@@ -102,7 +102,7 @@ class QuadrocopterLadingGearsAndHolders {
             val csg = ladingGearsAndHolders.toCSG()
             FileUtil.write(
                 Paths.get("quadcopter-landing-gear-and-holder.stl"),
-                csg!!.toStlString()
+                csg.toStlString()
             )
             csg.toObj().toFiles(Paths.get("quadcopter-landing-gear-and-holder.obj"))
         }

@@ -167,7 +167,7 @@ class Cube : Primitive {
         )
         val polygons: MutableList<Polygon> = ArrayList()
         for (info in a) {
-            val vertices: MutableList<Vertex?> = ArrayList()
+            val vertices: MutableList<Vertex> = ArrayList()
             for (i in info[0]) {
                 val pos = Vector3d.xyz(
                     center.x() + dimensions.x() * (1 * min(1, i and 1) - 0.5),

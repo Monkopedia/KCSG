@@ -36,7 +36,6 @@ import eu.mihosoft.jcsg.ext.openjfx.shape3d.SubdivisionMesh.MapBorderMode
 import javafx.beans.property.ObjectProperty
 import javafx.beans.property.SimpleIntegerProperty
 import javafx.beans.property.SimpleObjectProperty
-import javafx.beans.value.ChangeListener
 import javafx.beans.value.ObservableValue
 import javafx.collections.ArrayChangeListener
 import javafx.collections.ObservableFloatArray
@@ -81,18 +80,18 @@ class PolygonMeshView() : Parent() {
      *
      * @defaultValue null
      */
-    private var meshProperty: ObjectProperty<PolygonMesh?>? = null
+    private var meshProperty: ObjectProperty<PolygonMesh>? = null
     var mesh: PolygonMesh?
         get() = meshProperty().get()
         set(mesh) {
             meshProperty().set(mesh)
         }
 
-    private fun meshProperty(): ObjectProperty<PolygonMesh?> {
+    private fun meshProperty(): ObjectProperty<PolygonMesh> {
         if (meshProperty == null) {
             meshProperty = SimpleObjectProperty<PolygonMesh>().also { meshProperty ->
                 meshProperty.addListener(
-                    { observable: ObservableValue<out PolygonMesh?>?, oldValue: PolygonMesh?, newValue: PolygonMesh? ->
+                    { observable: ObservableValue<out PolygonMesh>?, oldValue: PolygonMesh?, newValue: PolygonMesh? ->
                         if (oldValue != null) {
                             oldValue.points.removeListener(meshPointsListener)
                             oldValue.points.removeListener(meshTexCoordListener)

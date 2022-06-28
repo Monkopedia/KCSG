@@ -108,13 +108,13 @@ object RaspberryPiBPlusMount {
         val bottom_thickness = 3.0
         val board = board()
         val peg1 =
-            RaspberryPeg.peg()!!.transformed(Transform.unity().scaleY(0.9))
+            RaspberryPeg.peg().transformed(Transform.unity().scaleY(0.9))
                 .transformed(
                     Transform.unity()
                         .translate(0.0, board_height - 36, -bottom_thickness)
                 )
         val peg2 =
-            RaspberryPeg.peg()!!.transformed(Transform.unity().scaleY(2.0))
+            RaspberryPeg.peg().transformed(Transform.unity().scaleY(2.0))
                 .transformed(
                     Transform.unity().translate(
                         22.0,
@@ -123,7 +123,7 @@ object RaspberryPiBPlusMount {
                     )
                         .rotZ(90.0)
                 )
-        val peg3 = RaspberryPeg.peg()!!
+        val peg3 = RaspberryPeg.peg()
             .transformed(
                 Transform.unity()
                     .translate(board_width - outer_offset, board_height, -bottom_thickness)
@@ -132,23 +132,23 @@ object RaspberryPiBPlusMount {
 
 //        translate([bw,outer_offset,0])
 //rotate([0,0,180])
-        val peg4 = RaspberryPeg.peg()!!.transformed(
+        val peg4 = RaspberryPeg.peg().transformed(
             Transform.unity()
                 .translate(board_width, board_height - outer_offset * 2, -bottom_thickness)
                 .rotZ(180.0)
         )
-        val peg4b = RaspberryPeg.peg()!!
+        val peg4b = RaspberryPeg.peg()
             .transformed(
                 Transform.unity()
                     .translate(board_width, outer_offset, -bottom_thickness).rotZ(180.0)
             )
         val peg5 =
-            RaspberryPeg.peg()!!.transformed(Transform.unity().scaleY(2.0))
+            RaspberryPeg.peg().transformed(Transform.unity().scaleY(2.0))
                 .transformed(
                     Transform.unity()
                         .translate(board_width - 19, 0.0, -bottom_thickness).rotZ(270.0)
                 )
-        val peg6 = RaspberryPeg.peg()!!
+        val peg6 = RaspberryPeg.peg()
             .transformed(
                 Transform.unity().translate(
                     board_width - 62,
@@ -157,7 +157,7 @@ object RaspberryPiBPlusMount {
                 )
                     .rotZ(270.0)
             )
-        return board!!.union(peg1, peg2, peg3, peg4, peg4b, peg5, peg6)
+        return board.union(peg1, peg2, peg3, peg4, peg4b, peg5, peg6)
 
 //        return peg1;
     }
@@ -168,7 +168,7 @@ object RaspberryPiBPlusMount {
 
         // save union as stl
 //        FileUtil.write(Paths.get("sample.stl"), new ServoHead().servoHeadFemale().transformed(Transform.unity().scale(1.0)).toStlString());
-        val board = boardAndPegs()!!
+        val board = boardAndPegs()
             .transformed(Transform.unity().rotX(180.0))
         FileUtil.write(
             Paths.get("raspberry-pi-bplus-mount-3mm.stl"),

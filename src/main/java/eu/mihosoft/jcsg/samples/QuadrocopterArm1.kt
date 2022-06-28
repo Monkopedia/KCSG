@@ -82,11 +82,11 @@ class QuadrocopterArm {
             shrinkFactorX, shrinkFactorX * 0.95
         )
         if (innerStructure != null) {
-            outerCyl = outerCyl!!.union(innerStructure)
+            outerCyl = outerCyl.union(innerStructure)
         }
         val innerCyl = Cylinder(innerRadius, length - innerTubeOffset, 16).toCSG()
             .transformed(Transform.unity().translateZ(innerTubeOffset))
-        var finalGeometry = outerCyl!!.union(innerCyl)
+        var finalGeometry = outerCyl.union(innerCyl)
         val plate = Cylinder(outerRadius, plateThickness, 16).toCSG()
             .transformed(Transform.unity().scaleX(shrinkFactorX))
         val endPlate = plate.transformed(Transform.unity().translateZ(innerTubeOffset))
@@ -100,7 +100,7 @@ class QuadrocopterArm {
                 plates = plates?.union(pl) ?: pl
                 i++
             }
-            finalGeometry = finalGeometry.union(plates)
+            finalGeometry = finalGeometry.union(plates!!)
         }
         val cube =
             Cube(outerRadius * 2, outerRadius * 2, armCubeThickness).toCSG().difference(innerCyl)
@@ -174,7 +174,7 @@ class QuadrocopterArm {
             armThickness,
             innerTubeOffset,
             armCubeThickness
-        )!!.transformed(
+        ).transformed(
             Transform.unity().rotX(90.0).rotY(90.0)
         )
         val enginePlatformSphere = Sphere(engineRadius * 1.1, 64, 32).toCSG()
@@ -193,7 +193,7 @@ class QuadrocopterArm {
             screwDistanceSmall,
             washerWallThickness,
             washerHeight
-        )!!.transformed(engineTransform)
+        ).transformed(engineTransform)
         mainArm =
             mainArm.difference(enginePlatformSphere).union(enginePlatform).difference(mainHole)
 
@@ -454,7 +454,7 @@ class QuadrocopterArm {
         @JvmStatic
         fun main(args: Array<String>) {
             val result = QuadrocopterArm().toCSG()
-            FileUtil.write(Paths.get("quadrocopter-arm.stl"), result!!.toStlString())
+            FileUtil.write(Paths.get("quadrocopter-arm.stl"), result.toStlString())
             result.toObj().toFiles(Paths.get("quadrocopter-arm.obj"))
 
 //        CSG resultNoStructure = new QuadrocopterArm().toCSG();

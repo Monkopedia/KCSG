@@ -127,7 +127,7 @@ class Sphere : Primitive {
         val polygons: MutableList<Polygon> = ArrayList()
         for (i in 0 until numSlices) {
             for (j in 0 until numStacks) {
-                val vertices: MutableList<Vertex?> = ArrayList()
+                val vertices: MutableList<Vertex> = ArrayList()
                 vertices.add(
                     sphereVertex(
                         center, radius, i / numSlices.toDouble(),

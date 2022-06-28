@@ -12,7 +12,6 @@ import eu.mihosoft.vvecmath.Transform
 import eu.mihosoft.vvecmath.Vector3d
 import java.io.IOException
 import java.nio.file.Paths
-import java.util.*
 
 /**
  *
@@ -89,7 +88,7 @@ class ServoMount {
 
             // save union as stl
 //        FileUtil.write(Paths.get("sample.stl"), new ServoHead().servoHeadFemale().transformed(Transform.unity().scale(1.0)).toStlString());
-            FileUtil.write(Paths.get("servo-mount.stl"), sMount.toCSG()!!.toStlString())
+            FileUtil.write(Paths.get("servo-mount.stl"), sMount.toCSG().toStlString())
         }
     }
 }

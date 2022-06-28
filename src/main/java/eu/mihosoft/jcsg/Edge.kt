@@ -72,7 +72,7 @@ class Edge(private val p1: Vertex, private val p2: Vertex) : Cloneable {
         private val children: MutableList<Node<*>> = ArrayList()
         private var isHole = false
         fun addChild(index: Int, value: T) {
-            children.add(Node<Any?>(index, value))
+            children.add(Node(index, value))
         }
 
         fun getChildren(): List<Node<*>> {
@@ -274,7 +274,7 @@ class Edge(private val p1: Vertex, private val p2: Vertex) : Cloneable {
         private fun fromPolygon(poly: Polygon?): List<Edge> {
             val result: MutableList<Edge> = ArrayList()
             for (i in poly!!.vertices.indices) {
-                val e = Edge(poly.vertices[i]!!, (poly.vertices[(i + 1) % poly.vertices.size])!!)
+                val e = Edge(poly.vertices[i], (poly.vertices[(i + 1) % poly.vertices.size]))
                 result.add(e)
             }
             return result
@@ -290,7 +290,7 @@ class Edge(private val p1: Vertex, private val p2: Vertex) : Cloneable {
                 .collect(Collectors.toList())
         }
 
-        private fun toPolygon(points: List<Vector3d?>, plane: Plane): Polygon {
+        private fun toPolygon(points: List<Vector3d>, plane: Plane): Polygon {
 
 //        List<Vector3d> points = edges.stream().().map(e -> e.p1.pos).
 //                collect(Collectors.toList());
@@ -306,7 +306,7 @@ class Edge(private val p1: Vertex, private val p2: Vertex) : Cloneable {
         }
 
         fun toPolygons(boundaryEdges: List<Edge>, plane: Plane): List<Polygon> {
-            val boundaryPath: MutableList<Vector3d?> = ArrayList()
+            val boundaryPath: MutableList<Vector3d> = ArrayList()
             val used = BooleanArray(boundaryEdges.size)
             var edge = boundaryEdges[0]
             used[0] = true
@@ -369,9 +369,9 @@ class Edge(private val p1: Vertex, private val p2: Vertex) : Cloneable {
                 }
                 parent[i] = maxIndex
                 if (!isHole[maxIndex] && isHole[i]) {
-                    var holes: MutableList<Polygon?>
+                    var holes: MutableList<Polygon>
                     val holesOpt = result[maxIndex]!!
-                        .storage.getValue<MutableList<Polygon?>>(KEY_POLYGON_HOLES)
+                        .storage.getValue<MutableList<Polygon>>(KEY_POLYGON_HOLES)
                     if (holesOpt.isPresent) {
                         holes = holesOpt.get()
                     } else {
@@ -398,11 +398,11 @@ class Edge(private val p1: Vertex, private val p2: Vertex) : Cloneable {
             used[startIndex] = true
             startIndex = 1
             while (startIndex > 0) {
-                val boundaryPath: MutableList<Vector3d?> = ArrayList()
+                val boundaryPath: MutableList<Vector3d> = ArrayList()
                 while (true) {
                     val finalEdge = edge
-                    boundaryPath.add(finalEdge!!.p1.pos)
-                    print("edge: " + edge!!.p2.pos)
+                    boundaryPath.add(finalEdge.p1.pos)
+                    print("edge: " + edge.p2.pos)
                     val nextEdgeResult =
                         boundaryEdges.stream().filter { e: Edge? -> finalEdge.p2 == e!!.p1 }
                             .findFirst()
@@ -452,7 +452,7 @@ class Edge(private val p1: Vertex, private val p2: Vertex) : Cloneable {
         }
 
         fun _toPolygons(boundaryEdges: List<Edge>, plane: Plane): List<Polygon> {
-            val boundaryPath: MutableList<Vector3d?> = ArrayList()
+            val boundaryPath: MutableList<Vector3d> = ArrayList()
             val used = BooleanArray(boundaryEdges.size)
             var edge = boundaryEdges[0]
             used[0] = true
@@ -551,7 +551,7 @@ class Edge(private val p1: Vertex, private val p2: Vertex) : Cloneable {
             println("polygons: " + polygons.size)
             val result: MutableList<Polygon> = ArrayList(polygons.size)
             for (p in polygons) {
-                val holesOfPresult = p!!.storage.getValue<List<Polygon>>(KEY_POLYGON_HOLES)
+                val holesOfPresult = p.storage.getValue<List<Polygon>>(KEY_POLYGON_HOLES)
                 if (!holesOfPresult.isPresent) {
                     result.add(p)
                 } else {
@@ -566,10 +566,10 @@ class Edge(private val p1: Vertex, private val p2: Vertex) : Cloneable {
             // we don't consider edges with shared end-points since we are only
             // interested in "false-boundary-edge"-cases
             val sharedEndPoints =
-                e!!.getP1()!!.pos == fbe!!.getP1()!!.pos || e.getP1()!!.pos == fbe.getP2()!!.pos || e.getP2()!!.pos == fbe.getP1()!!.pos || e.getP2()!!.pos == fbe.getP2()!!.pos
+                e!!.getP1().pos == fbe!!.getP1().pos || e.getP1().pos == fbe.getP2().pos || e.getP2().pos == fbe.getP1().pos || e.getP2().pos == fbe.getP2().pos
             return if (sharedEndPoints) {
                 false
-            } else fbe.contains(e.getP1()!!.pos) || fbe.contains(e.getP2()!!.pos)
+            } else fbe.contains(e.getP1().pos) || fbe.contains(e.getP2().pos)
         }
 
         private fun searchPlaneGroups(polygons: List<Polygon>?): List<List<Polygon>> {

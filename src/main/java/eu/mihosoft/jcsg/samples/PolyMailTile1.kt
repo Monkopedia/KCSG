@@ -33,15 +33,12 @@ class PolyMailTile {
     var jointRadius = 1.1
         private set
     private var coneLength = 1.8
-        private set
     var hingeHoleScale = 1.16
         private set
     var pinLength = 1.0
         private set
     private var pinThickness = 2.0
-        private set
     private var numEdges = 3
-        private set
     fun toCSG(): CSG {
 
 //        CSG.setDefaultOptType(CSG.OptType.POLYGON_BOUND);
@@ -54,7 +51,7 @@ class PolyMailTile {
                 .setConeLength(coneLength)
         hingePrototype.jointConnectionThickness = hingePrototype.jointRadius * 2
         var hinge1 = hingePrototype.toCSG()
-        val hingeBounds = hinge1!!.bounds.bounds
+        val hingeBounds = hinge1.bounds.bounds
         hinge1 = hinge1.intersect(
             Cube(
                 hingeBounds.x(),
@@ -75,7 +72,7 @@ class PolyMailTile {
                     pinLength
             )
         )
-        val hinges: MutableList<CSG?> = ArrayList()
+        val hinges: MutableList<CSG> = ArrayList()
         hinges.add(hinge1)
         for (i in 1 until numEdges) {
             val hinge = hinge1.transformed(Transform.unity().rotZ(i * step))
@@ -98,7 +95,7 @@ class PolyMailTile {
         if (numEdges % 2 != 0) {
             hingeHole1 = hingeHole1.transformed(Transform.unity().rotZ(initialRot))
         }
-        val hingeHoles: MutableList<CSG?> = ArrayList()
+        val hingeHoles: MutableList<CSG> = ArrayList()
         hingeHoles.add(hingeHole1)
         for (i in 1 until numEdges) {
             val hole = hingeHole1.transformed(Transform.unity().rotZ(i * step))
@@ -112,7 +109,7 @@ class PolyMailTile {
                 combinedPart.union(hinges[i])
             } else {
                 combinedPart.difference(
-                    hingeHoles[i]!!.transformed(Transform.unity().rotZ(step))
+                    hingeHoles[i].transformed(Transform.unity().rotZ(step))
                 )
             }
         }
@@ -237,7 +234,7 @@ class PolyMailTile {
         fun main(args: Array<String>) {
             FileUtil.write(
                 Paths.get("triangularmail.stl"),
-                PolyMailTile().setNumEdges(6).setCombined().toCSG()!!
+                PolyMailTile().setNumEdges(6).setCombined().toCSG()
                     .toStlString()
             )
         }

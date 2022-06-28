@@ -50,7 +50,7 @@ object STL {
     fun file(path: Path): CSG {
         val loader = STLLoader()
         val polygons: MutableList<Polygon> = ArrayList()
-        var vertices: MutableList<Vector3d?> = ArrayList()
+        var vertices: MutableList<Vector3d> = ArrayList()
         for (p in loader.parse(path.toFile())) {
             vertices.add(p.clone())
             if (vertices.size == 3) {

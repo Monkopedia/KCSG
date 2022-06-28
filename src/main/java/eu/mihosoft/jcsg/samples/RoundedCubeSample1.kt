@@ -26,9 +26,9 @@ class RoundedCubeSample {
         fun main(args: Array<String>) {
             FileUtil.write(
                 Paths.get("rounded-cube.stl"),
-                RoundedCubeSample().toCSG()!!.toStlString()
+                RoundedCubeSample().toCSG().toStlString()
             )
-            RoundedCubeSample().toCSG()!!.toObj().toFiles(Paths.get("rounded-cube.obj"))
+            RoundedCubeSample().toCSG().toObj().toFiles(Paths.get("rounded-cube.obj"))
         }
     }
 }

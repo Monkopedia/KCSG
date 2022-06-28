@@ -46,9 +46,7 @@ class SubdivisionMesh(
 ) : PolygonMesh() {
     private var _subdivisionLevel = 0
     private var boundaryMode: BoundaryMode? = null
-        private set
     private var mapBorderMode: MapBorderMode? = null
-        private set
     private val symbolicMeshes: MutableList<SymbolicPolygonMesh>
     private var pointValuesDirty = false
     private var meshDirty = false

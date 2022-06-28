@@ -94,7 +94,7 @@ class Plane(normal: Vector3d, dist: Double) : Cloneable {
         var polygonType = 0
         val types: MutableList<Int> = ArrayList(polygon!!.vertices.size)
         for (i in polygon.vertices.indices) {
-            val t = normal.dot(polygon.vertices[i]!!.pos) - dist
+            val t = normal.dot(polygon.vertices[i].pos) - dist
             val type = if (t < -EPSILON) BACK else if (t > EPSILON) FRONT else COPLANAR
             polygonType = polygonType or type
             types.add(type)
@@ -110,8 +110,8 @@ class Plane(normal: Vector3d, dist: Double) : Cloneable {
                 back.add(polygon)
             SPANNING -> {
                 //System.out.println(" -> spanning");
-                val f: MutableList<Vertex?> = ArrayList()
-                val b: MutableList<Vertex?> = ArrayList()
+                val f: MutableList<Vertex> = ArrayList()
+                val b: MutableList<Vertex> = ArrayList()
                 var i = 0
                 while (i < polygon.vertices.size) {
                     val j = (i + 1) % polygon.vertices.size
@@ -123,11 +123,11 @@ class Plane(normal: Vector3d, dist: Double) : Cloneable {
                         f.add(vi)
                     }
                     if (ti != FRONT) {
-                        b.add(if (ti != BACK) vi!!.clone() else vi)
+                        b.add(if (ti != BACK) vi.clone() else vi)
                     }
                     if (ti or tj == SPANNING) {
-                        val t = ((dist - normal.dot(vi!!.pos))
-                            / normal.dot(vj!!.pos.minus(vi.pos)))
+                        val t = ((dist - normal.dot(vi.pos))
+                            / normal.dot(vj.pos.minus(vi.pos)))
                         val v = vi.interpolate(vj, t)
                         f.add(v)
                         b.add(v.clone())

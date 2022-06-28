@@ -269,8 +269,8 @@ class ConcavePolygonExtrusionTest {
 
     @Test
     fun test() {
-        var H_points: List<Vector3d?> = ArrayList(Arrays.asList(*helvetica_H))
-        var e_points: List<Vector3d?> = ArrayList(Arrays.asList(*helvetica_e))
+        var H_points: List<Vector3d> = ArrayList(Arrays.asList(*helvetica_H))
+        var e_points: List<Vector3d> = ArrayList(Arrays.asList(*helvetica_e))
         H_points = H_points.stream().distinct().collect(Collectors.toList())
         e_points = e_points.stream().distinct().collect(Collectors.toList())
         val HLetter = points(Vector3d.xyz(0.0, 0.0, 10.0), H_points)

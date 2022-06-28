@@ -109,7 +109,7 @@ object RaspberryPiMount {
         val outer_offset = 4.0
         val bottom_thickness = 2.0
         val board = board()
-        val peg1 = RaspberryPeg.peg()!!
+        val peg1 = RaspberryPeg.peg()
             .transformed(
                 Transform.unity().translate(
                     0.0,
@@ -117,7 +117,7 @@ object RaspberryPiMount {
                     -bottom_thickness
                 )
             )
-        val peg2 = RaspberryPeg.peg()!!
+        val peg2 = RaspberryPeg.peg()
             .transformed(
                 Transform.unity().translate(
                     8.0,
@@ -126,7 +126,7 @@ object RaspberryPiMount {
                 )
                     .rotZ(90.0)
             )
-        val peg3 = RaspberryPeg.peg()!!
+        val peg3 = RaspberryPeg.peg()
             .transformed(
                 Transform.unity().translate(
                     board_width / 2,
@@ -138,7 +138,7 @@ object RaspberryPiMount {
 
 //        translate([bw,outer_offset,0])
 //rotate([0,0,180])
-        val peg4 = RaspberryPeg.peg()!!
+        val peg4 = RaspberryPeg.peg()
             .transformed(
                 Transform.unity()
                     .translate(board_width, board_height - outer_offset, -bottom_thickness)
@@ -147,7 +147,7 @@ object RaspberryPiMount {
 
 //        translate([bw-12,bh,0])
 //rotate([0,0,270])
-        val peg5 = RaspberryPeg.peg()!!
+        val peg5 = RaspberryPeg.peg()
             .transformed(
                 Transform.unity().translate(
                     board_width - 12,
@@ -159,12 +159,12 @@ object RaspberryPiMount {
 
 //        translate([30,bh,0])
 //rotate([0,0,270])
-        val peg6 = RaspberryPeg.peg()!!
+        val peg6 = RaspberryPeg.peg()
             .transformed(
                 Transform.unity().translate(30.0, 0.0, -bottom_thickness)
                     .rotZ(270.0)
             )
-        return board!!.union(peg1).union(peg2).union(peg3).union(peg4).union(peg5).union(peg6)
+        return board.union(peg1).union(peg2).union(peg3).union(peg4).union(peg5).union(peg6)
 
 //        return peg1;
     }
@@ -175,7 +175,7 @@ object RaspberryPiMount {
 
         // save union as stl
 //        FileUtil.write(Paths.get("sample.stl"), new ServoHead().servoHeadFemale().transformed(Transform.unity().scale(1.0)).toStlString());
-        val board = boardAndPegs()!!
+        val board = boardAndPegs()
             .transformed(Transform.unity().rotX(180.0))
         FileUtil.write(Paths.get("sample.stl"), board.toStlString())
     }

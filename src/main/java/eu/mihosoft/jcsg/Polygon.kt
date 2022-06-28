@@ -52,7 +52,7 @@ class Polygon : Cloneable {
     /**
      * Polygon vertices
      */
-    val vertices: List<Vertex?>
+    val vertices: List<Vertex>
 
     /**
      * Shared property (can be used for shared color etc.).
@@ -99,21 +99,21 @@ class Polygon : Cloneable {
      * @param vertices polygon vertices
      * @param shared shared property
      */
-    constructor(vertices: List<Vertex?>, shared: PropertyStorage?) {
+    constructor(vertices: List<Vertex>, shared: PropertyStorage?) {
         this.vertices = vertices
         this.shared = shared
         _csg_plane = Plane.createFromPoints(
-            vertices[0]!!.pos,
-            vertices[1]!!.pos,
-            vertices[2]!!.pos
+            vertices[0].pos,
+            vertices[1].pos,
+            vertices[2].pos
         )
         _plane = eu.mihosoft.vvecmath.Plane.fromPointAndNormal(centroid(), _csg_plane.normal)
         validateAndInit(vertices)
     }
 
-    private fun validateAndInit(vertices1: List<Vertex?>) {
+    private fun validateAndInit(vertices1: List<Vertex>) {
         for (v in vertices1) {
-            v!!.normal = _csg_plane.normal
+            v.normal = _csg_plane.normal
         }
         if (Vector3d.ZERO == _csg_plane.normal) {
             valid = false
@@ -144,12 +144,12 @@ class Polygon : Cloneable {
      *
      * @param vertices polygon vertices
      */
-    constructor(vertices: List<Vertex?>) {
+    constructor(vertices: List<Vertex>) {
         this.vertices = vertices
         _csg_plane = Plane.createFromPoints(
-            vertices[0]!!.pos,
-            vertices[1]!!.pos,
-            vertices[2]!!.pos
+            vertices[0].pos,
+            vertices[1].pos,
+            vertices[2].pos
         )
         _plane = eu.mihosoft.vvecmath.Plane.fromPointAndNormal(centroid(), _csg_plane.normal)
         validateAndInit(vertices)
@@ -164,10 +164,10 @@ class Polygon : Cloneable {
      *
      * @param vertices polygon vertices
      */
-    constructor(vararg vertices: Vertex?) : this(listOf<Vertex?>(*vertices))
+    constructor(vararg vertices: Vertex) : this(listOf<Vertex>(*vertices))
 
     public override fun clone(): Polygon {
-        val newVertices: MutableList<Vertex?> = ArrayList()
+        val newVertices: MutableList<Vertex> = ArrayList()
         vertices.forEach(
             Consumer { vertex: Vertex? ->
                 newVertices.add(
@@ -226,13 +226,13 @@ class Polygon : Cloneable {
             // STL requires triangular polygons.
             // If our polygon has more vertices, create
             // multiple triangles:
-            val firstVertexStl = vertices[0]!!.toStlString()
+            val firstVertexStl = vertices[0].toStlString()
             for (i in 0 until vertices.size - 2) {
                 sb.append("  facet normal ").append(_csg_plane.normal.toStlString()).append("\n")
                     .append("    outer loop\n").append("      ").append(firstVertexStl).append("\n")
                     .append("      ")
-                vertices[i + 1]!!.toStlString(sb).append("\n").append("      ")
-                vertices[i + 2]!!.toStlString(sb).append("\n").append("    endloop\n")
+                vertices[i + 1].toStlString(sb).append("\n").append("      ")
+                vertices[i + 2].toStlString(sb).append("\n").append("    endloop\n")
                     .append("  endfacet\n")
             }
         }
@@ -257,9 +257,9 @@ class Polygon : Cloneable {
 
                 // create triangle
                 val polygon = fromPoints(
-                    firstVertexStl!!.pos,
-                    vertices[i + 1]!!.pos,
-                    vertices[i + 2]!!.pos
+                    firstVertexStl.pos,
+                    vertices[i + 1].pos,
+                    vertices[i + 2].pos
                 )
                 result.add(polygon)
             }
@@ -275,9 +275,9 @@ class Polygon : Cloneable {
      */
     fun translate(v: Vector3d?): Polygon {
         vertices.forEach(Consumer { vertex: Vertex? -> vertex!!.pos = vertex.pos.plus(v) })
-        val a = vertices[0]!!.pos
-        val b = vertices[1]!!.pos
-        val c = vertices[2]!!.pos
+        val a = vertices[0].pos
+        val b = vertices[1].pos
+        val c = vertices[2].pos
 
         // TODO plane update correct?
         _csg_plane.normal = b.minus(a).crossed(c.minus(a))
@@ -310,9 +310,9 @@ class Polygon : Cloneable {
      */
     fun transform(transform: Transform): Polygon {
         vertices.stream().forEach { v: Vertex? -> v!!.transform(transform) }
-        val a = vertices[0]!!.pos
-        val b = vertices[1]!!.pos
-        val c = vertices[2]!!.pos
+        val a = vertices[0].pos
+        val b = vertices[1].pos
+        val c = vertices[2].pos
         _csg_plane.normal = b.minus(a).crossed(c.minus(a)).normalized()
         _csg_plane.dist = _csg_plane.normal.dot(a)
         _plane = eu.mihosoft.vvecmath.Plane.fromPointAndNormal(centroid(), _csg_plane.normal)
@@ -354,7 +354,7 @@ class Polygon : Cloneable {
             var maxZ = Double.NEGATIVE_INFINITY
             for (i in vertices.indices) {
                 val vert = vertices[i]
-                if (vert!!.pos.x() < minX) {
+                if (vert.pos.x() < minX) {
                     minX = vert.pos.x()
                 }
                 if (vert.pos.y() < minY) {
@@ -382,7 +382,7 @@ class Polygon : Cloneable {
     fun centroid(): Vector3d {
         var sum = Vector3d.zero()
         for (v in vertices) {
-            sum = sum.plus(v!!.pos)
+            sum = sum.plus(v.pos)
         }
         return sum.times(1.0 / vertices.size)
     }
@@ -403,7 +403,7 @@ class Polygon : Cloneable {
 
         // if P is on one of the vertices, return true
         for (i in 0 until vertices.size - 1) {
-            if (p!!.minus(vertices[i]!!.pos).magnitude() < Plane.EPSILON) {
+            if (p!!.minus(vertices[i].pos).magnitude() < Plane.EPSILON) {
                 return true
             }
         }
@@ -415,8 +415,8 @@ class Polygon : Cloneable {
         //     |
         // P is on the segment if( dist(P1,P) + dist(P2,P) - dist(P1,P2) < TOL)
         for (i in 0 until vertices.size - 1) {
-            val p1 = vertices[i]!!.pos
-            val p2 = vertices[i + 1]!!.pos
+            val p1 = vertices[i].pos
+            val p2 = vertices[i + 1].pos
             val onASegment: Boolean =
                 (p1.minus(p).magnitude() + p2.minus(p).magnitude() - p1.minus(p2).magnitude()) <
                     Plane.EPSILON
@@ -467,10 +467,10 @@ class Polygon : Cloneable {
         val y = p[coordIndex2]
         var i: Int = 0
         while (i < vertices.size) {
-            val xi = vertices[i]!!.pos[coordIndex1]
-            val yi = vertices[i]!!.pos[coordIndex2]
-            val xj = vertices[j]!!.pos[coordIndex1]
-            val yj = vertices[j]!!.pos[coordIndex2]
+            val xi = vertices[i].pos[coordIndex1]
+            val yi = vertices[i].pos[coordIndex2]
+            val xj = vertices[j].pos[coordIndex1]
+            val yj = vertices[j].pos[coordIndex2]
             if ((
                 yi < y && yj >= y ||
                     yj < y && yi >= y
@@ -495,7 +495,7 @@ class Polygon : Cloneable {
 
     operator fun contains(p: Polygon?): Boolean {
         for (v in p!!.vertices) {
-            if (!contains(v!!.pos)) {
+            if (!contains(v.pos)) {
                 return false
             }
         }
@@ -632,7 +632,7 @@ class Polygon : Cloneable {
          * @param points the points that define the polygon
          * @return the decomposed concave polygon (list of convex polygons)
          */
-        fun fromConcavePoints(vararg points: Vector3d?): List<Polygon?> {
+        fun fromConcavePoints(vararg points: Vector3d): List<Polygon> {
             val p = fromPoints(*points)
             return PolygonUtil.concaveToConvex(p)
         }
@@ -643,7 +643,7 @@ class Polygon : Cloneable {
          * @param points the points that define the polygon
          * @return the decomposed concave polygon (list of convex polygons)
          */
-        fun fromConcavePoints(points: List<Vector3d?>): List<Polygon?> {
+        fun fromConcavePoints(points: List<Vector3d>): List<Polygon> {
             val p = fromPoints(points)
             return PolygonUtil.concaveToConvex(p)
         }
@@ -656,7 +656,7 @@ class Polygon : Cloneable {
          * @return a polygon defined by the specified point list
          */
         fun fromPoints(
-            points: List<Vector3d?>,
+            points: List<Vector3d>,
             shared: PropertyStorage?
         ): Polygon {
             return fromPoints(points, shared, null)
@@ -668,7 +668,7 @@ class Polygon : Cloneable {
          * @param points the points that define the polygon
          * @return a polygon defined by the specified point list
          */
-        fun fromPoints(points: List<Vector3d?>): Polygon {
+        fun fromPoints(points: List<Vector3d>): Polygon {
             return fromPoints(points, PropertyStorage(), null)
         }
 
@@ -678,7 +678,7 @@ class Polygon : Cloneable {
          * @param points the points that define the polygon
          * @return a polygon defined by the specified point list
          */
-        fun fromPoints(vararg points: Vector3d?): Polygon {
+        fun fromPoints(vararg points: Vector3d): Polygon {
             return fromPoints(listOf(*points), PropertyStorage(), null)
         }
 
@@ -691,7 +691,7 @@ class Polygon : Cloneable {
          * @return a polygon defined by the specified point list
          */
         private fun fromPoints(
-            points: List<Vector3d?>,
+            points: List<Vector3d>,
             shared: PropertyStorage?,
             plane: Plane?
         ): Polygon {
@@ -703,9 +703,9 @@ class Polygon : Cloneable {
                     points[2]
                 ).normal
             }
-            val vertices: MutableList<Vertex?> = ArrayList()
+            val vertices: MutableList<Vertex> = ArrayList()
             for (p in points) {
-                val vec = p!!.clone()
+                val vec = p.clone()
                 val vertex = Vertex(vec, normal)
                 vertices.add(vertex)
             }

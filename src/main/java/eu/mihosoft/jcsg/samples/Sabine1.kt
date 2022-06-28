@@ -62,7 +62,7 @@ class Sabine {
         @Throws(IOException::class)
         @JvmStatic
         fun main(args: Array<String>) {
-            FileUtil.write(Paths.get("sabine.stl"), Sabine().toCSG()!!.toStlString())
+            FileUtil.write(Paths.get("sabine.stl"), Sabine().toCSG().toStlString())
         }
     }
 }

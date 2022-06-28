@@ -28,7 +28,7 @@ class QuadrocopterBottom {
         }
     }
 
-    fun toCSG(): CSG? {
+    fun toCSG(): CSG {
         val outerRadius = 93.0
         val bottomThickness = 3.0
         val numHoneyCombs = 21

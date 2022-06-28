@@ -47,7 +47,7 @@ class SurfacePro2PenHolder {
         @JvmStatic
         fun main(args: Array<String>) {
             FileUtil.write(
-                Paths.get("surfac2penholder.stl"), SurfacePro2PenHolder().toCSG()!!
+                Paths.get("surfac2penholder.stl"), SurfacePro2PenHolder().toCSG()
                     .toStlString()
             )
         }

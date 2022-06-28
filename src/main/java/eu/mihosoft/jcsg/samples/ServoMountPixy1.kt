@@ -13,7 +13,6 @@ import eu.mihosoft.vvecmath.Transform
 import eu.mihosoft.vvecmath.Vector3d
 import java.io.IOException
 import java.nio.file.Paths
-import java.util.*
 
 /**
  *
@@ -59,7 +58,7 @@ class ServoMountPixy {
         val bm1 = boardMount1().transformed(bm1Transform)
         val bm2Transform =
             Transform.unity().translateX(servoWidth - boardHolder1Length + borderThickness * 2)
-        val bm2 = boardMountWithPixy()!!.transformed(bm1Transform).transformed(bm2Transform)
+        val bm2 = boardMountWithPixy().transformed(bm1Transform).transformed(bm2Transform)
         val sm = toCSGSimple()
         return sm.union(bm1).union(bm2) //.transformed(Transform.unity().scale(0.08));
     }
@@ -204,7 +203,7 @@ class ServoMountPixy {
 //        FileUtil.write(Paths.get("sample.stl"), new ServoHead().servoHeadFemale().transformed(Transform.unity().scale(1.0)).toStlString());
             FileUtil.write(
                 Paths.get("servo-mount-pixy.stl"),
-                sMount.toCSG()!!.toStlString()
+                sMount.toCSG().toStlString()
             )
         }
     }

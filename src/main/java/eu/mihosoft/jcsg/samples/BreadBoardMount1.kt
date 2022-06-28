@@ -45,7 +45,7 @@ class BreadBoardMount {
         val third = prototype.clone()
             .transformed(Transform.unity().translate(-breadBoardWidth / 2.0 - 1, 0.0, 0.0))
         val pins = first.union(second).union(third)
-        val board = board()!!.transformed(Transform.unity().translateZ(pinHoleHeight * 2))
+        val board = board().transformed(Transform.unity().translateZ(pinHoleHeight * 2))
         return pins.difference(board)
     }
 
@@ -100,7 +100,7 @@ class BreadBoardMount {
     }
 
     fun toCSG(): CSG {
-        return pins()!!.union(pinConnections()).union(servoConnect())
+        return pins().union(pinConnections()).union(servoConnect())
     }
 
     companion object {
@@ -113,7 +113,7 @@ class BreadBoardMount {
 //        FileUtil.write(Paths.get("sample.stl"), new ServoHead().servoHeadFemale().transformed(Transform.unity().scale(1.0)).toStlString());
             FileUtil.write(
                 Paths.get("bread-board-mount.stl"),
-                aMount.toCSG()!!.toStlString()
+                aMount.toCSG().toStlString()
             )
         }
     }

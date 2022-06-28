@@ -40,7 +40,7 @@ class ArduinoMount {
         val third =
             prototype.clone().transformed(Transform.unity().translate(-bottomWidth / 2.0, 0.0, 0.0))
         val pins = first.union(second).union(third)
-        val board = board()!!.transformed(Transform.unity().translateZ(pinHoleHeight * 2))
+        val board = board().transformed(Transform.unity().translateZ(pinHoleHeight * 2))
         return pins.difference(board)
     }
 
@@ -91,7 +91,7 @@ class ArduinoMount {
     }
 
     fun toCSG(): CSG {
-        return pins()!!.union(pinConnections()).union(servoConnect())
+        return pins().union(pinConnections()).union(servoConnect())
     }
 
     companion object {
@@ -102,7 +102,7 @@ class ArduinoMount {
 
             // save union as stl
 //        FileUtil.write(Paths.get("sample.stl"), new ServoHead().servoHeadFemale().transformed(Transform.unity().scale(1.0)).toStlString());
-            FileUtil.write(Paths.get("sample.stl"), aMount.toCSG()!!.toStlString())
+            FileUtil.write(Paths.get("sample.stl"), aMount.toCSG().toStlString())
         }
     }
 }

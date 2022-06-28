@@ -79,7 +79,7 @@ class PolyObjImporter {
             return _meshes.keys
         }
 
-    private val _meshes: MutableMap<String, PolygonMesh?> = HashMap()
+    private val _meshes: MutableMap<String, PolygonMesh> = HashMap()
     private val _materials: MutableMap<String, Material> = HashMap()
     private val _materialLibrary: MutableList<Map<String, Material>> = ArrayList()
     private var _objFilename: String? = null
@@ -94,7 +94,7 @@ class PolyObjImporter {
         read(inputStream)
     }
 
-    val mesh: PolygonMesh?
+    val mesh: PolygonMesh
         get() = _meshes.values.iterator().next()
 
     val material: Material

@@ -70,13 +70,9 @@ internal class TriangulationProcess @JvmOverloads constructor(private val _algor
     val context: TriangulationContext<*>?
     private var _thread: Thread? = null
     private var isDone = false
-        private set
     private var pointCount = 0
-        private set
     private var timestamp: Long = 0
-        private set
     private var triangulationTime = 0.0
-        private set
     private var _awaitingTermination = false
     private var _restart = false
     private val _triangulations = ArrayList<Triangulatable?>()

@@ -13,7 +13,7 @@ internal class Modifier(private val function: WeightFunction) {
     fun modify(csg: CSG?) {
         for (p in csg!!.polygons!!) {
             for (v in p.vertices) {
-                v!!.weight = function.eval(v.pos, csg)
+                v.weight = function.eval(v.pos, csg)
             }
         }
     }

@@ -91,7 +91,7 @@ class QuadrocopterArmHolder {
             val result = QuadrocopterArmHolder().toCSG(18.0, 0.5, 18.0, 4.0, 20.0, 3.0)
             FileUtil.write(
                 Paths.get("quadrocopter-arm-holder.stl"),
-                result!!.toStlString()
+                result.toStlString()
             )
             result.toObj().toFiles(Paths.get("quadrocopter-arm-holder.obj"))
         }

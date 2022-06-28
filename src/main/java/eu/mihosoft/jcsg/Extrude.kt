@@ -55,7 +55,7 @@ class Extrude private constructor() {
          *
          * @return a CSG object that consists of the extruded polygon
          */
-        fun points(dir: Vector3d, vararg points: Vector3d?): CSG {
+        fun points(dir: Vector3d, vararg points: Vector3d): CSG {
             return extrude(dir, Polygon.fromPoints(toCCW(listOf(*points))))
         }
 
@@ -69,8 +69,8 @@ class Extrude private constructor() {
          *
          * @return a CSG object that consists of the extruded polygon
          */
-        fun points(dir: Vector3d, points: List<Vector3d?>?): CSG {
-            val newList: List<Vector3d?> = ArrayList(points)
+        fun points(dir: Vector3d, points: List<Vector3d>?): CSG {
+            val newList: List<Vector3d> = ArrayList(points)
             return extrude(dir, Polygon.fromPoints(toCCW(newList)))
         }
 
@@ -88,8 +88,8 @@ class Extrude private constructor() {
             dir: Vector3d,
             top: Boolean,
             bottom: Boolean,
-            vararg points: Vector3d?
-        ): List<Polygon?> {
+            vararg points: Vector3d
+        ): List<Polygon> {
             return extrude(
                 dir,
                 Polygon.fromPoints(toCCW(listOf(*points))),
@@ -114,9 +114,9 @@ class Extrude private constructor() {
             dir: Vector3d,
             top: Boolean,
             bottom: Boolean,
-            points1: List<Vector3d?>?
-        ): List<Polygon?> {
-            val newList1: List<Vector3d?> = ArrayList(points1)
+            points1: List<Vector3d>?
+        ): List<Polygon> {
+            val newList1: List<Vector3d> = ArrayList(points1)
             return extrude(dir, Polygon.fromPoints(toCCW(newList1)), top, bottom)
         }
 
@@ -164,11 +164,11 @@ class Extrude private constructor() {
             }
             for (i in 0 until numVertices) {
                 val nexti = (i + 1) % numVertices
-                val bottomV1 = p1.vertices[i]!!.pos
-                val topV1 = p2.vertices[i]!!.pos
-                val bottomV2 = p1.vertices[nexti]!!.pos
-                val topV2 = p2.vertices[nexti]!!.pos
-                var pPoints: List<Vector3d?>
+                val bottomV1 = p1.vertices[i].pos
+                val topV1 = p2.vertices[i].pos
+                val bottomV2 = p1.vertices[nexti].pos
+                val topV2 = p2.vertices[nexti].pos
+                var pPoints: List<Vector3d>
                 pPoints = listOf(bottomV2, topV2, topV1)
                 newPolygons.add(Polygon.fromPoints(pPoints, p1.storage))
                 pPoints = listOf(bottomV2, topV1, bottomV1)
@@ -188,10 +188,10 @@ class Extrude private constructor() {
             val numvertices = polygon1.vertices.size
             for (i in 0 until numvertices) {
                 val nexti = (i + 1) % numvertices
-                val bottomV1 = polygon1.vertices[i]!!.pos
-                val topV1 = polygon2.vertices[i]!!.pos
-                val bottomV2 = polygon1.vertices[nexti]!!.pos
-                val topV2 = polygon2.vertices[nexti]!!.pos
+                val bottomV1 = polygon1.vertices[i].pos
+                val topV1 = polygon2.vertices[i].pos
+                val bottomV2 = polygon1.vertices[nexti].pos
+                val topV2 = polygon2.vertices[nexti].pos
                 val pPoints = listOf(bottomV2, topV2, topV1, bottomV1)
                 newPolygons.add(Polygon.fromPoints(pPoints, polygon1.storage))
             }
@@ -225,23 +225,23 @@ class Extrude private constructor() {
                 var sz = 0.0
                 val n = polygon2.vertices.size
                 for (v in polygon2.vertices) {
-                    sx += v!!.pos.x()
+                    sx += v.pos.x()
                     sy += v.pos.y()
                     sz += v.pos.z()
                 }
                 val center = Vector3d.xyz(sx / n, sy / n, sz / n)
                 rot = rot.rot(center, axis, angle * Math.PI / 180.0)
                 for (v in polygon2.vertices) {
-                    v!!.pos = rot.transform(v.pos)
+                    v.pos = rot.transform(v.pos)
                 }
             }
             val numvertices = polygon1.vertices.size
             for (i in 0 until numvertices) {
                 val nexti = (i + 1) % numvertices
-                val bottomV1 = polygon1.vertices[i]!!.pos
-                val topV1 = polygon2.vertices[i]!!.pos
-                val bottomV2 = polygon1.vertices[nexti]!!.pos
-                val topV2 = polygon2.vertices[nexti]!!.pos
+                val bottomV1 = polygon1.vertices[i].pos
+                val topV1 = polygon2.vertices[i].pos
+                val bottomV2 = polygon1.vertices[nexti].pos
+                val topV2 = polygon2.vertices[nexti].pos
                 val pPoints = listOf(bottomV2, topV2, topV1, bottomV1)
                 newPolygons.add(Polygon.fromPoints(pPoints, polygon1.storage))
             }
@@ -253,16 +253,16 @@ class Extrude private constructor() {
             return newPolygons
         }
 
-        private fun toCCW(points: List<Vector3d?>?): List<Vector3d?> {
-            val result: List<Vector3d?> = ArrayList(points)
+        private fun toCCW(points: List<Vector3d>?): List<Vector3d> {
+            val result: List<Vector3d> = ArrayList(points)
             if (!isCCW(Polygon.fromPoints(result))) {
                 Collections.reverse(result)
             }
             return result
         }
 
-        fun toCW(points: List<Vector3d?>?): List<Vector3d?> {
-            val result: List<Vector3d?> = ArrayList(points)
+        fun toCW(points: List<Vector3d>?): List<Vector3d> {
+            val result: List<Vector3d> = ArrayList(points)
             if (isCCW(Polygon.fromPoints(result))) {
                 Collections.reverse(result)
             }
@@ -284,7 +284,7 @@ class Extrude private constructor() {
             var highestLeftVertex = polygon.vertices[0]
             for (i in polygon.vertices.indices) {
                 val v = polygon.vertices[i]
-                if (v!!.pos.y() > highestLeftVertex!!.pos.y()) {
+                if (v.pos.y() > highestLeftVertex.pos.y()) {
                     highestLeftVertex = v
                     highestLeftVertexIndex = i
                 } else if (v.pos.y() == highestLeftVertex.pos.y()
@@ -305,10 +305,10 @@ class Extrude private constructor() {
             val prevVertex = polygon.vertices[prevVertexIndex]
 
             // edge 1
-            val a1 = normalizedX(highestLeftVertex!!.pos, nextVertex!!.pos)
+            val a1 = normalizedX(highestLeftVertex.pos, nextVertex.pos)
 
             // edge 2
-            val a2 = normalizedX(highestLeftVertex.pos, prevVertex!!.pos)
+            val a2 = normalizedX(highestLeftVertex.pos, prevVertex.pos)
 
             // select vertex with lowest x value
             var selectedVIndex: Int

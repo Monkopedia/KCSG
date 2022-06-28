@@ -96,7 +96,7 @@ class MoebiusStairs {
         fun main(args: Array<String>) {
             val moebiusStairs = MoebiusStairs()
             val csg = moebiusStairs.toCSG()
-            FileUtil.write(Paths.get("moebius-stairs.stl"), csg!!.toStlString())
+            FileUtil.write(Paths.get("moebius-stairs.stl"), csg.toStlString())
             csg.toObj().toFiles(Paths.get("moebius-stairs.obj"))
         }
     }

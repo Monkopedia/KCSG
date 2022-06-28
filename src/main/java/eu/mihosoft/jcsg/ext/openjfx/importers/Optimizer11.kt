@@ -354,16 +354,16 @@ class Optimizer @JvmOverloads constructor(
     }
 
     private fun cleanUpRepeatingFramesAndValues() {
-        val timelineKeyFrames: ObservableList<KeyFrame?> =
+        val timelineKeyFrames: ObservableList<KeyFrame> =
             timeline!!.keyFrames.sorted(KeyFrameComparator())
         //        Timeline timeline;
         val kfTotal = timelineKeyFrames.size
         var kfRemoved = 0
         var kvTotal = 0
         var kvRemoved = 0
-        val kfUnique: MutableMap<Duration, KeyFrame?> = HashMap()
+        val kfUnique: MutableMap<Duration, KeyFrame> = HashMap()
         val kvUnique: MutableMap<WritableValue<*>, KeyValue> = HashMap()
-        val duplicates = MapOfLists<KeyFrame?, KeyFrame?>()
+        val duplicates = MapOfLists<KeyFrame?, KeyFrame>()
         val iterator = timelineKeyFrames.iterator()
         while (iterator.hasNext()) {
             val duplicate = iterator.next()
@@ -393,7 +393,7 @@ kvDup = $kvDup"""
         for (orig in duplicates.keys) {
             val keyValues: MutableList<KeyValue> = ArrayList()
             for (dup in duplicates[orig]!!) {
-                keyValues.addAll(dup!!.values)
+                keyValues.addAll(dup.values)
             }
             timelineKeyFrames[timelineKeyFrames.indexOf(orig)] =
                 KeyFrame(orig!!.time, *keyValues.toTypedArray())
@@ -444,7 +444,7 @@ kvDup = $kvDup"""
         }
         //        cleanUpRepeatingFramesAndValues(); // we don't need it usually as timeline is initially correct
         val sortedKeyFrames = timeline.keyFrames.sorted(KeyFrameComparator())
-        val toRemove = MapOfLists<KeyFrame?, KeyValue?>()
+        val toRemove = MapOfLists<KeyFrame?, KeyValue>()
         val prevValues: MutableMap<WritableValue<*>, KeyInfo> = HashMap()
         val prevPrevValues: MutableMap<WritableValue<*>, KeyInfo> = HashMap()
         var kvTotal = 0
@@ -496,7 +496,7 @@ kvDup = $kvDup"""
         var i = 0
         while (i < timeline.keyFrames.size) {
             var keyFrame = timeline.keyFrames[i]
-            val keyValuesToRemove: MutableList<KeyValue?>? = toRemove[keyFrame]
+            val keyValuesToRemove: MutableList<KeyValue>? = toRemove[keyFrame]
             if (keyValuesToRemove != null) {
                 newKeyValues.clear()
                 for (keyValue in keyFrame.values) {

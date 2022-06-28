@@ -106,7 +106,7 @@ class ServoHead {
         fun main(args: Array<String>) {
             println("RUNNING")
             FileUtil.write(
-                Paths.get("servo-head-female.stl"), ServoHead().servoHeadFemale()!!
+                Paths.get("servo-head-female.stl"), ServoHead().servoHeadFemale()
                     .toStlString()
             )
             FileUtil.write(

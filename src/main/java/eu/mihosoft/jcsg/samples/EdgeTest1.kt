@@ -48,11 +48,11 @@ class EdgeTest {
         fun main(args: Array<String>) {
             FileUtil.write(
                 Paths.get("edge-test.stl"),
-                EdgeTest().toCSG(true)!!.toStlString()
+                EdgeTest().toCSG(true).toStlString()
             )
             FileUtil.write(
                 Paths.get("edge-test-orig.stl"),
-                EdgeTest().toCSG(false)!!.toStlString()
+                EdgeTest().toCSG(false).toStlString()
             )
         }
     }

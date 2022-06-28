@@ -127,7 +127,7 @@ class Hinge {
         @Throws(IOException::class)
         @JvmStatic
         fun main(args: Array<String>) {
-            FileUtil.write(Paths.get("hinge.stl"), Hinge().toCSG()!!.toStlString())
+            FileUtil.write(Paths.get("hinge.stl"), Hinge().toCSG().toStlString())
         }
     }
 }

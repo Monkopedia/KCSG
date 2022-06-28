@@ -57,7 +57,7 @@ class PolygonUtil private constructor() {
             // convert polygon
             val points: MutableList<PolygonPoint> = ArrayList()
             for (v in polygon.vertices) {
-                val vp = PolygonPoint(v!!.pos.x(), v.pos.y(), v.pos.z())
+                val vp = PolygonPoint(v.pos.x(), v.pos.y(), v.pos.z())
                 points.add(vp)
             }
             val result = Polygon(points)
@@ -80,7 +80,7 @@ class PolygonUtil private constructor() {
             concave: eu.mihosoft.jcsg.Polygon
         ): List<eu.mihosoft.jcsg.Polygon> {
             val result: MutableList<eu.mihosoft.jcsg.Polygon> = ArrayList()
-            val normal = concave.vertices[0]!!.normal!!.clone()
+            val normal = concave.vertices[0].normal!!.clone()
             val cw: Boolean = !Extrude.isCCW(concave)
             val p = fromCSGPolygon(concave)
             Poly2Tri.triangulate(p)

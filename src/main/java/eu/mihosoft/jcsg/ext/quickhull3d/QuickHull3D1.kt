@@ -132,7 +132,6 @@ internal class QuickHull3D {
     private val unclaimed = VertexList()
     private val claimed = VertexList()
     private var numVertices = 0
-    private set
     private var numFaces = 0
     private var numPoints = 0
     private var explicitTolerance = AUTOMATIC_TOLERANCE

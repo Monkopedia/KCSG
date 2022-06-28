@@ -118,7 +118,7 @@ class HoleDetectionTest {
             polygons = boundaryPathsWithHoles(polygons)
             for (i in polygons.indices) {
                 val holesOfPresult =
-                    polygons[i]!!.storage.getValue<List<Polygon>>(Edge.KEY_POLYGON_HOLES)
+                    polygons[i].storage.getValue<List<Polygon>>(Edge.KEY_POLYGON_HOLES)
                 var numHolesOfP: Int
                 numHolesOfP = if (!holesOfPresult.isPresent) {
                     0

@@ -20,11 +20,11 @@ import kotlin.math.asin
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 class FractalStructureBeam2D {
-    private fun toCSG(): CSG? {
+    private fun toCSG(): CSG {
         return createBeam(5.0, Vector3d.xy(0.0, 0.0), Vector3d.xy(10.0, 0.0), 2)
     }
 
-    private fun createBeam(b: Double, start: Vector3d, stop: Vector3d, i: Int): CSG? {
+    private fun createBeam(b: Double, start: Vector3d, stop: Vector3d, i: Int): CSG {
         if (i == 0) {
             return createBeamTerminal(b, start, stop)
         }
@@ -43,7 +43,7 @@ class FractalStructureBeam2D {
         val mainBeamStopLower = innerStop.minus(incVec)
         val upperMainBeam = createBeam(nextB, mainBeamStartUpper, mainBeamStopUpper, i - 1)
         val lowerMainBeam = createBeam(nextB, mainBeamStartLower, mainBeamStopLower, i - 1)
-        val mainBeams = upperMainBeam!!.union(lowerMainBeam)
+        val mainBeams = upperMainBeam.union(lowerMainBeam)
         val switchDir = false
         var innerBeams: CSG? = null
         val stopMinorBeam = Vector3d.xy(b, 0.0).plus(incVec) //Vector3d.xy(b, b / 2.0);

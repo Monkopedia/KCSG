@@ -24,7 +24,7 @@ class EggCup {
     private fun toCSG(): CSG {
         CSG.setDefaultOptType(OptType.POLYGON_BOUND)
         val egg = Egg().toCSG()
-        val eggBounds = egg!!.bounds.bounds
+        val eggBounds = egg.bounds.bounds
         val upperNegativeEgg = egg.transformed(
             Transform.unity().translateZ(
                 eggBounds.z() * 0.175
@@ -43,7 +43,7 @@ class EggCup {
         val radius = eggBounds.x() / 2.0 + wallThickness
         CSG.setDefaultOptType(OptType.NONE)
         var feet = MoebiusStairs().resolution(90.0).twists(2.0).toCSG()
-        feet = feet!!.transformed(Transform.unity().translateZ(-radius).scale(1.2, 1.2, 1.3))
+        feet = feet.transformed(Transform.unity().translateZ(-radius).scale(1.2, 1.2, 1.3))
         CSG.setDefaultOptType(OptType.POLYGON_BOUND)
         val shellOuter = Sphere(radius, resolution, resolution / 2).toCSG()
             .transformed(Transform.unity().scaleZ(1.25))
@@ -64,7 +64,7 @@ class EggCup {
         @Throws(IOException::class)
         @JvmStatic
         fun main(args: Array<String>) {
-            FileUtil.write(Paths.get("eggcup.stl"), EggCup().toCSG()!!.toStlString())
+            FileUtil.write(Paths.get("eggcup.stl"), EggCup().toCSG().toStlString())
         }
     }
 }

@@ -76,7 +76,7 @@ class QuadrocopterCross {
         val armHolderPrototype = toCSG(
             armHeight, armScaleFactor, armHeight,
             armCubeThickness, holderPlatformRadius, platformThickness
-        )!!.transformed(Transform.unity().translateX(68.0).translateZ(14.0))
+        ).transformed(Transform.unity().translateX(68.0).translateZ(14.0))
         var armHolders = armHolderPrototype.clone()
         val quarterPrototype = RoundedCube(platformRadius).noCenter().cornerRadius(10.0)
             .resolution(16).toCSG()
@@ -105,7 +105,7 @@ class QuadrocopterCross {
         fun main(args: Array<String>) {
             CSG.setDefaultOptType(OptType.NONE)
             val result = QuadrocopterCross().toCSG2()
-            FileUtil.write(Paths.get("quadrocopter-cross.stl"), result!!.toStlString())
+            FileUtil.write(Paths.get("quadrocopter-cross.stl"), result.toStlString())
             result.toObj().toFiles(Paths.get("quadrocopter-cross.obj"))
         }
     }

@@ -75,7 +75,7 @@ class PlaneWithHoles {
 //        FileUtil.write(Paths.get("sample.stl"), new ServoHead().servoHeadFemale().transformed(Transform.unity().scale(1.0)).toStlString());
             FileUtil.write(
                 Paths.get("sample.stl"),
-                planeWithHoles.toCSG()!!.toStlString()
+                planeWithHoles.toCSG().toStlString()
             )
         }
     }

@@ -44,7 +44,7 @@ class WeightedTubeSample {
         fun main(args: Array<String>) {
             FileUtil.write(
                 Paths.get("weighted-tube.stl"),
-                WeightedTubeSample().toCSG()!!.toStlString()
+                WeightedTubeSample().toCSG().toStlString()
             )
 
 //        new WeightedTubeSample().toCSG().toObj().toFiles(Paths.get("weighted-tube.obj"));

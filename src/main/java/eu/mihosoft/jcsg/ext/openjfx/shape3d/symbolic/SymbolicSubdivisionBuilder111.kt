@@ -47,7 +47,7 @@ class SymbolicSubdivisionBuilder(
     private val mapBorderMode: MapBorderMode
 ) {
     private var edgeInfos: MutableMap<Edge?, EdgeInfo>? = null
-    private lateinit var faceInfos: Array<FaceInfo?>
+    private lateinit var faceInfos: Array<FaceInfo>
     private lateinit var pointInfos: Array<PointInfo?>
     private var points: SubdividedPointArray? = null
     private lateinit var texCoords: FloatArray
@@ -57,7 +57,7 @@ class SymbolicSubdivisionBuilder(
         collectInfo()
         texCoords = FloatArray((oldMesh.numEdgesInFaces * 3 + oldMesh.faces!!.size) * 2)
         val faces =
-            Array<IntArray?>(oldMesh.numEdgesInFaces) { IntArray(8) }
+            Array(oldMesh.numEdgesInFaces) { IntArray(8) }
         val faceSmoothingGroups = IntArray(oldMesh.numEdgesInFaces)
         newTexCoordIndex = 0
         reindex =
@@ -70,8 +70,8 @@ class SymbolicSubdivisionBuilder(
             val oldFaces = oldMesh.faces!![f]
             var p = 0
             while (p < oldFaces.size) {
-                faces[newFacesInd]!![4] = getPointNewIndex(faceInfo)
-                faces[newFacesInd]!![5] = getTexCoordNewIndex(faceInfo)
+                faces[newFacesInd][4] = getPointNewIndex(faceInfo)
+                faces[newFacesInd][5] = getTexCoordNewIndex(faceInfo)
                 faceSmoothingGroups[newFacesInd] = oldMesh.faceSmoothingGroups[f]
                 newFacesInd++
                 p += 2
@@ -84,12 +84,12 @@ class SymbolicSubdivisionBuilder(
             val oldFaces = oldMesh.faces!![f]
             var p = 0
             while (p < oldFaces.size) {
-                faces[newFacesInd]!![2] =
-                    getPointNewIndex(faceInfo, (p / 2 + 1) % faceInfo!!.edges.size)
-                faces[newFacesInd]!![3] =
+                faces[newFacesInd][2] =
+                    getPointNewIndex(faceInfo, (p / 2 + 1) % faceInfo.edges.size)
+                faces[newFacesInd][3] =
                     getTexCoordNewIndex(faceInfo, (p / 2 + 1) % faceInfo.edges.size)
-                faces[newFacesInd]!![6] = getPointNewIndex(faceInfo, p / 2)
-                faces[newFacesInd]!![7] = getTexCoordNewIndex(faceInfo, p / 2)
+                faces[newFacesInd][6] = getPointNewIndex(faceInfo, p / 2)
+                faces[newFacesInd][7] = getTexCoordNewIndex(faceInfo, p / 2)
                 newFacesInd++
                 p += 2
             }
@@ -101,14 +101,14 @@ class SymbolicSubdivisionBuilder(
             val oldFaces = oldMesh.faces!![f]
             var p = 0
             while (p < oldFaces.size) {
-                faces[newFacesInd]!![0] = getPointNewIndex(oldFaces[p])
-                faces[newFacesInd]!![1] =
+                faces[newFacesInd][0] = getPointNewIndex(oldFaces[p])
+                faces[newFacesInd][1] =
                     getTexCoordNewIndex(faceInfo, oldFaces[p], oldFaces[p + 1])
                 newFacesInd++
                 p += 2
             }
         }
-        return SymbolicPolygonMesh(points!!, texCoords, faces.requireNoNulls(), faceSmoothingGroups)
+        return SymbolicPolygonMesh(points!!, texCoords, faces, faceSmoothingGroups)
     }
 
     private fun addEdge(edge: Edge, faceInfo: FaceInfo) {
@@ -144,15 +144,13 @@ class SymbolicSubdivisionBuilder(
         edgeInfos = HashMap(
             oldMesh.faces!!.size * 2
         )
-        faceInfos = arrayOfNulls(oldMesh.faces!!.size)
         pointInfos = arrayOfNulls(oldMesh.points.numPoints)
-        for (f in oldMesh.faces!!.indices) {
+        faceInfos = Array(oldMesh.faces!!.size) {f ->
             val face = oldMesh.faces!![f]
             val n = face.size / 2
             val faceInfo = FaceInfo(n)
-            faceInfos[f] = faceInfo
             if (n < 3) {
-                continue
+                return@Array faceInfo
             }
             var from = face[(n - 1) * 2]
             var texFrom = face[(n - 1) * 2 + 1]
@@ -184,6 +182,7 @@ class SymbolicSubdivisionBuilder(
                 texFrom = texTo
             }
             faceInfo.texCoord = Point2D(u, v)
+            faceInfo
         }
         points = SubdividedPointArray(
             oldMesh.points,
@@ -197,7 +196,7 @@ class SymbolicSubdivisionBuilder(
             for (i in 0 until n) {
                 faceVertices[i] = face[i * 2]
             }
-            faceInfos[f]!!.facePoint = points!!.addFacePoint(faceVertices)
+            faceInfos[f].facePoint = points!!.addFacePoint(faceVertices)
         }
         for (edgeInfo in edgeInfos!!.values) {
             val edgeFacePoints = IntArray(edgeInfo.faces.size)

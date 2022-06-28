@@ -59,11 +59,11 @@ class LeapMotionCase {
         return arcCyls.hull()
     }
 
-    private fun deviceOutline(): CSG? {
+    private fun deviceOutline(): CSG {
         return outline(w, h, d, arc, 0.0, arcRes)
     }
 
-    private fun deviceInnerOutline(): CSG? {
+    private fun deviceInnerOutline(): CSG {
         return outline(w, h, d, arc, -deviceMetalThickness, arcRes)
     }
 
@@ -72,7 +72,7 @@ class LeapMotionCase {
         val cyl = Cylinder(grabSpace / 2.0, h + caseThickness * 2, arcRes).toCSG()
             .transformed(
                 Transform.unity().rotX(90.0).translate(
-                    outline!!.bounds.bounds.x() / 2.0 - caseThickness,
+                    outline.bounds.bounds.x() / 2.0 - caseThickness,
                     -d,
                     -caseThickness
                 ).scaleX(3.0)
@@ -107,11 +107,11 @@ class LeapMotionCase {
             .transformed(Transform.unity().translateX(-pegWidth / 2.0))
     }
 
-    private fun fullCase(): CSG? {
+    private fun fullCase(): CSG {
         var caseOutline = caseOutline()
 
         // add protection space
-        caseOutline = caseOutline!!.difference(
+        caseOutline = caseOutline.difference(
             deviceInnerOutline()!!.transformed(
                 Transform.unity().translate(0.0, 0.0, caseThickness / 2.0)
             )
@@ -130,8 +130,8 @@ class LeapMotionCase {
             .toCSG()
             .transformed(Transform.unity().rotX(90.0).translate(pos, -d, -caseThickness))
         caseOutline = caseOutline!!.difference(cyl1)
-        val peg1 = pegToFront()!!.transformed(Transform.unity().translate(pos, h, 0.0))
-        val peg2 = pegToBack()!!.transformed(Transform.unity().translate(pos + pegWidth, 0.0, 0.0))
+        val peg1 = pegToFront().transformed(Transform.unity().translate(pos, h, 0.0))
+        val peg2 = pegToBack().transformed(Transform.unity().translate(pos + pegWidth, 0.0, 0.0))
         return caseOutline.union(peg1, peg2)
     }
 

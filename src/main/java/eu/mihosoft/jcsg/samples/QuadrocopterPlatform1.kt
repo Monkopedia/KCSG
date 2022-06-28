@@ -44,7 +44,7 @@ class QuadrocopterPlatform {
             armCubeThickness,
             holderPlatformRadius,
             platformThickness
-        )!!.transformed(Transform.unity().translateX(-platformRadius))
+        ).transformed(Transform.unity().translateX(-platformRadius))
         var armHolders = armHolderPrototype.clone()
         for (i in 1..3) {
             armHolders = armHolders.union(
@@ -56,7 +56,7 @@ class QuadrocopterPlatform {
         var cross = Cube(platformRadius * 2, platformBorderThickness, platformThickness).toCSG()
             .transformed(Transform.unity().translateZ(platformThickness / 2.0))
         cross = cross.union(cross.transformed(Transform.unity().rotZ(90.0)))
-        platform = platform!!.union(armHolders, cross)
+        platform = platform.union(armHolders, cross)
         return platform
     }
 
@@ -113,7 +113,7 @@ class QuadrocopterPlatform {
         @JvmStatic
         fun main(args: Array<String>) {
             val result = QuadrocopterPlatform().toCSG()
-            FileUtil.write(Paths.get("quadrocopter-platform.stl"), result!!.toStlString())
+            FileUtil.write(Paths.get("quadrocopter-platform.stl"), result.toStlString())
             result.toObj().toFiles(Paths.get("quadrocopter-platform.obj"))
 
 //        CSG resultNoStructure = new QuadrocopterArm().toCSG();

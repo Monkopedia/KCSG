@@ -95,7 +95,7 @@ internal object DTSweep {
      * @param tcx
      */
     private fun sweep(tcx: DTSweepContext) {
-        val points: List<TriangulationPoint?>?
+        val points: List<TriangulationPoint>?
         var point: TriangulationPoint?
         var node: AdvancingFrontNode
         points = tcx.points
@@ -717,7 +717,7 @@ internal object DTSweep {
             }
         } else {
             newP = nextFlipPoint(ep, eq, ot, op)
-            flipScanEdgeEvent(tcx, ep, eq, t, ot, newP!!)
+            flipScanEdgeEvent(tcx, ep, eq, t, ot, newP)
             edgeEvent(tcx, ep, eq, t, p)
         }
     }
@@ -842,7 +842,7 @@ internal object DTSweep {
             // so it will have to wait.
         } else {
             newP = nextFlipPoint(ep, eq, ot, op)
-            flipScanEdgeEvent(tcx, ep, eq, flipTriangle, ot, newP!!)
+            flipScanEdgeEvent(tcx, ep, eq, flipTriangle, ot, newP)
         }
     }
 

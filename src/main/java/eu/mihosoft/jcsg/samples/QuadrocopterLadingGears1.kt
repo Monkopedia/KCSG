@@ -69,7 +69,7 @@ class QuadrocopterLadingGears {
         fun main(args: Array<String>) {
             val moebiusStairs = QuadrocopterLadingGears()
             val csg = moebiusStairs.toCSG()
-            FileUtil.write(Paths.get("quadcopter-landing-gear.stl"), csg!!.toStlString())
+            FileUtil.write(Paths.get("quadcopter-landing-gear.stl"), csg.toStlString())
             csg.toObj().toFiles(Paths.get("quadcopter-landing-gear.obj"))
         }
     }

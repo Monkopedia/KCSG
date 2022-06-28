@@ -45,10 +45,10 @@ class SmoothingGroups(
     private val visited: BitSet = BitSet(faces.size)
     private val notVisited: BitSet
     private val q: Queue<Int>
-    private lateinit var faceEdges: Array<Array<Edge?>?>
+    private lateinit var faceEdges: Array<Array<Edge>?>
 
     // edge -> [faces]
-    private fun getNextConnectedComponent(adjacentFaces: Map<Edge?, List<Int>>): List<Int> {
+    private fun getNextConnectedComponent(adjacentFaces: Map<Edge, List<Int>>): List<Int> {
         val index = notVisited.previousSetBit(faces.size - 1)
         q.add(index)
         visited.set(index)
@@ -82,24 +82,25 @@ class SmoothingGroups(
             val face = faces[f]
             val faceNormal = faceNormals[f]
             val n = face.size / 2
-            faceEdges[f] = arrayOfNulls(n)
+            val arr = arrayOfNulls<Edge>(n)
             var from = face[(n - 1) * 2]
             var fromNormal = faceNormal[n - 1]
             for (i in 0 until n) {
                 val to = face[i * 2]
                 val toNormal = faceNormal[i]
                 val edge: Edge = Edge(from, to, fromNormal, toNormal)
-                faceEdges[f]!![i] = edge
+                arr[i] = edge
                 from = to
                 fromNormal = toNormal
             }
+            faceEdges[f] = arr.requireNoNulls()
         }
     }
 
     // just skip them
-    private val adjacentFaces: Map<Edge?, MutableList<Int>>
+    private val adjacentFaces: Map<Edge, MutableList<Int>>
         private get() {
-            val adjacentFaces: MutableMap<Edge?, MutableList<Int>> = HashMap()
+            val adjacentFaces: MutableMap<Edge, MutableList<Int>> = HashMap()
             for (f in faceEdges.indices) {
                 for (edge in faceEdges[f]!!) {
                     if (!adjacentFaces.containsKey(edge)) {
@@ -108,7 +109,7 @@ class SmoothingGroups(
                     adjacentFaces[edge]!!.add(f)
                 }
             }
-            val it: MutableIterator<Map.Entry<Edge?, List<Int>>> = adjacentFaces.entries.iterator()
+            val it: MutableIterator<Map.Entry<Edge, List<Int>>> = adjacentFaces.entries.iterator()
             while (it.hasNext()) {
                 val (_, value) = it.next()
                 if (value.size != 2) {
@@ -123,8 +124,8 @@ class SmoothingGroups(
         return Vec3f(normals[index * 3], normals[index * 3 + 1], normals[index * 3 + 2])
     }
 
-    private fun getSmoothEdges(adjacentFaces: Map<Edge?, MutableList<Int>>): Map<Edge?, List<Int>> {
-        val smoothEdges: MutableMap<Edge?, List<Int>> = HashMap()
+    private fun getSmoothEdges(adjacentFaces: Map<Edge, MutableList<Int>>): Map<Edge, List<Int>> {
+        val smoothEdges: MutableMap<Edge, List<Int>> = HashMap()
         for (face in faceEdges.indices) {
             for (edge in faceEdges[face]!!) {
                 val adjFaces: List<Int>? = adjacentFaces[edge]
@@ -140,8 +141,8 @@ class SmoothingGroups(
                     println(listOf(*adjFaceEdges))
                     continue
                 }
-                val adjEdge = adjFaceEdges[adjEdgeInd]!!
-                if (edge!!.isSmooth(adjEdge)) {
+                val adjEdge = adjFaceEdges[adjEdgeInd]
+                if (edge.isSmooth(adjEdge)) {
                     if (!smoothEdges.containsKey(edge)) {
                         smoothEdges[edge] = adjFaces
                     }
@@ -151,7 +152,7 @@ class SmoothingGroups(
         return smoothEdges
     }
 
-    private fun calcConnComponents(smoothEdges: Map<Edge?, List<Int>>): List<List<Int>> {
+    private fun calcConnComponents(smoothEdges: Map<Edge, List<Int>>): List<List<Int>> {
         //System.out.println("smoothEdges = " + smoothEdges);
         val groups: MutableList<List<Int>> = ArrayList()
         while (hasNextConnectedComponent()) {

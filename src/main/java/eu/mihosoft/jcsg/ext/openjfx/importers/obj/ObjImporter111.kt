@@ -80,7 +80,7 @@ class ObjImporter {
             return _meshes.keys
         }
 
-    private val _meshes: MutableMap<String, TriangleMesh?> = HashMap()
+    private val _meshes: MutableMap<String, TriangleMesh> = HashMap()
     private val _materials: MutableMap<String, Material> = HashMap()
     private val _materialLibrary: MutableList<Map<String, Material>> = ArrayList()
     private var _objFileUrl: String? = null
@@ -99,9 +99,9 @@ class ObjImporter {
         read(obj.objStream, obj.mtlStream)
     }
 
-    val mesh: TriangleMesh?
+    val mesh: TriangleMesh
         get() = _meshes.values.iterator().next()
-    val meshCollection: Collection<TriangleMesh?>
+    val meshCollection: Collection<TriangleMesh>
         get() = _meshes.values
     val materialCollection: Collection<Material>
         get() = _materials.values

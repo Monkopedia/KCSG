@@ -20,10 +20,10 @@ class TriMail {
         val tile = PolyMailTile().setNumEdges(numEdges).setPinThickness(2.1).setHingeHoleScale(1.2)
             .setConeLength(1.8)
         val hingeHoleScale = tile.hingeHoleScale
-        val malePart = tile.setMale().toCSG()!!.transformed(
+        val malePart = tile.setMale().toCSG().transformed(
             Transform.unity().rotZ(360.0 / numEdges * 0.75)
         )
-        val femalePart = tile.setFemale().toCSG()!!.transformed(
+        val femalePart = tile.setFemale().toCSG().transformed(
             Transform.unity().rotZ(360.0 / numEdges * 0.25)
         )
         var result: CSG? = null

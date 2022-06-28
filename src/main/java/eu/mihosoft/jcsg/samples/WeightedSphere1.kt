@@ -73,9 +73,9 @@ class WeightedSphere {
         fun main(args: Array<String>) {
             FileUtil.write(
                 Paths.get("rounded-cube-mod.stl"),
-                WeightedSphere().toCSG()!!.toStlString()
+                WeightedSphere().toCSG().toStlString()
             )
-            WeightedSphere().toCSG()!!.toObj().toFiles(Paths.get("rounded-cube-mod.obj"))
+            WeightedSphere().toCSG().toObj().toFiles(Paths.get("rounded-cube-mod.obj"))
         }
     }
 }

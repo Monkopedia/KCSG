@@ -47,7 +47,7 @@ class Egg {
         @Throws(IOException::class)
         @JvmStatic
         fun main(args: Array<String>) {
-            FileUtil.write(Paths.get("egg.stl"), Egg().toCSG()!!.toStlString())
+            FileUtil.write(Paths.get("egg.stl"), Egg().toCSG().toStlString())
         }
     }
 }

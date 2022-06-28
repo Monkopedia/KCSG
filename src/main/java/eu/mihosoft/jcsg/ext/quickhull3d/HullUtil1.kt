@@ -25,7 +25,7 @@ class HullUtil private constructor() {
             hull.triangulate()
             val faces = hull.getFaces()
             val polygons: MutableList<Polygon> = ArrayList()
-            val vertices: MutableList<Vector3d?> = ArrayList()
+            val vertices: MutableList<Vector3d> = ArrayList()
             for (verts in faces) {
                 for (i in verts!!) {
                     vertices.add(points[hull.getVertexPointIndices()[i]])

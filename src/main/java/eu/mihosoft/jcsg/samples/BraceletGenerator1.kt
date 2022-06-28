@@ -47,6 +47,6 @@ object BraceletGenerator {
     @Throws(IOException::class)
     @JvmStatic
     fun main(args: Array<String>) {
-        FileUtil.write(Paths.get("sample.stl"), toCSG()!!.toStlString())
+        FileUtil.write(Paths.get("sample.stl"), toCSG().toStlString())
     }
 }

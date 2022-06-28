@@ -33,7 +33,7 @@ class SquareMail {
             .setConeLength(coneLength)
         hingePrototype.jointConnectionThickness = hingePrototype.jointRadius * 2
         var hinge1 = hingePrototype.toCSG()
-        val hingeBounds = hinge1!!.bounds.bounds
+        val hingeBounds = hinge1.bounds.bounds
         hinge1 = hinge1.intersect(
             Cube(
                 hingeBounds.x(),

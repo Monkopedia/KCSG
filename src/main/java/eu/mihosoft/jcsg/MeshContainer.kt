@@ -22,7 +22,7 @@ import java.util.*
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 class MeshContainer {
-    private val meshes: List<Mesh?>
+    private val meshes: List<Mesh>
     private val materials: MutableList<Material>
     private val width: Double
     private val height: Double
@@ -32,13 +32,13 @@ class MeshContainer {
     private val viewContainer: Pane? = null
     private val subScene: SubScene? = null
 
-    internal constructor(min: Vector3d, max: Vector3d, vararg meshes: Mesh?) : this(
+    internal constructor(min: Vector3d, max: Vector3d, vararg meshes: Mesh) : this(
         min,
         max,
-        listOf<Mesh?>(*meshes)
+        listOf<Mesh>(*meshes)
     )
 
-    internal constructor(min: Vector3d, max: Vector3d, meshes: List<Mesh?>) {
+    internal constructor(min: Vector3d, max: Vector3d, meshes: List<Mesh>) {
         this.meshes = meshes
         materials = ArrayList()
         bounds = Bounds(min, max)
@@ -54,7 +54,7 @@ class MeshContainer {
     internal constructor(
         min: Vector3d,
         max: Vector3d,
-        meshes: List<Mesh?>,
+        meshes: List<Mesh>,
         materials: MutableList<Material>
     ) {
         this.meshes = meshes
@@ -90,7 +90,7 @@ class MeshContainer {
     /**
      * @return the mesh
      */
-    fun getMeshes(): List<Mesh?> {
+    fun getMeshes(): List<Mesh> {
         return meshes
     }
 

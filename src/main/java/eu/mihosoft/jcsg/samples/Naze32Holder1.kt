@@ -42,7 +42,7 @@ class Naze32Holder {
         val cyl4 = screCylPrototype.transformed(
             Transform.unity().translateX(-wInner / 2.0).translateY(hInner / 2.0)
         )
-        return base!!.union( /*peg1, peg2, */cyl1, cyl2, cyl3, cyl4)
+        return base.union( /*peg1, peg2, */cyl1, cyl2, cyl3, cyl4)
     }
 
     private fun basePlatform(
@@ -75,9 +75,9 @@ class Naze32Holder {
         fun main(args: Array<String>) {
             FileUtil.write(
                 Paths.get("naze32-mount.stl"),
-                Naze32Holder().toCSG()!!.toStlString()
+                Naze32Holder().toCSG().toStlString()
             )
-            Naze32Holder().toCSG()!!.toObj().toFiles(Paths.get("naze32-mount.obj"))
+            Naze32Holder().toCSG().toObj().toFiles(Paths.get("naze32-mount.obj"))
         }
     }
 }

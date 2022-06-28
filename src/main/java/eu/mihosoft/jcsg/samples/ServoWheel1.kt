@@ -62,15 +62,15 @@ class ServoWheel {
                 minorArmThickness,
                 minorArmLength,
                 minorArmHeight
-            )!!.transformed(Transform.unity().rotZ(dt * i))
+            ).transformed(Transform.unity().rotZ(dt * i))
             arms = arms?.union(arm) ?: arm
         }
         var sHead = servoHead.servoHeadFemale()
         val screwHole = Cylinder(headScrewDiameter / 2.0, ringThickness * 2, 16).toCSG()
         if (arms != null) {
-            sHead = sHead!!.union(arms)
+            sHead = sHead.union(arms)
         }
-        sHead = sHead!!.difference(screwHole)
+        sHead = sHead.difference(screwHole)
         val outerWheelCylinder = Cylinder(radius, wheelThickness, 64).toCSG()
         val innerWheelCylinder = Cylinder(radius - ringThickness, wheelThickness, 64).toCSG()
         val ring = outerWheelCylinder.difference(innerWheelCylinder)
@@ -121,7 +121,7 @@ class ServoWheel {
             println("RUNNING")
             FileUtil.write(
                 Paths.get("servo-wheel.stl"),
-                ServoWheel().toCSG()!!.toStlString()
+                ServoWheel().toCSG().toStlString()
             )
         }
     }

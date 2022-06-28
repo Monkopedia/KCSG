@@ -62,7 +62,7 @@ class ServoToServoConnector {
 //        FileUtil.write(Paths.get("sample.stl"), new ServoHead().servoHeadFemale().transformed(Transform.unity().scale(1.0)).toStlString());
             FileUtil.write(
                 Paths.get("sample.stl"),
-                servo2ServoConnector.toCSG()!!.toStlString()
+                servo2ServoConnector.toCSG().toStlString()
             )
         }
     }

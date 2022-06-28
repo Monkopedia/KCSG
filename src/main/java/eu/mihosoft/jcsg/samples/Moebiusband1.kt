@@ -29,7 +29,7 @@ class Moebiusband {
             Vector3d.xy(-width / 2, height / 2)
         )
         val originalFacets: MutableList<CSG> = ArrayList()
-        val facets: MutableList<CSG?> = ArrayList()
+        val facets: MutableList<CSG> = ArrayList()
         var prev: CSG? = null
         for (i in 0..9) {
             val t = Transform.unity().translateZ(2.0).rotZ(i.toDouble())
@@ -43,13 +43,13 @@ class Moebiusband {
         }
         var result = facets[0]
         for (i in 1 until facets.size) {
-            result = result!!.union(facets[i])
+            result = result.union(facets[i])
         }
         var originalResult: CSG? = originalFacets[0]
         for (i in 1 until facets.size) {
             originalResult = originalResult!!.union(originalFacets[i])
         }
-        return result!!.union(originalResult!!.transformed(Transform.unity().translateX(width * 2)))
+        return result.union(originalResult!!.transformed(Transform.unity().translateX(width * 2)))
     }
 
     companion object {
@@ -59,7 +59,7 @@ class Moebiusband {
             println("RUNNING")
             FileUtil.write(
                 Paths.get("möbiusband.stl"),
-                Moebiusband().toCSG()!!.toStlString()
+                Moebiusband().toCSG().toStlString()
             )
         }
     }

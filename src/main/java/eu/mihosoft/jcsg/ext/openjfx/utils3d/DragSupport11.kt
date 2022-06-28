@@ -49,7 +49,7 @@ class DragSupport @JvmOverloads constructor(
     modifier: KeyCode,
     mouseButton: MouseButton,
     orientation: Orientation,
-    property: Property<Number?>,
+    property: Property<Number>,
     factor: Double = 1.0
 ) {
     private var keyboardEventHandler: EventHandler<KeyEvent>
@@ -72,7 +72,7 @@ class DragSupport @JvmOverloads constructor(
         target: Scene,
         modifier: KeyCode,
         orientation: Orientation,
-        property: Property<Number?>
+        property: Property<Number>
     ) : this(target, modifier, MouseButton.PRIMARY, orientation, property, 1.0)
 
     /**
@@ -98,7 +98,7 @@ class DragSupport @JvmOverloads constructor(
         target: Scene,
         modifier: KeyCode,
         orientation: Orientation,
-        property: Property<Number?>,
+        property: Property<Number>,
         factor: Double
     ) : this(target, modifier, MouseButton.PRIMARY, orientation, property, factor)
 

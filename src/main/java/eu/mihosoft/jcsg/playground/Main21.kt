@@ -322,8 +322,8 @@ object Main2 {
                             while (i < p1.vertices.size - 1) {
 
                                 //System.out.println("i,j : " + i + ", " + (i+1%p1.vertices.size()));
-                                val e1 = p1.vertices[i]!!.pos
-                                val e2 = p1.vertices[i + 1 % p1.vertices.size]!!.pos
+                                val e1 = p1.vertices[i].pos
+                                val e2 = p1.vertices[i + 1 % p1.vertices.size].pos
                                 val iRes = calculateLineLineIntersection(e1, e2, s1, s2)
                                 if (iRes.type == LineIntersectionResult.IntersectionType.INTERSECTING &&
                                     p1.contains(iRes.segmentPoint1.get())
@@ -336,8 +336,8 @@ object Main2 {
                         var numIntersectionsPoly2 = 0
                         var i = 0
                         while (i < p2.vertices.size - 1) {
-                            val e1 = p2.vertices[i]!!.pos
-                            val e2 = p2.vertices[i + 1 % p2.vertices.size]!!.pos
+                            val e1 = p2.vertices[i].pos
+                            val e2 = p2.vertices[i + 1 % p2.vertices.size].pos
                             val iRes = calculateLineLineIntersection(e1, e2, s1, s2)
                             if (iRes.type == LineIntersectionResult.IntersectionType.INTERSECTING &&
                                 p2.contains(iRes.segmentPoint1.get())
@@ -361,8 +361,8 @@ object Main2 {
 
     private fun cutPolygonWithPlaneAndTypes(
         polygon: Polygon, cutPlane: Plane,
-        vertexTypes: IntArray, frontPolygon: MutableList<Vector3d?>,
-        backPolygon: MutableList<Vector3d?>, onPlane: MutableList<Vector3d>
+        vertexTypes: IntArray, frontPolygon: MutableList<Vector3d>,
+        backPolygon: MutableList<Vector3d>, onPlane: MutableList<Vector3d>
     ) {
 
 //        System.out.println("polygon: \n" + polygon.toStlString());
@@ -376,19 +376,19 @@ object Main2 {
             val vi = polygon.vertices[i]
             val vj = polygon.vertices[j]
             if (ti == 1 /*front*/) {
-                frontPolygon.add(vi!!.pos)
+                frontPolygon.add(vi.pos)
             }
             if (ti == -1 /*back*/) {
-                backPolygon.add(vi!!.pos)
+                backPolygon.add(vi.pos)
             }
             if (ti == 0) {
-                frontPolygon.add(vi!!.pos)
+                frontPolygon.add(vi.pos)
                 backPolygon.add(vi.pos)
                 //                segmentPoints.add(vi.pos);
             }
             if (ti != tj && ti != 0 && tj != 0 /*spanning*/) {
                 val pI = computePlaneIntersection(
-                    cutPlane, vi!!.pos, vj!!.pos.minus(
+                    cutPlane, vi.pos, vj.pos.minus(
                         vi.pos
                     ), EPS
                 )
@@ -474,7 +474,7 @@ object Main2 {
         var typesEqual = true
         val types = IntArray(p.vertices.size)
         for (i in p.vertices.indices) {
-            types[i] = plane.compare(p.vertices[i]!!.pos, EPS)
+            types[i] = plane.compare(p.vertices[i].pos, EPS)
             //            System.out.println("type " + i + ": " + types[i]);
             if (i > 0 && typesEqual) {
                 typesEqual = typesEqual && types[i] == types[i - 1]
@@ -485,8 +485,8 @@ object Main2 {
         if (typesEqual) {
             return emptyList()
         }
-        val front: MutableList<Vector3d?> = ArrayList()
-        val back: MutableList<Vector3d?> = ArrayList()
+        val front: MutableList<Vector3d> = ArrayList()
+        val back: MutableList<Vector3d> = ArrayList()
         val on: MutableList<Vector3d> = ArrayList()
         cutPolygonWithPlaneAndTypes(p, plane, types, front, back, on)
         var checkResult = check == null

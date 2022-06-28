@@ -141,7 +141,7 @@ class CSG private constructor() : Cloneable {
      *
      * @return union of this csg and the specified csg
      */
-    fun union(csg: CSG?): CSG {
+    fun union(csg: CSG): CSG {
         return when (getOptType()) {
             OptType.CSG_BOUND -> _unionCSGBoundsOpt(csg)
             OptType.POLYGON_BOUND -> _unionPolygonBoundsOpt(csg)
@@ -194,7 +194,7 @@ class CSG private constructor() : Cloneable {
      *
      * @return union of this csg and the specified csgs
      */
-    fun union(csgs: List<CSG?>): CSG {
+    fun union(csgs: List<CSG>): CSG {
         var result = this
         for (csg in csgs) {
             result = result.union(csg)
@@ -225,7 +225,7 @@ class CSG private constructor() : Cloneable {
      *
      * @return union of this csg and the specified csgs
      */
-    fun union(vararg csgs: CSG?): CSG {
+    fun union(vararg csgs: CSG): CSG {
         return union(listOf(*csgs))
     }
 
@@ -369,13 +369,13 @@ class CSG private constructor() : Cloneable {
      * @param csgs other csgs
      * @return difference of this csg and the specified csgs
      */
-    fun difference(csgs: List<CSG?>): CSG {
+    fun difference(csgs: List<CSG>): CSG {
         if (csgs.isEmpty()) {
             return clone()
         }
         var csgsUnion = csgs[0]
         for (i in 1 until csgs.size) {
-            csgsUnion = csgsUnion!!.union(csgs[i])
+            csgsUnion = csgsUnion.union(csgs[i])
         }
         return difference(csgsUnion)
     }
@@ -401,7 +401,7 @@ class CSG private constructor() : Cloneable {
      * @param csgs other csgs
      * @return difference of this csg and the specified csgs
      */
-    fun difference(vararg csgs: CSG?): CSG {
+    fun difference(vararg csgs: CSG): CSG {
         return difference(listOf(*csgs))
     }
 
@@ -621,17 +621,17 @@ class CSG private constructor() : Cloneable {
             var materialName: String
         )
 
-        val vertices: MutableList<Vertex?> = ArrayList()
+        val vertices: MutableList<Vertex> = ArrayList()
         val indices: MutableList<PolygonStruct> = ArrayList()
         objSb.append("\n# Vertices\n")
         val materialNames: MutableMap<PropertyStorage?, Int> = HashMap()
         var materialIndex = 0
         for (p in _polygons!!) {
             val polyIndices: MutableList<Int> = ArrayList()
-            p.vertices.stream().forEach { v: Vertex? ->
+            p.vertices.stream().forEach { v: Vertex ->
                 if (!vertices.contains(v)) {
                     vertices.add(v)
-                    v!!.toObjString(objSb)
+                    v.toObjString(objSb)
                     polyIndices.add(vertices.size)
                 } else {
                     polyIndices.add(vertices.indexOf(v) + 1)
@@ -653,7 +653,7 @@ class CSG private constructor() : Cloneable {
         for (ps in indices) {
 
             // add mtl info
-            ps.storage!!.getValue<Any?>("material:color").ifPresent { v: Any? ->
+            ps.storage!!.getValue<Any>("material:color").ifPresent { v: Any ->
                 objSb.append("usemtl ").append(ps.materialName).append("\n")
             }
 
@@ -679,9 +679,9 @@ class CSG private constructor() : Cloneable {
         materialNames.keys.forEach(
             Consumer { s: PropertyStorage? ->
                 if (s!!.contains("material:color")) {
-                    mtlSb.append("newmtl material-").append(s.getValue<Any?>("material:name").get())
+                    mtlSb.append("newmtl material-").append(s.getValue<Any>("material:name").get())
                         .append("\n")
-                    mtlSb.append("Kd ").append(s.getValue<Any?>("material:color").get()).append("\n")
+                    mtlSb.append("Kd ").append(s.getValue<Any>("material:color").get()).append("\n")
                 }
             }
         )
@@ -703,15 +703,15 @@ class CSG private constructor() : Cloneable {
             var materialName: String
         )
 
-        val vertices: MutableList<Vertex?> = ArrayList()
+        val vertices: MutableList<Vertex> = ArrayList()
         val indices: List<PolygonStruct> = ArrayList()
         sb.append("\n# Vertices\n")
         for (p in _polygons!!) {
             val polyIndices: MutableList<Int> = ArrayList()
-            p.vertices.stream().forEach { v: Vertex? ->
+            p.vertices.stream().forEach { v: Vertex ->
                 if (!vertices.contains(v)) {
                     vertices.add(v)
-                    v!!.toObjString(sb)
+                    v.toObjString(sb)
                     polyIndices.add(vertices.size)
                 } else {
                     polyIndices.add(vertices.indexOf(v) + 1)
@@ -745,7 +745,7 @@ class CSG private constructor() : Cloneable {
         return toObjString(sb).toString()
     }
 
-    fun weighted(f: WeightFunction): CSG? {
+    fun weighted(f: WeightFunction): CSG {
         return Modifier(f).modified(this)
     }
 
@@ -809,7 +809,7 @@ class CSG private constructor() : Cloneable {
                 // multiple triangles:
                 val firstVertex = p.vertices[0]
                 for (i in 0 until p.vertices.size - 2) {
-                    if (firstVertex!!.pos.x() < minX) {
+                    if (firstVertex.pos.x() < minX) {
                         minX = firstVertex.pos.x()
                     }
                     if (firstVertex.pos.y() < minY) {
@@ -835,7 +835,7 @@ class CSG private constructor() : Cloneable {
                     mesh.texCoords.addAll(0f) // texture (not covered)
                     mesh.texCoords.addAll(0f)
                     val secondVertex = p.vertices[i + 1]
-                    if (secondVertex!!.pos.x() < minX) {
+                    if (secondVertex.pos.x() < minX) {
                         minX = secondVertex.pos.x()
                     }
                     if (secondVertex.pos.y() < minY) {
@@ -862,7 +862,7 @@ class CSG private constructor() : Cloneable {
                     mesh.texCoords.addAll(0f)
                     val thirdVertex = p.vertices[i + 2]
                     mesh.points.addAll(
-                        thirdVertex!!.pos.x().toFloat(),
+                        thirdVertex.pos.x().toFloat(),
                         thirdVertex.pos.y().toFloat(),
                         thirdVertex.pos.z().toFloat()
                     )
@@ -914,7 +914,7 @@ class CSG private constructor() : Cloneable {
             if (_polygons!!.isEmpty()) {
                 return Bounds(Vector3d.ZERO, Vector3d.ZERO)
             }
-            val initial = _polygons!![0].vertices[0]!!.pos
+            val initial = _polygons!![0].vertices[0].pos
             var minX = initial.x()
             var minY = initial.y()
             var minZ = initial.z()
@@ -924,7 +924,7 @@ class CSG private constructor() : Cloneable {
             for (p in polygons!!) {
                 for (i in p.vertices.indices) {
                     val vert = p.vertices[i]
-                    if (vert!!.pos.x() < minX) {
+                    if (vert.pos.x() < minX) {
                         minX = vert.pos.x()
                     }
                     if (vert.pos.y() < minY) {
@@ -995,9 +995,9 @@ class CSG private constructor() : Cloneable {
 //            triangles.stream()
 //        }
         var volume = triangleStream.mapToDouble { tri: Polygon? ->
-            val p1 = tri!!.vertices[0]!!.pos
-            val p2 = tri.vertices[1]!!.pos
-            val p3 = tri.vertices[2]!!.pos
+            val p1 = tri!!.vertices[0].pos
+            val p2 = tri.vertices[1].pos
+            val p3 = tri.vertices[2].pos
             p1.dot(p2.crossed(p3)) / 6.0
         }.sum()
         volume = abs(volume)
