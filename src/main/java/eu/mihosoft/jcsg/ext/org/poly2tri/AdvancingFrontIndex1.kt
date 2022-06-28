@@ -62,11 +62,11 @@ package eu.mihosoft.jcsg.ext.org.poly2tri
 internal class AdvancingFrontIndex<A>(min: Double, max: Double, depth: Int) {
     var _min = 0.0
     var _max = 0.0
-    var _root: IndexNode<A>?
+    private var _root: IndexNode<A>?
     private fun createIndex(n: Int): IndexNode<A>? {
         var node: IndexNode<A>? = null
         if (n > 0) {
-            node = IndexNode<A>()
+            node = IndexNode()
             node.bigger = createIndex(n - 1)
             node.smaller = createIndex(n - 1)
         }

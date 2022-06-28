@@ -16,7 +16,7 @@ import java.nio.file.Paths
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 class Sabine {
-    fun toCSG(): CSG? {
+    fun toCSG(): CSG {
         val w = 16.0
         val h = 9.0
         val offset = 1.5
@@ -25,7 +25,7 @@ class Sabine {
         val fractD = 0.25
         val cube = Cube(w, h, 1.0).toCSG()
         val beam = Cylinder(1.0, 10.0, 32).toCSG()
-        val beam1 = beam!!.weighted(ZModifier())!!
+        val beam1 = beam.weighted(ZModifier())!!
             .transformed(Transform.unity().scale(0.5, 0.5, 1.0))
             .weighted(UnityModifier())!!
             .transformed(Transform.unity().translate(w / 2.0 - offset, h / 2.0 - offset, 0.0))
@@ -46,27 +46,23 @@ class Sabine {
                 0.1 + fractW * Math.random(),
                 fractL * Math.random(),
                 fractD
-            ).noCenter().toCSG()!!.transformed(Transform.unity().rotZ(-angleZ).rotX(-angleX))
+            ).noCenter().toCSG().transformed(Transform.unity().rotZ(-angleZ).rotX(-angleX))
             val x = -w / 2.0 + Math.random() * (w - 2)
             val y = -h / 2.0 + Math.random() * (h - 2)
             fracture1 = fracture1.transformed(Transform.unity().translate(x, y, 0.0))
-            fractures = if (fractures == null) {
-                fracture1
-            } else {
-                fractures.union(fracture1)
-            }
+            fractures = fractures?.union(fracture1) ?: fracture1
         }
-        val diffCube = Cube(w, h, 11.0).noCenter().toCSG()!!
+        val diffCube = Cube(w, h, 11.0).noCenter().toCSG()
             .transformed(Transform.unity().translate(-w / 2.0, -h / 2.0, 0.0))
         fractures = fractures!!.intersect(diffCube)
-        return cube!!.union(beam1, beam2, beam3, beam4, fractures)
+        return cube.union(beam1, beam2, beam3, beam4, fractures)
     }
 
     companion object {
         @Throws(IOException::class)
         @JvmStatic
         fun main(args: Array<String>) {
-            FileUtil.Companion.write(Paths.get("sabine.stl"), Sabine().toCSG()!!.toStlString())
+            FileUtil.write(Paths.get("sabine.stl"), Sabine().toCSG()!!.toStlString())
         }
     }
 }

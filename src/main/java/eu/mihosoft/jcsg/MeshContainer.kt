@@ -35,7 +35,7 @@ class MeshContainer {
     internal constructor(min: Vector3d, max: Vector3d, vararg meshes: Mesh?) : this(
         min,
         max,
-        Arrays.asList<Mesh?>(*meshes)
+        listOf<Mesh?>(*meshes)
     )
 
     internal constructor(min: Vector3d, max: Vector3d, meshes: List<Mesh?>) {

@@ -62,12 +62,12 @@ import java.util.*
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */internal class Polygon : Triangulatable {
-    protected var _points = ArrayList<TriangulationPoint>()
-    protected var _steinerPoints: ArrayList<TriangulationPoint>? = null
-    protected var _holes: ArrayList<Polygon>? = null
-    protected var m_triangles: MutableList<DelaunayTriangle>? = null
+    private var _points = ArrayList<TriangulationPoint>()
+    private var _steinerPoints: ArrayList<TriangulationPoint>? = null
+    private var _holes: ArrayList<Polygon>? = null
+    private var m_triangles: MutableList<DelaunayTriangle>? = null
     var point: PolygonPoint? = null
-        protected set
+        private set
 
     /**
      * To create a polygon we need atleast 3 separate points
@@ -108,9 +108,9 @@ import java.util.*
      *
      * @param points
      */
-    constructor(points: Array<PolygonPoint>) : this(Arrays.asList<PolygonPoint>(*points))
+    constructor(points: Array<PolygonPoint>) : this(mutableListOf<PolygonPoint>(*points))
 
-    override val triangulationMode: TriangulationMode?
+    override val triangulationMode: TriangulationMode
         get() = TriangulationMode.POLYGON
 
     fun pointCount(): Int {
@@ -176,7 +176,6 @@ import java.util.*
     }
 
     fun addPoints(list: List<PolygonPoint>) {
-        val first: PolygonPoint?
         for (p in list) {
             p.previous = point
             if (point != null) {
@@ -186,7 +185,7 @@ import java.util.*
             point = p
             _points.add(p)
         }
-        first = _points[0] as PolygonPoint?
+        val first: PolygonPoint? = _points[0] as PolygonPoint?
         point!!.next = first
         first!!.previous = point
     }
@@ -204,10 +203,8 @@ import java.util.*
     }
 
     fun removePoint(p: PolygonPoint) {
-        val next: PolygonPoint?
-        val prev: PolygonPoint?
-        next = p.next
-        prev = p.previous
+        val next: PolygonPoint? = p.next
+        val prev: PolygonPoint? = p.previous
         prev!!.next = next
         next!!.previous = prev
         _points.remove(p)

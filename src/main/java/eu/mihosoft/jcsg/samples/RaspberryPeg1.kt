@@ -39,7 +39,7 @@ import eu.mihosoft.vvecmath.Vector3d
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 object RaspberryPeg {
-    fun peg(): CSG? {
+    fun peg(): CSG {
         //      ol
         //     | |
         //   __    _
@@ -74,7 +74,7 @@ object RaspberryPeg {
 
         // board spacing (small spacing between peg and board, should be < 0.5mm)
         val pw = outer_offset + inner_offset
-        val peg_points: CSG = Extrude.Companion.points(
+        val peg_points: CSG = Extrude.points(
             Vector3d.xyz(0.0, 0.0, peg_depth),
             Vector3d.xy(0.0, 0.0),
             Vector3d.xy(pw, 0.0),

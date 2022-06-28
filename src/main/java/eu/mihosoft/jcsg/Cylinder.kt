@@ -35,6 +35,9 @@ package eu.mihosoft.jcsg
 
 import eu.mihosoft.vvecmath.Vector3d
 import java.util.*
+import kotlin.math.abs
+import kotlin.math.cos
+import kotlin.math.sin
 
 /**
  * A solid cylinder.
@@ -149,7 +152,7 @@ class Cylinder : Primitive {
         val e = getEnd()
         val ray = e.minus(s)
         val axisZ = ray.normalized()
-        val isY = Math.abs(axisZ.y()) > 0.5
+        val isY = abs(axisZ.y()) > 0.5
         val axisX =
             Vector3d.xyz(if (isY) 1.0 else 0.toDouble(), if (!isY) 1.0 else 0.toDouble(), 0.0)
                 .crossed(axisZ).normalized()
@@ -162,7 +165,7 @@ class Cylinder : Primitive {
             val t1 = (i + 1) / numSlices.toDouble()
             polygons.add(
                 Polygon(
-                    Arrays.asList(
+                    listOf(
                         startV,
                         cylPoint(axisX, axisY, axisZ, ray, s, startRadius, 0.0, t0, -1.0),
                         cylPoint(axisX, axisY, axisZ, ray, s, startRadius, 0.0, t1, -1.0)
@@ -172,7 +175,7 @@ class Cylinder : Primitive {
             )
             polygons.add(
                 Polygon(
-                    Arrays.asList(
+                    listOf(
                         cylPoint(axisX, axisY, axisZ, ray, s, startRadius, 0.0, t1, 0.0),
                         cylPoint(axisX, axisY, axisZ, ray, s, startRadius, 0.0, t0, 0.0),
                         cylPoint(axisX, axisY, axisZ, ray, s, endRadius, 1.0, t0, 0.0),
@@ -183,7 +186,7 @@ class Cylinder : Primitive {
             )
             polygons.add(
                 Polygon(
-                    Arrays.asList(
+                    listOf(
                         endV,
                         cylPoint(axisX, axisY, axisZ, ray, s, endRadius, 1.0, t1, 1.0),
                         cylPoint(axisX, axisY, axisZ, ray, s, endRadius, 1.0, t0, 1.0)
@@ -207,16 +210,16 @@ class Cylinder : Primitive {
         normalBlend: Double
     ): Vertex {
         val angle = slice * Math.PI * 2
-        val out = axisX.times(Math.cos(angle)).plus(axisY.times(Math.sin(angle)))
+        val out = axisX.times(cos(angle)).plus(axisY.times(sin(angle)))
         val pos = s.plus(ray.times(stack)).plus(out.times(r))
-        val normal = out.times(1.0 - Math.abs(normalBlend)).plus(axisZ.times(normalBlend))
+        val normal = out.times(1.0 - abs(normalBlend)).plus(axisZ.times(normalBlend))
         return Vertex(pos, normal)
     }
 
     /**
      * @return the start
      */
-    fun getStart(): Vector3d {
+    private fun getStart(): Vector3d {
         return start
     }
 
@@ -230,7 +233,7 @@ class Cylinder : Primitive {
     /**
      * @return the end
      */
-    fun getEnd(): Vector3d {
+    private fun getEnd(): Vector3d {
         return end
     }
 

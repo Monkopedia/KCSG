@@ -188,7 +188,7 @@ class ObjImporter {
                         }
                         data[i] = IntArray(split2.size)
                         for (j in split2.indices) {
-                            if (split2[j].length == 0) {
+                            if (split2[j].isEmpty()) {
                                 data[i]!![j] = 0
                                 if (j == 1) {
                                     uvProvided = false
@@ -272,7 +272,7 @@ class ObjImporter {
                     // setting new material for next mesh
                     val materialName = line.substring("usemtl ".length)
                     for (mm in _materialLibrary) {
-                        val m = mm!![materialName]
+                        val m = mm[materialName]
                         if (m != null) {
                             _material = m
                             break
@@ -387,7 +387,7 @@ class ObjImporter {
                     _faceNormals.size
                 ) as IntegerArrayList
                 ).toIntArray()
-            val smGroups: IntArray = SmoothingGroups.Companion.calcSmoothGroups(
+            val smGroups: IntArray = SmoothingGroups.calcSmoothGroups(
                 mesh,
                 newFaces,
                 newFaceNormals,

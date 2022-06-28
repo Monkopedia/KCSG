@@ -3,7 +3,6 @@ package eu.mihosoft.jcsg.ext.imagej
 import eu.mihosoft.vvecmath.Vector3d
 import java.io.*
 import java.text.ParseException
-import kotlin.experimental.and
 
 /**
  * Fork of

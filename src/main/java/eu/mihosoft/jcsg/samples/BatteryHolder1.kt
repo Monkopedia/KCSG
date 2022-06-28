@@ -11,6 +11,7 @@ import eu.mihosoft.jcsg.FileUtil
 import eu.mihosoft.vvecmath.Vector3d
 import java.io.IOException
 import java.nio.file.Paths
+import kotlin.math.max
 
 /**
  *
@@ -36,11 +37,11 @@ class BatteryHolder {
         val ph = pegHeight
         val po = pegOverlap
         val o = 13.0
-        return Extrude.Companion.points(
+        return Extrude.points(
             Vector3d.xyz(0.0, 0.0, connectorDepth),
             Vector3d.xy(-th, -th),
             Vector3d.xy(smh + pth + ph + o, -th),
-            Vector3d.xy(smh + pth + Math.max(ph / 3, 0.4) + o, 0 + po),
+            Vector3d.xy(smh + pth + max(ph / 3, 0.4) + o, 0 + po),
             Vector3d.xy(smh + pth + o, 0 + po),
             Vector3d.xy(smh + o, 0.0),
             Vector3d.xy(0 + o, 0.0),
@@ -69,7 +70,7 @@ class BatteryHolder {
 
             // save union as stl
 //        FileUtil.write(Paths.get("sample.stl"), new ServoHead().servoHeadFemale().transformed(Transform.unity().scale(1.0)).toStlString());
-            FileUtil.Companion.write(
+            FileUtil.write(
                 Paths.get("battery-holder.stl"),
                 arConnect.toCSG().toStlString()
             )

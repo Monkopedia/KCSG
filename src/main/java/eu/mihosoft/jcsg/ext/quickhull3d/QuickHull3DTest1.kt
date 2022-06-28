@@ -13,6 +13,9 @@
 package eu.mihosoft.jcsg.ext.quickhull3d
 
 import java.util.*
+import kotlin.math.cos
+import kotlin.math.sin
+import kotlin.system.exitProcess
 
 /**
  * Testing class for QuickHull3D. Running the command
@@ -33,7 +36,7 @@ import java.util.*
  * @author John E. Lloyd, Fall 2004
  */
 internal class QuickHull3DTest {
-    var rand: Random
+    private var rand: Random = Random()
 
     /**
      * Returns true if two face index sets are equal,
@@ -43,13 +46,12 @@ internal class QuickHull3DTest {
      * @param indices2 index set for second face
      * @return true if the index sets are equivalent
      */
-    fun faceIndicesEqual(indices1: IntArray, indices2: IntArray?): Boolean {
+    private fun faceIndicesEqual(indices1: IntArray, indices2: IntArray?): Boolean {
         if (indices1.size != indices2!!.size) {
             return false
         }
         val len = indices1.size
-        var j: Int
-        j = 0
+        var j: Int = 0
         while (j < len) {
             if (indices1[0] == indices2[j]) {
                 break
@@ -75,7 +77,7 @@ internal class QuickHull3DTest {
      * @param range coordinate values will lie between -range and range
      * @return array of coordinate values
      */
-    fun randomPoints(num: Int, range: Double): DoubleArray {
+    private fun randomPoints(num: Int, range: Double): DoubleArray {
         val coords = DoubleArray(num * 3)
         for (i in 0 until num) {
             for (k in 0..2) {
@@ -101,7 +103,7 @@ internal class QuickHull3DTest {
      * 1 = colinear, 2 = coplaner.
      * @return array of coordinate values
      */
-    fun randomDegeneratePoints(num: Int, dimen: Int): DoubleArray {
+    private fun randomDegeneratePoints(num: Int, dimen: Int): DoubleArray {
         val coords = DoubleArray(num * 3)
         val pnt = Point3d()
         val base = Point3d()
@@ -156,7 +158,7 @@ internal class QuickHull3DTest {
      * @param radius radius of the sphere
      * @return array of coordinate values
      */
-    fun randomSphericalPoints(num: Int, radius: Double): DoubleArray {
+    private fun randomSphericalPoints(num: Int, radius: Double): DoubleArray {
         val coords = DoubleArray(num * 3)
         val pnt = Point3d()
         var i = 0
@@ -228,7 +230,7 @@ internal class QuickHull3DTest {
      * direction
      * @return array of coordinate values
      */
-    fun randomGridPoints(gridSize: Int, width: Double): DoubleArray {
+    private fun randomGridPoints(gridSize: Int, width: Double): DoubleArray {
         // gridSize gives the number of points across a given dimension
         // any given coordinate indexed by i has value
         // (i/(gridSize-1) - 0.5)*width
@@ -268,8 +270,7 @@ internal class QuickHull3DTest {
         }
         for (i in checkFaces.indices) {
             val cf = checkFaces[i]
-            var j: Int
-            j = 0
+            var j: Int = 0
             while (j < faceIndices.size) {
                 if (faceIndices[j] != null) {
                     if (faceIndicesEqual(cf, faceIndices[j])) {
@@ -295,13 +296,13 @@ internal class QuickHull3DTest {
     fun singleTest(coords: DoubleArray, checkFaces: Array<IntArray>?) {
         val hull = QuickHull3D()
         hull.debug = (debugEnable)
-        hull.build(coords, coords!!.size / 3)
+        hull.build(coords, coords.size / 3)
         if (triangulate) {
             hull.triangulate()
         }
         if (!hull.check(System.out)) {
             Throwable().printStackTrace()
-            System.exit(1)
+            exitProcess(1)
         }
         checkFaces?.let { explicitFaceCheck(hull, it) }
         if (degeneracyTest != NO_DEGENERACY) {
@@ -368,23 +369,23 @@ internal class QuickHull3DTest {
         }
         if (!xhull.check(System.out)) {
             Throwable().printStackTrace()
-            System.exit(1)
+            exitProcess(1)
         }
     }
 
-    fun rotateCoords(
+    private fun rotateCoords(
         res: DoubleArray,
         xyz: DoubleArray?,
         roll: Double,
         pitch: Double,
         yaw: Double
     ) {
-        val sroll = Math.sin(roll)
-        val croll = Math.cos(roll)
-        val spitch = Math.sin(pitch)
-        val cpitch = Math.cos(pitch)
-        val syaw = Math.sin(yaw)
-        val cyaw = Math.cos(yaw)
+        val sroll = sin(roll)
+        val croll = cos(roll)
+        val spitch = sin(pitch)
+        val cpitch = cos(pitch)
+        val syaw = sin(yaw)
+        val cyaw = cos(yaw)
         val m00 = croll * cpitch
         val m10 = sroll * cpitch
         val m20 = -spitch
@@ -406,7 +407,7 @@ internal class QuickHull3DTest {
         }
     }
 
-    fun printCoords(coords: DoubleArray?) {
+    private fun printCoords(coords: DoubleArray?) {
         val nump = coords!!.size / 3
         for (i in 0 until nump) {
             println(
@@ -417,7 +418,7 @@ internal class QuickHull3DTest {
         }
     }
 
-    fun testException(coords: DoubleArray, msg: String) {
+    private fun testException(coords: DoubleArray, msg: String) {
         val hull = QuickHull3D()
         var ex: Exception? = null
         try {
@@ -430,7 +431,7 @@ internal class QuickHull3DTest {
             println("Got no exception")
             println("Input pnts:")
             printCoords(coords)
-            System.exit(1)
+            exitProcess(1)
         } else if (ex.message == null ||
             ex.message != msg
         ) {
@@ -438,7 +439,7 @@ internal class QuickHull3DTest {
             println("Got exception " + ex.message)
             println("Input pnts:")
             printCoords(coords)
-            System.exit(1)
+            exitProcess(1)
         }
     }
 
@@ -602,7 +603,7 @@ internal class QuickHull3DTest {
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            System.exit(1)
+            exitProcess(1)
         }
         println("\nPassed\n")
     }
@@ -640,8 +641,8 @@ internal class QuickHull3DTest {
     companion object {
         private const val DOUBLE_PREC = 2.2204460492503131e-16
         var triangulate = false
-        var doTesting = true
-        var doTiming = false
+        private var doTesting = true
+        private var doTiming = false
         var debugEnable = false
         const val NO_DEGENERACY = 0
         const val EDGE_DEGENERACY = 1
@@ -671,7 +672,7 @@ internal class QuickHull3DTest {
                     println(
                         "Usage: java quickhull3d.QuickHull3DTest [-timing]"
                     )
-                    System.exit(1)
+                    exitProcess(1)
                 }
             }
             if (doTesting) {
@@ -687,7 +688,6 @@ internal class QuickHull3DTest {
      * Creates a testing object.
      */
     init {
-        rand = Random()
         rand.setSeed(0x1234)
     }
 }

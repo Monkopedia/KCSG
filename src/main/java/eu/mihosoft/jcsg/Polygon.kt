@@ -38,6 +38,7 @@ import eu.mihosoft.vvecmath.Transform
 import eu.mihosoft.vvecmath.Vector3d
 import java.util.*
 import java.util.function.Consumer
+import kotlin.math.abs
 
 /**
  * Represents a convex polygon.
@@ -101,7 +102,7 @@ class Polygon : Cloneable {
     constructor(vertices: List<Vertex?>, shared: PropertyStorage?) {
         this.vertices = vertices
         this.shared = shared
-        _csg_plane = Plane.Companion.createFromPoints(
+        _csg_plane = Plane.createFromPoints(
             vertices[0]!!.pos,
             vertices[1]!!.pos,
             vertices[2]!!.pos
@@ -145,7 +146,7 @@ class Polygon : Cloneable {
      */
     constructor(vertices: List<Vertex?>) {
         this.vertices = vertices
-        _csg_plane = Plane.Companion.createFromPoints(
+        _csg_plane = Plane.createFromPoints(
             vertices[0]!!.pos,
             vertices[1]!!.pos,
             vertices[2]!!.pos
@@ -163,7 +164,7 @@ class Polygon : Cloneable {
      *
      * @param vertices polygon vertices
      */
-    constructor(vararg vertices: Vertex?) : this(Arrays.asList<Vertex?>(*vertices))
+    constructor(vararg vertices: Vertex?) : this(listOf<Vertex?>(*vertices))
 
     public override fun clone(): Polygon {
         val newVertices: MutableList<Vertex?> = ArrayList()
@@ -396,7 +397,7 @@ class Polygon : Cloneable {
     operator fun contains(p: Vector3d?): Boolean {
 
         // P not on the plane
-        if (_plane.distance(p) > Plane.Companion.EPSILON) {
+        if (_plane.distance(p) > Plane.EPSILON) {
             return false
         }
 
@@ -428,29 +429,29 @@ class Polygon : Cloneable {
         // we start with XY plane
         var coordIndex1 = 0
         var coordIndex2 = 1
-        val orthogonalToXY: Boolean = Math.abs(
+        val orthogonalToXY: Boolean = abs(
             eu.mihosoft.vvecmath.Plane.XY_PLANE.normal
                 .dot(_plane.normal)
-        ) < Plane.Companion.EPSILON
+        ) < Plane.EPSILON
         var foundProjectionPlane = false
         if (!orthogonalToXY && !foundProjectionPlane) {
             coordIndex1 = 0
             coordIndex2 = 1
             foundProjectionPlane = true
         }
-        val orthogonalToXZ: Boolean = Math.abs(
+        val orthogonalToXZ: Boolean = abs(
             eu.mihosoft.vvecmath.Plane.XZ_PLANE.normal
                 .dot(_plane.normal)
-        ) < Plane.Companion.EPSILON
+        ) < Plane.EPSILON
         if (!orthogonalToXZ && !foundProjectionPlane) {
             coordIndex1 = 0
             coordIndex2 = 2
             foundProjectionPlane = true
         }
-        val orthogonalToYZ: Boolean = Math.abs(
+        val orthogonalToYZ: Boolean = abs(
             eu.mihosoft.vvecmath.Plane.YZ_PLANE.normal
                 .dot(_plane.normal)
-        ) < Plane.Companion.EPSILON
+        ) < Plane.EPSILON
         if (!orthogonalToYZ && !foundProjectionPlane) {
             coordIndex1 = 1
             coordIndex2 = 2
@@ -460,12 +461,11 @@ class Polygon : Cloneable {
         // see from http://www.java-gaming.org/index.php?topic=26013.0
         // see http://alienryderflex.com/polygon/
         // see http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
-        var i: Int
         var j = vertices.size - 1
         var oddNodes = false
         val x = p!![coordIndex1]
         val y = p[coordIndex2]
-        i = 0
+        var i: Int = 0
         while (i < vertices.size) {
             val xi = vertices[i]!!.pos[coordIndex1]
             val yi = vertices[i]!!.pos[coordIndex2]
@@ -634,7 +634,7 @@ class Polygon : Cloneable {
          */
         fun fromConcavePoints(vararg points: Vector3d?): List<Polygon?> {
             val p = fromPoints(*points)
-            return PolygonUtil.Companion.concaveToConvex(p)
+            return PolygonUtil.concaveToConvex(p)
         }
 
         /**
@@ -645,7 +645,7 @@ class Polygon : Cloneable {
          */
         fun fromConcavePoints(points: List<Vector3d?>): List<Polygon?> {
             val p = fromPoints(points)
-            return PolygonUtil.Companion.concaveToConvex(p)
+            return PolygonUtil.concaveToConvex(p)
         }
 
         /**
@@ -679,7 +679,7 @@ class Polygon : Cloneable {
          * @return a polygon defined by the specified point list
          */
         fun fromPoints(vararg points: Vector3d?): Polygon {
-            return fromPoints(Arrays.asList(*points), PropertyStorage(), null)
+            return fromPoints(listOf(*points), PropertyStorage(), null)
         }
 
         /**
@@ -697,7 +697,7 @@ class Polygon : Cloneable {
         ): Polygon {
             var normal = plane?.normal?.clone()
             if (normal == null) {
-                normal = Plane.Companion.createFromPoints(
+                normal = Plane.createFromPoints(
                     points[0],
                     points[1],
                     points[2]

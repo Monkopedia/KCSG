@@ -42,7 +42,7 @@ import javafx.scene.shape.TriangleMesh
  * Mesh data validator
  */
 class Validator {
-    fun validate(node: Node?) {
+    private fun validate(node: Node?) {
         if (node is MeshView) {
             validate(node.mesh)
         } else if (node is Parent) {
@@ -52,27 +52,26 @@ class Validator {
         }
     }
 
-    fun validate(mesh: Mesh) {
+    private fun validate(mesh: Mesh) {
         if (mesh !is TriangleMesh) {
             throw AssertionError("Mesh is not TriangleMesh: " + mesh.javaClass + ", mesh = " + mesh)
         }
-        val tMesh = mesh
-        val numPoints = tMesh.points.size() / tMesh.pointElementSize
-        val numTexCoords = tMesh.texCoords.size() / tMesh.texCoordElementSize
-        val numFaces = tMesh.faces.size() / tMesh.faceElementSize
-        if (numPoints == 0 || numPoints * tMesh.pointElementSize != tMesh.points.size()) {
-            throw AssertionError("Points array size is not correct: " + tMesh.points.size())
+        val numPoints = mesh.points.size() / mesh.pointElementSize
+        val numTexCoords = mesh.texCoords.size() / mesh.texCoordElementSize
+        val numFaces = mesh.faces.size() / mesh.faceElementSize
+        if (numPoints == 0 || numPoints * mesh.pointElementSize != mesh.points.size()) {
+            throw AssertionError("Points array size is not correct: " + mesh.points.size())
         }
-        if (numTexCoords == 0 || numTexCoords * tMesh.texCoordElementSize != tMesh.texCoords.size()) {
-            throw AssertionError("TexCoords array size is not correct: " + tMesh.points.size())
+        if (numTexCoords == 0 || numTexCoords * mesh.texCoordElementSize != mesh.texCoords.size()) {
+            throw AssertionError("TexCoords array size is not correct: " + mesh.points.size())
         }
-        if (numFaces == 0 || numFaces * tMesh.faceElementSize != tMesh.faces.size()) {
-            throw AssertionError("Faces array size is not correct: " + tMesh.points.size())
+        if (numFaces == 0 || numFaces * mesh.faceElementSize != mesh.faces.size()) {
+            throw AssertionError("Faces array size is not correct: " + mesh.points.size())
         }
-        if (numFaces != tMesh.faceSmoothingGroups.size() && tMesh.faceSmoothingGroups.size() > 0) {
-            throw AssertionError("FaceSmoothingGroups array size is not correct: " + tMesh.points.size() + ", numFaces = " + numFaces)
+        if (numFaces != mesh.faceSmoothingGroups.size() && mesh.faceSmoothingGroups.size() > 0) {
+            throw AssertionError("FaceSmoothingGroups array size is not correct: " + mesh.points.size() + ", numFaces = " + numFaces)
         }
-        val faces: ObservableIntegerArray = tMesh.faces
+        val faces: ObservableIntegerArray = mesh.faces
         var i = 0
         while (i < faces.size()) {
             val pIndex = faces[i]

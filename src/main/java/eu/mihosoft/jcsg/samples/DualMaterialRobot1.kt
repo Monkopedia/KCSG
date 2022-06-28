@@ -19,7 +19,7 @@ import java.nio.file.Paths
 object DualMaterialRobot {
     private var robot: CSG? = null
     @Throws(IOException::class)
-    fun middleToCSG(): CSG? {
+    fun middleToCSG(): CSG {
         if (robot == null) {
             robot = STL.file(Paths.get("/home/miho/CuraExamples/UltimakerRobot_support.stl"))
         }
@@ -36,7 +36,7 @@ object DualMaterialRobot {
     }
 
     @Throws(IOException::class)
-    fun topBottomCSG(): CSG? {
+    fun topBottomCSG(): CSG {
         if (robot == null) {
             robot = STL.file(Paths.get("/home/miho/CuraExamples/UltimakerRobot_support.stl"))
         }
@@ -57,6 +57,6 @@ object DualMaterialRobot {
 //        FileUtil.write(Paths.get("robot-color-1.stl"), DualMaterialRobot.topBottomCSG().toStlString());
 //        FileUtil.write(Paths.get("robot-color-2.stl"), DualMaterialRobot.middleToCSG().toStlString());
         robot = STL.file(Paths.get("/home/miho/CuraExamples/UltimakerRobot_support.stl"))
-        FileUtil.Companion.write(Paths.get("robot-ascii.stl"), robot!!.toStlString())
+        FileUtil.write(Paths.get("robot-ascii.stl"), robot!!.toStlString())
     }
 }

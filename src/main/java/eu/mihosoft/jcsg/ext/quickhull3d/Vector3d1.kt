@@ -13,6 +13,7 @@
 package eu.mihosoft.jcsg.ext.quickhull3d
 
 import java.util.*
+import kotlin.math.sqrt
 
 /**
  * A three-element vector. This class is actually a reduced version of the
@@ -177,9 +178,9 @@ internal open class Vector3d {
      * @param s scaling factor
      */
     fun scale(s: Double) {
-        x = s * x
-        y = s * y
-        z = s * z
+        x *= s
+        y *= s
+        z *= s
     }
 
     /**
@@ -202,7 +203,7 @@ internal open class Vector3d {
      * @return vector 2 norm
      */
     fun norm(): Double {
-        return Math.sqrt(x * x + y * y + z * z)
+        return sqrt(x * x + y * y + z * z)
     }
 
     /**
@@ -224,7 +225,7 @@ internal open class Vector3d {
         val dx = x - v.x
         val dy = y - v.y
         val dz = z - v.z
-        return Math.sqrt(dx * dx + dy * dy + dz * dz)
+        return sqrt(dx * dx + dy * dy + dz * dz)
     }
 
     /**
@@ -259,7 +260,7 @@ internal open class Vector3d {
         if (err > 2 * DOUBLE_PREC ||
             err < -(2 * DOUBLE_PREC)
         ) {
-            val len = Math.sqrt(lenSqr)
+            val len = sqrt(lenSqr)
             x /= len
             y /= len
             z /= len

@@ -12,19 +12,22 @@ import eu.mihosoft.vvecmath.Transform
 import eu.mihosoft.vvecmath.Vector3d
 import java.io.IOException
 import java.nio.file.Paths
+import kotlin.math.atan
+import kotlin.math.max
+import kotlin.math.sqrt
 
 /**
  *
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 class QuadrocopterArm {
-    fun mainArm(
+    private fun mainArm(
         numInnerStructures: Int,
         length: Double,
         armThickness: Double,
         innerTubeOffset: Double,
         armCubeThickness: Double
-    ): CSG? {
+    ): CSG {
         val outerRadius = armThickness / 2.0
         val wallThickness = 0.8
         val structureRadius = 0.4
@@ -43,10 +46,10 @@ class QuadrocopterArm {
         var innerStructure: CSG? = null
         for (i in 0 until numInnerStructures) {
             var cyl = Cylinder(structureRadius, outerRadius * 10, 8).toCSG()
-            cyl = cyl!!.transformed(
+            cyl = cyl.transformed(
                 Transform.unity().scale(
-                    Math.max(0.5, Math.random() * 3),
-                    Math.max(0.5, Math.random() * 3), 1.0
+                    max(0.5, Math.random() * 3),
+                    max(0.5, Math.random() * 3), 1.0
                 )
             )
             cyl = cyl.transformed(
@@ -66,15 +69,11 @@ class QuadrocopterArm {
                     innerTubeOffset + Math.random() * (length - innerTubeOffset)
                 )
             )
-            innerStructure = if (innerStructure == null) {
-                cyl
-            } else {
-                innerStructure.union(cyl)
-            }
+            innerStructure = innerStructure?.union(cyl) ?: cyl
         }
         if (innerStructure != null) {
             innerStructure = innerStructure.intersect(
-                Cylinder(outerRadius, length - innerTubeOffset, 16).toCSG()!!
+                Cylinder(outerRadius, length - innerTubeOffset, 16).toCSG()
                     .transformed(Transform.unity().scaleX(0.5).translateZ(innerTubeOffset))
             )
         }
@@ -85,10 +84,10 @@ class QuadrocopterArm {
         if (innerStructure != null) {
             outerCyl = outerCyl!!.union(innerStructure)
         }
-        val innerCyl = Cylinder(innerRadius, length - innerTubeOffset, 16).toCSG()!!
+        val innerCyl = Cylinder(innerRadius, length - innerTubeOffset, 16).toCSG()
             .transformed(Transform.unity().translateZ(innerTubeOffset))
         var finalGeometry = outerCyl!!.union(innerCyl)
-        val plate = Cylinder(outerRadius, plateThickness, 16).toCSG()!!
+        val plate = Cylinder(outerRadius, plateThickness, 16).toCSG()
             .transformed(Transform.unity().scaleX(shrinkFactorX))
         val endPlate = plate.transformed(Transform.unity().translateZ(innerTubeOffset))
         finalGeometry = finalGeometry.union(endPlate)
@@ -98,17 +97,13 @@ class QuadrocopterArm {
             var i = 0
             while (i < numPlates) {
                 val pl = plate.transformed(Transform.unity().translateZ(dt * i))
-                plates = if (plates == null) {
-                    pl
-                } else {
-                    plates.union(pl)
-                }
+                plates = plates?.union(pl) ?: pl
                 i++
             }
             finalGeometry = finalGeometry.union(plates)
         }
         val cube =
-            Cube(outerRadius * 2, outerRadius * 2, armCubeThickness).toCSG()!!.difference(innerCyl)
+            Cube(outerRadius * 2, outerRadius * 2, armCubeThickness).toCSG().difference(innerCyl)
                 .transformed(
                     Transform.unity().translateZ(length - armCubeThickness / 2.0)
                 )
@@ -156,10 +151,10 @@ class QuadrocopterArm {
     //
     //        return outerCyl;
     //    }
-    fun toCSG(): CSG? {
+    fun toCSG(): CSG {
 
         // optimization seems to cause problems
-        CSG.Companion.setDefaultOptType(OptType.NONE)
+        CSG.setDefaultOptType(OptType.NONE)
         val engineRadius = 14.0
         val screwDistanceBig = 9.5
         val screwDistanceSmall = 8.0
@@ -182,12 +177,12 @@ class QuadrocopterArm {
         )!!.transformed(
             Transform.unity().rotX(90.0).rotY(90.0)
         )
-        val enginePlatformSphere = Sphere(engineRadius * 1.1, 64, 32).toCSG()!!
+        val enginePlatformSphere = Sphere(engineRadius * 1.1, 64, 32).toCSG()
             .transformed(Transform.unity().scaleX(2.0).translateZ(armThickness * 0.5))
         val engineTransform =
             Transform.unity().translateX(-mainHoleRadius).translateZ(-armThickness * 0.28)
                 .translateX(1.2)
-        val mainHole = Cylinder(mainHoleRadius, enginePlatformThickness, 16).toCSG()!!
+        val mainHole = Cylinder(mainHoleRadius, enginePlatformThickness, 16).toCSG()
             .transformed(engineTransform)
         val enginePlatform = enginePlatform(
             engineRadius,
@@ -215,15 +210,15 @@ class QuadrocopterArm {
         screwDistanceSmall: Double,
         washerWallThickness: Double,
         washerHeight: Double
-    ): CSG? {
+    ): CSG {
         var enginePlatform = Cylinder(engineRadius, enginePlatformThickness, 32).toCSG()
-        val secondCyl = Cylinder(engineRadius * 0.3, enginePlatformThickness, 3).toCSG()!!
+        val secondCyl = Cylinder(engineRadius * 0.3, enginePlatformThickness, 3).toCSG()
             .transformed(Transform.unity().translateX(-engineRadius * 2.7))
-        enginePlatform = enginePlatform!!.union(secondCyl).hull()
-        val mainHole = Cylinder(mainHoleRadius, enginePlatformThickness * 5, 16).toCSG()!!
+        enginePlatform = enginePlatform.union(secondCyl).hull()
+        val mainHole = Cylinder(mainHoleRadius, enginePlatformThickness * 5, 16).toCSG()
             .transformed(Transform.unity().translateZ(-enginePlatformThickness))
         val screwHolePrototype =
-            Cylinder(screwRadius, enginePlatformThickness + washerHeight + 10, 16).toCSG()!!
+            Cylinder(screwRadius, enginePlatformThickness + washerHeight + 10, 16).toCSG()
                 .transformed(Transform.unity().translateZ(-5.0))
         val screwHole1 =
             screwHolePrototype.transformed(Transform.unity().translateX(screwDistanceBig))
@@ -246,10 +241,10 @@ class QuadrocopterArm {
                     Transform.unity().rotZ(-135.0)
                 )
         var washerPrototype = Cylinder(screwRadius + washerWallThickness, washerHeight, 16).toCSG()
-        val washerHole = washerPrototype!!.clone()
+        val washerHole = washerPrototype.clone()
         washerPrototype = washerPrototype.weighted(ZModifier())!!
             .transformed(Transform.unity().scale(1.35, 1.35, 1.0)).weighted(UnityModifier())!!
-        washerPrototype = washerPrototype!!.difference(screwHolePrototype)
+        washerPrototype = washerPrototype.difference(screwHolePrototype)
             .transformed(Transform.unity().translateZ(-washerHeight))
         val washer1 =
             washerPrototype.transformed(Transform.unity().translateX(screwDistanceBig)).transformed(
@@ -285,7 +280,7 @@ class QuadrocopterArm {
             ).transformed(Transform.unity().translateZ(-washerHeight * 2))
 
 //        CSG hullCube = new RoundedCube(20,5,3.8).cornerRadius(1).toCSG().transformed(Transform.unity().translate(-10,-2.5,-3.8/2.0-enginePlatformThickness));
-        val hullCube = Cylinder(3.0, 20.0, 16).toCSG()!!
+        val hullCube = Cylinder(3.0, 20.0, 16).toCSG()
             .transformed(Transform.unity().rotY(90.0))
             .transformed(Transform.unity().translate(0.0, 0.0, -2.0))
         enginePlatform = enginePlatform.union(hullCube).hull()
@@ -305,14 +300,14 @@ class QuadrocopterArm {
             length: Double,
             armCubeThickness: Double,
             outerRadius: Double
-        ): CSG? {
+        ): CSG {
             val sideArmLength =
-                Math.sqrt(sideArmGroundDist * sideArmGroundDist + sideArmHight * sideArmHight)
+                sqrt(sideArmGroundDist * sideArmGroundDist + sideArmHight * sideArmHight)
             val alpha =
-                Math.atan(sideArmGroundDist / sideArmHight) * 180 / Math.PI
+                atan(sideArmGroundDist / sideArmHight) * 180 / Math.PI
             var subCylinder =
                 Cylinder(sideArmRadius, sideArmLength + sideArmRadius, 16)
-                    .toCSG()!!
+                    .toCSG()
                     .transformed(
                         Transform.unity().rotY(90.0)
                             .scaleX(sideArmShrinkFactor)
@@ -361,14 +356,14 @@ class QuadrocopterArm {
             sideArmShrinkFactor: Double,
             armCubeThickness: Double,
             outerRadius: Double
-        ): CSG? {
+        ): CSG {
             val sideArmLength =
-                Math.sqrt(sideArmGroundDist * sideArmGroundDist + sideArmHight * sideArmHight)
+                sqrt(sideArmGroundDist * sideArmGroundDist + sideArmHight * sideArmHight)
             val alpha =
-                Math.atan(sideArmGroundDist / sideArmHight) * 180 / Math.PI
+                atan(sideArmGroundDist / sideArmHight) * 180 / Math.PI
             var subCylinder =
                 Cylinder(sideArmRadius, sideArmLength + sideArmRadius, 16)
-                    .toCSG()!!
+                    .toCSG()
                     .transformed(
                         Transform.unity().rotY(90.0)
                             .scaleX(sideArmShrinkFactor)
@@ -412,14 +407,14 @@ class QuadrocopterArm {
         fun outerCyl(
             outerRadius: Double, length: Double,
             wallThickness: Double, scaleOuter: Double, scaleInner: Double, filled: Boolean = false
-        ): CSG? {
-            var outerCyl = Cylinder(outerRadius, length, 32).toCSG()!!
+        ): CSG {
+            var outerCyl = Cylinder(outerRadius, length, 32).toCSG()
                 .transformed(Transform.unity().scaleX(scaleOuter))
             if (!filled) {
                 val outerCylInner = Cylinder(
                     outerRadius - wallThickness / scaleOuter,
                     length, 32
-                ).toCSG()!!.transformed(Transform.unity().scaleX(scaleInner))
+                ).toCSG().transformed(Transform.unity().scaleX(scaleInner))
                 outerCyl = outerCyl.difference(outerCylInner)
             }
             return outerCyl
@@ -459,7 +454,7 @@ class QuadrocopterArm {
         @JvmStatic
         fun main(args: Array<String>) {
             val result = QuadrocopterArm().toCSG()
-            FileUtil.Companion.write(Paths.get("quadrocopter-arm.stl"), result!!.toStlString())
+            FileUtil.write(Paths.get("quadrocopter-arm.stl"), result!!.toStlString())
             result.toObj().toFiles(Paths.get("quadrocopter-arm.obj"))
 
 //        CSG resultNoStructure = new QuadrocopterArm().toCSG();

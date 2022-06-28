@@ -50,7 +50,7 @@ class MtlReader {
         val fileUrl = baseUrl + filename
         try {
             val mtlUrl = URL(fileUrl)
-            ObjImporter.Companion.log("Reading material from filename = $mtlUrl")
+            ObjImporter.log("Reading material from filename = $mtlUrl")
             read(mtlUrl.openStream())
         } catch (ex: FileNotFoundException) {
             System.err.println("No material file found for obj. [$fileUrl]")
@@ -61,7 +61,7 @@ class MtlReader {
 
     constructor(stream: InputStream) {
         try {
-            ObjImporter.Companion.log("Reading material from stream")
+            ObjImporter.log("Reading material from stream")
             read(stream)
         } catch (ex: FileNotFoundException) {
             System.err.println("No material file found for obj. [stream]")
@@ -121,7 +121,7 @@ class MtlReader {
                         10	 Casts shadows onto invisible surfaces
                      */
                 } else {
-                    ObjImporter.Companion.log("material line ignored for $name: $line")
+                    ObjImporter.log("material line ignored for $name: $line")
                 }
             } catch (ex: Exception) {
                 Logger.getLogger(MtlReader::class.java.name)
@@ -136,7 +136,7 @@ class MtlReader {
             if (!_materials.containsKey(name)) {
                 _materials[name] = _material
             } else {
-                ObjImporter.Companion.log("This material is already added. Ignoring $name")
+                ObjImporter.log("This material is already added. Ignoring $name")
             }
             _material = PhongMaterial(Color.WHITE)
         }
@@ -153,7 +153,7 @@ class MtlReader {
     private fun loadImage(filename: String): Image {
         var filename = filename
         filename = baseUrl + filename
-        ObjImporter.Companion.log("Loading image from $filename")
+        ObjImporter.log("Loading image from $filename")
         val image = Image(filename)
         return Image(filename)
     }

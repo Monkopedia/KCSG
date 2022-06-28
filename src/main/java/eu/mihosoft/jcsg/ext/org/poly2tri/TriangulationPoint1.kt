@@ -100,8 +100,7 @@ package eu.mihosoft.jcsg.ext.org.poly2tri
 
     override fun equals(obj: Any?): Boolean {
         if (obj is TriangulationPoint) {
-            val p = obj
-            return x == p.x && y == p.y
+            return x == obj.x && y == obj.y
         }
         return super.equals(obj)
     }

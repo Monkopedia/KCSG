@@ -11,6 +11,7 @@ import eu.mihosoft.jcsg.FileUtil
 import eu.mihosoft.vvecmath.Transform
 import java.io.IOException
 import java.nio.file.Paths
+import kotlin.math.min
 
 /**
  *
@@ -36,14 +37,14 @@ class SquareMail {
         hinge1 = hinge1.intersect(
             Cube(
                 hingeBounds.x(),
-                Math.min(hingeBounds.y(), d), hingeBounds.z()
+                min(hingeBounds.y(), d), hingeBounds.z()
             ).toCSG()
         )
         hinge1 = hinge1.transformed(Transform.unity().rotX(90.0))
         val pin = Cube(
             pinLength + hingePrototype.jointRadius,
             pinThickness, d
-        ).toCSG()!!.transformed(Transform.unity().translateX(-(jointRadius + pinLength) * 0.5))
+        ).toCSG().transformed(Transform.unity().translateX(-(jointRadius + pinLength) * 0.5))
         hinge1 = hinge1.union(pin)
         hinge1 = hinge1.transformed(
             Transform.unity().translateX(
@@ -65,7 +66,7 @@ class SquareMail {
             )
         )
         val hingeHole2 = hingeHole1.transformed(Transform.unity().rotZ(90.0))
-        val part = mainCube!!.union(hinge1, hinge2).difference(hingeHole1, hingeHole2)
+        val part = mainCube.union(hinge1, hinge2).difference(hingeHole1, hingeHole2)
         val partBounds = part.bounds.bounds
         var result: CSG? = null
         for (y in 0 until numY) {
@@ -89,7 +90,7 @@ class SquareMail {
         @Throws(IOException::class)
         @JvmStatic
         fun main(args: Array<String>) {
-            FileUtil.Companion.write(
+            FileUtil.write(
                 Paths.get("squaremail-test.stl"),
                 SquareMail().toCSG(12, 4)!!.toStlString()
             )

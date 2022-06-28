@@ -62,7 +62,7 @@ import java.nio.FloatBuffer
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */internal class FloatBufferPoint(private val _fb: FloatBuffer, private val _ix: Int) :
     TriangulationPoint() {
-    private val _iy: Int
+    private val _iy: Int = _ix + 1
     private val _iz: Int
     override val x: Double
         get() = _fb[_ix].toDouble()
@@ -98,7 +98,6 @@ import java.nio.FloatBuffer
     }
 
     init {
-        _iy = _ix + 1
         _iz = _ix + 2
     }
 }

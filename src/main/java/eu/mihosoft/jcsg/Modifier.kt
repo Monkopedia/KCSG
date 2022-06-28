@@ -12,13 +12,13 @@ package eu.mihosoft.jcsg
 internal class Modifier(private val function: WeightFunction) {
     fun modify(csg: CSG?) {
         for (p in csg!!.polygons!!) {
-            for (v in p!!.vertices) {
+            for (v in p.vertices) {
                 v!!.weight = function.eval(v.pos, csg)
             }
         }
     }
 
-    fun modified(csg: CSG): CSG? {
+    fun modified(csg: CSG): CSG {
         val result = csg.clone()
         modify(result)
         return result

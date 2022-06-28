@@ -17,7 +17,7 @@ import java.nio.file.Paths
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 class Naze32Holder {
-    fun toCSG(): CSG? {
+    fun toCSG(): CSG {
         val w = 36.0
         val h = 36.0
         val wInner = 31.0
@@ -28,7 +28,7 @@ class Naze32Holder {
         val thickness = 2.0
         val resolution = 16
         val base = basePlatform(r, thickness, resolution, w, h)
-        val screCylPrototype = Cylinder(screwR, screwHolderHeight, resolution).toCSG()!!
+        val screCylPrototype = Cylinder(screwR, screwHolderHeight, resolution).toCSG()
             .transformed(Transform.unity().translateZ(thickness))
         val cyl1 = screCylPrototype.transformed(
             Transform.unity().translateX(-wInner / 2.0).translateY(-hInner / 2.0)
@@ -51,9 +51,9 @@ class Naze32Holder {
         resolution: Int,
         w: Double,
         h: Double
-    ): CSG? {
+    ): CSG {
         val cylPrototype = Cylinder(r, thickness, resolution).toCSG()
-        val cyl1 = cylPrototype!!.transformed(
+        val cyl1 = cylPrototype.transformed(
             Transform.unity().translateX(-w / 2.0 + r)
                 .translateY(-h / 2.0 + r)
         )
@@ -73,7 +73,7 @@ class Naze32Holder {
         @Throws(IOException::class)
         @JvmStatic
         fun main(args: Array<String>) {
-            FileUtil.Companion.write(
+            FileUtil.write(
                 Paths.get("naze32-mount.stl"),
                 Naze32Holder().toCSG()!!.toStlString()
             )

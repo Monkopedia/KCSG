@@ -95,10 +95,9 @@ import org.slf4j.LoggerFactory
         algorithm: TriangulationAlgorithm?,
         t: Triangulatable?
     ) {
-        val tcx: TriangulationContext<*>
 
 //        long time = System.nanoTime();
-        tcx = createContext(algorithm)
+        val tcx: TriangulationContext<*> = createContext(algorithm)
         tcx.prepareTriangulation(t!!)
         triangulate(tcx)
         //        logger.info( "Triangulation of {} points [{}ms]", tcx.getPoints().size(), ( System.nanoTime() - time ) / 1e6 );
@@ -121,7 +120,7 @@ import org.slf4j.LoggerFactory
          * the method. After an unspecified amount of time, then the compilation
          * system should become quiet.
          */
-        val poly = PolygonGenerator.RandomCircleSweep2(50.0, 50000)
+        val poly = PolygonGenerator.randomCircleSweep2(50.0, 50000)
         val process = TriangulationProcess()
         process.triangulate(poly)
     }

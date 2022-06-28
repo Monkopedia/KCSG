@@ -73,13 +73,12 @@ internal class Node @JvmOverloads constructor(polygons: List<Polygon>? = null) :
 //        polygons.parallelStream().forEach((Polygon p) -> {
 //            node.polygons.add(p.clone());
 //        });
-        val polygonStream: Stream<Polygon>
-        polygonStream = if (polygons.size > 200) {
+        val polygonStream: Stream<Polygon> = if (polygons.size > 200) {
             polygons.parallelStream()
         } else {
             polygons.stream()
         }
-        node.polygons = polygonStream.map { p: Polygon -> p!!.clone() }
+        node.polygons = polygonStream.map { p: Polygon -> p.clone() }
             .collect(Collectors.toList())
         return node
     }
@@ -88,15 +87,14 @@ internal class Node @JvmOverloads constructor(polygons: List<Polygon>? = null) :
      * Converts solid space to empty space and vice verca.
      */
     fun invert() {
-        val polygonStream: Stream<Polygon>
-        polygonStream = if (polygons.size > 200) {
+        val polygonStream: Stream<Polygon> = if (polygons.size > 200) {
             polygons.parallelStream()
         } else {
             polygons.stream()
         }
-        polygonStream.forEach { polygon: Polygon -> polygon!!.flip() }
-        if (plane == null && !polygons.isEmpty()) {
-            plane = polygons[0]!!._csg_plane.clone()
+        polygonStream.forEach { polygon: Polygon -> polygon.flip() }
+        if (plane == null && polygons.isNotEmpty()) {
+            plane = polygons[0]._csg_plane.clone()
         } else if (plane == null && polygons.isEmpty()) {
             System.err.println("Please fix me! I don't know what to do?")
 
@@ -195,7 +193,7 @@ internal class Node @JvmOverloads constructor(polygons: List<Polygon>? = null) :
         var polygons = polygons
         if (polygons!!.isEmpty()) return
         if (plane == null) {
-            plane = polygons[0]!!._csg_plane.clone()
+            plane = polygons[0]._csg_plane.clone()
         }
         polygons = polygons.stream().filter { p: Polygon? -> p!!.isValid }.distinct()
             .collect(Collectors.toList())

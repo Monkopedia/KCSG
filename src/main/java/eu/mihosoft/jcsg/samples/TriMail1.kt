@@ -43,13 +43,12 @@ class TriMail {
                 }
                 val translateX = (-tile.sideLength - pinOffset) * x + xOffset
                 val translateY = tile.radius * y - yOffset
-                var part2: CSG?
-                part2 = if (y % 2 == 0) {
+                var part2: CSG? = if (y % 2 == 0) {
                     femalePart.clone()
                 } else {
                     malePart.clone()
                 }
-                part2 = part2.transformed(
+                part2 = part2!!.transformed(
                     Transform.unity().translate(translateX, translateY, 0.0)
                 )
                 if (result == null) {
@@ -65,7 +64,7 @@ class TriMail {
         @Throws(IOException::class)
         @JvmStatic
         fun main(args: Array<String>) {
-            FileUtil.Companion.write(
+            FileUtil.write(
                 Paths.get("trimail-test.stl"),
                 TriMail().toCSG(3, 3, 3)!!.toStlString()
             )

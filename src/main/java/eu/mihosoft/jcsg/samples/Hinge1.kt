@@ -15,14 +15,14 @@ import java.nio.file.Paths
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 class Hinge {
-    var jointLength = 10.0
+    private var jointLength = 10.0
     var jointRadius = 5.0
-    var coneLength = 5.0
-    var jointHoleLength = 5.0
+    private var coneLength = 5.0
+    private var jointHoleLength = 5.0
     var jointConnectionThickness = jointRadius * 0.5
     var resolution = 16
 
-    fun toCSG(): CSG? {
+    fun toCSG(): CSG {
         val sideConeR: CSG =
             Cylinder(getJointRadius(), 0.0, getConeLength(), getResolution())
                 .toCSG().transformed(
@@ -37,7 +37,7 @@ class Hinge {
         val sideCones = sideConeL.union(sideConeR)
         val conesAndCyl = sideCones.hull()
         val cylinderHole =
-            Cube(getJointRadius() * 2, getJointHoleLength() * 2, getJointHoleLength()).toCSG()!!
+            Cube(getJointRadius() * 2, getJointHoleLength() * 2, getJointHoleLength()).toCSG()
                 .transformed(
                     Transform.unity()
                         .translate(getJointConnectionThickness(), 0.0, -getJointHoleLength() * 0.0)
@@ -127,7 +127,7 @@ class Hinge {
         @Throws(IOException::class)
         @JvmStatic
         fun main(args: Array<String>) {
-            FileUtil.Companion.write(Paths.get("hinge.stl"), Hinge().toCSG()!!.toStlString())
+            FileUtil.write(Paths.get("hinge.stl"), Hinge().toCSG()!!.toStlString())
         }
     }
 }

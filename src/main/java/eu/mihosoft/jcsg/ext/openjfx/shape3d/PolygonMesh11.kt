@@ -67,8 +67,8 @@ open class PolygonMesh {
 
     companion object {
         // TODO: Hardcode to constants for FX 8 (only one vertex format)
-        val pointElementSize = 3
-        val texCoordElementSize = 2
-        val faceElementSize = 6
+        const val pointElementSize = 3
+        const val texCoordElementSize = 2
+        const val faceElementSize = 6
     }
 }

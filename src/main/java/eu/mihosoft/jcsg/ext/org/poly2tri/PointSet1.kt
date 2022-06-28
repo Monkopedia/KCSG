@@ -60,7 +60,7 @@ package eu.mihosoft.jcsg.ext.org.poly2tri
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */internal open class PointSet(points: List<TriangulationPoint>) : Triangulatable {
     var _points: MutableList<TriangulationPoint>
-    var _triangles: MutableList<DelaunayTriangle>? = null
+    private var _triangles: MutableList<DelaunayTriangle>? = null
     override val triangulationMode: TriangulationMode?
         get() = TriangulationMode.UNCONSTRAINED
     override val points: List<TriangulationPoint>

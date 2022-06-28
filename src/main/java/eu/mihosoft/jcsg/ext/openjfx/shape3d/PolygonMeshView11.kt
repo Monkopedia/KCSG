@@ -47,6 +47,9 @@ import javafx.scene.shape.DrawMode
 import javafx.scene.shape.MeshView
 import javafx.scene.shape.TriangleMesh
 import java.util.*
+import kotlin.math.abs
+import kotlin.math.pow
+import kotlin.math.sqrt
 
 /**
  * A MeshView node for Polygon Meshes
@@ -85,11 +88,11 @@ class PolygonMeshView() : Parent() {
             meshProperty().set(mesh)
         }
 
-    fun meshProperty(): ObjectProperty<PolygonMesh?> {
+    private fun meshProperty(): ObjectProperty<PolygonMesh?> {
         if (meshProperty == null) {
             meshProperty = SimpleObjectProperty<PolygonMesh>().also { meshProperty ->
                 meshProperty.addListener(
-                    ChangeListener { observable: ObservableValue<out PolygonMesh?>?, oldValue: PolygonMesh?, newValue: PolygonMesh? ->
+                    { observable: ObservableValue<out PolygonMesh?>?, oldValue: PolygonMesh?, newValue: PolygonMesh? ->
                         if (oldValue != null) {
                             oldValue.points.removeListener(meshPointsListener)
                             oldValue.points.removeListener(meshTexCoordListener)
@@ -121,11 +124,11 @@ class PolygonMeshView() : Parent() {
         drawModeProperty().set(value)
     }
 
-    fun getDrawMode(): DrawMode {
+    private fun getDrawMode(): DrawMode {
         return if (drawMode == null) DrawMode.FILL else drawMode!!.get()
     }
 
-    fun drawModeProperty(): ObjectProperty<DrawMode> {
+    private fun drawModeProperty(): ObjectProperty<DrawMode> {
         if (drawMode == null) {
             drawMode = object :
                 SimpleObjectProperty<DrawMode>(this@PolygonMeshView, "drawMode", DrawMode.FILL) {
@@ -156,7 +159,7 @@ class PolygonMeshView() : Parent() {
         return if (cullFace == null) CullFace.BACK else cullFace!!.get()
     }
 
-    fun cullFaceProperty(): ObjectProperty<CullFace> {
+    private fun cullFaceProperty(): ObjectProperty<CullFace> {
         if (cullFace == null) {
             cullFace = object :
                 SimpleObjectProperty<CullFace>(this@PolygonMeshView, "cullFace", CullFace.BACK) {
@@ -182,7 +185,7 @@ class PolygonMeshView() : Parent() {
             materialProperty.set(material)
         }
 
-    fun materialProperty(): ObjectProperty<Material> {
+    private fun materialProperty(): ObjectProperty<Material> {
         return materialProperty
     }
 
@@ -198,7 +201,7 @@ class PolygonMeshView() : Parent() {
             subdivisionLevelProperty().set(subdivisionLevel)
         }
 
-    fun subdivisionLevelProperty(): SimpleIntegerProperty {
+    private fun subdivisionLevelProperty(): SimpleIntegerProperty {
         if (subdivisionLevelProperty == null) {
             subdivisionLevelProperty = object : SimpleIntegerProperty(subdivisionLevel) {
                 override fun invalidated() {
@@ -242,7 +245,7 @@ class PolygonMeshView() : Parent() {
         return if (boundaryMode == null) BoundaryMode.CREASE_EDGES else boundaryMode!!.get()
     }
 
-    fun boundaryModeProperty(): SimpleObjectProperty<BoundaryMode> {
+    private fun boundaryModeProperty(): SimpleObjectProperty<BoundaryMode> {
         if (boundaryMode == null) {
             boundaryMode = object : SimpleObjectProperty<BoundaryMode>(getBoundaryMode()) {
                 override fun invalidated() {
@@ -272,7 +275,7 @@ class PolygonMeshView() : Parent() {
         return if (mapBorderMode == null) MapBorderMode.NOT_SMOOTH else mapBorderMode!!.get()
     }
 
-    fun mapBorderModeProperty(): SimpleObjectProperty<MapBorderMode> {
+    private fun mapBorderModeProperty(): SimpleObjectProperty<MapBorderMode> {
         if (mapBorderMode == null) {
             mapBorderMode = object : SimpleObjectProperty<MapBorderMode>(getMapBorderMode()) {
                 override fun invalidated() {
@@ -296,7 +299,7 @@ class PolygonMeshView() : Parent() {
     // PRIVATE METHODS
     private fun updateMesh() {
         val pmesh = mesh
-        if (pmesh == null || pmesh.faces == null) {
+        if (pmesh?.faces == null) {
             triangleMesh = TriangleMesh()
             meshView.mesh = triangleMesh
             return
@@ -326,9 +329,7 @@ class PolygonMeshView() : Parent() {
                 var pointsInd = pmesh.points.size()
                 for (face in pmesh.faces) {
                     if (DEBUG) println(
-                        "face.length = " + face.size / 2 + "  -- " + Arrays.toString(
-                            face
-                        )
+                        "face.length = " + face.size / 2 + "  -- " + face.contentToString()
                     )
                     var lastPointIndex = face[face.size - 2]
                     if (DEBUG) println("    lastPointIndex = $lastPointIndex")
@@ -376,7 +377,7 @@ class PolygonMeshView() : Parent() {
                         val x2 = pointsArray[pointIndex * pointElementSize]
                         val y2 = pointsArray[pointIndex * pointElementSize + 1]
                         val z2 = pointsArray[pointIndex * pointElementSize + 2]
-                        val distance = Math.abs(distanceBetweenPoints(x1, y1, z1, x2, y2, z2))
+                        val distance = abs(distanceBetweenPoints(x1, y1, z1, x2, y2, z2))
                         val offset = distance / 1000
                         // add new point
                         pointsArray[pointsInd++] = x2 + offset
@@ -411,9 +412,7 @@ class PolygonMeshView() : Parent() {
                     val face = pmesh.faces[f]
                     val currentSmoothGroup = pmesh.faceSmoothingGroups[f]
                     if (DEBUG) println(
-                        "face.length = " + face.size + "  -- " + Arrays.toString(
-                            face
-                        )
+                        "face.length = " + face.size + "  -- " + face.contentToString()
                     )
                     val firstPointIndex = face[0]
                     val firstTexIndex = face[1]
@@ -487,10 +486,10 @@ class PolygonMeshView() : Parent() {
         y2: Float,
         z2: Float
     ): Float {
-        return Math.sqrt(
-            Math.pow((z2 - z1).toDouble(), 2.0) +
-                Math.pow((x2 - x1).toDouble(), 2.0) +
-                Math.pow((y2 - y1).toDouble(), 2.0)
+        return sqrt(
+            (z2 - z1).toDouble().pow(2.0) +
+                (x2 - x1).toDouble().pow(2.0) +
+                (y2 - y1).toDouble().pow(2.0)
         ).toFloat()
     }
 

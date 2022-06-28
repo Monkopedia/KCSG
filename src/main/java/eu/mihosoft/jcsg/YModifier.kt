@@ -6,6 +6,7 @@
 package eu.mihosoft.jcsg
 
 import eu.mihosoft.vvecmath.Vector3d
+import kotlin.math.abs
 
 /**
  * Modifies along y axis.
@@ -40,8 +41,8 @@ class YModifier : WeightFunction {
         }
         var s = sPerUnit * (pos!!.y() - bounds!!.min.y())
         if (centered) {
-            s = s - (max - min) / 2.0
-            s = Math.abs(s) * 2
+            s -= (max - min) / 2.0
+            s = abs(s) * 2
         }
         return s
     }

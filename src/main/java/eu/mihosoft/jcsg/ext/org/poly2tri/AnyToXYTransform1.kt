@@ -71,18 +71,14 @@ internal class AnyToXYTransform(nx: Double, ny: Double, nz: Double) : Matrix3Tra
      * @param ny
      * @param nz
      */
-    fun setSourceNormal(nx: Double, ny: Double, nz: Double) {
+    private fun setSourceNormal(nx: Double, ny: Double, nz: Double) {
         val h: Double
         val f: Double
-        val c: Double
-        val vx: Double
-        val vy: Double
-        val hvx: Double
-        vx = -ny
-        vy = nx
-        c = nz
+        val vx: Double = -ny
+        val vy: Double = nx
+        val c: Double = nz
         h = (1 - c) / (1 - c * c)
-        hvx = h * vx
+        val hvx: Double = h * vx
         f = if (c < 0) -c else c
         if (f < 1.0 - 1.0E-4) {
             m00 = c + hvx * vx

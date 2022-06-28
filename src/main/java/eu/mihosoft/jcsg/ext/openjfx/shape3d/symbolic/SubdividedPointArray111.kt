@@ -39,7 +39,7 @@ class SubdividedPointArray(
     numPoints: Int,
     boundaryMode: BoundaryMode
 ) : SymbolicPointArray(
-    FloatArray(SymbolicPointArray.Companion.NUM_COMPONENTS_PER_POINT * numPoints)
+    FloatArray(NUM_COMPONENTS_PER_POINT * numPoints)
 ) {
     private val controlPoints // points of the previous subdivision level
         : FloatArray?

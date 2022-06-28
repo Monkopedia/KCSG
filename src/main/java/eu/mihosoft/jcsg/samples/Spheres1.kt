@@ -25,21 +25,17 @@ class Spheres {
         val d = 30.0
 
         // optimization reduces runtime dramatically
-        CSG.Companion.setDefaultOptType(OptType.POLYGON_BOUND)
+        CSG.setDefaultOptType(OptType.POLYGON_BOUND)
         var spheres: CSG? = null
         for (i in 0..69) {
-            val s = Sphere(Math.random() * maxR).toCSG()!!.transformed(
+            val s = Sphere(Math.random() * maxR).toCSG().transformed(
                 Transform.unity().translate(
                     Math.random() * w,
                     Math.random() * h,
                     Math.random() * d
                 )
             )
-            spheres = if (spheres == null) {
-                s
-            } else {
-                spheres.union(s)
-            }
+            spheres = spheres?.union(s) ?: s
         }
         return spheres
     }
@@ -48,7 +44,7 @@ class Spheres {
         @Throws(IOException::class)
         @JvmStatic
         fun main(args: Array<String>) {
-            FileUtil.Companion.write(Paths.get("spheres.stl"), Spheres().toCSG()!!.toStlString())
+            FileUtil.write(Paths.get("spheres.stl"), Spheres().toCSG()!!.toStlString())
         }
     }
 }

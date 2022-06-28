@@ -48,9 +48,9 @@ object Main {
     fun main(args: Array<String>) {
 
         // we use cube and sphere as base geometries
-        val cube = Cube(2.0).toCSG()!!.color(Color.RED)
-        val sphere = Sphere(1.25).toCSG()!!.color(Color.BLUE)
-        val cyl = Cylinder(0.5, 3.0, 16).toCSG()!!
+        val cube = Cube(2.0).toCSG().color(Color.RED)
+        val sphere = Sphere(1.25).toCSG().color(Color.BLUE)
+        val cyl = Cylinder(0.5, 3.0, 16).toCSG()
             .transformed(Transform.unity().translateZ(-1.5)).color(Color.GREEN)
         val cyl2 = cyl.transformed(Transform.unity().rotY(90.0))
         val cyl3 = cyl.transformed(Transform.unity().rotX(90.0))
@@ -74,7 +74,7 @@ object Main {
         ).union(
             cubeIntersectSphereCyl.transformed(Transform.unity().translateX(18.0))
         )
-        FileUtil.Companion.write(Paths.get("sample.stl"), union.toStlString())
+        FileUtil.write(Paths.get("sample.stl"), union.toStlString())
         union.toObj().toFiles(Paths.get("sample-color.obj"))
     }
 }

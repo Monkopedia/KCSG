@@ -54,10 +54,10 @@ object STL {
         for (p in loader.parse(path.toFile())) {
             vertices.add(p.clone())
             if (vertices.size == 3) {
-                polygons.add(Polygon.Companion.fromPoints(vertices))
+                polygons.add(Polygon.fromPoints(vertices))
                 vertices = ArrayList()
             }
         }
-        return CSG.Companion.fromPolygons(PropertyStorage(), polygons)
+        return CSG.fromPolygons(PropertyStorage(), polygons)
     }
 }

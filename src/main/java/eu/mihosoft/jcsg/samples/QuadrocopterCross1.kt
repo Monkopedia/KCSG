@@ -18,7 +18,7 @@ import java.nio.file.Paths
 class QuadrocopterCross {
     fun print3d(csg: CSG, n: Int) {
         try {
-            FileUtil.Companion.write(Paths.get("quadrocopter-cross-$n.stl"), csg.toStlString())
+            FileUtil.write(Paths.get("quadrocopter-cross-$n.stl"), csg.toStlString())
         } catch (e: IOException) {
             e.printStackTrace()
         }
@@ -31,23 +31,23 @@ class QuadrocopterCross {
         armCubeThickness: Double,
         holderPlatformRadius: Double,
         holderPlatformThickness: Double
-    ): CSG? {
+    ): CSG {
         var armCubeThickness = armCubeThickness
         val widthTol = 2.0
         val thicknessTol = 0.1
         val holderWallThickness = 6.0
         val armOverlap = 30.0
-        armCubeThickness = armCubeThickness + thicknessTol
+        armCubeThickness += thicknessTol
         val holderCubeDepth = armOverlap + armCubeThickness + holderWallThickness
         val armWidth = armHeight * armScaleFactor
         val xTransform = Transform.unity().translateX(-holderWallThickness * 2)
         val yTransform = Transform.unity()
             .translateY(-armCubeThickness / 2.0 - armOverlap / 2.0 + holderWallThickness)
-        val armCube = Cube(armCubeWidth + widthTol, armCubeThickness, armHeight).toCSG()!!
+        val armCube = Cube(armCubeWidth + widthTol, armCubeThickness, armHeight).toCSG()
             .transformed(yTransform)
-        var arm = Cube(armWidth, holderCubeDepth, armHeight).toCSG()!!
+        var arm = Cube(armWidth, holderCubeDepth, armHeight).toCSG()
             .transformed(Transform.unity().translateZ(armHeight / 2.0))
-        arm = Cylinder(armHeight / 2.0, holderCubeDepth, 32).toCSG()!!
+        arm = Cylinder(armHeight / 2.0, holderCubeDepth, 32).toCSG()
             .transformed(
                 Transform.unity().rotX(90.0).translate(0.0, 0.0, -holderCubeDepth / 2.0)
                     .scaleX(armScaleFactor)
@@ -64,7 +64,7 @@ class QuadrocopterCross {
         return holder
     }
 
-    fun toCSG2(): CSG? {
+    fun toCSG2(): CSG {
         val platformRadius = 80.0
         val innerHoleRadius = 50.0
         val platformThickness = 3.0 // deprecated
@@ -95,7 +95,7 @@ class QuadrocopterCross {
         }
         var platform = Cylinder(platformRadius, armHeight, 64).toCSG()
         val innerHole = Cylinder(innerHoleRadius, armHeight, 64).toCSG()
-        platform = platform!!.difference(armHolders, innerHole, quarters)
+        platform = platform.difference(armHolders, innerHole, quarters)
         return platform
     }
 
@@ -103,9 +103,9 @@ class QuadrocopterCross {
         @Throws(IOException::class)
         @JvmStatic
         fun main(args: Array<String>) {
-            CSG.Companion.setDefaultOptType(OptType.NONE)
+            CSG.setDefaultOptType(OptType.NONE)
             val result = QuadrocopterCross().toCSG2()
-            FileUtil.Companion.write(Paths.get("quadrocopter-cross.stl"), result!!.toStlString())
+            FileUtil.write(Paths.get("quadrocopter-cross.stl"), result!!.toStlString())
             result.toObj().toFiles(Paths.get("quadrocopter-cross.obj"))
         }
     }

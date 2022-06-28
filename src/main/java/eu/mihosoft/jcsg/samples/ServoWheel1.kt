@@ -38,18 +38,18 @@ class ServoWheel {
         headThickness
     )
     private val numberOfArms = 3
-    var innerWidth = 7.0
-    var outerWidth = 3.5
+    private var innerWidth = 7.0
+    private var outerWidth = 3.5
     var thickness = 2.0
     var radius = 40.0
-    var ringThickness = 3.0
-    var wheelThickness = 5.0
-    var minorArmLength = radius * 0.75
-    var minorArmHeight = headHeight
-    var minorArmThickness = 2.5
-    var outerRingThickness = wheelThickness / 3.0 * 2
-    var outerRingDepth = 0.5
-    fun toCSG(): CSG? {
+    private var ringThickness = 3.0
+    private var wheelThickness = 5.0
+    private var minorArmLength = radius * 0.75
+    private var minorArmHeight = headHeight
+    private var minorArmThickness = 2.5
+    private var outerRingThickness = wheelThickness / 3.0 * 2
+    private var outerRingDepth = 0.5
+    fun toCSG(): CSG {
         val dt = 360.0 / numberOfArms
         var arms: CSG? = null
         for (i in 0 until numberOfArms) {
@@ -63,11 +63,7 @@ class ServoWheel {
                 minorArmLength,
                 minorArmHeight
             )!!.transformed(Transform.unity().rotZ(dt * i))
-            arms = if (arms == null) {
-                arm
-            } else {
-                arms.union(arm)
-            }
+            arms = arms?.union(arm) ?: arm
         }
         var sHead = servoHead.servoHeadFemale()
         val screwHole = Cylinder(headScrewDiameter / 2.0, ringThickness * 2, 16).toCSG()
@@ -77,19 +73,19 @@ class ServoWheel {
         sHead = sHead!!.difference(screwHole)
         val outerWheelCylinder = Cylinder(radius, wheelThickness, 64).toCSG()
         val innerWheelCylinder = Cylinder(radius - ringThickness, wheelThickness, 64).toCSG()
-        val ring = outerWheelCylinder!!.difference(innerWheelCylinder)
+        val ring = outerWheelCylinder.difference(innerWheelCylinder)
         var wheel = ring.union(sHead)
         val outerRingOutCylinder = Cylinder(radius, outerRingThickness, 64).toCSG()
         val outerRingInnerCylinder =
             Cylinder(radius - outerRingDepth, outerRingThickness, 64).toCSG()
-        val outerRing = outerRingOutCylinder!!.difference(outerRingInnerCylinder).transformed(
+        val outerRing = outerRingOutCylinder.difference(outerRingInnerCylinder).transformed(
             Transform.unity().translateZ(wheelThickness * 0.5 - outerRingThickness * 0.5)
         )
         wheel = wheel.difference(outerRing)
         return wheel
     }
 
-    fun servoArm(
+    private fun servoArm(
         innerWidth: Double,
         outerWidth: Double,
         thickness: Double,
@@ -98,15 +94,15 @@ class ServoWheel {
         minorArmThickness: Double,
         minorArmLegth: Double,
         minorArmHeight: Double
-    ): CSG? {
-        val mainArm: CSG = Extrude.Companion.points(
+    ): CSG {
+        val mainArm: CSG = Extrude.points(
             Vector3d.z(thickness),
             Vector3d.xy(-innerWidth * 0.5, 0.0),
             Vector3d.xy(innerWidth * 0.5, 0.0),
             Vector3d.xy(outerWidth * 0.5, radius - wheelThickness),
             Vector3d.xy(-outerWidth * 0.5, radius - wheelThickness)
         )
-        var minorArm: CSG? = Extrude.Companion.points(
+        var minorArm: CSG? = Extrude.points(
             Vector3d.z(minorArmThickness),
             Vector3d.xy(headDiameter * 0.5 + headThickness * 0.5, thickness),
             Vector3d.xy(minorArmLegth - headDiameter * 0.5 - headThickness * 0.5, thickness),
@@ -123,7 +119,7 @@ class ServoWheel {
         @JvmStatic
         fun main(args: Array<String>) {
             println("RUNNING")
-            FileUtil.Companion.write(
+            FileUtil.write(
                 Paths.get("servo-wheel.stl"),
                 ServoWheel().toCSG()!!.toStlString()
             )

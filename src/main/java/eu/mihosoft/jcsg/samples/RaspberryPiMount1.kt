@@ -43,7 +43,7 @@ import java.nio.file.Paths
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 object RaspberryPiMount {
-    fun board(): CSG? {
+    private fun board(): CSG {
         val board_thickness = 2.0
         val bottom_thickness = 2.0
         val board_mounting_height = 4.0
@@ -54,7 +54,7 @@ object RaspberryPiMount {
         val sd1 = 14.0
         val sd2 = 11.0
         val sd3 = 18.0
-        val board_points_exact: Polygon = Polygon.Companion.fromPoints(
+        val board_points_exact: Polygon = Polygon.fromPoints(
             Vector3d.xy(0.0, 0.0),
             Vector3d.xy(0.0, board_height),
             Vector3d.xy(board_width, board_height),
@@ -68,7 +68,7 @@ object RaspberryPiMount {
 // outer offset 
 
 // inner offset
-        val outer: CSG = Extrude.Companion.points(
+        val outer: CSG = Extrude.points(
             Vector3d.xyz(0.0, 0.0, bottom_thickness),
             Vector3d.xy(0 - outer_offset, 0 - outer_offset),
             Vector3d.xy(0 - outer_offset, board_height + outer_offset),
@@ -79,7 +79,7 @@ object RaspberryPiMount {
             Vector3d.xy(board_width + outer_offset, sd2),
             Vector3d.xy(board_width + outer_offset, 0 - outer_offset)
         )
-        val inner: CSG = Extrude.Companion.points(
+        val inner: CSG = Extrude.points(
             Vector3d.xyz(0.0, 0.0, bottom_thickness),
             Vector3d.xy(0 + inner_offset, 0 + inner_offset),
             Vector3d.xy(0 + inner_offset, board_height - inner_offset),
@@ -103,7 +103,7 @@ object RaspberryPiMount {
         )
     }
 
-    fun boardAndPegs(): CSG? {
+    private fun boardAndPegs(): CSG {
         val board_width = 85.6
         val board_height = 56.0
         val outer_offset = 4.0
@@ -177,6 +177,6 @@ object RaspberryPiMount {
 //        FileUtil.write(Paths.get("sample.stl"), new ServoHead().servoHeadFemale().transformed(Transform.unity().scale(1.0)).toStlString());
         val board = boardAndPegs()!!
             .transformed(Transform.unity().rotX(180.0))
-        FileUtil.Companion.write(Paths.get("sample.stl"), board.toStlString())
+        FileUtil.write(Paths.get("sample.stl"), board.toStlString())
     }
 }

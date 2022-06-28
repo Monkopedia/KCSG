@@ -16,7 +16,7 @@ import java.nio.file.Paths
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 class RoundedCubeSample {
-    fun toCSG(): CSG? {
+    fun toCSG(): CSG {
         return RoundedCube(3.0).resolution(8).cornerRadius(0.2).toCSG()
     }
 
@@ -24,7 +24,7 @@ class RoundedCubeSample {
         @Throws(IOException::class)
         @JvmStatic
         fun main(args: Array<String>) {
-            FileUtil.Companion.write(
+            FileUtil.write(
                 Paths.get("rounded-cube.stl"),
                 RoundedCubeSample().toCSG()!!.toStlString()
             )

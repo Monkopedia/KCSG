@@ -26,13 +26,13 @@ class ServoToServoConnector {
     private val servoMountHeight = 10.0
     private val servoDistance = 17.0
     private val height = 12.0
-    fun toCSG(): CSG? {
+    fun toCSG(): CSG {
         val sth = servoThickness
         val sd = servoDistance
         val th = borderThickness
         val th2 = connectorThickness
         val h = height
-        val fork: CSG = Extrude.Companion.points(
+        val fork: CSG = Extrude.points(
             Vector3d.xyz(0.0, 0.0, servoMountHeight),
             Vector3d.xy(0.0, 0.0),
             Vector3d.xy(sth, 0.0),
@@ -60,7 +60,7 @@ class ServoToServoConnector {
 
             // save union as stl
 //        FileUtil.write(Paths.get("sample.stl"), new ServoHead().servoHeadFemale().transformed(Transform.unity().scale(1.0)).toStlString());
-            FileUtil.Companion.write(
+            FileUtil.write(
                 Paths.get("sample.stl"),
                 servo2ServoConnector.toCSG()!!.toStlString()
             )

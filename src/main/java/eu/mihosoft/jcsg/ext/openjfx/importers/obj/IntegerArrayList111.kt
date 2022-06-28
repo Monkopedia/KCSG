@@ -141,10 +141,8 @@ open class IntegerArrayList :
      */
     constructor(c: Collection<Int>) {
         elementData = IntArray(c.size)
-        var i = 0
-        for (d in c) {
+        for ((i, d) in c.withIndex()) {
             elementData[i] = d
-            i++
         }
         size = elementData.size
     }
@@ -157,7 +155,7 @@ open class IntegerArrayList :
         modCount++
         val oldCapacity = elementData.size
         if (size < oldCapacity) {
-            elementData = Arrays.copyOf(elementData, size)
+            elementData = elementData.copyOf(size)
         }
     }
 
@@ -194,7 +192,7 @@ open class IntegerArrayList :
         if (newCapacity - minCapacity < 0) newCapacity = minCapacity
         if (newCapacity - MAX_ARRAY_SIZE > 0) newCapacity = hugeCapacity(minCapacity)
         // minCapacity is usually close to size, so this is a win:
-        elementData = Arrays.copyOf(elementData, newCapacity)
+        elementData = elementData.copyOf(newCapacity)
     }
 
     /**
@@ -253,7 +251,7 @@ open class IntegerArrayList :
     public override fun clone(): Any {
         return try {
             val v = super.clone() as IntegerArrayList
-            v.elementData = Arrays.copyOf(elementData, size)
+            v.elementData = elementData.copyOf(size)
             v.modCount = 0
             v
         } catch (e: CloneNotSupportedException) {

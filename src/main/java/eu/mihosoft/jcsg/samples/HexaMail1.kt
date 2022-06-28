@@ -61,7 +61,7 @@ class HexaMail {
         @Throws(IOException::class)
         @JvmStatic
         fun main(args: Array<String>) {
-            FileUtil.Companion.write(
+            FileUtil.write(
                 Paths.get("hexamail.stl"),
                 HexaMail().toCSG(6, 3, 3)!!.toStlString()
             )

@@ -122,16 +122,15 @@ class Optimizer @JvmOverloads constructor(
         }
         if (node is Parent) {
             groupsTotal++
-            val p = node
-            for (n in p.childrenUnmodifiable) {
+            for (n in node.childrenUnmodifiable) {
                 optimize(n)
             }
             if (transforms.isEmpty()) {
-                val parent = p.parent
+                val parent = node.parent
                 if (parent is Group) {
                     trEmpty++
                     //                    System.out.println("Empty group = " + node.getId());
-                    emptyParents.add(p)
+                    emptyParents.add(node)
                 } else {
 //                    System.err.println("parent is not group = " + parent);
                 }

@@ -45,9 +45,9 @@ class SubdivisionMesh(
     mapBorderMode: MapBorderMode
 ) : PolygonMesh() {
     private var _subdivisionLevel = 0
-    var boundaryMode: BoundaryMode? = null
+    private var boundaryMode: BoundaryMode? = null
         private set
-    var mapBorderMode: MapBorderMode? = null
+    private var mapBorderMode: MapBorderMode? = null
         private set
     private val symbolicMeshes: MutableList<SymbolicPolygonMesh>
     private var pointValuesDirty = false
@@ -102,7 +102,7 @@ class SubdivisionMesh(
         }
         while (_subdivisionLevel >= symbolicMeshes.size) {
             symbolicMeshes.add(
-                SymbolicSubdivisionBuilder.Companion.subdivide(
+                SymbolicSubdivisionBuilder.subdivide(
                     symbolicMeshes[symbolicMeshes.size - 1],
                     boundaryMode!!,
                     mapBorderMode!!

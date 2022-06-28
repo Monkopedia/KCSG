@@ -65,13 +65,13 @@ class RoundedCube : Primitive {
      */
     constructor(w: Double, h: Double, d: Double) : this(Vector3d.ZERO, Vector3d.xyz(w, h, d))
 
-    override fun toPolygons(): List<Polygon>? {
+    override fun toPolygons(): List<Polygon> {
         val spherePrototype =
             Sphere(getCornerRadius(), getResolution() * 2, getResolution()).toCSG()
         val x = dimensions.x() / 2.0 - getCornerRadius()
         val y = dimensions.y() / 2.0 - getCornerRadius()
         val z = dimensions.z() / 2.0 - getCornerRadius()
-        val sphere1 = spherePrototype!!.transformed(Transform.unity().translate(-x, -y, -z))
+        val sphere1 = spherePrototype.transformed(Transform.unity().translate(-x, -y, -z))
         val sphere2 = spherePrototype.transformed(Transform.unity().translate(x, -y, -z))
         val sphere3 = spherePrototype.transformed(Transform.unity().translate(x, y, -z))
         val sphere4 = spherePrototype.transformed(Transform.unity().translate(-x, y, -z))
@@ -85,7 +85,7 @@ class RoundedCube : Primitive {
         ).hull().polygons
         val locTransform = Transform.unity().translate(center)
         for (p in result!!) {
-            p!!.transform(locTransform)
+            p.transform(locTransform)
         }
         if (!centered) {
             val centerTransform = Transform.unity().translate(
@@ -94,7 +94,7 @@ class RoundedCube : Primitive {
                 dimensions.z() / 2.0
             )
             for (p in result) {
-                p!!.transform(centerTransform)
+                p.transform(centerTransform)
             }
         }
         return result
@@ -145,7 +145,7 @@ class RoundedCube : Primitive {
     /**
      * @return the resolution
      */
-    fun getResolution(): Int {
+    private fun getResolution(): Int {
         return resolution
     }
 
@@ -168,7 +168,7 @@ class RoundedCube : Primitive {
     /**
      * @return the corner radius
      */
-    fun getCornerRadius(): Double {
+    private fun getCornerRadius(): Double {
         return cornerRadius
     }
 

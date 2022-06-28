@@ -13,6 +13,7 @@ import eu.mihosoft.vvecmath.Transform
 import eu.mihosoft.vvecmath.Vector3d
 import java.io.IOException
 import java.nio.file.Paths
+import kotlin.math.max
 
 /**
  *
@@ -38,11 +39,11 @@ class BreadBoardConnector {
         val pth = pegToothHeight
         val ph = pegHeight
         val po = pegOverlap
-        return Extrude.Companion.points(
+        return Extrude.points(
             Vector3d.xyz(0.0, 0.0, connectorDepth),
             Vector3d.xy(-th, -th),
             Vector3d.xy(smh + pth + ph, -th),
-            Vector3d.xy(smh + pth + Math.max(ph / 3, 0.4), 0 + po),
+            Vector3d.xy(smh + pth + max(ph / 3, 0.4), 0 + po),
             Vector3d.xy(smh + pth, 0 + po),
             Vector3d.xy(smh, 0.0),
             Vector3d.xy(0.0, 0.0),
@@ -69,7 +70,7 @@ class BreadBoardConnector {
             val arConnect = BreadBoardConnector()
 
             // save union as stl
-            FileUtil.Companion.write(
+            FileUtil.write(
                 Paths.get("bread-board-connector-tmp.stl"), arConnect.toCSG().transformed(
                     Transform.unity().mirror(Plane.XY_PLANE).rotY(180.0)
                 ).toStlString()

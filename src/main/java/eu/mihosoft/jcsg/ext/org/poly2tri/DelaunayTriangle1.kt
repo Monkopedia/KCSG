@@ -31,6 +31,7 @@ package eu.mihosoft.jcsg.ext.org.poly2tri
 
 import eu.mihosoft.jcsg.ext.org.poly2tri.DelaunayTriangle
 import org.slf4j.LoggerFactory
+import kotlin.math.abs
 
 /* Poly2Tri
  * Copyright (c) 2009-2010, Poly2Tri Contributors
@@ -77,7 +78,7 @@ import org.slf4j.LoggerFactory
 
     /** Has this triangle been marked as an interior triangle?  */
     var isInterior = false
-        protected set
+        private set
     val points = arrayOfNulls<TriangulationPoint>(3)
     fun index(p: TriangulationPoint): Int {
         if (p === points[0]) {
@@ -91,8 +92,7 @@ import org.slf4j.LoggerFactory
     }
 
     fun indexCW(p: TriangulationPoint): Int {
-        val index = index(p)
-        return when (index) {
+        return when (index(p)) {
             0 -> 2
             1 -> 0
             else -> 1
@@ -100,8 +100,7 @@ import org.slf4j.LoggerFactory
     }
 
     fun indexCCW(p: TriangulationPoint): Int {
-        val index = index(p)
-        return when (index) {
+        return when (index(p)) {
             0 -> 1
             1 -> 2
             else -> 0
@@ -160,7 +159,7 @@ import org.slf4j.LoggerFactory
         neighbors[0] = neighbors[1]
     }
 
-    fun clearNeighbor(triangle: DelaunayTriangle) {
+    private fun clearNeighbor(triangle: DelaunayTriangle) {
         if (neighbors[0] === triangle) {
             neighbors[0] = null
         } else if (neighbors[1] === triangle) {
@@ -352,7 +351,7 @@ import org.slf4j.LoggerFactory
     fun area(): Double {
         val a = (points[0]!!.x - points[2]!!.x) * (points[1]!!.y - points[0]!!.y)
         val b = (points[0]!!.x - points[1]!!.x) * (points[2]!!.y - points[0]!!.y)
-        return 0.5 * Math.abs(a - b)
+        return 0.5 * abs(a - b)
     }
 
     fun centroid(): TPoint {

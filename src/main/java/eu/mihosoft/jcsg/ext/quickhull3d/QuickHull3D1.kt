@@ -10,11 +10,17 @@
  * whatsoever, arising out of or in connection with the use of this
  * software.
  */
+@file:Suppress("ControlFlowWithEmptyBody")
+
 package eu.mihosoft.jcsg.ext.quickhull3d
 
 import eu.mihosoft.jcsg.ext.quickhull3d.Face.Companion.createTriangle
 import java.io.*
 import java.util.*
+import kotlin.math.abs
+import kotlin.math.max
+import kotlin.math.sqrt
+import kotlin.system.exitProcess
 
 /**
  * Computes the convex hull of a set of three dimensional points.
@@ -110,27 +116,27 @@ import java.util.*
  * @author John E. Lloyd, Fall 2004
  */
 internal class QuickHull3D {
-    protected var findIndex = -1
+    private var findIndex = -1
 
     // estimated size of the point set
-    protected var charLength = 0.0
+    private var charLength = 0.0
     var debug = false
-    protected var pointBuffer = arrayOfNulls<Vertex>(0)
-    protected var vertexPointIndices = IntArray(0)
+    private var pointBuffer = arrayOfNulls<Vertex>(0)
+    private var vertexPointIndices = IntArray(0)
     private val discardedFaces = arrayOfNulls<Face>(3)
     private val maxVtxs = arrayOfNulls<Vertex>(3)
     private val minVtxs = arrayOfNulls<Vertex>(3)
-    protected var faces: Vector<Face> = Vector<Face>(16)
-    protected var horizon: Vector<HalfEdge> = Vector<HalfEdge>(16)
+    private var faces: Vector<Face> = Vector<Face>(16)
+    private var horizon: Vector<HalfEdge> = Vector<HalfEdge>(16)
     private val newFaces = FaceList()
     private val unclaimed = VertexList()
     private val claimed = VertexList()
-    var numVertices = 0
-    protected set
-    protected var numFaces = 0
-    protected var numPoints = 0
-    protected var explicitTolerance = AUTOMATIC_TOLERANCE
-    protected var tolerance = 0.0
+    private var numVertices = 0
+    private set
+    private var numFaces = 0
+    private var numPoints = 0
+    private var explicitTolerance = AUTOMATIC_TOLERANCE
+    private var tolerance = 0.0
 
     /**
      * Returns the distance tolerance that was used for the most recently
@@ -158,7 +164,7 @@ internal class QuickHull3D {
      * @param tol explicit tolerance
      * @see .getDistanceTolerance
      */
-    fun setExplicitDistanceTolerance(tol: Double) {
+    private fun setExplicitDistanceTolerance(tol: Double) {
         explicitTolerance = tol
     }
 
@@ -254,7 +260,7 @@ internal class QuickHull3D {
         return null
     }
 
-    protected fun setHull(
+    private fun setHull(
         coords: DoubleArray, nump: Int,
         faceIndices: Array<IntArray>, numf: Int
     ) {
@@ -262,7 +268,7 @@ internal class QuickHull3D {
         setPoints(coords, nump)
         computeMaxAndMin()
         for (i in 0 until numf) {
-            val face: Face = Face.Companion.create(pointBuffer, faceIndices[i])
+            val face: Face = Face.create(pointBuffer, faceIndices[i])
             var he = face.he0
             do {
                 val heOpp = findHalfEdge(he!!.head()!!, he.tail()!!)
@@ -325,7 +331,7 @@ internal class QuickHull3D {
             }
             if (stok.ttype != StreamTokenizer.TT_NUMBER) {
                 println("Expecting number of faces")
-                System.exit(1)
+                exitProcess(1)
             }
             val numf = stok.nval.toInt()
             stok.nextToken() // clear EOL
@@ -335,7 +341,7 @@ internal class QuickHull3D {
                 while (stok.nextToken() != StreamTokenizer.TT_EOL) {
                     if (stok.ttype != StreamTokenizer.TT_NUMBER) {
                         println("Expecting face index")
-                        System.exit(1)
+                        exitProcess(1)
                     }
                     indexList.add(0, stok.nval.toInt())
                 }
@@ -349,7 +355,7 @@ internal class QuickHull3D {
             setHull(coords, nump, faceIndices.requireNoNulls(), numf)
         } catch (e: Exception) {
             e.printStackTrace()
-            System.exit(1)
+            exitProcess(1)
         }
     }
 
@@ -431,7 +437,7 @@ internal class QuickHull3D {
         val it: Iterator<*> = faces.iterator()
         while (it.hasNext()) {
             val face = it.next() as Face
-            if (face.mark == Face.Companion.VISIBLE) {
+            if (face.mark == Face.VISIBLE) {
                 face.triangulate(newFaces, minArea)
                 // splitFace (face);
             }
@@ -452,7 +458,7 @@ internal class QuickHull3D {
     //  	      splitFace (face);
     //  	    }
     // 	 }
-    protected fun initBuffers(nump: Int) {
+    private fun initBuffers(nump: Int) {
         if (pointBuffer.size < nump) {
             val newBuffer = arrayOfNulls<Vertex>(nump)
             vertexPointIndices = IntArray(nump)
@@ -470,7 +476,7 @@ internal class QuickHull3D {
         numPoints = nump
     }
 
-    protected fun setPoints(coords: DoubleArray, nump: Int) {
+    private fun setPoints(coords: DoubleArray, nump: Int) {
         for (i in 0 until nump) {
             val vtx = pointBuffer[i]
             vtx!!.pnt[coords[i * 3 + 0], coords[i * 3 + 1]] = coords[i * 3 + 2]
@@ -478,7 +484,7 @@ internal class QuickHull3D {
         }
     }
 
-    protected fun setPoints(pnts: Array<Point3d>, nump: Int) {
+    private fun setPoints(pnts: Array<Point3d>, nump: Int) {
         for (i in 0 until nump) {
             val vtx = pointBuffer[i]
             vtx!!.pnt.set(pnts[i])
@@ -486,7 +492,7 @@ internal class QuickHull3D {
         }
     }
 
-    protected fun computeMaxAndMin() {
+    private fun computeMaxAndMin() {
         val max = Vector3d()
         val min = Vector3d()
         for (i in 0..2) {
@@ -522,15 +528,15 @@ internal class QuickHull3D {
 
         // this epsilon formula comes from QuickHull, and I'm
         // not about to quibble.
-        charLength = Math.max(max.x - min.x, max.y - min.y)
-        charLength = Math.max(max.z - min.z, charLength)
+        charLength = max(max.x - min.x, max.y - min.y)
+        charLength = max(max.z - min.z, charLength)
         tolerance = if (explicitTolerance == AUTOMATIC_TOLERANCE) {
-            3 * DOUBLE_PREC * (Math.max(
-                Math.abs(max.x),
-                Math.abs(min.x)
+            3 * DOUBLE_PREC * (max(
+                abs(max.x),
+                abs(min.x)
             ) +
-                Math.max(Math.abs(max.y), Math.abs(min.y)) +
-                Math.max(Math.abs(max.z), Math.abs(min.z)))
+                max(abs(max.y), abs(min.y)) +
+                max(abs(max.z), abs(min.z)))
         } else {
             explicitTolerance
         }
@@ -540,7 +546,7 @@ internal class QuickHull3D {
      * Creates the initial simplex from which the hull will be built.
      */
     @Throws(IllegalArgumentException::class)
-    protected fun createInitialSimplex() {
+    private fun createInitialSimplex() {
         var max = 0.0
         var imax = 0
         for (i in 0..2) {
@@ -578,12 +584,12 @@ internal class QuickHull3D {
                 nrml.set(xprod)
             }
         }
-        require(Math.sqrt(maxSqr) > 100 * tolerance) { "Input points appear to be colinear" }
+        require(sqrt(maxSqr) > 100 * tolerance) { "Input points appear to be colinear" }
         nrml.normalize()
         var maxDist = 0.0
         val d0 = vtx[2]!!.pnt.dot(nrml)
         for (i in 0 until numPoints) {
-            val dist = Math.abs(pointBuffer[i]!!.pnt.dot(nrml) - d0)
+            val dist = abs(pointBuffer[i]!!.pnt.dot(nrml) - d0)
             if (dist > maxDist && pointBuffer[i] !== vtx[0] && // paranoid
                 pointBuffer[i] !== vtx[1] && pointBuffer[i] !== vtx[2]
             ) {
@@ -591,7 +597,7 @@ internal class QuickHull3D {
                 vtx[3] = pointBuffer[i]
             }
         }
-        require(Math.abs(maxDist) > 100 * tolerance) { "Input points appear to be coplanar" }
+        require(abs(maxDist) > 100 * tolerance) { "Input points appear to be coplanar" }
         if (debug) {
             println("initial vertices:")
             println(vtx[0]!!.index.toString() + ": " + vtx[0]!!.pnt)
@@ -668,7 +674,7 @@ internal class QuickHull3D {
      * @see QuickHull3D.getVertices
      * @see QuickHull3D.getFaces
      */
-    fun getVertices(coords: DoubleArray): Int {
+    private fun getVertices(coords: DoubleArray): Int {
         for (i in 0 until numVertices) {
             val pnt = pointBuffer[vertexPointIndices[i]]!!.pnt
             coords[i * 3 + 0] = pnt.x
@@ -741,7 +747,7 @@ internal class QuickHull3D {
      * indices for each face.
      * @see QuickHull3D.getVertices
      */
-    fun getFaces(indexFlags: Int): Array<IntArray?> {
+    private fun getFaces(indexFlags: Int): Array<IntArray?> {
         val allFaces = arrayOfNulls<IntArray>(faces.size)
         var k = 0
         val it: Iterator<*> = faces.iterator()
@@ -840,7 +846,7 @@ internal class QuickHull3D {
         } while (hedge !== face.he0)
     }
 
-    protected fun resolveUnclaimedPoints(newFaces: FaceList) {
+    private fun resolveUnclaimedPoints(newFaces: FaceList) {
         var vtxNext = unclaimed.first()
         var vtx = vtxNext
         while (vtx != null) {
@@ -849,7 +855,7 @@ internal class QuickHull3D {
             var maxFace: Face? = null
             var newFace = newFaces.first()
             while (newFace != null) {
-                if (newFace.mark == Face.Companion.VISIBLE) {
+                if (newFace.mark == Face.VISIBLE) {
                     val dist = newFace.distanceToPlane(vtx.pnt)
                     if (dist > maxDist) {
                         maxDist = dist
@@ -878,7 +884,7 @@ internal class QuickHull3D {
         }
     }
 
-    protected fun deleteFacePoints(face: Face?, absorbingFace: Face?) {
+    private fun deleteFacePoints(face: Face?, absorbingFace: Face?) {
         val faceVtxs = removeAllPointsFromFace(face)
         if (faceVtxs != null) {
             if (absorbingFace == null) {
@@ -900,7 +906,7 @@ internal class QuickHull3D {
         }
     }
 
-    protected fun oppFaceDistance(he: HalfEdge?): Double {
+    private fun oppFaceDistance(he: HalfEdge?): Double {
         return he!!.face!!.distanceToPlane(he.opposite!!.face!!.centroid)
     }
 
@@ -957,18 +963,18 @@ internal class QuickHull3D {
             hedge = hedge.next
         } while (hedge !== face.he0)
         if (!convex) {
-            face.mark = Face.Companion.NON_CONVEX
+            face.mark = Face.NON_CONVEX
         }
         return false
     }
 
-    protected fun calculateHorizon(
+    private fun calculateHorizon(
         eyePnt: Point3d?, edge0: HalfEdge?, face: Face?, horizon: Vector<HalfEdge>
     ) {
 //	   oldFaces.add (face);
         var edge0 = edge0
         deleteFacePoints(face, null)
-        face!!.mark = Face.Companion.DELETED
+        face!!.mark = Face.DELETED
         if (debug) {
             println("  visiting face " + face.vertexString)
         }
@@ -981,7 +987,7 @@ internal class QuickHull3D {
         }
         do {
             val oppFace = edge!!.oppositeFace()
-            if (oppFace!!.mark == Face.Companion.VISIBLE) {
+            if (oppFace!!.mark == Face.VISIBLE) {
                 if (oppFace.distanceToPlane(eyePnt) > tolerance) {
                     calculateHorizon(
                         eyePnt, edge.opposite,
@@ -1012,7 +1018,7 @@ internal class QuickHull3D {
         return face.getEdge(0)
     }
 
-    protected fun addNewFaces(
+    private fun addNewFaces(
         newFaces: FaceList, eyeVtx: Vertex, horizon: Vector<*>
     ) {
         newFaces.clear()
@@ -1038,7 +1044,7 @@ internal class QuickHull3D {
         hedgeSideBegin!!.next!!.opposite = (hedgeSidePrev)
     }
 
-    protected fun nextPointToAdd(): Vertex? {
+    private fun nextPointToAdd(): Vertex? {
         return if (!claimed.isEmpty) {
             val eyeFace = claimed.first()!!.face
             var eyeVtx: Vertex? = null
@@ -1058,7 +1064,7 @@ internal class QuickHull3D {
         }
     }
 
-    protected fun addPointToHull(eyeVtx: Vertex) {
+    private fun addPointToHull(eyeVtx: Vertex) {
         horizon.clear()
         unclaimed.clear()
         if (debug) {
@@ -1078,7 +1084,7 @@ internal class QuickHull3D {
         run {
             var face = newFaces.first()
             while (face != null) {
-                if (face!!.mark == Face.Companion.VISIBLE) {
+                if (face!!.mark == Face.VISIBLE) {
                     while (doAdjacentMerge(face!!, NONCONVEX_WRT_LARGER_FACE));
                 }
                 face = face!!.next
@@ -1088,8 +1094,8 @@ internal class QuickHull3D {
         // wrt either face	     
         var face = newFaces.first()
         while (face != null) {
-            if (face!!.mark == Face.Companion.NON_CONVEX) {
-                face!!.mark = Face.Companion.VISIBLE
+            if (face!!.mark == Face.NON_CONVEX) {
+                face!!.mark = Face.VISIBLE
                 while (doAdjacentMerge(face!!, NONCONVEX));
             }
             face = face!!.next
@@ -1097,7 +1103,7 @@ internal class QuickHull3D {
         resolveUnclaimedPoints(newFaces)
     }
 
-    protected fun buildHull() {
+    private fun buildHull() {
         var cnt = 0
         var eyeVtx: Vertex
         computeMaxAndMin()
@@ -1124,7 +1130,7 @@ internal class QuickHull3D {
         } while (he !== he0)
     }
 
-    protected fun reindexFacesAndVertices() {
+    private fun reindexFacesAndVertices() {
         for (i in 0 until numPoints) {
             pointBuffer[i]!!.index = -1
         }
@@ -1133,7 +1139,7 @@ internal class QuickHull3D {
         val it = faces.iterator()
         while (it.hasNext()) {
             val face = it.next() as Face
-            if (face.mark != Face.Companion.VISIBLE) {
+            if (face.mark != Face.VISIBLE) {
                 it.remove()
             } else {
                 markFaceVertices(face, 0)
@@ -1151,7 +1157,7 @@ internal class QuickHull3D {
         }
     }
 
-    protected fun checkFaceConvexity(
+    private fun checkFaceConvexity(
         face: Face, tol: Double, ps: PrintStream?
     ): Boolean {
         var dist: Double
@@ -1188,13 +1194,13 @@ internal class QuickHull3D {
         return true
     }
 
-    protected fun checkFaces(tol: Double, ps: PrintStream?): Boolean {
+    private fun checkFaces(tol: Double, ps: PrintStream?): Boolean {
         // check edge convexity
         var convex = true
         val it: Iterator<*> = faces.iterator()
         while (it.hasNext()) {
             val face = it.next() as Face
-            if (face.mark == Face.Companion.VISIBLE) {
+            if (face.mark == Face.VISIBLE) {
                 if (!checkFaceConvexity(face, tol, ps)) {
                     convex = false
                 }
@@ -1249,7 +1255,7 @@ internal class QuickHull3D {
             val it: Iterator<*> = faces.iterator()
             while (it.hasNext()) {
                 val face = it.next() as Face
-                if (face.mark == Face.Companion.VISIBLE) {
+                if (face.mark == Face.VISIBLE) {
                     dist = face.distanceToPlane(pnt)
                     if (dist > pointTol) {
                         ps?.println(

@@ -18,7 +18,7 @@ import java.nio.file.Paths
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 class Egg {
-    fun toCSG(): CSG? {
+    fun toCSG(): CSG {
         val radius = 22.0
         val stretch = 1.50
         val resolution = 64
@@ -26,16 +26,16 @@ class Egg {
         // cube that cuts the spheres
         var cube = Cube(2 * stretch * radius).toCSG()
         cube =
-            cube!!.transformed(Transform.unity().translateZ(stretch * radius))
+            cube.transformed(Transform.unity().translateZ(stretch * radius))
 
         // stretched sphere
-        var upperHalf = Sphere(radius, resolution, resolution / 2).toCSG()!!
+        var upperHalf = Sphere(radius, resolution, resolution / 2).toCSG()
             .transformed(Transform.unity().scaleZ(stretch))
 
         // upper half
         upperHalf = upperHalf.intersect(cube)
         var lowerHalf = Sphere(radius, resolution, resolution / 2).toCSG()
-        lowerHalf = lowerHalf!!.difference(cube)
+        lowerHalf = lowerHalf.difference(cube)
 
         // stretch lower half
         lowerHalf =
@@ -47,7 +47,7 @@ class Egg {
         @Throws(IOException::class)
         @JvmStatic
         fun main(args: Array<String>) {
-            FileUtil.Companion.write(Paths.get("egg.stl"), Egg().toCSG()!!.toStlString())
+            FileUtil.write(Paths.get("egg.stl"), Egg().toCSG()!!.toStlString())
         }
     }
 }

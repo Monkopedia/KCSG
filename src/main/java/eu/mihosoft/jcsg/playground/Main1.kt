@@ -16,12 +16,13 @@ import java.util.*
 import java.util.function.Predicate
 import java.util.logging.Level
 import java.util.logging.Logger
+import kotlin.math.abs
 
 /**
  * @author Michael Hoffer (info@michaelhoffer.de)
  */
 object Main {
-    const val EPS = 1e-8
+    private const val EPS = 1e-8
     @Throws(IOException::class)
     @JvmStatic
     fun main(args: Array<String>) {
@@ -38,7 +39,7 @@ object Main {
 //        c2 = new Sphere(Vector3d.x(0.6), 0.5, 16, 16).toCSG();
         c2 = Sphere(Vector3d.x(0.0), 0.65, 16, 16).toCSG()
         val result1 = splitPolygons(
-            c1!!.polygons!!, c2.polygons!!,
+            c1.polygons!!, c2.polygons!!,
             c1.bounds, c2.bounds
         )
         val result2 = splitPolygons(
@@ -57,7 +58,7 @@ object Main {
 //
         Files.write(
             Paths.get("test-split1.stl"),
-            CSG.Companion.fromPolygons(splitted).toStlString().toByteArray()
+            CSG.fromPolygons(splitted).toStlString().toByteArray()
         )
         val inC2: MutableList<Polygon> = ArrayList()
         val outC2: MutableList<Polygon> = ArrayList()
@@ -109,14 +110,14 @@ object Main {
         difference.addAll(outC2)
         difference.addAll(oppositeC2)
         for (p in inC1) {
-            p!!.flip()
+            p.flip()
         }
         for (p in inC2) {
-            p!!.flip()
+            p.flip()
         }
         difference.addAll(inC1)
         System.err.println(">> creating CSG")
-        val result: CSG = CSG.Companion.fromPolygons(difference)
+        val result: CSG = CSG.fromPolygons(difference)
         System.err.println(">> unknown  polygons in C1: " + unknownOfC1.size)
         System.err.println(">> unknown  polygons in C2: " + unknownOfC2.size)
         System.err.println(">> opposite polygons in C1: " + oppositeC1.size)
@@ -126,7 +127,7 @@ object Main {
         Files.write(Paths.get("test.stl"), result.toStlString().toByteArray())
     }
 
-    internal fun classifyPolygon(p1: Polygon, polygons: List<Polygon>, b: Bounds?): PolygonType {
+    private fun classifyPolygon(p1: Polygon, polygons: List<Polygon>, b: Bounds?): PolygonType {
         val TOL = 1e-10
 
         // we are definitely outside if bounding boxes don't intersect
@@ -211,7 +212,7 @@ object Main {
         return PolygonType.UNKNOWN
     }
 
-    fun getPolygonsThatIntersectWithRay(
+    private fun getPolygonsThatIntersectWithRay(
         point: Vector3d, direction: Vector3d, polygons: List<Polygon>, TOL: Double
     ): List<RayIntersection> {
         val intersection: MutableList<RayIntersection> = ArrayList()
@@ -226,7 +227,7 @@ object Main {
         return intersection
     }
 
-    fun computePlaneIntersection(
+    private fun computePlaneIntersection(
         plane: Plane, point: Vector3d, direction: Vector3d, TOL: Double
     ): PlaneIntersection {
 
@@ -247,9 +248,9 @@ object Main {
         val denominator = A * direction.x() + B * direction.y() + C * direction.z()
 
         //if line is paralel to the plane...
-        return if (Math.abs(denominator) < TOL) {
+        return if (abs(denominator) < TOL) {
             //if line is contained in the plane...
-            if (Math.abs(numerator) < TOL) {
+            if (abs(numerator) < TOL) {
                 PlaneIntersection(
                     PlaneIntersection.IntersectionType.ON,
                     Optional.of(point)
@@ -284,7 +285,7 @@ object Main {
      * @param b2
      * @return
      */
-    fun splitPolygons(
+    private fun splitPolygons(
         ps1: List<Polygon>,
         ps2: List<Polygon>,
         b1: Bounds?, b2: Bounds?
@@ -303,7 +304,7 @@ object Main {
             for (p2 in ps2WithCuts) {
 
                 // return early if polygon bounds do not intersect other polygon bound
-                if (!p1.bounds.intersects(p2!!.bounds)) {
+                if (!p1.bounds.intersects(p2.bounds)) {
                     continue
                 }
                 val cutsOfP2WithP1 = cutPolygonWithPlaneIf(p2, p1.plane,
@@ -332,7 +333,7 @@ object Main {
                         }
                         var numIntersectionsPoly2 = 0
                         var i = 0
-                        while (i < p2!!.vertices.size - 1) {
+                        while (i < p2.vertices.size - 1) {
                             val e1 = p2.vertices[i]!!.pos
                             val e2 = p2.vertices[i + 1 % p2.vertices.size]!!.pos
                             val iRes = calculateLineLineIntersection(e1, e2, s1, s2)
@@ -345,13 +346,13 @@ object Main {
                         }
                         numIntersectionsPoly1 > 0 && numIntersectionsPoly2 > 0
                     })
-                if (!cutsOfP2WithP1.isEmpty()) {
+                if (cutsOfP2WithP1.isNotEmpty()) {
                     cutsWithP1.addAll(cutsOfP2WithP1)
                     p2ToDelete.add(p2)
                 }
             }
             ps2WithCuts.addAll(cutsWithP1)
-            ps2WithCuts.removeAll(p2ToDelete)
+            ps2WithCuts.removeAll(p2ToDelete.toSet())
         }
         return ps2WithCuts
     }
@@ -400,8 +401,8 @@ object Main {
         }
     }
 
-    fun testCut() {
-        var p: Polygon = Polygon.Companion.fromPoints(
+    private fun testCut() {
+        var p: Polygon = Polygon.fromPoints(
             Vector3d.xyz(0.0, 0.0, 0.0),
             Vector3d.xyz(1.0, 0.0, 0.0),
             Vector3d.xyz(1.0, 0.0, 1.0),
@@ -440,11 +441,11 @@ object Main {
         println(" -> $pType")
         val cutsWithCube: MutableList<Polygon> = splitPolygons(
             cubePolys,
-            Arrays.asList(p), p.bounds, cube.bounds
+            listOf(p), p.bounds, cube.bounds
         ).toMutableList()
         cutsWithCube.addAll(cube.polygons!! /*.subList(cubePolyFrom, cubePolyTo)*/)
         try {
-            val objF: ObjFile = CSG.Companion.fromPolygons(cutsWithCube).toObj(3)
+            val objF: ObjFile = CSG.fromPolygons(cutsWithCube).toObj(3)
             objF.toFiles(Paths.get("test-split1.obj"))
             //            Files.write(Paths.get("test-split1.stl"),
 //                    CSG.fromPolygons(cutsWithP1).toStlString().getBytes());
@@ -493,7 +494,7 @@ object Main {
         if (!checkResult) return emptyList()
         val cutsWithP1: MutableList<Polygon> = ArrayList()
         if (front.size > 2) {
-            val frontCut: Polygon = Polygon.Companion.fromPoints(
+            val frontCut: Polygon = Polygon.fromPoints(
                 front
             )
             if (frontCut.isValid) {
@@ -501,7 +502,7 @@ object Main {
             }
         }
         if (back.size > 2) {
-            val backCut: Polygon = Polygon.Companion.fromPoints(
+            val backCut: Polygon = Polygon.fromPoints(
                 back
             )
             if (backCut.isValid) {
@@ -520,7 +521,7 @@ object Main {
      * @param line2Point2
      * @return `true` if the intersection line segment exists; `false` otherwise
      */
-    internal fun calculateLineLineIntersection(
+    private fun calculateLineLineIntersection(
         line1Point1: Vector3d, line1Point2: Vector3d,
         line2Point1: Vector3d, line2Point2: Vector3d
     ): LineIntersectionResult {
@@ -546,7 +547,7 @@ object Main {
         val d2121 =
             p21.x() * p21.x() + p21.y() * p21.y() + p21.z() * p21.z()
         val denom = d2121 * d4343 - d4321 * d4321
-        if (Math.abs(denom) < EPS) {
+        if (abs(denom) < EPS) {
             return LineIntersectionResult.PARALLEL
         }
         val numer = d1343 * d4321 - d1321 * d4343
@@ -604,7 +605,7 @@ object Main {
         segmentPoint2: Vector3d?
     ) {
         val segmentPoint1: Optional<Vector3d>
-        val segmentPoint2: Optional<Vector3d>
+        private val segmentPoint2: Optional<Vector3d>
 
         internal enum class IntersectionType {
             PARALLEL, NON_PARALLEL, INTERSECTING

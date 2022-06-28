@@ -16,7 +16,7 @@ import java.nio.file.Paths
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 class QuadrocopterLadingGearsAndHolders {
-    private fun toCSG(): CSG? {
+    private fun toCSG(): CSG {
         val armThickness = 18.0
         val armShrinkFactor = 0.640
         val gearHeadHeight = 18.0
@@ -29,7 +29,7 @@ class QuadrocopterLadingGearsAndHolders {
         val platformSpaceInner = 50.0
         val platformReplacement =
             bottomReplacementShape(platformThickness, gearWidth, platformInsertionDepth)
-        var arm: CSG? = QuadrocopterArm.Companion.outerCyl(
+        var arm: CSG? = QuadrocopterArm.outerCyl(
             armThickness / 2.0,
             gearDepth,
             0.0,
@@ -40,12 +40,12 @@ class QuadrocopterLadingGearsAndHolders {
         arm = arm!!.transformed(Transform.unity().translateY(armInset))
         var landingGearHead = Cube(gearWidth, gearHeadHeight, gearDepth).toCSG()
         val lgOrigin = Transform.unity().translate(0.0, gearHeadHeight / 2.0, gearDepth / 2.0)
-        landingGearHead = landingGearHead!!.transformed(lgOrigin)
+        landingGearHead = landingGearHead.transformed(lgOrigin)
         landingGearHead = landingGearHead.difference(arm)
         val gearLegHeight = 150.0
         val legResolution = 16
         val legPrototype =
-            Cube(gearDepth, gearLegHeight / legResolution, gearWidth).noCenter().toCSG()!!
+            Cube(gearDepth, gearLegHeight / legResolution, gearWidth).noCenter().toCSG()
                 .transformed(Transform.unity().translate(0.0, gearHeadHeight, -gearWidth / 2.0))
         var leg = legPrototype.clone()
         val dH = gearLegHeight / legResolution
@@ -82,7 +82,7 @@ class QuadrocopterLadingGearsAndHolders {
         depth: Double
     ): CSG {
         val height = Vector3d.z(landingGearWidth)
-        return Extrude.Companion.points(
+        return Extrude.points(
             height,
             Vector3d.ZERO,
             Vector3d.xy(0.0, bottomThickness),
@@ -100,7 +100,7 @@ class QuadrocopterLadingGearsAndHolders {
         fun main(args: Array<String>) {
             val ladingGearsAndHolders = QuadrocopterLadingGearsAndHolders()
             val csg = ladingGearsAndHolders.toCSG()
-            FileUtil.Companion.write(
+            FileUtil.write(
                 Paths.get("quadcopter-landing-gear-and-holder.stl"),
                 csg!!.toStlString()
             )

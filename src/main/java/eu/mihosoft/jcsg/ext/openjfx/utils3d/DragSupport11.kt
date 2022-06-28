@@ -52,8 +52,8 @@ class DragSupport @JvmOverloads constructor(
     property: Property<Number?>,
     factor: Double = 1.0
 ) {
-    var keyboardEventHandler: EventHandler<KeyEvent>
-    var mouseEventHandler: EventHandler<MouseEvent>
+    private var keyboardEventHandler: EventHandler<KeyEvent>
+    private var mouseEventHandler: EventHandler<MouseEvent>
     private var anchor: Number? = null
     private var dragAnchor = 0.0
     private var lastMouseEvent: MouseEvent? = null

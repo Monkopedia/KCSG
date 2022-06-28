@@ -37,8 +37,8 @@ class ServoMountPixy {
     private val pegHeight = 1.0
     private val pegToothHeight = 0.6
     private val pegOverlap = 0.5
-    fun toCSGSimple(): CSG {
-        return Extrude.Companion.points(
+    private fun toCSGSimple(): CSG {
+        return Extrude.points(
             Vector3d.xyz(0.0, 0.0, servoMountHeight),
             Vector3d.xy(0.0, servoThickness),
             Vector3d.xy(overlap, servoThickness),
@@ -53,7 +53,7 @@ class ServoMountPixy {
         )
     }
 
-    fun toCSG(): CSG? {
+    fun toCSG(): CSG {
         val bm1Transform = Transform.unity().rotY(90.0).rotZ(90.0)
             .translate(borderThickness, borderThickness, -boardHolder1Length + borderThickness)
         val bm1 = boardMount1().transformed(bm1Transform)
@@ -72,11 +72,11 @@ class ServoMountPixy {
         return boardMount(boardHolder2Length)
     }
 
-    private fun boardMountWithPixy(): CSG? {
+    private fun boardMountWithPixy(): CSG {
         return boardMount2().union(pixyMount())
     }
 
-    private fun pixyMount(): CSG? {
+    private fun pixyMount(): CSG {
         val pixyBoardThickness = 2.0
         val camHeight = 60.0
         val camHolderHeight = 20.0
@@ -87,7 +87,7 @@ class ServoMountPixy {
 //                outerThickness).
 //                union(pixyMountBase(innerThickness).transformed(Transform.unity().translateZ(outerThickness)));
         var pixyBoard = Cube(50.0, 50.0, pixyBoardThickness).toCSG()
-        pixyBoard = pixyBoard!!.transformed(
+        pixyBoard = pixyBoard.transformed(
             Transform.unity().translate(
                 camHeight + camHolderHeight + boardMountingThickness + borderThickness * 4,
                 pixyBoard.bounds.bounds.y() * 0.5, boardHolder2Length * 0.5
@@ -109,7 +109,7 @@ class ServoMountPixy {
         val breadBoardThickness = 9.0
         val breadBoardOverlap = 14.5
         val bottomThickness = 3.0
-        val points = Arrays.asList(
+        val points = mutableListOf(
             Vector3d.xy(boardMountingThickness + borderThickness, -borderThickness),
             Vector3d.xy(
                 boardMountingThickness + borderThickness + camHeight + camHolderHeight,
@@ -164,8 +164,8 @@ class ServoMountPixy {
             Vector3d.xy(boardMountingThickness, h),
             Vector3d.xy(boardMountingThickness, 0.0)
         )
-        Collections.reverse(points)
-        return Extrude.Companion.points(
+        points.reverse()
+        return Extrude.points(
             Vector3d.xyz(0.0, 0.0, boardHolder2Length),
             points
         )
@@ -174,7 +174,7 @@ class ServoMountPixy {
     private fun boardMount(boardHolderLength: Double): CSG {
         val bottomThickness = 3.0
         val h = boardMountingWidth
-        val points = Arrays.asList(
+        val points = mutableListOf(
             Vector3d.ZERO,
             Vector3d.xy(0.0, -borderThickness),
             Vector3d.xy(
@@ -187,8 +187,8 @@ class ServoMountPixy {
             Vector3d.xy(boardMountingThickness, h),
             Vector3d.xy(boardMountingThickness, 0.0)
         )
-        Collections.reverse(points)
-        return Extrude.Companion.points(
+        points.reverse()
+        return Extrude.points(
             Vector3d.xyz(0.0, 0.0, boardHolderLength),
             points
         )
@@ -202,7 +202,7 @@ class ServoMountPixy {
 
             // save union as stl
 //        FileUtil.write(Paths.get("sample.stl"), new ServoHead().servoHeadFemale().transformed(Transform.unity().scale(1.0)).toStlString());
-            FileUtil.Companion.write(
+            FileUtil.write(
                 Paths.get("servo-mount-pixy.stl"),
                 sMount.toCSG()!!.toStlString()
             )

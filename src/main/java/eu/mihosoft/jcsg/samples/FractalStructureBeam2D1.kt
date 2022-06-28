@@ -13,6 +13,7 @@ import eu.mihosoft.vvecmath.Transform
 import eu.mihosoft.vvecmath.Vector3d
 import java.io.IOException
 import java.nio.file.Paths
+import kotlin.math.asin
 
 /**
  *
@@ -29,7 +30,7 @@ class FractalStructureBeam2D {
         }
         val l = stop.minus(start).magnitude()
         val a = stop.y() - start.y()
-        val alpha = Math.asin(a / l) * 180.0 / Math.PI
+        val alpha = asin(a / l) * 180.0 / Math.PI
         println("level: $i alpha: $alpha : $start : $stop : l(c) = $l : a = $a")
         val localToGlobalTransform = Transform.unity().rotZ(-alpha).translate(start)
         val nextB = b / 5.0
@@ -48,7 +49,7 @@ class FractalStructureBeam2D {
         val stopMinorBeam = Vector3d.xy(b, 0.0).plus(incVec) //Vector3d.xy(b, b / 2.0);
         val startMinor = Sphere(mainBeamStartLower, 0.5, 4, 4).toCSG()
         val stopMinor = Sphere(stopMinorBeam, 0.5, 4, 4).toCSG()
-        innerBeams = startMinor!!.union(stopMinor)
+        innerBeams = startMinor.union(stopMinor)
         val counter = 0
 
         /*while (stopMinorBeam.x < innerStop.x) {
@@ -80,7 +81,7 @@ class FractalStructureBeam2D {
 //        }
     }
 
-    private fun createBeamTerminal(b: Double, start: Vector3d, stop: Vector3d): CSG? {
+    private fun createBeamTerminal(b: Double, start: Vector3d, stop: Vector3d): CSG {
         return Cylinder(start, stop, b / 2.0, 4).toCSG()
     }
 
@@ -90,7 +91,7 @@ class FractalStructureBeam2D {
         fun main(args: Array<String>) {
             var result = FractalStructureBeam2D().toCSG()
             result = result!!.union(Sphere(Vector3d.ZERO, 1.0, 4, 4).toCSG())
-            FileUtil.Companion.write(
+            FileUtil.write(
                 Paths.get("fractal-structure-beam-2d.stl"),
                 result.toStlString()
             )

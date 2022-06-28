@@ -16,27 +16,27 @@ import java.nio.file.Paths
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 class EdgeTest {
-    fun toCSG(optimized: Boolean): CSG? {
+    fun toCSG(optimized: Boolean): CSG {
         val radius = 22.0
         val stretch = 1.50
         val resolution = 64
         val cylinder = Cylinder(1.0, 0.3, 8).toCSG()
-        val sphere = Sphere(0.1, 8, 4).toCSG()!!
+        val sphere = Sphere(0.1, 8, 4).toCSG()
             .transformed(Transform.unity().translateZ(0.15))
         val cyl = Cylinder(0.08, 0.3, 8).toCSG()
 
 //        CSG csg = cylinder.difference(cyl).union(sphere);
-        val csg = cylinder!!.difference(cyl)
+        val csg = cylinder.difference(cyl)
         //        CSG csg = cylinder.union(sphere);
         return if (!optimized) {
             csg
         } else {
             val boundaryPolygons: MutableList<Polygon> =
-                Edge.Companion.boundaryPolygons(csg)
+                Edge.boundaryPolygons(csg)
             println("#groups: " + boundaryPolygons.size)
 
 //        List<Polygon> polys = boundaryPolygons.stream().peek(p->System.out.println("verts: "+p.vertices)).map(p->PolygonUtil.concaveToConvex(p)).flatMap(pList->pList.stream()).collect(Collectors.toList());
-            CSG.Companion.fromPolygons(boundaryPolygons)
+            CSG.fromPolygons(boundaryPolygons)
         }
 
 //        return csg;
@@ -46,11 +46,11 @@ class EdgeTest {
         @Throws(IOException::class)
         @JvmStatic
         fun main(args: Array<String>) {
-            FileUtil.Companion.write(
+            FileUtil.write(
                 Paths.get("edge-test.stl"),
                 EdgeTest().toCSG(true)!!.toStlString()
             )
-            FileUtil.Companion.write(
+            FileUtil.write(
                 Paths.get("edge-test-orig.stl"),
                 EdgeTest().toCSG(false)!!.toStlString()
             )

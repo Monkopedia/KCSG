@@ -131,7 +131,7 @@ package eu.mihosoft.jcsg.ext.org.poly2tri
         _points.clear()
         _terminated = false
         if (isDebugEnabled) {
-            debugContext!!.clear()
+            debugContext.clear()
         }
         stepCount = 0
     }

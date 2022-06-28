@@ -64,9 +64,9 @@ class PolygonUtil private constructor() {
 
             // convert holes
             val holesOfPresult =
-                polygon.storage.getValue<List<eu.mihosoft.jcsg.Polygon>>(Edge.Companion.KEY_POLYGON_HOLES)
-            if (holesOfPresult!!.isPresent) {
-                val holesOfP = holesOfPresult!!.get()
+                polygon.storage.getValue<List<eu.mihosoft.jcsg.Polygon>>(Edge.KEY_POLYGON_HOLES)
+            if (holesOfPresult.isPresent) {
+                val holesOfP = holesOfPresult.get()
                 holesOfP.stream().forEach { hP: eu.mihosoft.jcsg.Polygon ->
                     result.addHole(
                         fromCSGPolygon(hP)
@@ -81,14 +81,14 @@ class PolygonUtil private constructor() {
         ): List<eu.mihosoft.jcsg.Polygon> {
             val result: MutableList<eu.mihosoft.jcsg.Polygon> = ArrayList()
             val normal = concave.vertices[0]!!.normal!!.clone()
-            val cw: Boolean = !Extrude.Companion.isCCW(concave)
+            val cw: Boolean = !Extrude.isCCW(concave)
             val p = fromCSGPolygon(concave)
             Poly2Tri.triangulate(p)
             val triangles = p.triangles
             var triPoints: MutableList<Vertex> = ArrayList()
             for (t in triangles!!) {
                 var counter = 0
-                for (tp in t!!.points) {
+                for (tp in t.points) {
                     triPoints.add(
                         Vertex(
                             Vector3d.xyz(tp!!.x, tp.y, tp.z),
@@ -97,7 +97,7 @@ class PolygonUtil private constructor() {
                     )
                     if (counter == 2) {
                         if (!cw) {
-                            Collections.reverse(triPoints)
+                            triPoints.reverse()
                         }
                         val poly = eu.mihosoft.jcsg.Polygon(
                             triPoints, concave.storage

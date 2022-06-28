@@ -36,7 +36,7 @@ package eu.mihosoft.jcsg.ext.openjfx.shape3d.symbolic
  * as a function of other variables.
  */
 abstract class SymbolicPointArray protected constructor(val data: FloatArray) {
-    val numPoints: Int
+    val numPoints: Int = data.size / NUM_COMPONENTS_PER_POINT
 
     /**
      * Updates the variables x, y, z based on the state of the other variables
@@ -49,7 +49,4 @@ abstract class SymbolicPointArray protected constructor(val data: FloatArray) {
         const val NUM_COMPONENTS_PER_POINT = 3
     }
 
-    init {
-        numPoints = data.size / NUM_COMPONENTS_PER_POINT
-    }
 }

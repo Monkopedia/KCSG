@@ -51,7 +51,7 @@ interface Primitive {
      * @return this primitive as [CSG]
      */
     fun toCSG(): CSG {
-        return CSG.Companion.fromPolygons(getProperties(), toPolygons())
+        return CSG.fromPolygons(getProperties(), toPolygons())
     }
 
     /**

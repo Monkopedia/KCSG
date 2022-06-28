@@ -31,6 +31,8 @@
  */
 package eu.mihosoft.jcsg.ext.openjfx.importers
 
+import kotlin.math.sqrt
+
 /**
  * A 3-dimensional, single-precision, floating-point vector.
  *
@@ -133,7 +135,7 @@ class Vec3f {
      * @return the length of this vector
      */
     fun length(): Float {
-        return Math.sqrt((x * x + y * y + z * z).toDouble()).toFloat()
+        return sqrt((x * x + y * y + z * z).toDouble()).toFloat()
     }
 
     /**
@@ -141,9 +143,9 @@ class Vec3f {
      */
     fun normalize() {
         val norm = 1.0f / length()
-        x = x * norm
-        y = y * norm
-        z = z * norm
+        x *= norm
+        y *= norm
+        z *= norm
     }
 
     /**
@@ -152,10 +154,8 @@ class Vec3f {
      * @param v2 the second vector
      */
     fun cross(v1: Vec3f, v2: Vec3f) {
-        val tmpX: Float
-        val tmpY: Float
-        tmpX = v1.y * v2.z - v1.z * v2.y
-        tmpY = v2.x * v1.z - v2.z * v1.x
+        val tmpX: Float = v1.y * v2.z - v1.z * v2.y
+        val tmpY: Float = v2.x * v1.z - v2.z * v1.x
         z = v1.x * v2.y - v1.y * v2.x
         x = tmpX
         y = tmpY
@@ -197,8 +197,7 @@ class Vec3f {
             return true
         }
         if (obj is Vec3f) {
-            val v = obj
-            return x == v.x && y == v.y && z == v.z
+            return x == obj.x && y == obj.y && z == obj.z
         }
         return false
     }

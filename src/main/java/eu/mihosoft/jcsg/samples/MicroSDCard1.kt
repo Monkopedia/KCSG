@@ -41,7 +41,7 @@ class MicroSDCard {
         val C1 = 0.6
         val A_ = A - A1
         val B_ = B - B1 + A_
-        return Extrude.Companion.points(
+        return Extrude.points(
             Vector3d.xyz(0.0, 0.0, C1),
             Vector3d.xy(0.0, 0.0),
             Vector3d.xy(A, 0.0),
@@ -60,7 +60,7 @@ class MicroSDCard {
         @Throws(IOException::class)
         @JvmStatic
         fun main(args: Array<String>) {
-            FileUtil.Companion.write(Paths.get("mircosd.stl"), MicroSDCard().toCSG().toStlString())
+            FileUtil.write(Paths.get("mircosd.stl"), MicroSDCard().toCSG().toStlString())
         }
     }
 }

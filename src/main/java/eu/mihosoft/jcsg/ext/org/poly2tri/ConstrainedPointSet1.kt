@@ -69,8 +69,8 @@ package eu.mihosoft.jcsg.ext.org.poly2tri
  * @author Thomas ???, thahlen@gmail.com
  */
 internal class ConstrainedPointSet : PointSet {
-    var edgeIndex: IntArray = intArrayOf()
-    var _constrainedPointList: MutableList<TriangulationPoint>? = null
+    private var edgeIndex: IntArray = intArrayOf()
+    private var _constrainedPointList: MutableList<TriangulationPoint>? = null
 
     constructor(points: List<TriangulationPoint>, index: IntArray) : super(points) {
         edgeIndex = index
@@ -89,7 +89,7 @@ internal class ConstrainedPointSet : PointSet {
         }
     }
 
-    override val triangulationMode: TriangulationMode?
+    override val triangulationMode: TriangulationMode
         get() = TriangulationMode.CONSTRAINED
 
     override fun prepareTriangulation(tcx: TriangulationContext<*>) {

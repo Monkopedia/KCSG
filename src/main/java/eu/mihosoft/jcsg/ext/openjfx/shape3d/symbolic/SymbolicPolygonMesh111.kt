@@ -47,7 +47,7 @@ class SymbolicPolygonMesh {
             if (field == -1) {
                 field = 0
                 for (face in faces!!) {
-                    field += face!!.size
+                    field += face.size
                 }
                 field /= 2
             }

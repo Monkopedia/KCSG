@@ -12,7 +12,7 @@ internal object QhullTest {
             var pnts = tester.randomCubedPoints(100, 1.0, 0.5)
             hull.setFromQhull(pnts, pnts.size / 3,  /*triangulated=*/false)
             pnts = tester.addDegeneracy(
-                QuickHull3DTest.Companion.VERTEX_DEGENERACY, pnts, hull
+                QuickHull3DTest.VERTEX_DEGENERACY, pnts, hull
             )
 
 //	      hull = new QuickHull3D ();

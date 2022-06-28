@@ -173,11 +173,11 @@ class PolyObjImporter {
                         val split2 = split[i].split("/").toTypedArray()
                         faceIndexes[i * 2] = vertexIndex(split2[0].toInt())
                         faceIndexes[i * 2 + 1] =
-                            if (split2.size > 1 && split2[1].length > 0) uvIndex(
+                            if (split2.size > 1 && split2[1].isNotEmpty()) uvIndex(
                                 split2[1].toInt()
                             ) else -1
                         faceNormalIndexes[i] =
-                            if (split2.size > 2 && split2[2].length > 0) normalIndex(
+                            if (split2.size > 2 && split2[2].isNotEmpty()) normalIndex(
                                 split2[2].toInt()
                             ) else -1
                     }
@@ -203,7 +203,7 @@ class PolyObjImporter {
                     // setting new material for next mesh
                     val materialName = line.substring("usemtl ".length)
                     for (mm in _materialLibrary) {
-                        val m = mm!![materialName]
+                        val m = mm[materialName]
                         if (m != null) {
                             _material = m
                             break
@@ -313,7 +313,7 @@ class PolyObjImporter {
 
         // Use normals if they are provided
         if (useNormals) {
-            val smGroups: IntArray = SmoothingGroups.Companion.calcSmoothGroups(
+            val smGroups: IntArray = SmoothingGroups.calcSmoothGroups(
                 faceArrays.requireNoNulls(),
                 faceNormalArrays.requireNoNulls(),
                 newNormals.toFloatArray()
@@ -332,7 +332,7 @@ class PolyObjImporter {
             println("mesh.texCoords = " + mesh.texCoords)
             println("mesh.faces: ")
             for (face in mesh.faces) {
-                println("    face:: " + Arrays.toString(face))
+                println("    face:: " + face.contentToString())
             }
         }
         var keyIndex = 2

@@ -30,7 +30,7 @@ class MoebiusStairs {
         return this
     }
 
-    fun toCSG(): CSG? {
+    fun toCSG(): CSG {
 
 //        CSG.setDefaultOptType(CSG.OptType.POLYGON_BOUND);
         var result: CSG? = null
@@ -56,7 +56,7 @@ class MoebiusStairs {
 //                    4,
 //                    3 + abs(8.0 * cos(30 + i * 360 * (twists + 0.5) / n)),
 //                    3).toCSG().transformed(unity().rotY(90).rotZ(60+i*60.0/n));
-            cube = cube!!.transformed(finalTransform)
+            cube = cube.transformed(finalTransform)
             if (i == 1) {
                 firstCube = cube
             }
@@ -79,16 +79,16 @@ class MoebiusStairs {
     }
 
     private fun abs(value: Double): Double {
-        return Math.abs(value)
+        return kotlin.math.abs(value)
     }
 
     companion object {
         private fun sin(deg: Double): Double {
-            return Math.sin(Math.toRadians(deg))
+            return kotlin.math.sin(Math.toRadians(deg))
         }
 
         private fun cos(deg: Double): Double {
-            return Math.cos(Math.toRadians(deg))
+            return kotlin.math.cos(Math.toRadians(deg))
         }
 
         @Throws(IOException::class)
@@ -96,7 +96,7 @@ class MoebiusStairs {
         fun main(args: Array<String>) {
             val moebiusStairs = MoebiusStairs()
             val csg = moebiusStairs.toCSG()
-            FileUtil.Companion.write(Paths.get("moebius-stairs.stl"), csg!!.toStlString())
+            FileUtil.write(Paths.get("moebius-stairs.stl"), csg!!.toStlString())
             csg.toObj().toFiles(Paths.get("moebius-stairs.obj"))
         }
     }

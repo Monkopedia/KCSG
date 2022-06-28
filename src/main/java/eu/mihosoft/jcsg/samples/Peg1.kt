@@ -92,7 +92,7 @@ class Peg {
     private var pegToothHeight = 1.0
     private var pegTopHeight = 2.0
     private var boardSpacing = 0.2
-    fun toCSG(): CSG? {
+    fun toCSG(): CSG {
 
         // inner offset
         val oi = getInnerOffset()
@@ -108,7 +108,7 @@ class Peg {
         val bs = getBoardSpacing()
         val pd = getPegDepth()
         val pw = oo + oi
-        val peg_points: CSG = Extrude.Companion.points(
+        val peg_points: CSG = Extrude.points(
             Vector3d.xyz(0.0, 0.0, pd),
             Vector3d.xy(0.0, 0.0),
             Vector3d.xy(pw, 0.0),
@@ -127,7 +127,7 @@ class Peg {
     /**
      * @return the outerOffset
      */
-    fun getOuterOffset(): Double {
+    private fun getOuterOffset(): Double {
         return outerOffset
     }
 
@@ -142,7 +142,7 @@ class Peg {
     /**
      * @return the innerOffset
      */
-    fun getInnerOffset(): Double {
+    private fun getInnerOffset(): Double {
         return innerOffset
     }
 
@@ -157,7 +157,7 @@ class Peg {
     /**
      * @return the boardMountingHeight
      */
-    fun getBoardMountingHeight(): Double {
+    private fun getBoardMountingHeight(): Double {
         return boardMountingHeight
     }
 
@@ -172,7 +172,7 @@ class Peg {
     /**
      * @return the boardThickness
      */
-    fun getBoardThickness(): Double {
+    private fun getBoardThickness(): Double {
         return boardThickness
     }
 
@@ -187,7 +187,7 @@ class Peg {
     /**
      * @return the overlap
      */
-    fun getOverlap(): Double {
+    private fun getOverlap(): Double {
         return overlap
     }
 
@@ -202,7 +202,7 @@ class Peg {
     /**
      * @return the pegDepth
      */
-    fun getPegDepth(): Double {
+    private fun getPegDepth(): Double {
         return pegDepth
     }
 
@@ -217,7 +217,7 @@ class Peg {
     /**
      * @return the pegToothHeight
      */
-    fun getPegToothHeight(): Double {
+    private fun getPegToothHeight(): Double {
         return pegToothHeight
     }
 
@@ -232,7 +232,7 @@ class Peg {
     /**
      * @return the pegTopHeight
      */
-    fun getPegTopHeight(): Double {
+    private fun getPegTopHeight(): Double {
         return pegTopHeight
     }
 
@@ -247,7 +247,7 @@ class Peg {
     /**
      * @return the boardSpacing
      */
-    fun getBoardSpacing(): Double {
+    private fun getBoardSpacing(): Double {
         return boardSpacing
     }
 

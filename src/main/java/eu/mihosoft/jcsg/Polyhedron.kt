@@ -40,16 +40,16 @@ class Polyhedron : Primitive {
      * @param faces list of faces (array of point index arrays)
      */
     constructor(points: Array<Vector3d>, faces: Array<Array<Int>>) {
-        this.points.addAll(Arrays.asList(*points))
+        this.points.addAll(listOf(*points))
         for (list in faces) {
-            this.faces.add(Arrays.asList(*list))
+            this.faces.add(listOf(*list))
         }
     }
 
     override fun toPolygons(): MutableList<Polygon>? {
         val indexToPoint = Function { i: Int? -> points[i!!].clone() }
         val faceListToPolygon = Function<List<Int>, Polygon> { faceList: List<Int> ->
-            Polygon.Companion.fromPoints(
+            Polygon.fromPoints(
                 faceList.stream().map(indexToPoint).collect(Collectors.toList()),
                 properties
             )

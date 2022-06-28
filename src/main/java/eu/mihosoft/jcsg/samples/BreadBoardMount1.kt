@@ -27,16 +27,16 @@ class BreadBoardMount {
     private val pinHoleHeight = 10.0
     private val bottomThickness = 2.0
     private val servoConnectThickness = 7.0
-    private fun board(): CSG? {
+    private fun board(): CSG {
         return Cube(
             Vector3d.ZERO,
             Vector3d.xyz(breadBoardWidth, breadboardLength, breadBoardHeight)
         ).toCSG()
     }
 
-    private fun pins(): CSG? {
+    private fun pins(): CSG {
         val prototype = Cylinder(pinRadius, pinHeight, 16).toCSG()
-        val first = prototype!!.clone().transformed(
+        val first = prototype.clone().transformed(
             Transform.unity().translate(breadBoardWidth / 2.0, breadBoardHeight / 2.0, 0.0)
         )
         val second = prototype.clone().transformed(
@@ -49,35 +49,35 @@ class BreadBoardMount {
         return pins.difference(board)
     }
 
-    private fun pinConnections(): CSG? {
+    private fun pinConnections(): CSG {
         val first = Cube(
             Vector3d.ZERO,
             Vector3d.xyz(breadBoardWidth / 2, 3.0, bottomThickness)
-        ).toCSG()!!.transformed(
+        ).toCSG().transformed(
             Transform.unity().translate(-breadBoardWidth / 4, 0.0, bottomThickness / 2)
         )
         val second = Cube(
             Vector3d.ZERO,
             Vector3d.xyz(breadBoardWidth / 2 + 10, 3.0, bottomThickness)
-        ).toCSG()!!.transformed(
+        ).toCSG().transformed(
             Transform.unity().rotZ(37.8)
                 .translate(breadBoardWidth / 4 + 5, 0.0, bottomThickness / 2)
         )
         val third = Cube(
             Vector3d.ZERO,
             Vector3d.xyz(breadBoardWidth / 2 + 10, 3.0, bottomThickness)
-        ).toCSG()!!.transformed(
+        ).toCSG().transformed(
             Transform.unity().rotZ(-37.8)
                 .translate(breadBoardWidth / 4 + 5, 0.0, bottomThickness / 2)
         )
         return first.union(second).union(third)
     }
 
-    private fun servoConnect(): CSG? {
+    private fun servoConnect(): CSG {
         val firstA = Cube(
             Vector3d.ZERO,
             Vector3d.xyz(breadBoardWidth, servoConnectThickness, bottomThickness)
-        ).toCSG()!!.transformed(
+        ).toCSG().transformed(
             Transform.unity().translate(0.0, -breadBoardHeight / 2, bottomThickness / 2)
         )
         val firstB = Cube(
@@ -87,7 +87,7 @@ class BreadBoardMount {
                 breadBoardHeight / 2 + servoConnectThickness / 2,
                 bottomThickness
             )
-        ).toCSG()!!.transformed(
+        ).toCSG().transformed(
             Transform.unity().translate(
                 -breadBoardWidth / 2,
                 -breadBoardHeight / 4 - servoConnectThickness / 4,
@@ -99,7 +99,7 @@ class BreadBoardMount {
         return first.union(second)
     }
 
-    fun toCSG(): CSG? {
+    fun toCSG(): CSG {
         return pins()!!.union(pinConnections()).union(servoConnect())
     }
 
@@ -111,7 +111,7 @@ class BreadBoardMount {
 
             // save union as stl
 //        FileUtil.write(Paths.get("sample.stl"), new ServoHead().servoHeadFemale().transformed(Transform.unity().scale(1.0)).toStlString());
-            FileUtil.Companion.write(
+            FileUtil.write(
                 Paths.get("bread-board-mount.stl"),
                 aMount.toCSG()!!.toStlString()
             )

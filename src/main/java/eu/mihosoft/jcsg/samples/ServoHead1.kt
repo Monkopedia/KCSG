@@ -50,7 +50,7 @@ class ServoHead {
 
     constructor()
 
-    fun servoTooth(): CSG {
+    private fun servoTooth(): CSG {
 
         //
         //       |  tw  |
@@ -60,7 +60,7 @@ class ServoHead {
         //     
         //     |    tl    |
         //
-        return Extrude.Companion.points(
+        return Extrude.points(
             Vector3d.xyz(0.0, 0.0, headHeight),
             Vector3d.xy(-toothLength / 2, 0.0),
             Vector3d.xy(-toothWidth / 2, toothHeight),
@@ -81,11 +81,7 @@ class ServoHead {
             val translate = Transform.unity().translateY(headDiameter / 2 - toothHeight + clear)
             val rot = Transform.unity().rotZ(i * (360.0 / toothCount))
             tooth = tooth!!.transformed(rot.apply(translate))
-            result = if (result == null) {
-                tooth
-            } else {
-                result.union(tooth)
-            }
+            result = result?.union(tooth) ?: tooth
         }
         if (result != null) {
             result = result.union(cylinder)
@@ -93,12 +89,12 @@ class ServoHead {
         return result
     }
 
-    fun servoHeadFemale(): CSG? {
+    fun servoHeadFemale(): CSG {
         val cyl1 = Cylinder(headDiameter / 2 + headThickness, headHeight + 1, 16).toCSG()
         //        cyl1 = cyl1.transformed(Transform.unity().translateZ(0.1));
         val cyl2 = Cylinder(headScrewDiameter / 2, 10.0, 16).toCSG()
         val head = servoHeadMale()
-        val headFinal = cyl1!!.difference(cyl2).difference(head)
+        val headFinal = cyl1.difference(cyl2).difference(head)
         return headFinal.transformed(
             Transform.unity().rotX(180.0).translateZ(-headHeight - headThickness)
         )
@@ -109,11 +105,11 @@ class ServoHead {
         @JvmStatic
         fun main(args: Array<String>) {
             println("RUNNING")
-            FileUtil.Companion.write(
+            FileUtil.write(
                 Paths.get("servo-head-female.stl"), ServoHead().servoHeadFemale()!!
                     .toStlString()
             )
-            FileUtil.Companion.write(
+            FileUtil.write(
                 Paths.get("servo-head-male.stl"), ServoHead().servoHeadMale()!!
                     .toStlString()
             )

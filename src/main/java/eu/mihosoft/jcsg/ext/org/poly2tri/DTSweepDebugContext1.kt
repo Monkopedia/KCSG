@@ -63,11 +63,11 @@ internal class DTSweepDebugContext(tcx: DTSweepContext) : TriangulationDebugCont
     /*
      * Fields used for visual representation of current triangulation
      */
-    protected var _primaryTriangle: DelaunayTriangle? = null
-    protected var _secondaryTriangle: DelaunayTriangle? = null
-    var activePoint: TriangulationPoint? = null
-    protected var _activeNode: AdvancingFrontNode? = null
-    protected var _activeConstraint: DTSweepConstraint? = null
+    private var _primaryTriangle: DelaunayTriangle? = null
+    private var _secondaryTriangle: DelaunayTriangle? = null
+    private var activePoint: TriangulationPoint? = null
+    private var _activeNode: AdvancingFrontNode? = null
+    private var _activeConstraint: DTSweepConstraint? = null
     val isDebugContext: Boolean
         get() = true
 

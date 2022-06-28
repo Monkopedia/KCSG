@@ -25,7 +25,7 @@ class QuadrocopterArmHolder {
         armCubeThickness: Double,
         holderPlatformRadius: Double,
         holderPlatformThickness: Double
-    ): CSG? {
+    ): CSG {
         var armCubeThickness = armCubeThickness
         val widthTol = 2.0
         val thicknessTol = 0.1
@@ -33,31 +33,31 @@ class QuadrocopterArmHolder {
         val armOverlap = 15.0
         val holderTopRailWidth = 2.0
         val holderTopRailSpacing = 2.0
-        armCubeThickness = armCubeThickness + thicknessTol
+        armCubeThickness += thicknessTol
         val holderCubeWidth = widthTol + holderWallThickness * 2 + armCubeWidth
         val holderCubeHeight = armHeight + holderWallThickness
         val holderCubeDepth = armOverlap + armCubeThickness + holderWallThickness
         val holderCube = Cube(holderCubeWidth, holderCubeDepth, holderCubeHeight).toCSG()
         val armWidth = armHeight * armScaleFactor
-        val armCube = Cube(armCubeWidth + widthTol, armCubeThickness, armHeight).toCSG()!!
+        val armCube = Cube(armCubeWidth + widthTol, armCubeThickness, armHeight).toCSG()
             .transformed(
                 Transform.unity()
                     .translateY(-armCubeThickness / 2.0 - armOverlap / 2.0 + holderWallThickness)
             )
-        var arm = Cube(armWidth, holderCubeDepth, armHeight).toCSG()!!
+        var arm = Cube(armWidth, holderCubeDepth, armHeight).toCSG()
             .transformed(Transform.unity().translateZ(armHeight / 2.0))
-        arm = Cylinder(armHeight / 2.0, holderCubeDepth, 32).toCSG()!!
+        arm = Cylinder(armHeight / 2.0, holderCubeDepth, 32).toCSG()
             .transformed(
                 Transform.unity().rotX(90.0).translate(0.0, 0.0, -holderCubeDepth / 2.0)
                     .scaleX(armScaleFactor)
             ).union(arm)
-        var holder = holderCube!!.difference(
+        var holder = holderCube.difference(
             armCube.union(arm)
                 .transformed(Transform.unity().translate(0.0, 0.0, 0.5 * holderWallThickness))
         ).transformed(
             Transform.unity().translateY(-holderCubeDepth / 2.0)
         )
-        var holderTopRail = Cylinder(holderTopRailWidth / 2.0, holderCubeDepth, 6).toCSG()!!
+        var holderTopRail = Cylinder(holderTopRailWidth / 2.0, holderCubeDepth, 6).toCSG()
             .transformed(
                 Transform.unity().translate(
                     -holderCubeWidth / 2.0,
@@ -73,7 +73,7 @@ class QuadrocopterArmHolder {
         holder = holder.difference(holderTopRail)
 
 //        return holder;
-        val holderPlatform = Cylinder(holderPlatformRadius, holderPlatformThickness, 64).toCSG()!!
+        val holderPlatform = Cylinder(holderPlatformRadius, holderPlatformThickness, 64).toCSG()
             .transformed(Transform.unity().scaleY(1.15).translateY(-holderPlatformRadius * 0.75))
         return holderPlatform.union(
             holder.transformed(
@@ -89,7 +89,7 @@ class QuadrocopterArmHolder {
         @JvmStatic
         fun main(args: Array<String>) {
             val result = QuadrocopterArmHolder().toCSG(18.0, 0.5, 18.0, 4.0, 20.0, 3.0)
-            FileUtil.Companion.write(
+            FileUtil.write(
                 Paths.get("quadrocopter-arm-holder.stl"),
                 result!!.toStlString()
             )

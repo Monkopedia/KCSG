@@ -59,7 +59,7 @@ package eu.mihosoft.jcsg.ext.org.poly2tri
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */internal class PolygonSet {
-    protected var _polygons = ArrayList<Polygon>()
+    private var _polygons = ArrayList<Polygon>()
 
     constructor()
     constructor(poly: Polygon) {

@@ -56,7 +56,7 @@ class Extrude private constructor() {
          * @return a CSG object that consists of the extruded polygon
          */
         fun points(dir: Vector3d, vararg points: Vector3d?): CSG {
-            return extrude(dir, Polygon.Companion.fromPoints(toCCW(Arrays.asList(*points))))
+            return extrude(dir, Polygon.fromPoints(toCCW(listOf(*points))))
         }
 
         /**
@@ -71,7 +71,7 @@ class Extrude private constructor() {
          */
         fun points(dir: Vector3d, points: List<Vector3d?>?): CSG {
             val newList: List<Vector3d?> = ArrayList(points)
-            return extrude(dir, Polygon.Companion.fromPoints(toCCW(newList)))
+            return extrude(dir, Polygon.fromPoints(toCCW(newList)))
         }
 
         /**
@@ -92,7 +92,7 @@ class Extrude private constructor() {
         ): List<Polygon?> {
             return extrude(
                 dir,
-                Polygon.Companion.fromPoints(toCCW(Arrays.asList(*points))),
+                Polygon.fromPoints(toCCW(listOf(*points))),
                 top,
                 bottom
             )
@@ -117,7 +117,7 @@ class Extrude private constructor() {
             points1: List<Vector3d?>?
         ): List<Polygon?> {
             val newList1: List<Vector3d?> = ArrayList(points1)
-            return extrude(dir, Polygon.Companion.fromPoints(toCCW(newList1)), top, bottom)
+            return extrude(dir, Polygon.fromPoints(toCCW(newList1)), top, bottom)
         }
 
         /**
@@ -132,7 +132,7 @@ class Extrude private constructor() {
          * @return List of polygons
          */
         fun combine(p1: Polygon, p2: Polygon): CSG {
-            return CSG.Companion.fromPolygons(combine(p1, p2, true, true))
+            return CSG.fromPolygons(combine(p1, p2, true, true))
         }
 
         /**
@@ -148,7 +148,7 @@ class Extrude private constructor() {
          * @param top defines whether to close the top of the tube
          * @return List of polygons
          */
-        fun combine(
+        private fun combine(
             p1: Polygon,
             p2: Polygon,
             bottom: Boolean,
@@ -169,10 +169,10 @@ class Extrude private constructor() {
                 val bottomV2 = p1.vertices[nexti]!!.pos
                 val topV2 = p2.vertices[nexti]!!.pos
                 var pPoints: List<Vector3d?>
-                pPoints = Arrays.asList(bottomV2, topV2, topV1)
-                newPolygons.add(Polygon.Companion.fromPoints(pPoints, p1.storage))
-                pPoints = Arrays.asList(bottomV2, topV1, bottomV1)
-                newPolygons.add(Polygon.Companion.fromPoints(pPoints, p1.storage))
+                pPoints = listOf(bottomV2, topV2, topV1)
+                newPolygons.add(Polygon.fromPoints(pPoints, p1.storage))
+                pPoints = listOf(bottomV2, topV1, bottomV1)
+                newPolygons.add(Polygon.fromPoints(pPoints, p1.storage))
             }
             if (top) {
                 newPolygons.add(p2)
@@ -183,7 +183,7 @@ class Extrude private constructor() {
         private fun extrude(dir: Vector3d, polygon1: Polygon): CSG {
             val newPolygons: MutableList<Polygon> = ArrayList()
             require(dir.z() >= 0) { "z < 0 currently not supported for extrude: $dir" }
-            newPolygons.addAll(PolygonUtil.Companion.concaveToConvex(polygon1))
+            newPolygons.addAll(PolygonUtil.concaveToConvex(polygon1))
             var polygon2 = polygon1.translated(dir)
             val numvertices = polygon1.vertices.size
             for (i in 0 until numvertices) {
@@ -192,13 +192,13 @@ class Extrude private constructor() {
                 val topV1 = polygon2.vertices[i]!!.pos
                 val bottomV2 = polygon1.vertices[nexti]!!.pos
                 val topV2 = polygon2.vertices[nexti]!!.pos
-                val pPoints = Arrays.asList(bottomV2, topV2, topV1, bottomV1)
-                newPolygons.add(Polygon.Companion.fromPoints(pPoints, polygon1.storage))
+                val pPoints = listOf(bottomV2, topV2, topV1, bottomV1)
+                newPolygons.add(Polygon.fromPoints(pPoints, polygon1.storage))
             }
             polygon2 = polygon2.flipped()
-            val topPolygons: List<Polygon> = PolygonUtil.Companion.concaveToConvex(polygon2)
+            val topPolygons: List<Polygon> = PolygonUtil.concaveToConvex(polygon2)
             newPolygons.addAll(topPolygons)
-            return CSG.Companion.fromPolygons(newPolygons)
+            return CSG.fromPolygons(newPolygons)
         }
 
         private fun extrude(
@@ -209,7 +209,7 @@ class Extrude private constructor() {
         ): List<Polygon> {
             val newPolygons: MutableList<Polygon> = ArrayList()
             if (bottom) {
-                newPolygons.addAll(PolygonUtil.Companion.concaveToConvex(polygon1))
+                newPolygons.addAll(PolygonUtil.concaveToConvex(polygon1))
             }
             var polygon2 = polygon1.translated(dir)
             var rot = Transform.unity()
@@ -242,20 +242,20 @@ class Extrude private constructor() {
                 val topV1 = polygon2.vertices[i]!!.pos
                 val bottomV2 = polygon1.vertices[nexti]!!.pos
                 val topV2 = polygon2.vertices[nexti]!!.pos
-                val pPoints = Arrays.asList(bottomV2, topV2, topV1, bottomV1)
-                newPolygons.add(Polygon.Companion.fromPoints(pPoints, polygon1.storage))
+                val pPoints = listOf(bottomV2, topV2, topV1, bottomV1)
+                newPolygons.add(Polygon.fromPoints(pPoints, polygon1.storage))
             }
             polygon2 = polygon2.flipped()
-            val topPolygons: List<Polygon> = PolygonUtil.Companion.concaveToConvex(polygon2)
+            val topPolygons: List<Polygon> = PolygonUtil.concaveToConvex(polygon2)
             if (top) {
                 newPolygons.addAll(topPolygons)
             }
             return newPolygons
         }
 
-        fun toCCW(points: List<Vector3d?>?): List<Vector3d?> {
+        private fun toCCW(points: List<Vector3d?>?): List<Vector3d?> {
             val result: List<Vector3d?> = ArrayList(points)
-            if (!isCCW(Polygon.Companion.fromPoints(result))) {
+            if (!isCCW(Polygon.fromPoints(result))) {
                 Collections.reverse(result)
             }
             return result
@@ -263,7 +263,7 @@ class Extrude private constructor() {
 
         fun toCW(points: List<Vector3d?>?): List<Vector3d?> {
             val result: List<Vector3d?> = ArrayList(points)
-            if (isCCW(Polygon.Companion.fromPoints(result))) {
+            if (isCCW(Polygon.fromPoints(result))) {
                 Collections.reverse(result)
             }
             return result

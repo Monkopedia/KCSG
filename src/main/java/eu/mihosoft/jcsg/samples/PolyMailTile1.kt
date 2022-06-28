@@ -12,6 +12,9 @@ import eu.mihosoft.jcsg.FileUtil
 import eu.mihosoft.vvecmath.Transform
 import java.io.IOException
 import java.nio.file.Paths
+import kotlin.math.cos
+import kotlin.math.min
+import kotlin.math.sin
 
 internal enum class TileType {
     MALE, FEMALE, COMBINED
@@ -29,22 +32,22 @@ class PolyMailTile {
         private set
     var jointRadius = 1.1
         private set
-    var coneLength = 1.8
+    private var coneLength = 1.8
         private set
     var hingeHoleScale = 1.16
         private set
     var pinLength = 1.0
         private set
-    var pinThickness = 2.0
+    private var pinThickness = 2.0
         private set
-    var numEdges = 3
+    private var numEdges = 3
         private set
-    fun toCSG(): CSG? {
+    fun toCSG(): CSG {
 
 //        CSG.setDefaultOptType(CSG.OptType.POLYGON_BOUND);
         val step = 360.0 / numEdges
         val initialRot = step * 0.5
-        val mainPrism = Cylinder(radius, thickness, numEdges).toCSG()!!
+        val mainPrism = Cylinder(radius, thickness, numEdges).toCSG()
             .transformed(Transform.unity().translateZ(-thickness * 0.5).rotZ(initialRot))
         val hingePrototype =
             Hinge().setJointRadius(jointRadius).setJointLength(pinThickness)
@@ -55,7 +58,7 @@ class PolyMailTile {
         hinge1 = hinge1.intersect(
             Cube(
                 hingeBounds.x(),
-                Math.min(hingeBounds.y(), thickness), hingeBounds.z()
+                min(hingeBounds.y(), thickness), hingeBounds.z()
             ).toCSG()
         )
         hinge1 = hinge1.transformed(Transform.unity().rotX(90.0))
@@ -63,7 +66,7 @@ class PolyMailTile {
             pinLength + hingePrototype.jointRadius,
             pinThickness,
             thickness
-        ).toCSG()!!.transformed(Transform.unity().translateX(-(jointRadius + pinLength) * 0.5))
+        ).toCSG().transformed(Transform.unity().translateX(-(jointRadius + pinLength) * 0.5))
         hinge1 = hinge1.union(pin)
         val apothem = apothem
         hinge1 = hinge1.transformed(
@@ -127,18 +130,18 @@ class PolyMailTile {
     /**
      * @return the male
      */
-    fun isMale(): Boolean {
+    private fun isMale(): Boolean {
         return tileType == TileType.MALE
     }
 
     /**
      * @return the male
      */
-    fun isFemale(): Boolean {
+    private fun isFemale(): Boolean {
         return tileType == TileType.FEMALE
     }
 
-    fun isCombined(): Boolean {
+    private fun isCombined(): Boolean {
         return tileType == TileType.COMBINED
     }
 
@@ -220,19 +223,19 @@ class PolyMailTile {
 
     val sideLength: Double
         get() {
-            return 2 * radius * Math.sin(Math.toRadians(180.0 / numEdges))
+            return 2 * radius * sin(Math.toRadians(180.0 / numEdges))
         }
 
     val apothem: Double
         get() {
-            return radius * Math.cos(Math.toRadians(180.0 / numEdges))
+            return radius * cos(Math.toRadians(180.0 / numEdges))
         }
 
     companion object {
         @Throws(IOException::class)
         @JvmStatic
         fun main(args: Array<String>) {
-            FileUtil.Companion.write(
+            FileUtil.write(
                 Paths.get("triangularmail.stl"),
                 PolyMailTile().setNumEdges(6).setCombined().toCSG()!!
                     .toStlString()

@@ -16,14 +16,14 @@ import java.nio.file.Paths
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 class QuadrocopterLadingGears {
-    private fun toCSG(): CSG? {
+    private fun toCSG(): CSG {
         val armThickness = 18.0
         val armShrinkFactor = 0.640
         val gearHeadHeight = 18.0
         val gearWidth = 16.0
         val gearDepth = 20.0
         val armInset = 6.0
-        var arm: CSG? = QuadrocopterArm.Companion.outerCyl(
+        var arm: CSG? = QuadrocopterArm.outerCyl(
             armThickness / 2.0,
             gearDepth,
             0.0,
@@ -34,12 +34,12 @@ class QuadrocopterLadingGears {
         arm = arm!!.transformed(Transform.unity().translateY(armInset))
         var landingGearHead = Cube(gearWidth, gearHeadHeight, gearDepth).toCSG()
         val lgOrigin = Transform.unity().translate(0.0, gearHeadHeight / 2.0, gearDepth / 2.0)
-        landingGearHead = landingGearHead!!.transformed(lgOrigin)
+        landingGearHead = landingGearHead.transformed(lgOrigin)
         landingGearHead = landingGearHead.difference(arm)
         val gearLegHeight = 120.0
         val legResolution = 10
         val legPrototype =
-            Cube(gearDepth, gearLegHeight / legResolution, gearWidth).noCenter().toCSG()!!
+            Cube(gearDepth, gearLegHeight / legResolution, gearWidth).noCenter().toCSG()
                 .transformed(Transform.unity().translate(0.0, gearHeadHeight, -gearWidth / 2.0))
         var leg = legPrototype.clone()
         val dH = gearLegHeight / legResolution
@@ -69,7 +69,7 @@ class QuadrocopterLadingGears {
         fun main(args: Array<String>) {
             val moebiusStairs = QuadrocopterLadingGears()
             val csg = moebiusStairs.toCSG()
-            FileUtil.Companion.write(Paths.get("quadcopter-landing-gear.stl"), csg!!.toStlString())
+            FileUtil.write(Paths.get("quadcopter-landing-gear.stl"), csg!!.toStlString())
             csg.toObj().toFiles(Paths.get("quadcopter-landing-gear.obj"))
         }
     }

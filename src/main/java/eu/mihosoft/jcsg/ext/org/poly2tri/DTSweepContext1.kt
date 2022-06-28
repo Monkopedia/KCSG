@@ -76,7 +76,7 @@ internal class DTSweepContext : TriangulationContext<DTSweepDebugContext>() {
     var head: TriangulationPoint? = null
 
     /** tail point used with advancing front  */
-    var tail: TriangulationPoint? = null
+    private var tail: TriangulationPoint? = null
     var basin = Basin()
     var edgeEvent = EdgeEvent()
     private val _comparator = DTSweepPointComparator()
@@ -246,7 +246,7 @@ internal class DTSweepContext : TriangulationContext<DTSweepDebugContext>() {
         return DTSweepConstraint(a, b)
     }
 
-    override fun algorithm(): TriangulationAlgorithm? {
+    override fun algorithm(): TriangulationAlgorithm {
         return TriangulationAlgorithm.DTSweep
     }
 

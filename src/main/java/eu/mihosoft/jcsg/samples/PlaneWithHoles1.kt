@@ -23,7 +23,7 @@ import java.util.logging.Logger
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 class PlaneWithHoles {
-    fun toCSG(): CSG? {
+    fun toCSG(): CSG {
         var result = Cube(Vector3d.ZERO, Vector3d.xyz(30.0, 30.0, 1.0)).toCSG()
 
 //        CSG result = null;
@@ -41,7 +41,7 @@ class PlaneWithHoles {
 
 //                CSG sphere = new Cylinder(radius, 1, 24).toCSG().transformed(
 //                        Transform.unity().translate((x - 5) * (radius * 1.7 + spacing), (y - 5) * (radius * 1.7 + spacing), -0.5)).optimization(CSG.OptType.CSG_BOUND);
-                val sphere = Sphere(radius).toCSG()!!.transformed(
+                val sphere = Sphere(radius).toCSG().transformed(
                     Transform.unity().translate(
                         (x - 5) * (radius * 2 + spacing),
                         (y - 5) * (radius * 2 + spacing),
@@ -51,20 +51,16 @@ class PlaneWithHoles {
 
 
 //                result = result.difference(sphere);
-                spheres = if (spheres == null) {
-                    sphere
-                } else {
-                    spheres.union(sphere)
-                }
+                spheres = spheres?.union(sphere) ?: sphere
             }
         }
         try {
-            FileUtil.Companion.write(Paths.get("cyl.stl"), spheres!!.toStlString())
+            FileUtil.write(Paths.get("cyl.stl"), spheres!!.toStlString())
         } catch (ex: IOException) {
             Logger.getLogger(PlaneWithHoles::class.java.name).log(Level.SEVERE, null, ex)
         }
         println(">> final diff")
-        result = result!!.difference(spheres)
+        result = result.difference(spheres)
         return result
     }
 
@@ -72,12 +68,12 @@ class PlaneWithHoles {
         @Throws(IOException::class)
         @JvmStatic
         fun main(args: Array<String>) {
-            CSG.Companion.setDefaultOptType(OptType.CSG_BOUND)
+            CSG.setDefaultOptType(OptType.CSG_BOUND)
             val planeWithHoles = PlaneWithHoles()
 
             // save union as stl
 //        FileUtil.write(Paths.get("sample.stl"), new ServoHead().servoHeadFemale().transformed(Transform.unity().scale(1.0)).toStlString());
-            FileUtil.Companion.write(
+            FileUtil.write(
                 Paths.get("sample.stl"),
                 planeWithHoles.toCSG()!!.toStlString()
             )

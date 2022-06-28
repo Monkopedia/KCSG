@@ -69,13 +69,13 @@ internal class TriangulationProcess @JvmOverloads constructor(private val _algor
     Runnable {
     val context: TriangulationContext<*>?
     private var _thread: Thread? = null
-    var isDone = false
+    private var isDone = false
         private set
-    var pointCount = 0
+    private var pointCount = 0
         private set
-    var timestamp: Long = 0
+    private var timestamp: Long = 0
         private set
-    var triangulationTime = 0.0
+    private var triangulationTime = 0.0
         private set
     private var _awaitingTermination = false
     private var _restart = false
@@ -225,7 +225,7 @@ internal class TriangulationProcess @JvmOverloads constructor(private val _algor
         }
     }
 
-    fun resume() {
+    private fun resume() {
         if (_thread != null) {
             // Only force a resume when process is waiting for a notification
             if (_thread!!.state == Thread.State.WAITING) {
@@ -236,7 +236,7 @@ internal class TriangulationProcess @JvmOverloads constructor(private val _algor
         }
     }
 
-    fun shutdown() {
+    private fun shutdown() {
         _awaitingTermination = true
         context!!.terminateTriangulation()
         resume()

@@ -29,6 +29,9 @@
  */
 package eu.mihosoft.jcsg.ext.org.poly2tri
 
+import kotlin.math.cos
+import kotlin.math.sin
+
 /* Poly2Tri
  * Copyright (c) 2009-2010, Poly2Tri Contributors
  * http://code.google.com/p/poly2tri/
@@ -61,11 +64,10 @@ package eu.mihosoft.jcsg.ext.org.poly2tri
  */
 internal object PolygonGenerator {
     private const val PI_2 = 2.0 * Math.PI
-    fun RandomCircleSweep(scale: Double, vertexCount: Int): Polygon {
+    fun randomCircleSweep(scale: Double, vertexCount: Int): Polygon {
         var point: PolygonPoint
-        val points: Array<PolygonPoint?>
         var radius = scale / 4
-        points = arrayOfNulls(vertexCount)
+        val points: Array<PolygonPoint?> = arrayOfNulls(vertexCount)
         for (i in 0 until vertexCount) {
             do {
                 radius += if (i % 250 == 0) {
@@ -79,19 +81,18 @@ internal object PolygonGenerator {
                 radius = if (radius < scale / 10) scale / 10 else radius
             } while (radius < scale / 10 || radius > scale / 2)
             point = PolygonPoint(
-                radius * Math.cos(PI_2 * i / vertexCount),
-                radius * Math.sin(PI_2 * i / vertexCount)
+                radius * cos(PI_2 * i / vertexCount),
+                radius * sin(PI_2 * i / vertexCount)
             )
             points[i] = point
         }
         return Polygon(points.requireNoNulls())
     }
 
-    fun RandomCircleSweep2(scale: Double, vertexCount: Int): Polygon {
+    fun randomCircleSweep2(scale: Double, vertexCount: Int): Polygon {
         var point: PolygonPoint
-        val points: Array<PolygonPoint?>
         var radius = scale / 4
-        points = arrayOfNulls(vertexCount)
+        val points: Array<PolygonPoint?> = arrayOfNulls(vertexCount)
         for (i in 0 until vertexCount) {
             do {
                 radius += scale / 5 * (0.5 - Math.random())
@@ -99,8 +100,8 @@ internal object PolygonGenerator {
                 radius = if (radius < scale / 10) scale / 10 else radius
             } while (radius < scale / 10 || radius > scale / 2)
             point = PolygonPoint(
-                radius * Math.cos(PI_2 * i / vertexCount),
-                radius * Math.sin(PI_2 * i / vertexCount)
+                radius * cos(PI_2 * i / vertexCount),
+                radius * sin(PI_2 * i / vertexCount)
             )
             points[i] = point
         }

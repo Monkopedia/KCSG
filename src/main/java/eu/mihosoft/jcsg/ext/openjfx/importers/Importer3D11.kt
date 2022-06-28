@@ -117,9 +117,8 @@ object Importer3D {//        return new String[]{"*.ma", "*.ase", "*.obj", "*.fx
                     val clazz = Class.forName(name)
                     val obj = clazz.newInstance()
                     if (obj is Importer) {
-                        val plugin = obj
-                        if (plugin.isSupported(extension)) {
-                            importer = plugin
+                        if (obj.isSupported(extension)) {
+                            importer = obj
                             fail = false
                             break
                         }

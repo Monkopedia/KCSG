@@ -13,15 +13,15 @@ import eu.mihosoft.vvecmath.Vector3d
  * @author cpoliwoda
  */
 class Matrix3d(
-    var m11: Double,
-    var m12: Double,
-    var m13: Double,
-    var m21: Double,
-    var m22: Double,
-    var m23: Double,
-    var m31: Double,
-    var m32: Double,
-    var m33: Double
+    private var m11: Double,
+    private var m12: Double,
+    private var m13: Double,
+    private var m21: Double,
+    private var m22: Double,
+    private var m23: Double,
+    private var m31: Double,
+    private var m32: Double,
+    private var m33: Double
 ) {
     override fun toString(): String {
         return """

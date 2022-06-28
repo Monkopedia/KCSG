@@ -33,11 +33,11 @@ class ObjFile internal constructor(private var _obj: String, private val _mtl: S
         _obj = _obj.replace(MTL_NAME, mtlName)
         _objStream = null
         if (parent == null) {
-            FileUtil.Companion.write(Paths.get(objName), _obj)
-            FileUtil.Companion.write(Paths.get(mtlName), _mtl)
+            FileUtil.write(Paths.get(objName), _obj)
+            FileUtil.write(Paths.get(mtlName), _mtl)
         } else {
-            FileUtil.Companion.write(Paths.get(parent.toString(), objName), _obj)
-            FileUtil.Companion.write(Paths.get(parent.toString(), mtlName), _mtl)
+            FileUtil.write(Paths.get(parent.toString(), objName), _obj)
+            FileUtil.write(Paths.get(parent.toString(), mtlName), _mtl)
         }
     }
 

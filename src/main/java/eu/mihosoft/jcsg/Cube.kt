@@ -35,6 +35,7 @@ package eu.mihosoft.jcsg
 
 import eu.mihosoft.vvecmath.Transform
 import eu.mihosoft.vvecmath.Vector3d
+import kotlin.math.min
 
 /**
  * An axis-aligned solid cuboid defined by `center` and
@@ -155,7 +156,7 @@ class Cube : Primitive {
     //
     //        return result;
     //    }
-    override fun toPolygons(): MutableList<Polygon>? {
+    override fun toPolygons(): MutableList<Polygon> {
         val a = arrayOf(
             arrayOf(intArrayOf(0, 4, 6, 2), intArrayOf(-1, 0, 0)),
             arrayOf(intArrayOf(1, 3, 7, 5), intArrayOf(+1, 0, 0)),
@@ -169,9 +170,9 @@ class Cube : Primitive {
             val vertices: MutableList<Vertex?> = ArrayList()
             for (i in info[0]) {
                 val pos = Vector3d.xyz(
-                    center.x() + dimensions.x() * (1 * Math.min(1, i and 1) - 0.5),
-                    center.y() + dimensions.y() * (1 * Math.min(1, i and 2) - 0.5),
-                    center.z() + dimensions.z() * (1 * Math.min(1, i and 4) - 0.5)
+                    center.x() + dimensions.x() * (1 * min(1, i and 1) - 0.5),
+                    center.y() + dimensions.y() * (1 * min(1, i and 2) - 0.5),
+                    center.z() + dimensions.z() * (1 * min(1, i and 4) - 0.5)
                 )
                 vertices.add(
                     Vertex(
@@ -192,7 +193,7 @@ class Cube : Primitive {
                 dimensions.z() / 2.0
             )
             for (p in polygons) {
-                p!!.transform(centerTransform)
+                p.transform(centerTransform)
             }
         }
         return polygons

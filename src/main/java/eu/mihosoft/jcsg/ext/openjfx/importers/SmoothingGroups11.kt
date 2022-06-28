@@ -33,6 +33,8 @@ package eu.mihosoft.jcsg.ext.openjfx.importers
 
 import javafx.scene.shape.TriangleMesh
 import java.util.*
+import kotlin.math.max
+import kotlin.math.min
 
 /** Util for converting Normals to Smoothing Groups  */
 class SmoothingGroups(
@@ -40,7 +42,7 @@ class SmoothingGroups(
     private val faceNormals: Array<IntArray>,
     private val normals: FloatArray
 ) {
-    private val visited: BitSet
+    private val visited: BitSet = BitSet(faces.size)
     private val notVisited: BitSet
     private val q: Queue<Int>
     private lateinit var faceEdges: Array<Array<Edge?>?>
@@ -132,10 +134,10 @@ class SmoothingGroups(
                 }
                 val adjFace = adjFaces[if (adjFaces[0] == face) 1 else 0]
                 val adjFaceEdges = faceEdges[adjFace]!!
-                val adjEdgeInd = Arrays.asList(*adjFaceEdges).indexOf(edge)
+                val adjEdgeInd = listOf(*adjFaceEdges).indexOf(edge)
                 if (adjEdgeInd == -1) {
                     println("Can't find edge $edge in face $adjFace")
-                    println(Arrays.asList(*adjFaceEdges))
+                    println(listOf(*adjFaceEdges))
                     continue
                 }
                 val adjEdge = adjFaceEdges[adjEdgeInd]!!
@@ -231,10 +233,10 @@ class SmoothingGroups(
         }
 
         init {
-            this.from = Math.min(from, to)
-            this.to = Math.max(from, to)
-            this.fromNormal = Math.min(fromNormal, toNormal)
-            this.toNormal = Math.max(fromNormal, toNormal)
+            this.from = min(from, to)
+            this.to = max(from, to)
+            this.fromNormal = min(fromNormal, toNormal)
+            this.toNormal = max(fromNormal, toNormal)
         }
     }
 
@@ -283,14 +285,14 @@ class SmoothingGroups(
         ): IntArray {
             val faceElementSize = mesh.faceElementSize
             val faces =
-                Array<IntArray>(flatFaces.size / faceElementSize) { IntArray(faceElementSize) }
+                Array(flatFaces.size / faceElementSize) { IntArray(faceElementSize) }
             for (f in faces.indices) {
                 for (e in 0 until faceElementSize) {
                     faces[f][e] = flatFaces[f * faceElementSize + e]
                 }
             }
             val pointElementSize = mesh.pointElementSize
-            val faceNormals = Array<IntArray>(flatFaceNormals.size / pointElementSize) {
+            val faceNormals = Array(flatFaceNormals.size / pointElementSize) {
                 IntArray(pointElementSize)
             }
             for (f in faceNormals.indices) {
@@ -304,7 +306,6 @@ class SmoothingGroups(
     }
 
     init {
-        visited = BitSet(faces.size)
         notVisited = BitSet(faces.size)
         notVisited[0, faces.size] = true
         q = LinkedList()

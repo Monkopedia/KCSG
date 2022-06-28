@@ -26,13 +26,13 @@ internal object SimpleExample {
         hull.build(points)
         println("Vertices:")
         val vertices = hull.vertices
-        for (i in vertices!!.indices) {
-            val pnt = vertices!![i]
-            println(pnt!!.x.toString() + " " + pnt!!.y + " " + pnt!!.z)
+        for (i in vertices.indices) {
+            val pnt = vertices[i]
+            println(pnt.x.toString() + " " + pnt.y + " " + pnt.z)
         }
         println("Faces:")
         val faceIndices = hull.getFaces()
-        for (i in vertices!!.indices) {
+        for (i in vertices.indices) {
             for (k in 0 until faceIndices[i]!!.size) {
                 print(faceIndices[i]!![k].toString() + " ")
             }

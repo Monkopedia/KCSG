@@ -12,13 +12,15 @@ import eu.mihosoft.jcsg.FileUtil
 import eu.mihosoft.vvecmath.Transform
 import java.io.IOException
 import java.nio.file.Paths
+import kotlin.math.cos
+import kotlin.math.sin
 
 /**
  *
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 class QuadrocopterPlatform {
-    private fun toCSG(): CSG? {
+    private fun toCSG(): CSG {
         val platformRadius = 84.0
         val platformThickness = 3.0
         val platformBorderThickness = 4.0
@@ -51,7 +53,7 @@ class QuadrocopterPlatform {
                 )
             )
         }
-        var cross = Cube(platformRadius * 2, platformBorderThickness, platformThickness).toCSG()!!
+        var cross = Cube(platformRadius * 2, platformBorderThickness, platformThickness).toCSG()
             .transformed(Transform.unity().translateZ(platformThickness / 2.0))
         cross = cross.union(cross.transformed(Transform.unity().rotZ(90.0)))
         platform = platform!!.union(armHolders, cross)
@@ -64,17 +66,17 @@ class QuadrocopterPlatform {
         platformThickness: Double,
         platformBorderThickness: Double,
         honeycombWallThickness: Double
-    ): CSG? {
+    ): CSG {
         val honeycombRadius = platformRadius / numHoneycombs
         var platform = Cylinder(platformRadius, platformThickness, 64).toCSG()
         val innerPlatform =
             Cylinder(platformRadius - platformBorderThickness, platformThickness, 64).toCSG()
-        val platformShell = platform!!.difference(innerPlatform)
+        val platformShell = platform.difference(innerPlatform)
         val honeycombPrototype = Cylinder(honeycombRadius, platformThickness, 6).toCSG()
         var numHoneycomb = (platformRadius * 2 / (honeycombRadius * 2)).toInt()
         var hexagons: CSG? = null
-        val inradiusOfHexagon = honeycombRadius * Math.cos(180.0 / 6.0 * Math.PI / 180)
-        val sideLength = honeycombRadius * 2 * Math.sin(180.0 / 6.0 * Math.PI / 180)
+        val inradiusOfHexagon = honeycombRadius * cos(180.0 / 6.0 * Math.PI / 180)
+        val sideLength = honeycombRadius * 2 * sin(180.0 / 6.0 * Math.PI / 180)
 
         // TODO: change that!
         // inradius makes previus calculation obsolete
@@ -89,16 +91,12 @@ class QuadrocopterPlatform {
                     -platformRadius + y * inradiusOfHexagon * 2.0 + offset - honeycombWallThickness / 4.0
                 dx += honeycombWallThickness * x + centerOffset - honeycombWallThickness / 6.0
                 dy += honeycombWallThickness * y + honeycombWallThickness * (x % 2) / 2 + centerOffset * 1.75 - inradiusOfHexagon * 0.5 + honeycombWallThickness / 2.0
-                val h = honeycombPrototype!!.transformed(
+                val h = honeycombPrototype.transformed(
                     Transform.unity().translate(
                         dx, dy, 0.0
                     )
                 )
-                hexagons = if (hexagons == null) {
-                    h
-                } else {
-                    hexagons.union(h)
-                }
+                hexagons = hexagons?.union(h) ?: h
             }
         }
         if (hexagons != null) {
@@ -106,7 +104,7 @@ class QuadrocopterPlatform {
         }
         return platform.union(
             platformShell,
-            honeycombPrototype!!.transformed(Transform.unity().scale(1.05, 1.05, 1.0))
+            honeycombPrototype.transformed(Transform.unity().scale(1.05, 1.05, 1.0))
         )
     }
 
@@ -115,7 +113,7 @@ class QuadrocopterPlatform {
         @JvmStatic
         fun main(args: Array<String>) {
             val result = QuadrocopterPlatform().toCSG()
-            FileUtil.Companion.write(Paths.get("quadrocopter-platform.stl"), result!!.toStlString())
+            FileUtil.write(Paths.get("quadrocopter-platform.stl"), result!!.toStlString())
             result.toObj().toFiles(Paths.get("quadrocopter-platform.obj"))
 
 //        CSG resultNoStructure = new QuadrocopterArm().toCSG();

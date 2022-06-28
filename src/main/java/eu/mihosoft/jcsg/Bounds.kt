@@ -34,6 +34,7 @@
 package eu.mihosoft.jcsg
 
 import eu.mihosoft.vvecmath.Vector3d
+import kotlin.math.abs
 
 /**
  * Bounding box for CSGs.
@@ -187,9 +188,9 @@ class Bounds(min: Vector3d, max: Vector3d) : Cloneable {
             (max.z() + min.z()) / 2
         )
         _bounds = Vector3d.xyz(
-            Math.abs(max.x() - min.x()),
-            Math.abs(max.y() - min.y()),
-            Math.abs(max.z() - min.z())
+            abs(max.x() - min.x()),
+            abs(max.y() - min.y()),
+            abs(max.z() - min.z())
         )
         this.min = min.clone()
         this.max = max.clone()

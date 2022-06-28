@@ -29,6 +29,8 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+@file:Suppress("LeakingThis")
+
 package eu.mihosoft.jcsg.ext.openjfx.importers.obj
 
 import java.io.IOException
@@ -141,10 +143,8 @@ open class FloatArrayList :
      */
     constructor(c: Collection<Float>) {
         elementData = FloatArray(c.size)
-        var i = 0
-        for (d in c) {
+        for ((i, d) in c.withIndex()) {
             elementData[i] = d
-            i++
         }
         size = elementData.size
     }
@@ -157,7 +157,7 @@ open class FloatArrayList :
         modCount++
         val oldCapacity = elementData.size
         if (size < oldCapacity) {
-            elementData = Arrays.copyOf(elementData, size)
+            elementData = elementData.copyOf(size)
         }
     }
 
@@ -194,7 +194,7 @@ open class FloatArrayList :
         if (newCapacity - minCapacity < 0) newCapacity = minCapacity
         if (newCapacity - MAX_ARRAY_SIZE > 0) newCapacity = hugeCapacity(minCapacity)
         // minCapacity is usually close to size, so this is a win:
-        elementData = Arrays.copyOf(elementData, newCapacity)
+        elementData = elementData.copyOf(newCapacity)
     }
 
     /**
@@ -253,7 +253,7 @@ open class FloatArrayList :
     public override fun clone(): Any {
         return try {
             val v = super.clone() as FloatArrayList
-            v.elementData = Arrays.copyOf(elementData, size)
+            v.elementData = elementData.copyOf(size)
             v.modCount = 0
             v
         } catch (e: CloneNotSupportedException) {

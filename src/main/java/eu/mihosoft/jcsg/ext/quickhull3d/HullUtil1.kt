@@ -30,10 +30,10 @@ class HullUtil private constructor() {
                 for (i in verts!!) {
                     vertices.add(points[hull.getVertexPointIndices()[i]])
                 }
-                polygons.add(Polygon.Companion.fromPoints(vertices, storage))
+                polygons.add(Polygon.fromPoints(vertices, storage))
                 vertices.clear()
             }
-            return CSG.Companion.fromPolygons(polygons)
+            return CSG.fromPolygons(polygons)
         }
 
         fun hull(csg: CSG, storage: PropertyStorage?): CSG {

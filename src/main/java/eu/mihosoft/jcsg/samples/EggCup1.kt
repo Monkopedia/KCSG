@@ -21,8 +21,8 @@ import java.util.logging.Logger
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 class EggCup {
-    private fun toCSG(): CSG? {
-        CSG.Companion.setDefaultOptType(OptType.POLYGON_BOUND)
+    private fun toCSG(): CSG {
+        CSG.setDefaultOptType(OptType.POLYGON_BOUND)
         val egg = Egg().toCSG()
         val eggBounds = egg!!.bounds.bounds
         val upperNegativeEgg = egg.transformed(
@@ -34,25 +34,25 @@ class EggCup {
             egg.transformed(Transform.unity().translateZ(-eggBounds.z() * 0.50))
         println("egg-size: " + upperNegativeEgg.bounds)
         try {
-            FileUtil.Companion.write(Paths.get("eggcup-neg.stl"), upperNegativeEgg.toStlString())
+            FileUtil.write(Paths.get("eggcup-neg.stl"), upperNegativeEgg.toStlString())
         } catch (ex: IOException) {
             Logger.getLogger(EggCup::class.java.name).log(Level.SEVERE, null, ex)
         }
         val resolution = 64
         val wallThickness = 5.0
         val radius = eggBounds.x() / 2.0 + wallThickness
-        CSG.Companion.setDefaultOptType(OptType.NONE)
+        CSG.setDefaultOptType(OptType.NONE)
         var feet = MoebiusStairs().resolution(90.0).twists(2.0).toCSG()
         feet = feet!!.transformed(Transform.unity().translateZ(-radius).scale(1.2, 1.2, 1.3))
-        CSG.Companion.setDefaultOptType(OptType.POLYGON_BOUND)
-        val shellOuter = Sphere(radius, resolution, resolution / 2).toCSG()!!
+        CSG.setDefaultOptType(OptType.POLYGON_BOUND)
+        val shellOuter = Sphere(radius, resolution, resolution / 2).toCSG()
             .transformed(Transform.unity().scaleZ(1.25))
         var shell = shellOuter.difference(lowerNegativeEgg)
         val shellHeight = shell.bounds.bounds.z()
         val shrinkTransformZ = 0.8
         shell = shell.transformed(Transform.unity().scaleZ(shrinkTransformZ))
         var lowerIntersectionHeight = shellOuter.bounds.bounds.z() - shellHeight
-        lowerIntersectionHeight = lowerIntersectionHeight * shrinkTransformZ
+        lowerIntersectionHeight *= shrinkTransformZ
         val shellTransform = Transform.unity().translateZ(-lowerIntersectionHeight)
         shell = shell.transformed(shellTransform)
         shell = shell.union(feet)
@@ -64,7 +64,7 @@ class EggCup {
         @Throws(IOException::class)
         @JvmStatic
         fun main(args: Array<String>) {
-            FileUtil.Companion.write(Paths.get("eggcup.stl"), EggCup().toCSG()!!.toStlString())
+            FileUtil.write(Paths.get("eggcup.stl"), EggCup().toCSG()!!.toStlString())
         }
     }
 }

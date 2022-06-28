@@ -30,6 +30,7 @@
 package eu.mihosoft.jcsg.ext.org.poly2tri
 
 import org.slf4j.LoggerFactory
+import kotlin.math.atan2
 
 /* Poly2Tri
  * Copyright (c) 2009-2010, Poly2Tri Contributors
@@ -104,7 +105,7 @@ internal object DTSweep {
             if (point.hasEdges()) {
                 for (e in point.edges!!) {
                     if (tcx.isDebugEnabled) {
-                        tcx.debugContext?.activeConstraint = e
+                        tcx.debugContext.activeConstraint = e
                     }
                     edgeEvent(tcx, e, node)
                 }
@@ -121,14 +122,13 @@ internal object DTSweep {
      */
     private fun finalizationConvexHull(tcx: DTSweepContext) {
         var n1: AdvancingFrontNode
-        var n2: AdvancingFrontNode
         var t1: DelaunayTriangle?
         var t2: DelaunayTriangle?
         var first: TriangulationPoint?
         var p1: TriangulationPoint?
         val advancingFront = tcx.advancingFront!!
         n1 = advancingFront.head.next!!
-        n2 = n1.next!!
+        var n2: AdvancingFrontNode = n1.next!!
         first = n1.point
         turnAdvancingFrontConvex(tcx, n1, n2)
 
@@ -139,17 +139,19 @@ internal object DTSweep {
         //      Same for last three nodes!
         // !!! If I implement ConvexHull for lower right and left boundary this fix should not be 
         //     needed and the removed triangles will be added again by default
-        n1 = advancingFront!!.tail.previous!!
+        n1 = advancingFront.tail.previous!!
         if (n1.triangle!!.contains(n1.next!!.point) && n1.triangle!!.contains(n1.previous!!.point)) {
             t1 = n1.triangle!!.neighborAcross(n1.point)
-            rotateTrianglePair(n1.triangle!!, n1.point, t1!!, t1!!.oppositePoint(n1.triangle!!, n1.point)!!)
+            rotateTrianglePair(n1.triangle!!, n1.point, t1!!,
+                t1.oppositePoint(n1.triangle!!, n1.point)
+            )
             tcx.mapTriangleToNodes(n1.triangle!!)
             tcx.mapTriangleToNodes(t1)
         }
         n1 = advancingFront.head.next!!
         if (n1.triangle!!.contains(n1.previous!!.point) && n1.triangle!!.contains(n1.next!!.point)) {
             t1 = n1.triangle!!.neighborAcross(n1.point)
-            rotateTrianglePair(n1.triangle!!, n1.point, t1!!, t1!!.oppositePoint(n1.triangle!!, n1.point))
+            rotateTrianglePair(n1.triangle!!, n1.point, t1!!, t1.oppositePoint(n1.triangle!!, n1.point))
             tcx.mapTriangleToNodes(n1.triangle!!)
             tcx.mapTriangleToNodes(t1)
         }
@@ -166,7 +168,7 @@ internal object DTSweep {
             if (p1 === first) {
                 break
             }
-            t2 = t1.neighborCCW(p1!!)
+            t2 = t1.neighborCCW(p1)
             t1.clear()
             t1 = t2
         } while (true)
@@ -180,7 +182,7 @@ internal object DTSweep {
         while (p1 !== first) {
             tcx.removeFromList(t1)
             p1 = t1!!.pointCCW(p1!!)
-            t2 = t1.neighborCCW(p1!!)
+            t2 = t1.neighborCCW(p1)
             t1.clear()
             t1 = t2
         }
@@ -208,7 +210,7 @@ internal object DTSweep {
         val first = b
         while (c !== tcx.advancingFront!!.tail) {
             if (tcx.isDebugEnabled) {
-                tcx.debugContext!!.activeNode = c
+                tcx.debugContext.activeNode = c
             }
             if (TriangulationUtil.orient2d(
                     b!!.point,
@@ -244,7 +246,7 @@ internal object DTSweep {
         var t = tcx.advancingFront!!.head.next!!.triangle
         val p = tcx.advancingFront!!.head.next!!.point
         while (!t!!.getConstrainedEdgeCW(p)) {
-            t = t!!.neighborCCW(p)
+            t = t.neighborCCW(p)
         }
 
         // Collect interior triangles constrained by edges
@@ -263,17 +265,15 @@ internal object DTSweep {
         tcx: DTSweepContext,
         point: TriangulationPoint
     ): AdvancingFrontNode {
-        val node: AdvancingFrontNode?
-        val newNode: AdvancingFrontNode
-        node = tcx.locateNode(point)
+        val node: AdvancingFrontNode? = tcx.locateNode(point)
         if (tcx.isDebugEnabled) {
-            tcx.debugContext!!.activeNode = node
+            tcx.debugContext.activeNode = node
         }
-        newNode = newFrontTriangle(tcx, point, node!!)
+        val newNode: AdvancingFrontNode = newFrontTriangle(tcx, point, node!!)
 
         // Only need to check +epsilon since point never have smaller 
         // x value than node due to how we fetch nodes from the front
-        if (point.x <= node!!.point.x + TriangulationUtil.EPSILON) {
+        if (point.x <= node.point.x + TriangulationUtil.EPSILON) {
             fill(tcx, node)
         }
         tcx.addNode(newNode)
@@ -294,12 +294,10 @@ internal object DTSweep {
         point: TriangulationPoint,
         node: AdvancingFrontNode
     ): AdvancingFrontNode {
-        val newNode: AdvancingFrontNode
-        val triangle: DelaunayTriangle
-        triangle = DelaunayTriangle(point, node.point, node.next!!.point)
+        val triangle: DelaunayTriangle = DelaunayTriangle(point, node.point, node.next!!.point)
         triangle.markNeighbor(node.triangle!!)
         tcx.addToList(triangle)
-        newNode = AdvancingFrontNode(point)
+        val newNode: AdvancingFrontNode = AdvancingFrontNode(point)
         newNode.next = node.next
         newNode.previous = node
         node.next!!.previous = newNode
@@ -534,7 +532,7 @@ internal object DTSweep {
         node: AdvancingFrontNode
     ) {
         if (tcx.isDebugEnabled) {
-            tcx.debugContext!!.activeNode = node
+            tcx.debugContext.activeNode = node
         }
         if (node.point.x > edge.p!!.x) {
             if (TriangulationUtil.orient2d(
@@ -562,7 +560,7 @@ internal object DTSweep {
         var node: AdvancingFrontNode = node
         while (node.previous!!.point.x > edge.p!!.x) {
             if (tcx.isDebugEnabled) {
-                tcx.debugContext!!.activeNode = node
+                tcx.debugContext.activeNode = node
             }
             // Check if next node is below the edge
             val o1 = TriangulationUtil.orient2d(edge.q!!, node.previous!!.point, edge.p!!)
@@ -580,8 +578,7 @@ internal object DTSweep {
         eq: TriangulationPoint
     ): Boolean {
         var triangle: DelaunayTriangle? = triangle
-        val index: Int
-        index = triangle!!.edgeIndex(ep, eq)
+        val index: Int = triangle!!.edgeIndex(ep, eq)
         if (index != -1) {
             triangle.markConstrainedEdge(index)
             triangle = triangle.neighbors[index]
@@ -607,14 +604,14 @@ internal object DTSweep {
         if (isEdgeSideOfTriangle(triangle!!, ep, eq)) {
             return
         }
-        p1 = triangle!!.pointCCW(point)
-        val o1 = TriangulationUtil.orient2d(eq, p1!!, ep)
+        p1 = triangle.pointCCW(point)
+        val o1 = TriangulationUtil.orient2d(eq, p1, ep)
         if (o1 == TriangulationUtil.Orientation.Collinear) {
             if (triangle.contains(eq, p1)) {
                 triangle.markConstrainedEdge(eq, p1)
                 // We are modifying the constraint maybe it would be better to 
                 // not change the given constraint and just keep a variable for the new constraint
-                tcx.edgeEvent.constrainedEdge!!.q = p1!!
+                tcx.edgeEvent.constrainedEdge!!.q = p1
                 triangle = triangle.neighborAcross(point)
                 edgeEvent(tcx, ep, p1, triangle!!, p1)
             } else {
@@ -632,7 +629,7 @@ internal object DTSweep {
                 triangle.markConstrainedEdge(eq, p2)
                 // We are modifying the constraint maybe it would be better to 
                 // not change the given constraint and just keep a variable for the new constraint
-                tcx.edgeEvent.constrainedEdge!!.q = p2!!
+                tcx.edgeEvent.constrainedEdge!!.q = p2
                 triangle = triangle.neighborAcross(point)
                 edgeEvent(tcx, ep, p2, triangle!!, p2)
             } else {
@@ -668,9 +665,7 @@ internal object DTSweep {
         var t: DelaunayTriangle? = t
         val op: TriangulationPoint
         val newP: TriangulationPoint?
-        val ot: DelaunayTriangle?
-        val inScanArea: Boolean
-        ot = t!!.neighborAcross(p)
+        val ot: DelaunayTriangle? = t!!.neighborAcross(p)
         op = ot!!.oppositePoint(t, p)
         if (ot == null) {
             // If we want to integrate the fillEdgeEvent do it here
@@ -684,7 +679,7 @@ internal object DTSweep {
             tcx.debugContext.primaryTriangle = t
             tcx.debugContext.secondaryTriangle = ot
         } // TODO: remove
-        inScanArea = TriangulationUtil.inScanArea(
+        val inScanArea: Boolean = TriangulationUtil.inScanArea(
             p,
             t.pointCCW(p),
             t.pointCW(p),
@@ -742,7 +737,7 @@ internal object DTSweep {
         eq: TriangulationPoint,
         ot: DelaunayTriangle,
         op: TriangulationPoint
-    ): TriangulationPoint? {
+    ): TriangulationPoint {
         val o2d = TriangulationUtil.orient2d(eq, op, ep)
         return if (o2d == TriangulationUtil.Orientation.CW) {
             // Right
@@ -815,11 +810,9 @@ internal object DTSweep {
         t: DelaunayTriangle,
         p: TriangulationPoint
     ) {
-        val ot: DelaunayTriangle?
         val op: TriangulationPoint?
         val newP: TriangulationPoint?
-        val inScanArea: Boolean
-        ot = t.neighborAcross(p)
+        val ot: DelaunayTriangle? = t.neighborAcross(p)
         op = ot!!.oppositePoint(t, p)
         if (ot == null) {
             // If we want to integrate the fillEdgeEvent do it here
@@ -831,7 +824,7 @@ internal object DTSweep {
             tcx.debugContext.primaryTriangle = t
             tcx.debugContext.secondaryTriangle = ot
         }
-        inScanArea = TriangulationUtil.inScanArea(
+        val inScanArea: Boolean = TriangulationUtil.inScanArea(
             eq,
             flipTriangle.pointCCW(eq),
             flipTriangle.pointCW(eq),
@@ -1023,11 +1016,11 @@ internal object DTSweep {
             return
         }
         fill(tcx, node)
-        node = if (node.previous === tcx.basin.leftNode && node!!.next === tcx.basin.rightNode) {
+        node = if (node.previous === tcx.basin.leftNode && node.next === tcx.basin.rightNode) {
             return
         } else if (node.previous === tcx.basin.leftNode) {
             val o = TriangulationUtil.orient2d(
-                node!!.point,
+                node.point,
                 node.next!!.point,
                 node.next!!.next!!.point
             )
@@ -1035,8 +1028,8 @@ internal object DTSweep {
                 return
             }
             node.next!!
-        } else if (node!!.next === tcx.basin.rightNode) {
-            val o = TriangulationUtil.orient2d(node!!.point, node.previous!!.point, node.previous!!.previous!!.point)
+        } else if (node.next === tcx.basin.rightNode) {
+            val o = TriangulationUtil.orient2d(node.point, node.previous!!.point, node.previous!!.previous!!.point)
             if (o == TriangulationUtil.Orientation.CCW) {
                 return
             }
@@ -1053,8 +1046,7 @@ internal object DTSweep {
     }
 
     private fun isShallow(tcx: DTSweepContext, node: AdvancingFrontNode): Boolean {
-        val height: Double
-        height = if (tcx.basin.leftHighest) {
+        val height: Double = if (tcx.basin.leftHighest) {
             tcx.basin.leftNode!!.point.y - node.point.y
         } else {
             tcx.basin.rightNode!!.point.y - node.point.y
@@ -1088,7 +1080,7 @@ internal object DTSweep {
         val ay = a.y - py
         val bx = b.x - px
         val by = b.y - py
-        return Math.atan2(ax * by - ay * bx, ax * bx + ay * by)
+        return atan2(ax * by - ay * bx, ax * bx + ay * by)
     }
 
     /**
@@ -1097,7 +1089,7 @@ internal object DTSweep {
     private fun basinAngle(node: AdvancingFrontNode): Double {
         val ax = node.point.x - node.next!!.next!!.point.x
         val ay = node.point.y - node.next!!.next!!.point.y
-        return Math.atan2(ay, ax)
+        return atan2(ay, ax)
     }
 
     /**
@@ -1168,7 +1160,6 @@ internal object DTSweep {
                     op
                 )
                 if (inside) {
-                    var notLegalized: Boolean
 
                     // Lets mark this shared edge as Delaunay 
                     t.dEdge[i] = true
@@ -1180,7 +1171,7 @@ internal object DTSweep {
                     // We now got one valid Delaunay Edge shared by two triangles
                     // This gives us 4 new edges to check for Delaunay
                     // Make sure that triangle to node mapping is done only one time for a specific triangle
-                    notLegalized = !legalize(tcx, t)
+                    var notLegalized: Boolean = !legalize(tcx, t)
                     if (notLegalized) {
                         tcx.mapTriangleToNodes(t)
                     }
@@ -1225,30 +1216,18 @@ internal object DTSweep {
         ot: DelaunayTriangle,
         op: TriangulationPoint
     ) {
-        val n1: DelaunayTriangle?
-        val n2: DelaunayTriangle?
-        val n3: DelaunayTriangle?
-        val n4: DelaunayTriangle?
-        n1 = t.neighborCCW(p)
-        n2 = t.neighborCW(p)
-        n3 = ot.neighborCCW(op)
-        n4 = ot.neighborCW(op)
-        val ce1: Boolean
-        val ce2: Boolean
-        val ce3: Boolean
-        val ce4: Boolean
-        ce1 = t.getConstrainedEdgeCCW(p)
-        ce2 = t.getConstrainedEdgeCW(p)
-        ce3 = ot.getConstrainedEdgeCCW(op)
-        ce4 = ot.getConstrainedEdgeCW(op)
-        val de1: Boolean
-        val de2: Boolean
-        val de3: Boolean
-        val de4: Boolean
-        de1 = t.getDelunayEdgeCCW(p)
-        de2 = t.getDelunayEdgeCW(p)
-        de3 = ot.getDelunayEdgeCCW(op)
-        de4 = ot.getDelunayEdgeCW(op)
+        val n1: DelaunayTriangle? = t.neighborCCW(p)
+        val n2: DelaunayTriangle? = t.neighborCW(p)
+        val n3: DelaunayTriangle? = ot.neighborCCW(op)
+        val n4: DelaunayTriangle? = ot.neighborCW(op)
+        val ce1: Boolean = t.getConstrainedEdgeCCW(p)
+        val ce2: Boolean = t.getConstrainedEdgeCW(p)
+        val ce3: Boolean = ot.getConstrainedEdgeCCW(op)
+        val ce4: Boolean = ot.getConstrainedEdgeCW(op)
+        val de1: Boolean = t.getDelunayEdgeCCW(p)
+        val de2: Boolean = t.getDelunayEdgeCW(p)
+        val de3: Boolean = ot.getDelunayEdgeCCW(op)
+        val de4: Boolean = ot.getDelunayEdgeCW(op)
         t.legalize(p, op)
         ot.legalize(op, p)
 

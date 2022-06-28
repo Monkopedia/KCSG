@@ -62,9 +62,9 @@ package eu.mihosoft.jcsg.ext.org.poly2tri
 internal class AdvancingFrontNode(val point: TriangulationPoint) {
     var next: AdvancingFrontNode? = null
     var previous: AdvancingFrontNode? = null
-    protected val key // XXX: BST
+    private val key // XXX: BST
         : Double
-    val value: Double
+    val value: Double = point.x
     var triangle: DelaunayTriangle? = null
     operator fun hasNext(): Boolean {
         return next != null
@@ -75,7 +75,6 @@ internal class AdvancingFrontNode(val point: TriangulationPoint) {
     }
 
     init {
-        value = point.x
         key = java.lang.Double.valueOf(value) // XXX: BST
     }
 }

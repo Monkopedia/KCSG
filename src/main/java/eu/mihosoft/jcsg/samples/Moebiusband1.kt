@@ -19,10 +19,10 @@ import java.util.*
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 class Moebiusband {
-    fun toCSG(): CSG? {
+    fun toCSG(): CSG {
         val width = 10.0
         val height = 20.0
-        val points = Arrays.asList(
+        val points = listOf(
             Vector3d.xy(-width / 2, -height / 2),
             Vector3d.xy(width / 2, -height / 2),
             Vector3d.xy(width / 2, height / 2),
@@ -33,7 +33,7 @@ class Moebiusband {
         var prev: CSG? = null
         for (i in 0..9) {
             val t = Transform.unity().translateZ(2.0).rotZ(i.toDouble())
-            val facet: CSG = Extrude.Companion.points(Vector3d.xyz(0.0, 0.0, 1.0), points)
+            val facet: CSG = Extrude.points(Vector3d.xyz(0.0, 0.0, 1.0), points)
             if (prev != null) {
                 facets.add(facet.union(prev).hull())
             }
@@ -57,7 +57,7 @@ class Moebiusband {
         @JvmStatic
         fun main(args: Array<String>) {
             println("RUNNING")
-            FileUtil.Companion.write(
+            FileUtil.write(
                 Paths.get("möbiusband.stl"),
                 Moebiusband().toCSG()!!.toStlString()
             )

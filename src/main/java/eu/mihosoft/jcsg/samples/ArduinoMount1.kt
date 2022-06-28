@@ -27,13 +27,13 @@ class ArduinoMount {
     private val pinRadius = 2.0
     private val boardThickness = 2.0
     private val servoConnectThickness = 7.0
-    private fun board(): CSG? {
+    private fun board(): CSG {
         return Cube(Vector3d.ZERO, Vector3d.xyz(bottomWidth, bottomHeight, bottomThickness)).toCSG()
     }
 
-    private fun pins(): CSG? {
+    private fun pins(): CSG {
         val prototype = Cylinder(pinRadius, pinHeight, 16).toCSG()
-        val first = prototype!!.clone()
+        val first = prototype.clone()
             .transformed(Transform.unity().translate(bottomWidth / 2.0, bottomHeight / 2.0, 0.0))
         val second = prototype.clone()
             .transformed(Transform.unity().translate(bottomWidth / 2.0, -bottomHeight / 2.0, 0.0))
@@ -44,32 +44,32 @@ class ArduinoMount {
         return pins.difference(board)
     }
 
-    private fun pinConnections(): CSG? {
+    private fun pinConnections(): CSG {
         val first = Cube(
             Vector3d.ZERO,
             Vector3d.xyz(bottomWidth / 2, 3.0, bottomThickness)
-        ).toCSG()!!
+        ).toCSG()
             .transformed(Transform.unity().translate(-bottomWidth / 4, 0.0, bottomThickness / 2))
         val second = Cube(
             Vector3d.ZERO,
             Vector3d.xyz(bottomWidth / 2 + 10, 3.0, bottomThickness)
-        ).toCSG()!!.transformed(
+        ).toCSG().transformed(
             Transform.unity().rotZ(37.8).translate(bottomWidth / 4 + 5, 0.0, bottomThickness / 2)
         )
         val third = Cube(
             Vector3d.ZERO,
             Vector3d.xyz(bottomWidth / 2 + 10, 3.0, bottomThickness)
-        ).toCSG()!!.transformed(
+        ).toCSG().transformed(
             Transform.unity().rotZ(-37.8).translate(bottomWidth / 4 + 5, 0.0, bottomThickness / 2)
         )
         return first.union(second).union(third)
     }
 
-    private fun servoConnect(): CSG? {
+    private fun servoConnect(): CSG {
         val firstA = Cube(
             Vector3d.ZERO,
             Vector3d.xyz(bottomWidth, servoConnectThickness, bottomThickness)
-        ).toCSG()!!
+        ).toCSG()
             .transformed(Transform.unity().translate(0.0, -bottomHeight / 2, bottomThickness / 2))
         val firstB = Cube(
             Vector3d.ZERO,
@@ -78,7 +78,7 @@ class ArduinoMount {
                 bottomHeight / 2 + servoConnectThickness / 2,
                 bottomThickness
             )
-        ).toCSG()!!.transformed(
+        ).toCSG().transformed(
             Transform.unity().translate(
                 -bottomWidth / 2,
                 -bottomHeight / 4 - servoConnectThickness / 4,
@@ -90,7 +90,7 @@ class ArduinoMount {
         return first.union(second)
     }
 
-    fun toCSG(): CSG? {
+    fun toCSG(): CSG {
         return pins()!!.union(pinConnections()).union(servoConnect())
     }
 
@@ -102,7 +102,7 @@ class ArduinoMount {
 
             // save union as stl
 //        FileUtil.write(Paths.get("sample.stl"), new ServoHead().servoHeadFemale().transformed(Transform.unity().scale(1.0)).toStlString());
-            FileUtil.Companion.write(Paths.get("sample.stl"), aMount.toCSG()!!.toStlString())
+            FileUtil.write(Paths.get("sample.stl"), aMount.toCSG()!!.toStlString())
         }
     }
 }

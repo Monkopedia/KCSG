@@ -62,7 +62,7 @@ package eu.mihosoft.jcsg.ext.org.poly2tri
  * @author Thomas ??? (thahlen@gmail.com)
  */
 internal class AdvancingFront(var head: AdvancingFrontNode, var tail: AdvancingFrontNode) {
-    protected var search: AdvancingFrontNode?
+    private var search: AdvancingFrontNode?
     fun addNode(node: AdvancingFrontNode?) {
 //        _searchTree.put( node.key, node );
     }

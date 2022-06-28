@@ -18,12 +18,12 @@ import java.nio.file.Paths
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 class SurfacePro2PenHolder {
-    fun toCSG(): CSG? {
+    fun toCSG(): CSG {
         val sdCard = MicroSDCard().toCSG()
         val width = sdCard.bounds.bounds.x()
         val height = sdCard.bounds.bounds.z()
         val extensionSize = 11.0
-        val extension: CSG = Extrude.Companion.points(
+        val extension: CSG = Extrude.points(
             Vector3d.xyz(0.0, 0.0, height * 2),
             Vector3d.xy(0.0, 0.0),
             Vector3d.xy(width, 0.0),
@@ -32,7 +32,7 @@ class SurfacePro2PenHolder {
         ).transformed(Transform.unity().translateZ(-height))
         val extensionHeight = 10.0
         val extensionThickness = 0.8
-        val extension2: CSG = Extrude.Companion.points(
+        val extension2: CSG = Extrude.points(
             Vector3d.xyz(0.0, 0.0, extensionHeight),
             Vector3d.xy(0.0, -extensionSize),
             Vector3d.xy(width, -extensionSize),
@@ -46,7 +46,7 @@ class SurfacePro2PenHolder {
         @Throws(IOException::class)
         @JvmStatic
         fun main(args: Array<String>) {
-            FileUtil.Companion.write(
+            FileUtil.write(
                 Paths.get("surfac2penholder.stl"), SurfacePro2PenHolder().toCSG()!!
                     .toStlString()
             )

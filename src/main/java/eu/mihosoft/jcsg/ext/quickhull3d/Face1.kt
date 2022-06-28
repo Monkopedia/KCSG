@@ -13,6 +13,9 @@
   */
 package eu.mihosoft.jcsg.ext.quickhull3d
 
+import kotlin.math.abs
+import kotlin.math.sqrt
+
 /**
  * Basic triangular face used to form the hull.
  *
@@ -25,16 +28,16 @@ package eu.mihosoft.jcsg.ext.quickhull3d
  */
 internal class Face {
     var he0: HalfEdge? = null
-    val normal: Vector3d
+    val normal: Vector3d = Vector3d()
     var area = 0.0
     val centroid: Point3d
-    var planeOffset = 0.0
+    private var planeOffset = 0.0
     var index = 0
-    var numVerts = 0
+    private var numVerts = 0
     var next: Face? = null
     var mark = VISIBLE
     var outside: Vertex? = null
-    fun computeCentroid(centroid: Point3d) {
+    private fun computeCentroid(centroid: Point3d) {
         centroid.setZero()
         var he = he0
         do {
@@ -44,7 +47,7 @@ internal class Face {
         centroid.scale(1 / numVerts.toDouble())
     }
 
-    fun computeNormal(normal: Vector3d, minArea: Double) {
+    private fun computeNormal(normal: Vector3d, minArea: Double) {
         computeNormal(normal)
         if (area < minArea) {
             // make the normal more robust by removing
@@ -62,7 +65,7 @@ internal class Face {
             } while (hedge !== he0)
             val p2 = hedgeMax!!.head()!!.pnt
             val p1 = hedgeMax.tail()!!.pnt
-            val lenMax = Math.sqrt(lenSqrMax)
+            val lenMax = sqrt(lenSqrMax)
             val ux = (p2.x - p1.x) / lenMax
             val uy = (p2.y - p1.y) / lenMax
             val uz = (p2.z - p1.z) / lenMax
@@ -74,7 +77,7 @@ internal class Face {
         }
     }
 
-    fun computeNormal(normal: Vector3d) {
+    private fun computeNormal(normal: Vector3d) {
         var he1 = he0!!.next
         var he2 = he1!!.next
         val p0 = he0!!.head()!!.pnt
@@ -115,7 +118,7 @@ internal class Face {
         } while (he !== he0)
         if (numv != numVerts) {
             throw InternalErrorException(
-                "face " + vertexString + " numVerts=" + numVerts + " should be " + numv
+                "face $vertexString numVerts=$numVerts should be $numv"
             )
         }
     }
@@ -253,7 +256,7 @@ internal class Face {
         var numv = 0
         if (numVerts < 3) {
             throw InternalErrorException(
-                "degenerate face: " + vertexString
+                "degenerate face: $vertexString"
             )
         }
         do {
@@ -293,7 +296,7 @@ internal class Face {
                         " not on hull"
                 )
             }
-            val d = Math.abs(distanceToPlane(hedge.head()!!.pnt))
+            val d = abs(distanceToPlane(hedge.head()!!.pnt))
             if (d > maxd) {
                 maxd = d
             }
@@ -302,7 +305,7 @@ internal class Face {
         } while (hedge !== he0)
         if (numv != numVerts) {
             throw InternalErrorException(
-                "face " + vertexString + " numVerts=" + numVerts + " should be " + numv
+                "face $vertexString numVerts=$numVerts should be $numv"
             )
         }
     }
@@ -339,8 +342,7 @@ internal class Face {
         }
 
         // handle the half edges at the head
-        var discardedFace: Face?
-        discardedFace = connectHalfEdges(hedgeOppPrev, hedgeAdjNext)
+        var discardedFace: Face? = connectHalfEdges(hedgeOppPrev, hedgeAdjNext)
         if (discardedFace != null) {
             discarded[numDiscarded++] = discardedFace
         }
@@ -470,7 +472,6 @@ internal class Face {
     }
 
     init {
-        normal = Vector3d()
         centroid = Point3d()
         mark = VISIBLE
     }

@@ -34,6 +34,8 @@
 package eu.mihosoft.jcsg
 
 import eu.mihosoft.vvecmath.Vector3d
+import kotlin.math.cos
+import kotlin.math.sin
 
 /**
  * A solid sphere.
@@ -114,14 +116,14 @@ class Sphere : Primitive {
         theta *= Math.PI * 2
         phi *= Math.PI
         val dir = Vector3d.xyz(
-            Math.cos(theta) * Math.sin(phi),
-            Math.cos(phi),
-            Math.sin(theta) * Math.sin(phi)
+            cos(theta) * sin(phi),
+            cos(phi),
+            sin(theta) * sin(phi)
         )
         return Vertex(c!!.plus(dir.times(r)), dir)
     }
 
-    override fun toPolygons(): MutableList<Polygon>? {
+    override fun toPolygons(): MutableList<Polygon> {
         val polygons: MutableList<Polygon> = ArrayList()
         for (i in 0 until numSlices) {
             for (j in 0 until numStacks) {
