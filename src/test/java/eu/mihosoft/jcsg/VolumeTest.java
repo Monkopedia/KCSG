@@ -11,7 +11,7 @@ public class VolumeTest {
 
         {
             // volume of empty CSG object is 0
-            double emptyVolume = CSG.fromPolygons(new Polygon[0]).computeVolume();
+            double emptyVolume = CSG.Companion.fromPolygons(new Polygon[0]).computeVolume();
             assertEquals(emptyVolume, 0, 1e-16);
         }
 

@@ -281,8 +281,8 @@ public class ConcavePolygonExtrusionTest {
 		H_points = H_points.stream().distinct().collect(Collectors.toList());
         e_points = e_points.stream().distinct().collect(Collectors.toList());
 
-		CSG HLetter = Extrude.points(Vector3d.xyz(0, 0, 10), H_points);
-		CSG eLetter = Extrude.points(Vector3d.xyz(0, 0, 10), e_points);
+		CSG HLetter = Extrude.Companion.points(Vector3d.xyz(0, 0, 10), H_points);
+		CSG eLetter = Extrude.Companion.points(Vector3d.xyz(0, 0, 10), e_points);
 		
 		System.out.println("H number of polygons: "+HLetter.getPolygons().size());
 		System.out.println("e number of polygons: "+eLetter.getPolygons().size());

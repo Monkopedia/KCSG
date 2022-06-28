@@ -22,7 +22,7 @@ public class HoleDetectionTest {
     public void holeDetectionTest() {
         
         // one polygon with one hole
-        Polygon p1 = Polygon.fromPoints(
+        Polygon p1 = Polygon.Companion.fromPoints(
                 Vector3d.xy(1, 1),
                 Vector3d.xy(2, 3),
                 Vector3d.xy(4, 3),
@@ -31,7 +31,7 @@ public class HoleDetectionTest {
                 Vector3d.xy(3, 0),
                 Vector3d.xy(2, 2)
         );
-        Polygon p1Hole = Polygon.fromPoints(
+        Polygon p1Hole = Polygon.Companion.fromPoints(
                 Vector3d.xy(3, 1),
                 Vector3d.xy(3, 2),
                 Vector3d.xy(4, 2)
@@ -40,7 +40,7 @@ public class HoleDetectionTest {
         createNumHolesTest(Arrays.asList(p1, p1Hole), 1, 0);
         
         // one polygon with two holes
-        Polygon p2 = Polygon.fromPoints(
+        Polygon p2 = Polygon.Companion.fromPoints(
                 Vector3d.xy(1, 1),
                 Vector3d.xy(2, 2),
                 Vector3d.xy(1, 5),
@@ -51,13 +51,13 @@ public class HoleDetectionTest {
                 Vector3d.xy(6, 1),
                 Vector3d.xy(3, 0)
         );
-        Polygon p2Hole1 = Polygon.fromPoints(
+        Polygon p2Hole1 = Polygon.Companion.fromPoints(
                 Vector3d.xy(3, 2),
                 Vector3d.xy(3, 3),
                 Vector3d.xy(4, 2),
                 Vector3d.xy(4, 1)
         );
-        Polygon p2Hole2 = Polygon.fromPoints(
+        Polygon p2Hole2 = Polygon.Companion.fromPoints(
                 Vector3d.xy(2, 3),
                 Vector3d.xy(2, 4),
                 Vector3d.xy(3, 4)
@@ -67,7 +67,7 @@ public class HoleDetectionTest {
         
         // one polygon with two holes, one of the holes contains another
         // polygon with one hole
-        Polygon p3 = Polygon.fromPoints(
+        Polygon p3 = Polygon.Companion.fromPoints(
                 Vector3d.xy(1, 1),
                 Vector3d.xy(2, 2),
                 Vector3d.xy(1, 5),
@@ -78,7 +78,7 @@ public class HoleDetectionTest {
                 Vector3d.xy(6, 1),
                 Vector3d.xy(3, 0)
         );
-        Polygon p3Hole1 = Polygon.fromPoints(
+        Polygon p3Hole1 = Polygon.Companion.fromPoints(
                 Vector3d.xy(3, 2),
                 Vector3d.xy(3, 3),
                 Vector3d.xy(4, 4),
@@ -87,21 +87,21 @@ public class HoleDetectionTest {
                 Vector3d.xy(4, 1)
         );
         
-        Polygon p3p1 = Polygon.fromPoints(
+        Polygon p3p1 = Polygon.Companion.fromPoints(
                 Vector3d.xy(4, 2),
                 Vector3d.xy(3.5, 2.5),
                 Vector3d.xy(4, 3),
                 Vector3d.xy(4.5, 2.5)
         );
         
-        Polygon p3p1Hole = Polygon.fromPoints(
+        Polygon p3p1Hole = Polygon.Companion.fromPoints(
                 Vector3d.xy(4, 2.25),
                 Vector3d.xy(3.75, 2.5),
                 Vector3d.xy(4, 2.75),
                 Vector3d.xy(4.25, 2.5)
         );
         
-        Polygon p3Hole2 = Polygon.fromPoints(
+        Polygon p3Hole2 = Polygon.Companion.fromPoints(
                 Vector3d.xy(2, 3),
                 Vector3d.xy(2, 4),
                 Vector3d.xy(3, 4)

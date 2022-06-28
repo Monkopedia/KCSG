@@ -10,7 +10,7 @@ public class PolygonFlipTest {
 
     @Test
     public void flipPolygonTest() {
-        Polygon polygon = Polygon.fromPoints(
+        Polygon polygon = Polygon.Companion.fromPoints(
                 Vector3d.xy(1, 1),
                 Vector3d.xy(2, 1),
                 Vector3d.xy(1, 2)
