@@ -333,7 +333,7 @@ class Edge(private val p1: Vertex, private val p2: Vertex) : Cloneable {
 
         const val KEY_POLYGON_HOLES = "jcsg:edge:polygon-holes"
         @kotlin.jvm.JvmStatic
-        fun boundaryPathsWithHoles(boundaryPaths: List<Polygon>): List<Polygon?> {
+        fun boundaryPathsWithHoles(boundaryPaths: List<Polygon>): List<Polygon> {
             val result = boundaryPaths.stream().map { p: Polygon -> p.clone() }
                 .collect(Collectors.toList())
             val parents: MutableList<List<Int>> = ArrayList()
@@ -390,7 +390,7 @@ class Edge(private val p1: Vertex, private val p2: Vertex) : Cloneable {
          * @param boundaryEdges boundary edges (all paths must be closed)
          * @return
          */
-        private fun boundaryPaths(boundaryEdges: List<Edge?>): List<Polygon> {
+        private fun boundaryPaths(boundaryEdges: List<Edge>): List<Polygon> {
             val result: MutableList<Polygon> = ArrayList()
             val used = BooleanArray(boundaryEdges.size)
             var startIndex = 0
