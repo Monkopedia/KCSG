@@ -130,7 +130,7 @@ package eu.mihosoft.jcsg.ext.org.poly2tri
     open fun clear() {
         _points.clear()
         _terminated = false
-        if (debugContext != null) {
+        if (isDebugEnabled) {
             debugContext!!.clear()
         }
         stepCount = 0

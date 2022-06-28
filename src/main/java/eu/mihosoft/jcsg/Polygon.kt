@@ -243,8 +243,8 @@ class Polygon : Cloneable {
      *
      * @return triangles
      */
-    fun toTriangles(): List<Polygon?> {
-        val result: MutableList<Polygon?> = ArrayList()
+    fun toTriangles(): List<Polygon> {
+        val result: MutableList<Polygon> = ArrayList()
         if (vertices.size >= 3) {
 
             // TODO: improve the triangulation?

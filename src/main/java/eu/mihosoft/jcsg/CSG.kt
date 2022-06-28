@@ -983,18 +983,19 @@ class CSG private constructor() : Cloneable {
         } else {
             polygons!!.stream()
         }
-        val triangles = polyStream.flatMap { poly: Polygon? -> poly!!.toTriangles().stream() }
-            .collect(Collectors.toList())
+        println("Mapping ${polygons!!.size}")
+        val triangles = polyStream.flatMap { poly: Polygon -> poly.toTriangles().stream() }
+//            .collect(Collectors.toList())
 
         // compute sum over signed volumes of triangles
         // we use parallel streams for larger meshes
         // see http://chenlab.ece.cornell.edu/Publication/Cha/icip01_Cha.pdf
-        val triangleStream: Stream<Polygon?>
-        triangleStream = if (triangles.size > 200) {
-            triangles.parallelStream()
-        } else {
-            triangles.stream()
-        }
+        val triangleStream: Stream<Polygon>
+        triangleStream = triangles//if (triangles.size > 200) {
+//            triangles.parallelStream()
+//        } else {
+//            triangles.stream()
+//        }
         var volume = triangleStream.mapToDouble { tri: Polygon? ->
             val p1 = tri!!.vertices[0]!!.pos
             val p2 = tri.vertices[1]!!.pos
