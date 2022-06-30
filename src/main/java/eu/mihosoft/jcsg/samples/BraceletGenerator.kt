@@ -40,7 +40,7 @@ object BraceletGenerator {
         val bottom = Cube(sphereRadius * 2).toCSG()
             .transformed(Transform.unity().translateZ(-sphereRadius - braceletHeight / 2.0))
         sphere = sphere.transformed(Transform.unity().scaleZ(0.5))
-        return sphere.difference(top).difference(bottom).difference(spaces)
+        return sphere.difference(top).difference(bottom).difference(spaces!!)
             .transformed(Transform.unity().scale(3.5))
     }
 

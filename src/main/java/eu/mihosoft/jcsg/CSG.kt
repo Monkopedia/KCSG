@@ -426,7 +426,7 @@ class CSG private constructor() : Cloneable {
      * @param csg other csg
      * @return difference of this csg and the specified csg
      */
-    fun difference(csg: CSG?): CSG {
+    fun difference(csg: CSG): CSG {
         return when (getOptType()) {
             OptType.CSG_BOUND -> _differenceCSGBoundsOpt(csg)
             OptType.POLYGON_BOUND -> _differencePolygonBoundsOpt(csg)

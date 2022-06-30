@@ -60,7 +60,7 @@ class PlaneWithHoles {
             Logger.getLogger(PlaneWithHoles::class.java.name).log(Level.SEVERE, null, ex)
         }
         println(">> final diff")
-        result = result.difference(spheres)
+        result = result.difference(spheres!!)
         return result
     }
 
