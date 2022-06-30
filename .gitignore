@@ -8,3 +8,4 @@
 /.project
 /.vscode/
 local.properties
+**/build
