@@ -26,7 +26,7 @@ object DualMaterialRobot {
 
 //        return robot.getBounds().toCSG().transformed(Transform.unity().scale(1.1,0.5,1.1).translateY(10).translateZ(-1.5)).difference(robot);
         val robotBounds = robot!!.bounds
-        val middle = robotBounds.toCSG()!!
+        val middle = robotBounds.toCSG()
             .transformed(
                 Transform.unity().scaleZ(1 / 2.0).translateZ(
                     robotBounds.bounds.z() / 3.0
@@ -41,7 +41,7 @@ object DualMaterialRobot {
             robot = STL.file(Paths.get("/home/miho/CuraExamples/UltimakerRobot_support.stl"))
         }
         val robotBounds = robot!!.bounds
-        val middle = robotBounds.toCSG()!!
+        val middle = robotBounds.toCSG()
             .transformed(
                 Transform.unity().scaleZ(1 / 2.0).translateZ(
                     robotBounds.bounds.z() / 3.0

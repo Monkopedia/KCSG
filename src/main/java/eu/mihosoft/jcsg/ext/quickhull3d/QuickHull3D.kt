@@ -121,7 +121,7 @@ internal class QuickHull3D {
     // estimated size of the point set
     private var charLength = 0.0
     var debug = false
-    private var pointBuffer = arrayOfNulls<Vertex>(0)
+    private var pointBuffer = emptyArray<Vertex>()
     private var vertexPointIndices = IntArray(0)
     private val discardedFaces = arrayOfNulls<Face>(3)
     private val maxVtxs = arrayOfNulls<Vertex>(3)
@@ -178,8 +178,8 @@ internal class QuickHull3D {
             return explicitTolerance
         }
 
-    private fun addPointToFace(vtx: Vertex?, face: Face) {
-        vtx!!.face = face
+    private fun addPointToFace(vtx: Vertex, face: Face) {
+        vtx.face = face
         if (face.outside == null) {
             claimed.add(vtx)
         } else {
@@ -270,7 +270,7 @@ internal class QuickHull3D {
             val face: Face = Face.create(pointBuffer, faceIndices[i])
             var he = face.he0
             do {
-                val heOpp = findHalfEdge(he!!.head()!!, he.tail()!!)
+                val heOpp = findHalfEdge(he!!.head(), he.tail()!!)
                 if (heOpp != null) {
                     he.opposite = (heOpp)
                 }
@@ -360,7 +360,7 @@ internal class QuickHull3D {
 
     private fun printPoints(ps: PrintStream) {
         for (i in 0 until numPoints) {
-            val pnt = pointBuffer[i]!!.pnt
+            val pnt = pointBuffer[i].pnt
             ps.println(pnt.x.toString() + ", " + pnt.y + ", " + pnt.z + ",")
         }
     }
@@ -459,13 +459,9 @@ internal class QuickHull3D {
     // 	 }
     private fun initBuffers(nump: Int) {
         if (pointBuffer.size < nump) {
-            val newBuffer = arrayOfNulls<Vertex>(nump)
             vertexPointIndices = IntArray(nump)
-            for (i in pointBuffer.indices) {
-                newBuffer[i] = pointBuffer[i]
-            }
-            for (i in pointBuffer.size until nump) {
-                newBuffer[i] = Vertex()
+            val newBuffer = Array(nump) { i ->
+                pointBuffer.getOrNull(i) ?: Vertex()
             }
             pointBuffer = newBuffer
         }
@@ -478,7 +474,7 @@ internal class QuickHull3D {
     private fun setPoints(coords: DoubleArray, nump: Int) {
         for (i in 0 until nump) {
             val vtx = pointBuffer[i]
-            vtx!!.pnt[coords[i * 3 + 0], coords[i * 3 + 1]] = coords[i * 3 + 2]
+            vtx.pnt[coords[i * 3 + 0], coords[i * 3 + 1]] = coords[i * 3 + 2]
             vtx.index = i
         }
     }
@@ -486,7 +482,7 @@ internal class QuickHull3D {
     private fun setPoints(pnts: Array<Point3d>, nump: Int) {
         for (i in 0 until nump) {
             val vtx = pointBuffer[i]
-            vtx!!.pnt.set(pnts[i])
+            vtx.pnt.set(pnts[i])
             vtx.index = i
         }
     }
@@ -498,10 +494,10 @@ internal class QuickHull3D {
             minVtxs[i] = pointBuffer[0]
             maxVtxs[i] = minVtxs[i]
         }
-        max.set(pointBuffer[0]!!.pnt)
-        min.set(pointBuffer[0]!!.pnt)
+        max.set(pointBuffer[0].pnt)
+        min.set(pointBuffer[0].pnt)
         for (i in 1 until numPoints) {
-            val pnt = pointBuffer[i]!!.pnt
+            val pnt = pointBuffer[i].pnt
             if (pnt.x > max.x) {
                 max.x = pnt.x
                 maxVtxs[0] = pointBuffer[i]
@@ -556,11 +552,11 @@ internal class QuickHull3D {
             }
         }
         require(max > tolerance) { "Input points appear to be coincident" }
-        val vtx = arrayOfNulls<Vertex>(4)
+        val vtxInit = arrayOfNulls<Vertex>(4)
         // set first two vertices to be those with the greatest
         // one dimensional separation
-        vtx[0] = maxVtxs[imax]
-        vtx[1] = minVtxs[imax]
+        vtxInit[0] = maxVtxs[imax]
+        vtxInit[1] = minVtxs[imax]
 
         // set third vertex to be the vertex farthest from
         // the line between vtx0 and vtx1
@@ -569,43 +565,44 @@ internal class QuickHull3D {
         val nrml = Vector3d()
         val xprod = Vector3d()
         var maxSqr = 0.0
-        u01.sub(vtx[1]!!.pnt, vtx[0]!!.pnt)
+        u01.sub(vtxInit[1]!!.pnt, vtxInit[0]!!.pnt)
         u01.normalize()
         for (i in 0 until numPoints) {
-            diff02.sub(pointBuffer[i]!!.pnt, vtx[0]!!.pnt)
+            diff02.sub(pointBuffer[i].pnt, vtxInit[0]!!.pnt)
             xprod.cross(u01, diff02)
             val lenSqr = xprod.normSquared()
-            if (lenSqr > maxSqr && pointBuffer[i] !== vtx[0] && // paranoid
-                pointBuffer[i] !== vtx[1]
+            if (lenSqr > maxSqr && pointBuffer[i] !== vtxInit[0] && // paranoid
+                pointBuffer[i] !== vtxInit[1]
             ) {
                 maxSqr = lenSqr
-                vtx[2] = pointBuffer[i]
+                vtxInit[2] = pointBuffer[i]
                 nrml.set(xprod)
             }
         }
         require(sqrt(maxSqr) > 100 * tolerance) { "Input points appear to be colinear" }
         nrml.normalize()
         var maxDist = 0.0
-        val d0 = vtx[2]!!.pnt.dot(nrml)
+        val d0 = vtxInit[2]!!.pnt.dot(nrml)
         for (i in 0 until numPoints) {
-            val dist = abs(pointBuffer[i]!!.pnt.dot(nrml) - d0)
-            if (dist > maxDist && pointBuffer[i] !== vtx[0] && // paranoid
-                pointBuffer[i] !== vtx[1] && pointBuffer[i] !== vtx[2]
+            val dist = abs(pointBuffer[i].pnt.dot(nrml) - d0)
+            if (dist > maxDist && pointBuffer[i] !== vtxInit[0] && // paranoid
+                pointBuffer[i] !== vtxInit[1] && pointBuffer[i] !== vtxInit[2]
             ) {
                 maxDist = dist
-                vtx[3] = pointBuffer[i]
+                vtxInit[3] = pointBuffer[i]
             }
         }
+        val vtx = vtxInit.requireNoNulls()
         require(abs(maxDist) > 100 * tolerance) { "Input points appear to be coplanar" }
         if (debug) {
             println("initial vertices:")
-            println(vtx[0]!!.index.toString() + ": " + vtx[0]!!.pnt)
-            println(vtx[1]!!.index.toString() + ": " + vtx[1]!!.pnt)
-            println(vtx[2]!!.index.toString() + ": " + vtx[2]!!.pnt)
-            println(vtx[3]!!.index.toString() + ": " + vtx[3]!!.pnt)
+            println(vtx[0].index.toString() + ": " + vtx[0].pnt)
+            println(vtx[1].index.toString() + ": " + vtx[1].pnt)
+            println(vtx[2].index.toString() + ": " + vtx[2].pnt)
+            println(vtx[3].index.toString() + ": " + vtx[3].pnt)
         }
         val tris = arrayOfNulls<Face>(4)
-        if (vtx[3]!!.pnt.dot(nrml) - d0 < 0) {
+        if (vtx[3].pnt.dot(nrml) - d0 < 0) {
             tris[0] = createTriangle(vtx[0], vtx[1], vtx[2])
             tris[1] = createTriangle(vtx[3], vtx[1], vtx[0])
             tris[2] = createTriangle(vtx[3], vtx[2], vtx[1])
@@ -637,7 +634,7 @@ internal class QuickHull3D {
             maxDist = tolerance
             var maxFace: Face? = null
             for (k in 0..3) {
-                val dist = tris[k]!!.distanceToPlane(v!!.pnt)
+                val dist = tris[k]!!.distanceToPlane(v.pnt)
                 if (dist > maxDist) {
                     maxFace = tris[k]
                     maxDist = dist
@@ -658,7 +655,7 @@ internal class QuickHull3D {
         get() {
             val vtxs = arrayOfNulls<Point3d>(numVertices)
             for (i in 0 until numVertices) {
-                vtxs[i] = pointBuffer[vertexPointIndices[i]]!!.pnt
+                vtxs[i] = pointBuffer[vertexPointIndices[i]].pnt
             }
             return vtxs.requireNoNulls()
         }
@@ -675,7 +672,7 @@ internal class QuickHull3D {
      */
     private fun getVertices(coords: DoubleArray): Int {
         for (i in 0 until numVertices) {
-            val pnt = pointBuffer[vertexPointIndices[i]]!!.pnt
+            val pnt = pointBuffer[vertexPointIndices[i]].pnt
             coords[i * 3 + 0] = pnt.x
             coords[i * 3 + 1] = pnt.y
             coords[i * 3 + 2] = pnt.z
@@ -810,7 +807,7 @@ internal class QuickHull3D {
             indexFlags = indexFlags or INDEXED_FROM_ONE
         }
         for (i in 0 until numVertices) {
-            val pnt = pointBuffer[vertexPointIndices[i]]!!.pnt
+            val pnt = pointBuffer[vertexPointIndices[i]].pnt
             ps.println("v " + pnt.x + " " + pnt.y + " " + pnt.z)
         }
         val fi: Iterator<*> = faces.iterator()
@@ -833,7 +830,7 @@ internal class QuickHull3D {
         var hedge = face.he0
         var k = 0
         do {
-            var idx = hedge!!.head()!!.index
+            var idx = hedge!!.head().index
             if (pointRelative) {
                 idx = vertexPointIndices[idx]
             }
@@ -906,7 +903,7 @@ internal class QuickHull3D {
     }
 
     private fun oppFaceDistance(he: HalfEdge?): Double {
-        return he!!.face!!.distanceToPlane(he.opposite!!.face!!.centroid)
+        return he!!.face.distanceToPlane(he.opposite!!.face.centroid)
     }
 
     private fun doAdjacentMerge(face: Face, mergeType: Int): Boolean {
@@ -1010,7 +1007,7 @@ internal class QuickHull3D {
         eyeVtx: Vertex, he: HalfEdge
     ): HalfEdge? {
         val face: Face = createTriangle(
-            eyeVtx, he.tail(), he.head()
+            eyeVtx, he.tail()!!, he.head()
         )
         faces.add(face)
         face.getEdge(-1)!!.opposite = (he.opposite)
@@ -1029,7 +1026,7 @@ internal class QuickHull3D {
             val hedgeSide = addAdjoiningFace(eyeVtx, horizonHe)
             if (debug) {
                 println(
-                    "new face: " + hedgeSide!!.face!!.vertexString
+                    "new face: " + hedgeSide!!.face.vertexString
                 )
             }
             if (hedgeSidePrev != null) {
@@ -1037,7 +1034,7 @@ internal class QuickHull3D {
             } else {
                 hedgeSideBegin = hedgeSide
             }
-            newFaces.add(hedgeSide!!.face!!)
+            newFaces.add(hedgeSide!!.face)
             hedgeSidePrev = hedgeSide
         }
         hedgeSideBegin!!.next!!.opposite = (hedgeSidePrev)
@@ -1124,14 +1121,14 @@ internal class QuickHull3D {
         val he0 = face.firstEdge
         var he = he0
         do {
-            he!!.head()!!.index = mark
+            he!!.head().index = mark
             he = he.next
         } while (he !== he0)
     }
 
     private fun reindexFacesAndVertices() {
         for (i in 0 until numPoints) {
-            pointBuffer[i]!!.index = -1
+            pointBuffer[i].index = -1
         }
         // remove inactive faces and mark active vertices
         numFaces = 0
@@ -1149,7 +1146,7 @@ internal class QuickHull3D {
         numVertices = 0
         for (i in 0 until numPoints) {
             val vtx = pointBuffer[i]
-            if (vtx!!.index == 0) {
+            if (vtx.index == 0) {
                 vertexPointIndices[numVertices] = i
                 vtx.index = numVertices++
             }
@@ -1183,7 +1180,7 @@ internal class QuickHull3D {
             }
             if (he.next!!.oppositeFace() === he.oppositeFace()) {
                 ps?.println(
-                    "Redundant vertex " + he.head()!!.index +
+                    "Redundant vertex " + he.head().index +
                         " in face " + face.vertexString
                 )
                 return false
@@ -1250,7 +1247,7 @@ internal class QuickHull3D {
 
         // check point inclusion
         for (i in 0 until numPoints) {
-            val pnt = pointBuffer[i]!!.pnt
+            val pnt = pointBuffer[i].pnt
             val it: Iterator<*> = faces.iterator()
             while (it.hasNext()) {
                 val face = it.next() as Face

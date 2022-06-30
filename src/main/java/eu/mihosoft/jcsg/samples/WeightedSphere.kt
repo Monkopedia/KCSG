@@ -58,7 +58,7 @@ class WeightedSphere {
                 v!!.z() * 2
             ) * cos(v.z() * 2)) / 2.0
             w
-        }!!.transformed(
+        }.transformed(
             Transform.unity().scale(0.1)
         ).transformed(Transform.unity().translateX(1.0).rotZ(90.0))
         //                    weighted(new XModifier(true)).

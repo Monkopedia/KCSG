@@ -41,7 +41,7 @@ internal class Face {
         centroid.setZero()
         var he = he0
         do {
-            centroid.add(he!!.head()!!.pnt)
+            centroid.add(he!!.head().pnt)
             he = he.next
         } while (he !== he0)
         centroid.scale(1 / numVerts.toDouble())
@@ -63,7 +63,7 @@ internal class Face {
                 }
                 hedge = hedge.next
             } while (hedge !== he0)
-            val p2 = hedgeMax!!.head()!!.pnt
+            val p2 = hedgeMax!!.head().pnt
             val p1 = hedgeMax.tail()!!.pnt
             val lenMax = sqrt(lenSqrMax)
             val ux = (p2.x - p1.x) / lenMax
@@ -80,8 +80,8 @@ internal class Face {
     private fun computeNormal(normal: Vector3d) {
         var he1 = he0!!.next
         var he2 = he1!!.next
-        val p0 = he0!!.head()!!.pnt
-        var p2 = he1.head()!!.pnt
+        val p0 = he0!!.head().pnt
+        var p2 = he1.head().pnt
         var d2x = p2.x - p0.x
         var d2y = p2.y - p0.y
         var d2z = p2.z - p0.z
@@ -91,7 +91,7 @@ internal class Face {
             val d1x = d2x
             val d1y = d2y
             val d1z = d2z
-            p2 = he2!!.head()!!.pnt
+            p2 = he2!!.head().pnt
             d2x = p2.x - p0.x
             d2y = p2.y - p0.y
             d2z = p2.z - p0.z
@@ -194,9 +194,9 @@ internal class Face {
             var he = he0
             do {
                 if (s == null) {
-                    s = "" + he!!.head()!!.index
+                    s = "" + he!!.head().index
                 } else {
-                    s += " " + he!!.head()!!.index
+                    s += " " + he!!.head().index
                 }
                 he = he.next
             } while (he !== he0)
@@ -207,7 +207,7 @@ internal class Face {
         var he = he0
         var i = 0
         do {
-            idxs[i++] = he!!.head()!!.index
+            idxs[i++] = he!!.head().index
             he = he.next
         } while (he !== he0)
     }
@@ -296,7 +296,7 @@ internal class Face {
                         " not on hull"
                 )
             }
-            val d = abs(distanceToPlane(hedge.head()!!.pnt))
+            val d = abs(distanceToPlane(hedge.head().pnt))
             if (d > maxd) {
                 maxd = d
             }
@@ -362,8 +362,8 @@ internal class Face {
         // by the half edge hedge0 and the point at the
         // head of hedge1.
         val p0 = hedge0.tail()!!.pnt
-        val p1 = hedge0.head()!!.pnt
-        val p2 = hedge1.head()!!.pnt
+        val p1 = hedge0.head().pnt
+        val p2 = hedge1.head().pnt
         val dx1 = p1.x - p0.x
         val dy1 = p1.y - p0.y
         val dz1 = p1.z - p0.z
@@ -427,9 +427,9 @@ internal class Face {
          */
         @JvmOverloads
         fun createTriangle(
-            v0: Vertex?,
-            v1: Vertex?,
-            v2: Vertex?,
+            v0: Vertex,
+            v1: Vertex,
+            v2: Vertex,
             minArea: Double = 0.0
         ): Face {
             val face = Face()
@@ -449,7 +449,7 @@ internal class Face {
             return face
         }
 
-        fun create(vtxArray: Array<Vertex?>, indices: IntArray): Face {
+        fun create(vtxArray: Array<Vertex>, indices: IntArray): Face {
             val face = Face()
             var hePrev: HalfEdge? = null
             for (i in indices.indices) {

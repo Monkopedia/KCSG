@@ -102,7 +102,7 @@ class QuadrocopterBottom {
         fun main(args: Array<String>) {
             CSG.setDefaultOptType(OptType.POLYGON_BOUND)
             val result = QuadrocopterBottom().toCSG()
-            FileUtil.write(Paths.get("quadrocopter-bottom.stl"), result!!.toStlString())
+            FileUtil.write(Paths.get("quadrocopter-bottom.stl"), result.toStlString())
             result.toObj().toFiles(Paths.get("quadrocopter-bottom.obj"))
         }
     }

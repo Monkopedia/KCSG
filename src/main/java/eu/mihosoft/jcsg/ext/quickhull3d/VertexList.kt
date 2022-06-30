@@ -32,16 +32,16 @@ internal class VertexList {
     /**
      * Adds a chain of vertices to the end of this list.
      */
-    fun addAll(vtx: Vertex?) {
+    fun addAll(vtx: Vertex) {
         var vtx = vtx
         if (head == null) {
             head = vtx
         } else {
             tail!!.next = vtx
         }
-        vtx!!.prev = tail
-        while (vtx!!.next != null) {
-            vtx = vtx.next
+        vtx.prev = tail
+        while (vtx.next != null) {
+            vtx = vtx.next!!
         }
         tail = vtx
     }

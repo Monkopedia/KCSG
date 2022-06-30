@@ -78,7 +78,7 @@ class LeapMotionCase {
                 ).scaleX(3.0)
             )
         return outline.difference(
-            deviceOutline()!!.transformed(
+            deviceOutline().transformed(
                 Transform.unity().translateZ(caseThickness)
             )
         ).difference(cyl)
@@ -112,7 +112,7 @@ class LeapMotionCase {
 
         // add protection space
         caseOutline = caseOutline.difference(
-            deviceInnerOutline()!!.transformed(
+            deviceInnerOutline().transformed(
                 Transform.unity().translate(0.0, 0.0, caseThickness / 2.0)
             )
         )

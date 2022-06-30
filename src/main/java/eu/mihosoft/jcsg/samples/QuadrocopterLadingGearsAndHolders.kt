@@ -61,10 +61,10 @@ class QuadrocopterLadingGearsAndHolders {
                 return@WeightFunction 0.82 + v.y() * v.y() / (gearLegHeight * gearLegHeight)
             }
         }
-        leg = leg.weighted(translateWeight)!!
+        leg = leg.weighted(translateWeight)
             .transformed(
                 Transform.unity().scale(0.6, 1.0, 0.6)
-            ).weighted(UnityModifier())!!.transformed(Transform.unity().rotY(90.0))
+            ).weighted(UnityModifier()).transformed(Transform.unity().rotY(90.0))
         //                weighted(translateWeight).transformed(unity().translateX(-50)).
         return leg.union(landingGearHead).difference(
             platformReplacement.transformed(

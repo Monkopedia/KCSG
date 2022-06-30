@@ -296,7 +296,7 @@ class Edge(private val p1: Vertex, private val p2: Vertex) : Cloneable {
 //                collect(Collectors.toList());
             val p: Polygon = Polygon.fromPoints(points)
             p.vertices.stream()
-                .forEachOrdered { vertex: Vertex? -> vertex!!.normal = plane.normal.clone() }
+                .forEachOrdered { vertex: Vertex -> vertex.normal = plane.normal.clone() }
 
 //        // we try to detect wrong orientation by comparing normals
 //        if (p.plane.normal.angle(plane.normal) > 0.1) {

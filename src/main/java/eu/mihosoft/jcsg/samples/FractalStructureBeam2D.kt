@@ -90,7 +90,7 @@ class FractalStructureBeam2D {
         @JvmStatic
         fun main(args: Array<String>) {
             var result = FractalStructureBeam2D().toCSG()
-            result = result!!.union(Sphere(Vector3d.ZERO, 1.0, 4, 4).toCSG())
+            result = result.union(Sphere(Vector3d.ZERO, 1.0, 4, 4).toCSG())
             FileUtil.write(
                 Paths.get("fractal-structure-beam-2d.stl"),
                 result.toStlString()

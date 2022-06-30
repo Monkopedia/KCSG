@@ -169,9 +169,9 @@ class Polygon : Cloneable {
     public override fun clone(): Polygon {
         val newVertices: MutableList<Vertex> = ArrayList()
         vertices.forEach(
-            Consumer { vertex: Vertex? ->
+            Consumer { vertex: Vertex ->
                 newVertices.add(
-                    vertex!!.clone()
+                    vertex.clone()
                 )
             }
         )
@@ -184,7 +184,7 @@ class Polygon : Cloneable {
      * @return this polygon
      */
     fun flip(): Polygon {
-        vertices.forEach(Consumer { vertex: Vertex? -> vertex!!.flip() })
+        vertices.forEach(Consumer { vertex: Vertex -> vertex.flip() })
         Collections.reverse(vertices)
         _csg_plane.flip()
         _plane = _plane.flipped()
@@ -274,7 +274,7 @@ class Polygon : Cloneable {
      * @return this polygon
      */
     fun translate(v: Vector3d?): Polygon {
-        vertices.forEach(Consumer { vertex: Vertex? -> vertex!!.pos = vertex.pos.plus(v) })
+        vertices.forEach(Consumer { vertex: Vertex -> vertex.pos = vertex.pos.plus(v) })
         val a = vertices[0].pos
         val b = vertices[1].pos
         val c = vertices[2].pos
@@ -309,14 +309,14 @@ class Polygon : Cloneable {
      * @return this polygon
      */
     fun transform(transform: Transform): Polygon {
-        vertices.stream().forEach { v: Vertex? -> v!!.transform(transform) }
+        vertices.stream().forEach { v: Vertex -> v.transform(transform) }
         val a = vertices[0].pos
         val b = vertices[1].pos
         val c = vertices[2].pos
         _csg_plane.normal = b.minus(a).crossed(c.minus(a)).normalized()
         _csg_plane.dist = _csg_plane.normal.dot(a)
         _plane = eu.mihosoft.vvecmath.Plane.fromPointAndNormal(centroid(), _csg_plane.normal)
-        vertices.forEach(Consumer { vertex: Vertex? -> vertex!!.normal = _plane.normal })
+        vertices.forEach(Consumer { vertex: Vertex -> vertex.normal = _plane.normal })
         if (transform.isMirror) {
             // the transformation includes mirroring. flip polygon
             flip()

@@ -23,12 +23,12 @@ internal class HalfEdge {
     /**
      * The vertex associated with the head of this half-edge.
      */
-    var vertex: Vertex? = null
+    var vertex: Vertex
 
     /**
      * Triangular face associated with this half-edge.
      */
-    var face: Face? = null
+    var face: Face
 
     /**
      * Next half-edge in the triangle.
@@ -58,19 +58,17 @@ internal class HalfEdge {
      * @param v head vertex
      * @param f left-hand triangular face
      */
-    constructor(v: Vertex?, f: Face?) {
+    constructor(v: Vertex, f: Face) {
         vertex = v
         face = f
     }
-
-    constructor()
 
     /**
      * Returns the head vertex associated with this half-edge.
      *
      * @return head vertex
      */
-    fun head(): Vertex? {
+    fun head(): Vertex {
         return vertex
     }
 
@@ -80,7 +78,7 @@ internal class HalfEdge {
      * @return tail vertex
      */
     fun tail(): Vertex? {
-        return if (prev != null) prev!!.vertex else null
+        return prev?.vertex
     }
 
     /**
@@ -90,7 +88,7 @@ internal class HalfEdge {
      * @return opposite triangular face
      */
     fun oppositeFace(): Face? {
-        return if (opposite != null) opposite!!.face else null
+        return opposite?.face
     }
 
     /**
@@ -104,9 +102,9 @@ internal class HalfEdge {
             return if (tail() != null) {
                 "" +
                     tail()!!.index + "-" +
-                    head()!!.index
+                    head().index
             } else {
-                "?-" + head()!!.index
+                "?-" + head().index
             }
         }
 
@@ -117,7 +115,7 @@ internal class HalfEdge {
      */
     fun length(): Double {
         return if (tail() != null) {
-            head()!!.pnt.distance(tail()!!.pnt)
+            head().pnt.distance(tail()!!.pnt)
         } else {
             (-1).toDouble()
         }
@@ -130,7 +128,7 @@ internal class HalfEdge {
      */
     fun lengthSquared(): Double {
         return if (tail() != null) {
-            head()!!.pnt.distanceSquared(tail()!!.pnt)
+            head().pnt.distanceSquared(tail()!!.pnt)
         } else {
             (-1).toDouble()
         }

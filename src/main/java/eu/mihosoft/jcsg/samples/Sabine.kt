@@ -25,9 +25,9 @@ class Sabine {
         val fractD = 0.25
         val cube = Cube(w, h, 1.0).toCSG()
         val beam = Cylinder(1.0, 10.0, 32).toCSG()
-        val beam1 = beam.weighted(ZModifier())!!
+        val beam1 = beam.weighted(ZModifier())
             .transformed(Transform.unity().scale(0.5, 0.5, 1.0))
-            .weighted(UnityModifier())!!
+            .weighted(UnityModifier())
             .transformed(Transform.unity().translate(w / 2.0 - offset, h / 2.0 - offset, 0.0))
         val beam2 = beam.transformed(
             Transform.unity().translate(-(w / 2.0 - offset), h / 2.0 - offset, 0.0)

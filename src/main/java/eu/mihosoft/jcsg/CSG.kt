@@ -164,9 +164,9 @@ class CSG private constructor() : Cloneable {
      *
      * @return a csg consisting of the polygons of this csg and the specified csg
      */
-    fun dumbUnion(csg: CSG?): CSG {
+    fun dumbUnion(csg: CSG): CSG {
         val result = clone()
-        val other = csg!!.clone()
+        val other = csg.clone()
         result._polygons!!.addAll(other._polygons!!)
         return result
     }
@@ -276,7 +276,7 @@ class CSG private constructor() : Cloneable {
         return hull(listOf(*csgs))
     }
 
-    private fun _unionCSGBoundsOpt(csg: CSG?): CSG {
+    private fun _unionCSGBoundsOpt(csg: CSG): CSG {
         System.err.println(
             "WARNING: using " + OptType.NONE +
                 " since other optimization types missing for union operation."
@@ -284,10 +284,10 @@ class CSG private constructor() : Cloneable {
         return _unionIntersectOpt(csg)
     }
 
-    private fun _unionPolygonBoundsOpt(csg: CSG?): CSG {
+    private fun _unionPolygonBoundsOpt(csg: CSG): CSG {
         val inner: MutableList<Polygon> = ArrayList()
         val outer: MutableList<Polygon> = ArrayList()
-        val bounds = csg!!.bounds
+        val bounds = csg.bounds
         _polygons!!.stream().forEach { p: Polygon ->
             if (bounds.intersects(
                     p.bounds
@@ -317,9 +317,9 @@ class CSG private constructor() : Cloneable {
      * @param csg csg
      * @return the union of this csg and the specified csg
      */
-    private fun _unionIntersectOpt(csg: CSG?): CSG {
+    private fun _unionIntersectOpt(csg: CSG): CSG {
         var intersects = false
-        val bounds = csg!!.bounds
+        val bounds = csg.bounds
         for (p in _polygons!!) {
             if (bounds.intersects(p.bounds)) {
                 intersects = true
@@ -336,9 +336,9 @@ class CSG private constructor() : Cloneable {
         return fromPolygons(allPolygons).optimization(getOptType())
     }
 
-    private fun _unionNoOpt(csg: CSG?): CSG {
+    private fun _unionNoOpt(csg: CSG): CSG {
         val a = Node(clone()._polygons)
-        val b = Node(csg!!.clone()._polygons)
+        val b = Node(csg.clone()._polygons)
         a.clipTo(b)
         b.clipTo(a)
         b.invert()
@@ -434,16 +434,16 @@ class CSG private constructor() : Cloneable {
         }
     }
 
-    private fun _differenceCSGBoundsOpt(csg: CSG?): CSG {
-        val a1 = _differenceNoOpt(csg!!.bounds.toCSG())
+    private fun _differenceCSGBoundsOpt(csg: CSG): CSG {
+        val a1 = _differenceNoOpt(csg.bounds.toCSG())
         val a2 = this.intersect(csg.bounds.toCSG())
         return a2._differenceNoOpt(csg)._unionIntersectOpt(a1).optimization(getOptType())
     }
 
-    private fun _differencePolygonBoundsOpt(csg: CSG?): CSG {
+    private fun _differencePolygonBoundsOpt(csg: CSG): CSG {
         val inner: MutableList<Polygon> = ArrayList()
         val outer: MutableList<Polygon> = ArrayList()
-        val bounds = csg!!.bounds
+        val bounds = csg.bounds
         _polygons!!.stream().forEach { p: Polygon ->
             if (bounds.intersects(
                     p.bounds
@@ -461,9 +461,9 @@ class CSG private constructor() : Cloneable {
         return fromPolygons(allPolygons).optimization(getOptType())
     }
 
-    private fun _differenceNoOpt(csg: CSG?): CSG {
+    private fun _differenceNoOpt(csg: CSG): CSG {
         val a = Node(clone()._polygons)
-        val b = Node(csg!!.clone()._polygons)
+        val b = Node(csg.clone()._polygons)
         a.invert()
         a.clipTo(b)
         b.clipTo(a)
@@ -497,9 +497,9 @@ class CSG private constructor() : Cloneable {
      * @param csg other csg
      * @return intersection of this csg and the specified csg
      */
-    fun intersect(csg: CSG?): CSG {
+    fun intersect(csg: CSG): CSG {
         val a = Node(clone()._polygons)
-        val b = Node(csg!!.clone()._polygons)
+        val b = Node(csg.clone()._polygons)
         a.invert()
         b.clipTo(a)
         b.invert()

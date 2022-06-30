@@ -80,7 +80,7 @@ class PolygonUtil private constructor() {
             concave: eu.mihosoft.jcsg.Polygon
         ): List<eu.mihosoft.jcsg.Polygon> {
             val result: MutableList<eu.mihosoft.jcsg.Polygon> = ArrayList()
-            val normal = concave.vertices[0].normal!!.clone()
+            val normal = concave.vertices[0].normal.clone()
             val cw: Boolean = !Extrude.isCCW(concave)
             val p = fromCSGPolygon(concave)
             Poly2Tri.triangulate(p)

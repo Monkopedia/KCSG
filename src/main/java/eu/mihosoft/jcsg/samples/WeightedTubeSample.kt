@@ -34,8 +34,8 @@ class WeightedTubeSample {
         }
         val scale = Transform.unity().scale(2.0, 2.0, 1.0)
         val scaleInner = Transform.unity().scale(1.5, 1.5, 1.0)
-        inner = inner.weighted(weight)!!.transformed(scaleInner).weighted(UnityModifier())!!
-        return outer.weighted(weight)!!.transformed(scale).difference(inner)
+        inner = inner.weighted(weight).transformed(scaleInner).weighted(UnityModifier())
+        return outer.weighted(weight).transformed(scale).difference(inner)
     }
 
     companion object {

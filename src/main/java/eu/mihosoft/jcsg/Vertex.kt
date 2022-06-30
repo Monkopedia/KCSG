@@ -52,7 +52,7 @@ class Vertex : Cloneable {
     /**
      * Normal.
      */
-    var normal: Vector3d?
+    var normal: Vector3d
     private var _weight = 1.0
 
     /**
@@ -61,7 +61,7 @@ class Vertex : Cloneable {
      * @param pos position
      * @param normal normal
      */
-    constructor(pos: Vector3d, normal: Vector3d?) {
+    constructor(pos: Vector3d, normal: Vector3d) {
         this.pos = pos
         this.normal = normal
     }
@@ -80,14 +80,14 @@ class Vertex : Cloneable {
     }
 
     public override fun clone(): Vertex {
-        return Vertex(pos.clone(), normal!!.clone(), _weight)
+        return Vertex(pos.clone(), normal.clone(), _weight)
     }
 
     /**
      * Inverts all orientation-specific data. (e.g. vertex normal).
      */
     fun flip() {
-        normal = normal!!.negated()
+        normal = normal.negated()
     }
 
     /**
@@ -98,10 +98,10 @@ class Vertex : Cloneable {
      * @param t interpolation parameter
      * @return a new vertex between this and the specified vertex
      */
-    fun interpolate(other: Vertex?, t: Double): Vertex {
+    fun interpolate(other: Vertex, t: Double): Vertex {
         return Vertex(
-            pos.lerp(other!!.pos, t),
-            normal!!.lerp(other.normal, t)
+            pos.lerp(other.pos, t),
+            normal.lerp(other.normal, t)
         )
     }
 

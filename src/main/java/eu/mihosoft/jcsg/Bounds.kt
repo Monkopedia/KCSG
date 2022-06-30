@@ -86,11 +86,11 @@ class Bounds(min: Vector3d, max: Vector3d) : Cloneable {
      *
      * @return this bounding box as csg
      */
-    fun toCSG(): CSG? {
+    fun toCSG(): CSG {
         if (csg == null) {
             csg = cube.toCSG()
         }
-        return csg
+        return csg!!
     }
 
     /**
@@ -110,8 +110,8 @@ class Bounds(min: Vector3d, max: Vector3d) : Cloneable {
      * @return `true` if the vertex is contained within this bounding box;
      * `false` otherwise
      */
-    operator fun contains(v: Vertex?): Boolean {
-        return contains(v!!.pos)
+    operator fun contains(v: Vertex): Boolean {
+        return contains(v.pos)
     }
 
     /**
@@ -138,7 +138,7 @@ class Bounds(min: Vector3d, max: Vector3d) : Cloneable {
      * box; `false` otherwise
      */
     operator fun contains(p: Polygon): Boolean {
-        return p.vertices.stream().allMatch { v: Vertex? -> contains(v) }
+        return p.vertices.stream().allMatch { v: Vertex -> contains(v) }
     }
 
     /**
@@ -150,7 +150,7 @@ class Bounds(min: Vector3d, max: Vector3d) : Cloneable {
      * `false` otherwise
      */
     fun intersects(p: Polygon): Boolean {
-        return p.vertices.stream().filter { v: Vertex? -> this.contains(v) }.count() > 0
+        return p.vertices.stream().filter { v: Vertex -> this.contains(v) }.count() > 0
     }
 
     /**

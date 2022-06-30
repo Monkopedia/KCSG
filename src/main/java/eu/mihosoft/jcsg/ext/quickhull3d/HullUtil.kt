@@ -41,14 +41,14 @@ class HullUtil private constructor() {
                 csg.polygons!!.size * 3
             )
             csg.polygons!!
-                .forEach(Consumer { p: Polygon? ->
-                    p!!.vertices.forEach(
-                        Consumer { v: Vertex? ->
+                .forEach { p: Polygon ->
+                    p.vertices.forEach(
+                        Consumer { v: Vertex ->
                             points.add(
-                                v!!.pos
+                                v.pos
                             )
                         })
-                })
+                }
             return hull(points, storage)
         }
     }
