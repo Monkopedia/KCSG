@@ -135,7 +135,7 @@ class LeapMotionCase {
         return caseOutline.union(peg1, peg2)
     }
 
-    fun toCSG(): CSG? {
+    fun toCSG(): CSG {
         return fullCase()
     }
 
@@ -145,9 +145,9 @@ class LeapMotionCase {
         fun main(args: Array<String>) {
             FileUtil.write(
                 Paths.get("leapmotion.stl"),
-                LeapMotionCase().toCSG()!!.toStlString()
+                LeapMotionCase().toCSG().toStlString()
             )
-            LeapMotionCase().toCSG()!!.toObj().toFiles(Paths.get("leapmotion.obj"))
+            LeapMotionCase().toCSG().toObj().toFiles(Paths.get("leapmotion.obj"))
         }
     }
 }

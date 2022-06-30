@@ -7,7 +7,7 @@ import java.util.*
 import java.util.stream.Collectors
 
 class ConcavePolygonExtrusionTest {
-    var helvetica_H = arrayOf(
+    private var helvetica_H = arrayOf(
         Vector3d.xyz(2.9375, -21.875, 0.0),
         Vector3d.xyz(5.90625, -21.875, 0.0),
         Vector3d.xyz(5.90625, -12.90625, 0.0),
@@ -21,7 +21,7 @@ class ConcavePolygonExtrusionTest {
         Vector3d.xyz(5.90625, 0.0, 0.0),
         Vector3d.xyz(2.9375, 0.0, 0.0)
     )
-    var helvetica_e = arrayOf(
+    private var helvetica_e = arrayOf(
         Vector3d.xyz(39.41796875, -8.875, 0.0),
         Vector3d.xyz(39.41796875, -7.5625, 0.0),
         Vector3d.xyz(27.02734375, -7.5625, 0.0),
@@ -269,8 +269,8 @@ class ConcavePolygonExtrusionTest {
 
     @Test
     fun test() {
-        var H_points: List<Vector3d> = ArrayList(Arrays.asList(*helvetica_H))
-        var e_points: List<Vector3d> = ArrayList(Arrays.asList(*helvetica_e))
+        var H_points: List<Vector3d> = ArrayList(listOf(*helvetica_H))
+        var e_points: List<Vector3d> = ArrayList(listOf(*helvetica_e))
         H_points = H_points.stream().distinct().collect(Collectors.toList())
         e_points = e_points.stream().distinct().collect(Collectors.toList())
         val HLetter = points(Vector3d.xyz(0.0, 0.0, 10.0), H_points)

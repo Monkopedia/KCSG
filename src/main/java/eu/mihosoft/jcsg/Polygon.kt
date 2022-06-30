@@ -52,7 +52,8 @@ class Polygon : Cloneable {
     /**
      * Polygon vertices
      */
-    val vertices: List<Vertex>
+    var vertices: List<Vertex>
+        private set
 
     /**
      * Shared property (can be used for shared color etc.).
@@ -184,8 +185,8 @@ class Polygon : Cloneable {
      * @return this polygon
      */
     fun flip(): Polygon {
-        vertices.forEach(Consumer { vertex: Vertex -> vertex.flip() })
-        Collections.reverse(vertices)
+        vertices.forEach { vertex: Vertex -> vertex.flip() }
+        vertices = vertices.asReversed()
         _csg_plane.flip()
         _plane = _plane.flipped()
         return this

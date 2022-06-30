@@ -168,8 +168,7 @@ class Extrude private constructor() {
                 val topV1 = p2.vertices[i].pos
                 val bottomV2 = p1.vertices[nexti].pos
                 val topV2 = p2.vertices[nexti].pos
-                var pPoints: List<Vector3d>
-                pPoints = listOf(bottomV2, topV2, topV1)
+                var pPoints: List<Vector3d> = listOf(bottomV2, topV2, topV1)
                 newPolygons.add(Polygon.fromPoints(pPoints, p1.storage))
                 pPoints = listOf(bottomV2, topV1, bottomV1)
                 newPolygons.add(Polygon.fromPoints(pPoints, p1.storage))
@@ -254,17 +253,17 @@ class Extrude private constructor() {
         }
 
         private fun toCCW(points: List<Vector3d>?): List<Vector3d> {
-            val result: List<Vector3d> = ArrayList(points)
+            val result: MutableList<Vector3d> = ArrayList(points)
             if (!isCCW(Polygon.fromPoints(result))) {
-                Collections.reverse(result)
+                result.reverse()
             }
             return result
         }
 
         fun toCW(points: List<Vector3d>?): List<Vector3d> {
-            val result: List<Vector3d> = ArrayList(points)
+            val result: MutableList<Vector3d> = ArrayList(points)
             if (isCCW(Polygon.fromPoints(result))) {
-                Collections.reverse(result)
+                result.reverse()
             }
             return result
         }

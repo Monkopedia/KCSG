@@ -90,24 +90,22 @@ class PolygonMeshView() : Parent() {
     private fun meshProperty(): ObjectProperty<PolygonMesh> {
         if (meshProperty == null) {
             meshProperty = SimpleObjectProperty<PolygonMesh>().also { meshProperty ->
-                meshProperty.addListener(
-                    { observable: ObservableValue<out PolygonMesh>?, oldValue: PolygonMesh?, newValue: PolygonMesh? ->
-                        if (oldValue != null) {
-                            oldValue.points.removeListener(meshPointsListener)
-                            oldValue.points.removeListener(meshTexCoordListener)
-                        }
-                        meshProperty.set(newValue)
-                        facesDirty = true
-                        texCoordsDirty = facesDirty
-                        pointsSizeDirty = texCoordsDirty
-                        pointsDirty = pointsSizeDirty
-                        updateMesh()
-                        if (newValue != null) {
-                            newValue.points.addListener(meshPointsListener)
-                            newValue.texCoords.addListener(meshTexCoordListener)
-                        }
+                meshProperty.addListener { observable: ObservableValue<out PolygonMesh>?, oldValue: PolygonMesh?, newValue: PolygonMesh? ->
+                    if (oldValue != null) {
+                        oldValue.points.removeListener(meshPointsListener)
+                        oldValue.points.removeListener(meshTexCoordListener)
                     }
-                )
+                    meshProperty.set(newValue)
+                    facesDirty = true
+                    texCoordsDirty = facesDirty
+                    pointsSizeDirty = texCoordsDirty
+                    pointsDirty = pointsSizeDirty
+                    updateMesh()
+                    if (newValue != null) {
+                        newValue.points.addListener(meshPointsListener)
+                        newValue.texCoords.addListener(meshTexCoordListener)
+                    }
+                }
             }
         }
         return meshProperty!!

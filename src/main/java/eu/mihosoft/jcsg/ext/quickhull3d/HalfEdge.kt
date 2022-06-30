@@ -19,16 +19,23 @@ package eu.mihosoft.jcsg.ext.quickhull3d
  *
  * @author John E. Lloyd, Fall 2004
  */
-internal class HalfEdge {
+internal class HalfEdge
+/**
+ * Constructs a HalfEdge with head vertex `v` and
+ * left-hand triangular face `f`.
+ *
+ * @param v head vertex
+ * @param f left-hand triangular face
+ */(v: Vertex, f: Face) {
     /**
      * The vertex associated with the head of this half-edge.
      */
-    var vertex: Vertex
+    var vertex: Vertex = v
 
     /**
      * Triangular face associated with this half-edge.
      */
-    var face: Face
+    var face: Face = f
 
     /**
      * Next half-edge in the triangle.
@@ -50,18 +57,6 @@ internal class HalfEdge {
             field = edge
             edge!!.opposite = this
         }
-
-    /**
-     * Constructs a HalfEdge with head vertex `v` and
-     * left-hand triangular face `f`.
-     *
-     * @param v head vertex
-     * @param f left-hand triangular face
-     */
-    constructor(v: Vertex, f: Face) {
-        vertex = v
-        face = f
-    }
 
     /**
      * Returns the head vertex associated with this half-edge.

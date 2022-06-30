@@ -32,6 +32,8 @@
 package eu.mihosoft.jcsg.ext.openjfx.shape3d
 
 import javafx.collections.FXCollections
+import javafx.collections.ObservableFloatArray
+import javafx.collections.ObservableIntegerArray
 
 /**
  * A Mesh where each face can be a Polygon
@@ -39,10 +41,10 @@ import javafx.collections.FXCollections
  * can convert to using ObservableIntegerArray
  */
 open class PolygonMesh {
-    val points = FXCollections.observableFloatArray()
-    val texCoords = FXCollections.observableFloatArray()
+    val points: ObservableFloatArray = FXCollections.observableFloatArray()
+    val texCoords: ObservableFloatArray = FXCollections.observableFloatArray()
     var faces = Array(0) { IntArray(0) }
-    val faceSmoothingGroups = FXCollections.observableIntegerArray()
+    val faceSmoothingGroups: ObservableIntegerArray = FXCollections.observableIntegerArray()
     protected var _numEdgesInfaces =
         -1 // TODO invalidate automatically by listening to faces (whenever it is an observable)
 

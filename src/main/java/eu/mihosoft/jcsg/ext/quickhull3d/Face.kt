@@ -30,7 +30,7 @@ internal class Face {
     var he0: HalfEdge? = null
     val normal: Vector3d = Vector3d()
     var area = 0.0
-    val centroid: Point3d
+    val centroid: Point3d = Point3d()
     private var planeOffset = 0.0
     var index = 0
     private var numVerts = 0
@@ -472,7 +472,6 @@ internal class Face {
     }
 
     init {
-        centroid = Point3d()
         mark = VISIBLE
     }
 }

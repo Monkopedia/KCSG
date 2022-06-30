@@ -118,8 +118,13 @@ object Main2 {
         // step 3
         val TOL = 1e-10
         val polygons = ps2.parallelStream().collect(
-            Collectors.partitioningBy(
-                { p: Polygon -> classifyPolygon(p, ps1, b1) == PolygonType.OUTSIDE })
+            Collectors.partitioningBy { p: Polygon ->
+                classifyPolygon(
+                    p,
+                    ps1,
+                    b1
+                ) == PolygonType.OUTSIDE
+            }
         )
         val inside = polygons[false]!!
         val outside = polygons[true]!!

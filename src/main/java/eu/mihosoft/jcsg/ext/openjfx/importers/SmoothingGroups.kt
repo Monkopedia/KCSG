@@ -43,7 +43,7 @@ class SmoothingGroups(
     private val normals: FloatArray
 ) {
     private val visited: BitSet = BitSet(faces.size)
-    private val notVisited: BitSet
+    private val notVisited: BitSet = BitSet(faces.size)
     private val q: Queue<Int>
     private lateinit var faceEdges: Array<Array<Edge>?>
 
@@ -307,7 +307,6 @@ class SmoothingGroups(
     }
 
     init {
-        notVisited = BitSet(faces.size)
         notVisited[0, faces.size] = true
         q = LinkedList()
     }

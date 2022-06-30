@@ -35,7 +35,7 @@ class HoleDetectionTest {
             Vector3d.xy(3.0, 2.0),
             Vector3d.xy(4.0, 2.0)
         )
-        createNumHolesTest(Arrays.asList(p1, p1Hole), 1, 0)
+        createNumHolesTest(listOf(p1, p1Hole), 1, 0)
 
         // one polygon with two holes
         val p2 = fromPoints(
@@ -60,7 +60,7 @@ class HoleDetectionTest {
             Vector3d.xy(2.0, 4.0),
             Vector3d.xy(3.0, 4.0)
         )
-        createNumHolesTest(Arrays.asList(p2, p2Hole1, p2Hole2), 2, 0, 0)
+        createNumHolesTest(listOf(p2, p2Hole1, p2Hole2), 2, 0, 0)
 
         // one polygon with two holes, one of the holes contains another
         // polygon with one hole
@@ -101,7 +101,7 @@ class HoleDetectionTest {
             Vector3d.xy(3.0, 4.0)
         )
         createNumHolesTest(
-            Arrays.asList(p3, p3Hole1, p3Hole2, p3p1, p3p1Hole),
+            listOf(p3, p3Hole1, p3Hole2, p3p1, p3p1Hole),
             2, 0, 0, 1, 0
         )
     }
@@ -119,8 +119,7 @@ class HoleDetectionTest {
             for (i in polygons.indices) {
                 val holesOfPresult =
                     polygons[i].storage.getValue<List<Polygon>>(Edge.KEY_POLYGON_HOLES)
-                var numHolesOfP: Int
-                numHolesOfP = if (!holesOfPresult.isPresent) {
+                var numHolesOfP: Int = if (!holesOfPresult.isPresent) {
                     0
                 } else {
                     val holesOfP = holesOfPresult.get()
