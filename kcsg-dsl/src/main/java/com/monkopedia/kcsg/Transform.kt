@@ -17,11 +17,11 @@ object TransformBuilder {
     }
 
     fun rotX(d: Double): Transform {
-        return unity.rotZ(d)
+        return unity.rotX(d)
     }
 
     fun rotY(d: Double): Transform {
-        return unity.rotZ(d)
+        return unity.rotY(d)
     }
 }
 

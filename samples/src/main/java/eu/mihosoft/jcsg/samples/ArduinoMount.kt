@@ -52,7 +52,7 @@ class ArduinoMount {
     private fun pinConnections(): CSG {
         val first = cube {
             dimensions = xyz(bottomWidth / 2, 3.0, bottomThickness)
-        } * translate(x = -bottomWidth / 4, y = bottomThickness / 2)
+        } * translate(x = -bottomWidth / 4, z = bottomThickness / 2)
         val second = cube {
             dimensions = xyz(bottomWidth / 2 + 10, 3.0, bottomThickness)
         }.transform {
