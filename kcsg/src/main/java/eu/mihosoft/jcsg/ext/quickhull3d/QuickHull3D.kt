@@ -1101,11 +1101,11 @@ internal class QuickHull3D {
 
     private fun buildHull() {
         var cnt = 0
-        var eyeVtx: Vertex
+        var eyeVtx: Vertex?
         computeMaxAndMin()
         createInitialSimplex()
-        while (nextPointToAdd().also { eyeVtx = it!! } != null) {
-            addPointToHull(eyeVtx)
+        while (nextPointToAdd().also { eyeVtx = it } != null) {
+            addPointToHull(eyeVtx!!)
             cnt++
             if (debug) {
                 println("iteration $cnt done")

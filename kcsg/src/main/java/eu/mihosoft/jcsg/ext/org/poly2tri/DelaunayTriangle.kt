@@ -279,12 +279,9 @@ import kotlin.math.abs
         for (i in 0..2) {
             if (cEdge[i]) {
                 when (i) {
-                    0 -> if (neighbors[0] != null) neighbors[0]!!
-                        .markConstrainedEdge(points[1], points[2])
-                    1 -> if (neighbors[1] != null) neighbors[1]!!
-                        .markConstrainedEdge(points[0], points[2])
-                    2 -> if (neighbors[2] != null) neighbors[2]!!
-                        .markConstrainedEdge(points[0], points[1])
+                    0 -> neighbors[0]?.markConstrainedEdge(points[1], points[2])
+                    1 -> neighbors[1]?.markConstrainedEdge(points[0], points[2])
+                    2 -> neighbors[2]?.markConstrainedEdge(points[0], points[1])
                 }
             }
         }

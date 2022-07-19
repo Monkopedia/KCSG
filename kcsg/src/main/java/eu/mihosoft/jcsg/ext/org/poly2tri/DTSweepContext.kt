@@ -112,7 +112,7 @@ internal class DTSweepContext : TriangulationContext<DTSweepDebugContext>() {
             while (!deque.isEmpty()) {
                 t1 = deque.removeFirst()
                 triangulatable!!.addTriangle(t1)
-                for (i in 0..2) {
+                for (i in 0 until 3) {
                     if (!t1.cEdge[i]) {
                         t2 = t1.neighbors[i]
                         if (t2 != null && !t2.isInterior) {

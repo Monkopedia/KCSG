@@ -490,11 +490,11 @@ class Edge(private val p1: Vertex, private val p2: Vertex) : Cloneable {
             val edges: MutableList<Edge> =
                 ArrayList()
 
-            // if (planeGroup.size() > 200) {
-            //     pStream = planeGroup.parallelStream();
-            // } else {
-            val pStream: Stream<Polygon> = planeGroup.stream()
-            // }
+            val pStream: Stream<Polygon> = if (planeGroup.size > 200) {
+                planeGroup.parallelStream()
+            } else {
+                planeGroup.stream()
+            }
             pStream.map { p: Polygon ->
                 fromPolygon(
                     p
@@ -505,11 +505,11 @@ class Edge(private val p1: Vertex, private val p2: Vertex) : Cloneable {
                 )
             }
 
-            // if (edges.size() > 200) {
-            // edgeStream = edges.parallelStream();
-            // } else {
-            val edgeStream: Stream<Edge> = edges.stream()
-            // }
+            val edgeStream: Stream<Edge> = if (edges.size > 200) {
+                edges.parallelStream()
+            } else {
+                edges.stream()
+            }
 
             // find potential boundary edges, i.e., edges that occur once (freq=1)
             val potentialBoundaryEdges: MutableList<Edge> =

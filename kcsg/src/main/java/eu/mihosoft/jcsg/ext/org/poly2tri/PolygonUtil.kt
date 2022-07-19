@@ -79,7 +79,12 @@ internal class PolygonUtil private constructor() {
             val normal = concave.vertices[0].normal.clone()
             val cw: Boolean = !Extrude.isCCW(concave)
             val p = fromCSGPolygon(concave)
+
             Poly2Tri.triangulate(p)
+            for (i in p.triangles!!.indices) {
+                println("Concave " + i + " " + Arrays.asList(*p.triangles!![i].points))
+            }
+
             val triangles = p.triangles
             var triPoints: MutableList<Vertex> = ArrayList()
             for (t in triangles!!) {

@@ -49,11 +49,12 @@ import kotlin.math.abs
  * color).
  */
 class Polygon : Cloneable {
+    private var _vertices: MutableList<Vertex>
     /**
      * Polygon vertices
      */
-    var vertices: List<Vertex>
-        private set
+    val vertices: List<Vertex>
+        get() = _vertices
 
     /**
      * Shared property (can be used for shared color etc.).
@@ -101,7 +102,7 @@ class Polygon : Cloneable {
      * @param shared shared property
      */
     constructor(vertices: List<Vertex>, shared: PropertyStorage?) {
-        this.vertices = vertices
+        this._vertices = vertices.toMutableList()
         this.shared = shared
         _csg_plane = Plane.createFromPoints(
             vertices[0].pos,
@@ -146,7 +147,7 @@ class Polygon : Cloneable {
      * @param vertices polygon vertices
      */
     constructor(vertices: List<Vertex>) {
-        this.vertices = vertices
+        this._vertices = vertices.toMutableList()
         _csg_plane = Plane.createFromPoints(
             vertices[0].pos,
             vertices[1].pos,
@@ -186,7 +187,7 @@ class Polygon : Cloneable {
      */
     fun flip(): Polygon {
         vertices.forEach { vertex: Vertex -> vertex.flip() }
-        vertices = vertices.asReversed()
+        _vertices.reverse()
         _csg_plane.flip()
         _plane = _plane.flipped()
         return this

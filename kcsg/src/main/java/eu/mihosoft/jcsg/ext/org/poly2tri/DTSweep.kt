@@ -500,8 +500,8 @@ internal object DTSweep {
         edge: DTSweepConstraint,
         node: AdvancingFrontNode
     ) {
+        fill(tcx, node.previous!!)
         val previous = node.previous!!
-        fill(tcx, previous)
         if (previous.point !== edge.p) {
             // Next above or below edge?
             if (TriangulationUtil.orient2d(

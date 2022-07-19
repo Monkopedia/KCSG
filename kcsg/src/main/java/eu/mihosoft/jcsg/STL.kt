@@ -32,6 +32,7 @@ package eu.mihosoft.jcsg
 import eu.mihosoft.jcsg.ext.imagej.STLLoader
 import eu.mihosoft.vvecmath.Vector3d
 import java.io.IOException
+import java.io.InputStream
 import java.nio.file.Path
 
 /**
@@ -52,6 +53,25 @@ object STL {
         val polygons: MutableList<Polygon> = ArrayList()
         var vertices: MutableList<Vector3d> = ArrayList()
         for (p in loader.parse(path.toFile())) {
+            vertices.add(p.clone())
+            if (vertices.size == 3) {
+                polygons.add(Polygon.fromPoints(vertices))
+                vertices = ArrayList()
+            }
+        }
+        return CSG.fromPolygons(PropertyStorage(), polygons)
+    }
+    /**
+     * Loads a CSG from stl.
+     * @return CSG
+     * @throws IOException if loading failed
+     */
+    @Throws(IOException::class)
+    fun from(inputStreamFactory: () -> InputStream, length: () -> Long): CSG {
+        val loader = STLLoader()
+        val polygons: MutableList<Polygon> = ArrayList()
+        var vertices: MutableList<Vector3d> = ArrayList()
+        for (p in loader.parse(inputStreamFactory, length)) {
             vertices.add(p.clone())
             if (vertices.size == 3) {
                 polygons.add(Polygon.fromPoints(vertices))

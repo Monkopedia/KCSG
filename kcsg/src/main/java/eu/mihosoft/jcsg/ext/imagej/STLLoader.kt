@@ -2,7 +2,6 @@ package eu.mihosoft.jcsg.ext.imagej
 
 import eu.mihosoft.vvecmath.Vector3d
 import java.io.*
-import java.text.ParseException
 
 /**
  * Fork of
@@ -10,7 +9,8 @@ import java.text.ParseException
  *
  * TODO: license unclear
  */
-internal class STLLoader  //        /**
+internal class STLLoader {
+//        /**
 //         * Load the specified stl file and returns the result as a hash map, mapping
 //         * the object names to the corresponding <code>CustomMesh</code> objects.
 //         */
@@ -24,95 +24,74 @@ internal class STLLoader  //        /**
 //                        throw e;
 //                }
 //                return sl.meshes;
-//        }
-//
-//        private HashMap<String, CustomMesh> meshes;
-{
-    var line: String? = null
-    var `in`: BufferedReader? = null
+//        } { // { //        private HashMap<String, CustomMesh> meshes;
 
     // attributes of the currently read mesh
-    private var vertices = ArrayList<Vector3d>()
-    private val normal = Vector3d.zero().asModifiable() //to be used for file checking
-    private var fis: FileInputStream? = null
-    private var triangles = 0
 
     //    private DecimalFormat decimalFormat = new DecimalFormat("0.0E0");
-    @Throws(IOException::class)
-    fun parse(f: File): ArrayList<Vector3d> {
-        vertices.clear()
+    fun parse(f: File): List<Vector3d> {
+        return parse({ FileInputStream(f) }, { f.length() })
+    }
 
+    fun parse(inputStreamFactory: () -> InputStream, length: () -> Long): List<Vector3d> {
         // determine if this is a binary or ASCII STL
         // and send to the appropriate parsing method
         // Hypothesis 1: this is an ASCII STL
-        val br = BufferedReader(FileReader(f))
+        val br = inputStreamFactory().bufferedReader()
         val line = br.readLine()
-        val words = line.trim { it <= ' ' }.split("\\s+").toTypedArray()
+        val words = line.trim().split(Regex("\\s+"))
         if (line.indexOf('\u0000') < 0 && words[0].equals("solid", ignoreCase = true)) {
             println("Looks like an ASCII STL")
-            parseAscii(f)
-            return vertices
+            return parseAscii(inputStreamFactory)
         }
 
         // Hypothesis 2: this is a binary STL
-        val fs = FileInputStream(f)
+        val fs = inputStreamFactory()
 
         // bytes 80, 81, 82 and 83 form a little-endian int
         // that contains the number of triangles
         val buffer = ByteArray(84)
         fs.read(buffer, 0, 84)
-        triangles = (buffer[83].toInt() and 0xff shl 24
-            or (buffer[82].toInt() and 0xff shl 16) or (buffer[81].toInt() and 0xff shl 8) or (buffer[80].toInt() and 0xff))
-        if ((f.length() - 84) / 50 == triangles.toLong()) {
+        val triangles = (
+            buffer[83].toInt() and 0xff shl 24
+                or (buffer[82].toInt() and 0xff shl 16) or (buffer[81].toInt() and 0xff shl 8) or (buffer[80].toInt() and 0xff)
+            )
+        if ((length() - 84) / 50 == triangles.toLong()) {
             println("Looks like a binary STL")
-            parseBinary(f)
-            return vertices
+            return parseBinary(inputStreamFactory, triangles)
         }
         System.err.println("File is not a valid STL")
-        return vertices
+        return ArrayList()
     }
 
-    private fun parseAscii(f: File) {
-        try {
-            `in` = BufferedReader(FileReader(f))
-        } catch (e: FileNotFoundException) {
-            e.printStackTrace()
-        }
-        vertices = ArrayList()
-        try {
-            while (`in`!!.readLine().also { line = it } != null) {
-                val numbers = line!!.trim { it <= ' ' }.split("\\s+").toTypedArray()
+    private fun parseAscii(inputStreamFactory: () -> InputStream): List<Vector3d> = buildList {
+        inputStreamFactory().bufferedReader().useLines { lines ->
+            lines.forEach { line ->
+                val numbers = line.trim().split(Regex("\\s+")).toTypedArray()
                 if (numbers[0] == "vertex") {
                     val x = parseFloat(numbers[1])
                     val y = parseFloat(numbers[2])
                     val z = parseFloat(numbers[3])
                     val vertex = Vector3d.xyz(x.toDouble(), y.toDouble(), z.toDouble())
-                    vertices.add(vertex)
+                    add(vertex)
                 } else if (numbers[0] == "facet" && numbers[1] == "normal") {
                     normal.x = parseFloat(numbers[2]).toDouble()
                     normal.y = parseFloat(numbers[3]).toDouble()
                     normal.z = parseFloat(numbers[4]).toDouble()
                 }
             }
-            `in`!!.close()
-        } catch (e: IOException) {
-            e.printStackTrace()
-        } catch (e: ParseException) {
-            e.printStackTrace()
         }
     }
 
-    private fun parseBinary(f: File) {
-        vertices = ArrayList()
-        try {
-            fis = FileInputStream(f)
+    private fun parseBinary(inputStreamFactory: () -> InputStream, triangles: Int): List<Vector3d> = buildList {
+        inputStreamFactory().use { fis ->
             for (h in 0..83) {
-                fis!!.read() // skip the header bytes
+                fis.read() // skip the header bytes
             }
             for (t in 0 until triangles) {
                 val tri = ByteArray(50)
                 for (tb in 0..49) {
-                    tri[tb] = fis!!.read().toByte()
+                    tri[tb] = fis.read().toByte()
                 }
                 normal.x = leBytesToFloat(tri[0], tri[1], tri[2], tri[3]).toDouble()
                 normal.y = leBytesToFloat(tri[4], tri[5], tri[6], tri[7]).toDouble()
@@ -132,14 +111,9 @@ internal class STLLoader  //        /**
                         tri[j + 10], tri[j + 11]
                     )
                     val p = Vector3d.xyz(px.toDouble(), py.toDouble(), pz.toDouble())
-                    vertices.add(p)
+                    add(p)
                 }
             }
-            fis!!.close()
-        } catch (e: FileNotFoundException) {
-            e.printStackTrace()
-        } catch (e: IOException) {
-            e.printStackTrace()
         }
     }
 
@@ -150,7 +124,6 @@ internal class STLLoader  //        /**
     //        string = string.replaceFirst("e\\-", "E-");
     //        return decimalFormat.parse(string).floatValue();
     //    }
-    @Throws(ParseException::class)
     private fun parseFloat(string: String): Float {
         return string.toFloat()
     }
@@ -160,5 +133,9 @@ internal class STLLoader  //        /**
             b3.toInt() and 0xff shl 24 or (b2.toInt() and 0xff shl 16)
                 or (b1.toInt() and 0xff shl 8) or (b0.toInt() and 0xff)
         )
+    }
+
+    companion object {
+        private val normal = Vector3d.zero().asModifiable() // to be used for file checking
     }
 }

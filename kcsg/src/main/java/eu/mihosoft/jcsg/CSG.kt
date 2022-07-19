@@ -287,10 +287,7 @@ class CSG private constructor(
         val outer: MutableList<Polygon> = ArrayList()
         val bounds = csg.bounds
         _polygons.stream().forEach { p: Polygon ->
-            if (bounds.intersects(
-                    p.bounds
-                )
-            ) {
+            if (bounds.intersects(p.bounds)) {
                 inner.add(p)
             } else {
                 outer.add(p)

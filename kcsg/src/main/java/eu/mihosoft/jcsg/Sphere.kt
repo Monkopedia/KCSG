@@ -34,8 +34,8 @@
 package eu.mihosoft.jcsg
 
 import eu.mihosoft.vvecmath.Vector3d
-import kotlin.math.cos
-import kotlin.math.sin
+import java.lang.Math.cos
+import java.lang.Math.sin
 
 /**
  * A solid sphere.

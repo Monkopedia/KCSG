@@ -66,7 +66,7 @@ class Bounds(min: Vector3d, max: Vector3d) : Cloneable {
     private val cube: Cube = Cube(_center, _bounds)
 
     public override fun clone(): Bounds {
-        return Bounds(min, max)
+        return Bounds(min.clone(), max.clone())
     }
 
     /**
