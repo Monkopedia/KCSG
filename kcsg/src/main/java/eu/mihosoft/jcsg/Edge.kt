@@ -281,13 +281,11 @@ class Edge(private val p1: Vertex, private val p2: Vertex) : Cloneable {
         }
 
         fun toVertices(edges: List<Edge>): List<Vertex> {
-            return edges.stream().map { e: Edge -> e.p1 }
-                .collect(Collectors.toList())
+            return edges.map { e: Edge -> e.p1 }
         }
 
         fun toPoints(edges: List<Edge>): List<Vector3d> {
-            return edges.stream().map { e: Edge -> e.p1.pos }
-                .collect(Collectors.toList())
+            return edges.map { e: Edge -> e.p1.pos }
         }
 
         private fun toPolygon(points: List<Vector3d>, plane: Plane): Polygon {
@@ -295,8 +293,9 @@ class Edge(private val p1: Vertex, private val p2: Vertex) : Cloneable {
 //        List<Vector3d> points = edges.stream().().map(e -> e.p1.pos).
 //                collect(Collectors.toList());
             val p: Polygon = Polygon.fromPoints(points)
-            p.vertices.stream()
-                .forEachOrdered { vertex: Vertex -> vertex.normal = plane.normal.clone() }
+            p.vertices.forEach { vertex: Vertex ->
+                vertex.normal = plane.normal.clone()
+            }
 
 //        // we try to detect wrong orientation by comparing normals
 //        if (p.plane.normal.angle(plane.normal) > 0.1) {
@@ -313,10 +312,9 @@ class Edge(private val p1: Vertex, private val p2: Vertex) : Cloneable {
             while (true) {
                 val finalEdge = edge
                 boundaryPath.add(finalEdge.p1.pos)
-                val nextEdgeIndex = boundaryEdges.indexOf(
-                    boundaryEdges.stream().filter { e: Edge -> finalEdge.p2 == e.p1 }
-                        .findFirst().get()
-                )
+                val nextEdgeIndex = boundaryEdges.indexOfFirst { e: Edge ->
+                    finalEdge.p2 == e.p1
+                }
                 if (used[nextEdgeIndex]) {
 //                System.out.println("nexIndex: " + nextEdgeIndex);
                     break
@@ -336,8 +334,7 @@ class Edge(private val p1: Vertex, private val p2: Vertex) : Cloneable {
 
         @kotlin.jvm.JvmStatic
         fun boundaryPathsWithHoles(boundaryPaths: List<Polygon>): List<Polygon> {
-            val result = boundaryPaths.stream().map { p: Polygon -> p.clone() }
-                .collect(Collectors.toList())
+            val result = boundaryPaths.map { p: Polygon -> p.clone() }
             val parents: MutableList<List<Int>> = ArrayList()
             val isHole = BooleanArray(result.size)
             for (i in result.indices) {
@@ -347,7 +344,7 @@ class Edge(private val p1: Vertex, private val p2: Vertex) : Cloneable {
                 for (j in result.indices) {
                     val p2 = result[j]
                     if (i != j) {
-                        if (p2!!.contains(p1)) {
+                        if (p2.contains(p1)) {
                             parentsOfI.add(j)
                         }
                     }
@@ -372,13 +369,13 @@ class Edge(private val p1: Vertex, private val p2: Vertex) : Cloneable {
                 parent[i] = maxIndex
                 if (!isHole[maxIndex] && isHole[i]) {
                     var holes: MutableList<Polygon>
-                    val holesOpt = result[maxIndex]!!
+                    val holesOpt = result[maxIndex]
                         .storage.getValue<MutableList<Polygon>>(KEY_POLYGON_HOLES)
                     if (holesOpt != null) {
                         holes = holesOpt
                     } else {
                         holes = ArrayList()
-                        result[maxIndex]!!.storage[KEY_POLYGON_HOLES] = holes
+                        result[maxIndex].storage[KEY_POLYGON_HOLES] = holes
                     }
                     holes.add(result[i])
                 }
@@ -459,10 +456,7 @@ class Edge(private val p1: Vertex, private val p2: Vertex) : Cloneable {
             while (true) {
                 val finalEdge = edge
                 boundaryPath.add(finalEdge.p1.pos)
-                val nextEdgeIndex = boundaryEdges.indexOf(
-                    boundaryEdges.stream().filter { e: Edge -> finalEdge.p2 == e.p1 }
-                        .findFirst().get()
-                )
+                val nextEdgeIndex = boundaryEdges.indexOfFirst { e: Edge -> finalEdge.p2 == e.p1 }
                 if (used[nextEdgeIndex]) {
 //                System.out.println("nexIndex: " + nextEdgeIndex);
                     break
@@ -496,13 +490,9 @@ class Edge(private val p1: Vertex, private val p2: Vertex) : Cloneable {
                 planeGroup.stream()
             }
             pStream.map { p: Polygon ->
-                fromPolygon(
-                    p
-                )
+                fromPolygon(p)
             }.forEach { pEdges: List<Edge> ->
-                edges.addAll(
-                    pEdges
-                )
+                edges.addAll(pEdges)
             }
 
             val edgeStream: Stream<Edge> = if (edges.size > 200) {
@@ -536,8 +526,7 @@ class Edge(private val p1: Vertex, private val p2: Vertex) : Cloneable {
 //                + ",#edges: " + edges.size()
 //                + ", #del-bnd-edges: " + (boundaryEdges.size() - realBndEdges.size()));
             return bndEdgeStream.filter { be: Edge ->
-                edges.stream().filter { e: Edge -> falseBoundaryEdgeSharedWithOtherEdge(be, e) }
-                    .count() == 0L
+                !edges.any { e: Edge -> falseBoundaryEdgeSharedWithOtherEdge(be, e) }
             }.collect(Collectors.toList())
         }
 
@@ -547,7 +536,6 @@ class Edge(private val p1: Vertex, private val p2: Vertex) : Cloneable {
             val polygons = boundaryPathsWithHoles(
                 boundaryPaths(boundaryEdgesOfPlaneGroup(planeGroup))
             )
-            println("polygons: " + polygons.size)
             val result: MutableList<Polygon> = ArrayList(polygons.size)
             for (p in polygons) {
                 val holesOfPresult = p.storage.getValue<List<Polygon>>(KEY_POLYGON_HOLES)

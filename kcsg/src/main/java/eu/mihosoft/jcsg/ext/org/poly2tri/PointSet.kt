@@ -72,7 +72,7 @@ package eu.mihosoft.jcsg.ext.org.poly2tri
         _triangles!!.add(t)
     }
 
-    override fun addTriangles(list: List<DelaunayTriangle>?) {
+    override fun addTriangles(list: List<DelaunayTriangle>) {
         _triangles!!.addAll(list!!)
     }
 

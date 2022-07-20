@@ -31,6 +31,7 @@ package eu.mihosoft.jcsg.ext.org.poly2tri
 
 import org.slf4j.LoggerFactory
 import java.util.*
+import kotlin.collections.ArrayList
 
 /* Poly2Tri
  * Copyright (c) 2009-2010, Poly2Tri Contributors
@@ -65,7 +66,9 @@ import java.util.*
     private var _points = ArrayList<TriangulationPoint>()
     private var _steinerPoints: ArrayList<TriangulationPoint>? = null
     private var _holes: ArrayList<Polygon>? = null
-    private var m_triangles: MutableList<DelaunayTriangle>? = null
+    private val m_triangles: MutableList<DelaunayTriangle> by lazy {
+        ArrayList(_points.size)
+    }
     var point: PolygonPoint? = null
         private set
 
@@ -162,7 +165,7 @@ import java.util.*
      * @param p
      */
     fun insertPointAfter(a: PolygonPoint, newPoint: PolygonPoint) {
-        // Validate that 
+        // Validate that
         val index = _points.indexOf(a)
         if (index != -1) {
             newPoint.next = a.next
@@ -212,32 +215,26 @@ import java.util.*
 
     override val points: List<TriangulationPoint>
         get() = _points
-    override val triangles: List<DelaunayTriangle>?
+    override val triangles: List<DelaunayTriangle>
         get() = m_triangles
 
     override fun addTriangle(t: DelaunayTriangle) {
-        m_triangles!!.add(t)
+        m_triangles.add(t)
     }
 
-    override fun addTriangles(list: List<DelaunayTriangle>?) {
-        m_triangles!!.addAll(list!!)
+    override fun addTriangles(list: List<DelaunayTriangle>) {
+        m_triangles.addAll(list)
     }
 
     override fun clearTriangulation() {
-        if (m_triangles != null) {
-            m_triangles!!.clear()
-        }
+        m_triangles.clear()
     }
 
     /**
      * Creates constraints and populates the context with points
      */
     override fun prepareTriangulation(tcx: TriangulationContext<*>) {
-        if (m_triangles == null) {
-            m_triangles = ArrayList(_points.size)
-        } else {
-            m_triangles!!.clear()
-        }
+        m_triangles.clear()
 
         // Outer constraints
         for (i in 0 until _points.size - 1) {

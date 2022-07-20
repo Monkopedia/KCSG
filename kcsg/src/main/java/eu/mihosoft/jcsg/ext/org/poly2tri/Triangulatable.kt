@@ -67,7 +67,7 @@ package eu.mihosoft.jcsg.ext.org.poly2tri
     val triangles: List<DelaunayTriangle>?
     val points: List<TriangulationPoint?>
     fun addTriangle(t: DelaunayTriangle)
-    fun addTriangles(list: List<DelaunayTriangle>?)
+    fun addTriangles(list: List<DelaunayTriangle>)
     fun clearTriangulation()
     val triangulationMode: TriangulationMode?
 }

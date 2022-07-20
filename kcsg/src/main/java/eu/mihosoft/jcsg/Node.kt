@@ -49,10 +49,15 @@ internal class Node @JvmOverloads constructor(polygons: List<Polygon>? = null) :
      */
     private var polygons: MutableList<Polygon> = ArrayList()
 
+    private var planeImpl: Plane? = null
+
     /**
      * Plane used for BSP.
      */
-    private var plane: Plane? = null
+    private val plane: Plane
+        get() = planeImpl ?: this.polygons.firstOrNull()?._csg_plane?.clone()?.also {
+            planeImpl = it
+        } ?: error("Please fix me! I don't know what to do?")
 
     /**
      * Polygons in front of the plane.
@@ -65,9 +70,9 @@ internal class Node @JvmOverloads constructor(polygons: List<Polygon>? = null) :
     private var back: Node? = null
     public override fun clone(): Node {
         val node = Node()
-        node.plane = if (plane == null) null else plane!!.clone()
-        node.front = if (front == null) null else front!!.clone()
-        node.back = if (back == null) null else back!!.clone()
+        node.planeImpl = planeImpl?.clone()
+        node.front = front?.clone()
+        node.back = back?.clone()
         //        node.polygons = new ArrayList<>();
 //        polygons.parallelStream().forEach((Polygon p) -> {
 //            node.polygons.add(p.clone());
@@ -92,21 +97,9 @@ internal class Node @JvmOverloads constructor(polygons: List<Polygon>? = null) :
             polygons.stream()
         }
         polygonStream.forEach { polygon: Polygon -> polygon.flip() }
-        if (plane == null && polygons.isNotEmpty()) {
-            plane = polygons[0]._csg_plane.clone()
-        } else if (plane == null && polygons.isEmpty()) {
-            System.err.println("Please fix me! I don't know what to do?")
-
-            // throw new RuntimeException("Please fix me! I don't know what to do?");
-            return
-        }
-        plane!!.flip()
-        if (front != null) {
-            front!!.invert()
-        }
-        if (back != null) {
-            back!!.invert()
-        }
+        plane.flip()
+        front?.invert()
+        back?.invert()
         val temp = front
         front = back
         back = temp
@@ -123,22 +116,13 @@ internal class Node @JvmOverloads constructor(polygons: List<Polygon>? = null) :
      * @return the cliped list of polygons
      */
     private fun clipPolygons(polygons: List<Polygon>): MutableList<Polygon> {
-        if (plane == null) {
-            return ArrayList(polygons)
-        }
         var frontP: MutableList<Polygon> = ArrayList()
         var backP: MutableList<Polygon> = ArrayList()
         for (polygon in polygons) {
-            plane!!.splitPolygon(polygon, frontP, backP, frontP, backP)
+            plane.splitPolygon(polygon, frontP, backP, frontP, backP)
         }
-        if (front != null) {
-            frontP = front!!.clipPolygons(frontP)
-        }
-        backP = if (back != null) {
-            back!!.clipPolygons(backP)
-        } else {
-            ArrayList(0)
-        }
+        frontP = front?.clipPolygons(frontP) ?: frontP
+        backP = back?.clipPolygons(backP) ?: ArrayList(0)
         frontP.addAll(backP)
         return frontP
     }
@@ -154,12 +138,8 @@ internal class Node @JvmOverloads constructor(polygons: List<Polygon>? = null) :
      */
     fun clipTo(bsp: Node) {
         polygons = bsp.clipPolygons(polygons)
-        if (front != null) {
-            front!!.clipTo(bsp)
-        }
-        if (back != null) {
-            back!!.clipTo(bsp)
-        }
+        front?.clipTo(bsp)
+        back?.clipTo(bsp)
     }
 
     /**
@@ -169,14 +149,10 @@ internal class Node @JvmOverloads constructor(polygons: List<Polygon>? = null) :
      */
     fun allPolygons(): MutableList<Polygon> {
         val localPolygons: MutableList<Polygon> = ArrayList(polygons)
-        if (front != null) {
-            localPolygons.addAll(front!!.allPolygons())
-            //            polygons = Utils.concat(polygons, this.front.allPolygons());
-        }
-        if (back != null) {
+        front?.allPolygons()?.let { localPolygons.addAll(it) }
+        //            polygons = Utils.concat(polygons, this.front.allPolygons());
 //            polygons = Utils.concat(polygons, this.back.allPolygons());
-            localPolygons.addAll(back!!.allPolygons())
-        }
+        back?.allPolygons()?.let { localPolygons.addAll(it) }
         return localPolygons
     }
 
@@ -191,8 +167,8 @@ internal class Node @JvmOverloads constructor(polygons: List<Polygon>? = null) :
     fun build(polygons: List<Polygon>) {
         var polygons = polygons
         if (polygons.isEmpty()) return
-        if (plane == null) {
-            plane = polygons[0]._csg_plane.clone()
+        if (planeImpl == null) {
+            planeImpl = polygons.first()._csg_plane.clone()
         }
         polygons = polygons.stream().filter { p: Polygon -> p.isValid }.distinct()
             .collect(Collectors.toList())
@@ -201,21 +177,17 @@ internal class Node @JvmOverloads constructor(polygons: List<Polygon>? = null) :
 
         // parellel version does not work here
         polygons.forEach { polygon: Polygon ->
-            plane!!.splitPolygon(
+            plane.splitPolygon(
                 polygon, this.polygons, this.polygons, frontP, backP
             )
         }
         if (frontP.size > 0) {
-            if (front == null) {
-                front = Node()
-            }
-            front!!.build(frontP)
+            val front = front ?: Node().also { front = it }
+            front.build(frontP)
         }
         if (backP.size > 0) {
-            if (back == null) {
-                back = Node()
-            }
-            back!!.build(backP)
+            val back = back ?: Node().also { back = it }
+            back.build(backP)
         }
     }
     /**
