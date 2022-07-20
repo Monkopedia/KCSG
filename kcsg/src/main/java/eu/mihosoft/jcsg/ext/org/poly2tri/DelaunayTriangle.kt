@@ -173,10 +173,8 @@ import kotlin.math.abs
      * Clears all references to all other triangles and points
      */
     fun clear() {
-        var t: DelaunayTriangle?
         for (i in 0..2) {
-            t = neighbors[i]
-            t?.clearNeighbor(this)
+            neighbors[i]?.clearNeighbor(this)
         }
         clearNeighbors()
         points[2] = null

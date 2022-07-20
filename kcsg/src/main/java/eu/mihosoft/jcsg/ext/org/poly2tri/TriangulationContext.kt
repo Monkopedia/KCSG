@@ -58,8 +58,8 @@ package eu.mihosoft.jcsg.ext.org.poly2tri
  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */internal abstract class TriangulationContext<A : TriangulationDebugContext>: Object() {
-    lateinit var debugContext: A
+ */internal abstract class TriangulationContext<A : TriangulationDebugContext?>: Object() {
+    var debugContext: A? = null
         protected set
     var isDebugEnabled = false
         protected set
@@ -131,7 +131,7 @@ package eu.mihosoft.jcsg.ext.org.poly2tri
         _points.clear()
         _terminated = false
         if (isDebugEnabled) {
-            debugContext.clear()
+            debugContext?.clear()
         }
         stepCount = 0
     }

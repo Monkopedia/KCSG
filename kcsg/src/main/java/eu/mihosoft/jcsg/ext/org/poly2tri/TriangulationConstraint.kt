@@ -66,6 +66,6 @@ package eu.mihosoft.jcsg.ext.org.poly2tri
  * @author Thomas ???, thahlen@gmail.com
  */
 internal open class TriangulationConstraint {
-    open var p: TriangulationPoint? = null
-    open var q: TriangulationPoint? = null
+    open lateinit var p: TriangulationPoint
+    open lateinit var q: TriangulationPoint
 }

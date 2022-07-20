@@ -65,12 +65,12 @@ import java.util.*
  * @author Thomas ??? (thahlen@gmail.com)
  */
 internal class DTSweepContext : TriangulationContext<DTSweepDebugContext>() {
-    // Inital triangle factor, seed triangle will extend 30% of 
+    // Inital triangle factor, seed triangle will extend 30% of
     // PointSet width to both left and right.
     private val ALPHA = 0.3f
 
     /** Advancing front  */
-    var advancingFront: AdvancingFront? = null
+    lateinit var advancingFront: AdvancingFront
 
     /** head point used with advancing front  */
     var head: TriangulationPoint? = null
@@ -133,17 +133,17 @@ internal class DTSweepContext : TriangulationContext<DTSweepDebugContext>() {
     fun addNode(node: AdvancingFrontNode?) {
 //        System.out.println( "add:" + node.key + ":" + System.identityHashCode(node.key));
 //        m_nodeTree.put( node.getKey(), node );
-        advancingFront!!.addNode(node)
+        advancingFront.addNode(node)
     }
 
     fun removeNode(node: AdvancingFrontNode?) {
 //        System.out.println( "remove:" + node.key + ":" + System.identityHashCode(node.key));
 //        m_nodeTree.delete( node.getKey() );
-        advancingFront!!.removeNode(node)
+        advancingFront.removeNode(node)
     }
 
     fun locateNode(point: TriangulationPoint): AdvancingFrontNode? {
-        return advancingFront!!.locateNode(point)
+        return advancingFront.locateNode(point)
     }
 
     fun createAdvancingFront() {
@@ -163,20 +163,20 @@ internal class DTSweepContext : TriangulationContext<DTSweepDebugContext>() {
         middle.triangle = iTriangle
         tail = AdvancingFrontNode(iTriangle.points[2]!!)
         advancingFront = AdvancingFront(head, tail)
-        advancingFront!!.addNode(middle)
+        advancingFront.addNode(middle)
 
         // TODO: I think it would be more intuitive if head is middles next and not previous
         //       so swap head and tail
-        advancingFront!!.head.next = middle
-        middle.next = advancingFront!!.tail
-        middle.previous = advancingFront!!.head
-        advancingFront!!.tail.previous = middle
+        advancingFront.head.next = middle
+        middle.next = advancingFront.tail
+        middle.previous = advancingFront.head
+        advancingFront.tail.previous = middle
     }
 
     internal inner class Basin {
-        var leftNode: AdvancingFrontNode? = null
-        var bottomNode: AdvancingFrontNode? = null
-        var rightNode: AdvancingFrontNode? = null
+        lateinit var leftNode: AdvancingFrontNode
+        lateinit var bottomNode: AdvancingFrontNode
+        lateinit var rightNode: AdvancingFrontNode
         var width = 0.0
         var leftHighest = false
     }
@@ -196,10 +196,8 @@ internal class DTSweepContext : TriangulationContext<DTSweepDebugContext>() {
         var n: AdvancingFrontNode?
         for (i in 0..2) {
             if (t.neighbors[i] == null) {
-                n = advancingFront!!.locatePoint(t.pointCW(t.points[i]!!))
-                if (n != null) {
-                    n.triangle = t
-                }
+                n = advancingFront.locatePoint(t.pointCW(t.points[i]!!))
+                n?.triangle = t
             }
         }
     }

@@ -62,7 +62,13 @@ package eu.mihosoft.jcsg.ext.org.poly2tri
  * @author Thomas ??? (thahlen@gmail.com)
  */
 internal class AdvancingFront(var head: AdvancingFrontNode, var tail: AdvancingFrontNode) {
-    private var search: AdvancingFrontNode?
+    private var search: AdvancingFrontNode = head
+
+    init {
+        addNode(head)
+        addNode(tail)
+    }
+
     fun addNode(node: AdvancingFrontNode?) {
 //        _searchTree.put( node.key, node );
     }
@@ -82,8 +88,8 @@ internal class AdvancingFront(var head: AdvancingFrontNode, var tail: AdvancingF
         return sb.toString()
     }
 
-    private fun findSearchNode(x: Double): AdvancingFrontNode? {
-        // TODO: implement BST index 
+    private fun findSearchNode(x: Double): AdvancingFrontNode {
+        // TODO: implement BST index
         return search
     }
 
@@ -100,18 +106,18 @@ internal class AdvancingFront(var head: AdvancingFrontNode, var tail: AdvancingF
 
     private fun locateNode(x: Double): AdvancingFrontNode? {
         var node = findSearchNode(x)
-        if (x < node!!.value) {
-            while (node!!.previous.also { node = it } != null) {
-                if (x >= node!!.value) {
+        if (x < node.value) {
+            while (node.previous?.also { node = it } != null) {
+                if (x >= node.value) {
                     search = node
                     return node
                 }
             }
         } else {
-            while (node!!.next.also { node = it } != null) {
-                if (x < node!!.value) {
-                    search = node!!.previous
-                    return node!!.previous
+            while (node.next?.also { node = it } != null) {
+                if (x < node.value) {
+                    search = node.previous!!
+                    return node.previous
                 }
             }
         }
@@ -132,35 +138,25 @@ internal class AdvancingFront(var head: AdvancingFrontNode, var tail: AdvancingF
         if (px == nx) {
             if (point !== node.point) {
                 // We might have two nodes with same x value for a short time
-                node = if (point === node.previous!!.point) {
-                    node.previous
-                } else if (point === node.next!!.point) {
-                    node.next
-                } else {
-                    throw RuntimeException("Failed to find Node for given afront point")
-                    //                    node = null;
-                }
+                node = node.previous?.takeIf { it.point === point }
+                    ?: node.next?.takeIf { it.point === point }
+                    ?: throw RuntimeException("Failed to find Node for given afront point")
+                //                    node = null;
             }
         } else if (px < nx) {
-            while (node!!.previous.also { node = it } != null) {
-                if (point === node!!.point) {
+            while (node.previous?.also { node = it } != null) {
+                if (point === node.point) {
                     break
                 }
             }
         } else {
-            while (node!!.next.also { node = it } != null) {
-                if (point === node!!.point) {
+            while (node.next?.also { node = it } != null) {
+                if (point === node.point) {
                     break
                 }
             }
         }
         search = node
         return node
-    }
-
-    init {
-        search = head
-        addNode(head)
-        addNode(tail)
     }
 }

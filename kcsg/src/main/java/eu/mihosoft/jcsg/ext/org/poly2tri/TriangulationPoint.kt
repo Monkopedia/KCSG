@@ -60,8 +60,7 @@ package eu.mihosoft.jcsg.ext.org.poly2tri
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */internal abstract class TriangulationPoint : Point() {
     // List of edges this point constitutes an upper ending point (CDT)
-    var edges: ArrayList<DTSweepConstraint>? = null
-        private set
+    lateinit var edges: ArrayList<DTSweepConstraint>
 
     override fun toString(): String {
         return "[$x,$y]"
@@ -75,14 +74,14 @@ package eu.mihosoft.jcsg.ext.org.poly2tri
     abstract override val zf: Float
     abstract override fun set(x: Double, y: Double, z: Double)
     fun addEdge(e: DTSweepConstraint) {
-        if (edges == null) {
+        if (!::edges.isInitialized) {
             edges = ArrayList()
         }
-        edges!!.add(e)
+        edges.add(e)
     }
 
     fun hasEdges(): Boolean {
-        return edges != null
+        return ::edges.isInitialized
     }
 
     /**
@@ -90,7 +89,7 @@ package eu.mihosoft.jcsg.ext.org.poly2tri
      * @return the edge from this point to given point
      */
     fun getEdge(p: TriangulationPoint): DTSweepConstraint? {
-        for (c in edges!!) {
+        for (c in edges) {
             if (c.p === p) {
                 return c
             }
