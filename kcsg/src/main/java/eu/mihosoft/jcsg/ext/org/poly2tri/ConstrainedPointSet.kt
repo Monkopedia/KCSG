@@ -108,7 +108,7 @@ internal class ConstrainedPointSet : PointSet {
             while (i < edgeIndex.size) {
 
                 // XXX: must change!!
-                tcx.newConstraint(_points[edgeIndex[i]], _points[edgeIndex[i + 1]])
+                tcx.newConstraint(mutablePoints[edgeIndex[i]], mutablePoints[edgeIndex[i + 1]])
                 i += 2
             }
         }

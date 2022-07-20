@@ -66,7 +66,7 @@ import kotlin.collections.ArrayList
     private var _points = ArrayList<TriangulationPoint>()
     private var _steinerPoints: ArrayList<TriangulationPoint>? = null
     private var _holes: ArrayList<Polygon>? = null
-    private val m_triangles: MutableList<DelaunayTriangle> by lazy {
+    private val tranglesImpl: MutableList<DelaunayTriangle> by lazy {
         ArrayList(_points.size)
     }
     var point: PolygonPoint? = null
@@ -216,25 +216,25 @@ import kotlin.collections.ArrayList
     override val points: List<TriangulationPoint>
         get() = _points
     override val triangles: List<DelaunayTriangle>
-        get() = m_triangles
+        get() = tranglesImpl
 
     override fun addTriangle(t: DelaunayTriangle) {
-        m_triangles.add(t)
+        tranglesImpl.add(t)
     }
 
     override fun addTriangles(list: List<DelaunayTriangle>) {
-        m_triangles.addAll(list)
+        tranglesImpl.addAll(list)
     }
 
     override fun clearTriangulation() {
-        m_triangles.clear()
+        tranglesImpl.clear()
     }
 
     /**
      * Creates constraints and populates the context with points
      */
     override fun prepareTriangulation(tcx: TriangulationContext<*>) {
-        m_triangles.clear()
+        tranglesImpl.clear()
 
         // Outer constraints
         for (i in 0 until _points.size - 1) {

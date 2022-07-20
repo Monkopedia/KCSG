@@ -29,7 +29,6 @@
  */
 package eu.mihosoft.jcsg.ext.org.poly2tri
 
-import eu.mihosoft.jcsg.ext.org.poly2tri.TriangulationProcess
 import org.slf4j.LoggerFactory
 
 /* Poly2Tri
@@ -189,7 +188,7 @@ internal class TriangulationProcess @JvmOverloads constructor(private val _algor
             for (t in _triangulations) {
                 context!!.clear()
                 context.prepareTriangulation(t)
-                pointCount += context._points.size
+                pointCount += context.mutablePoints.size
                 Poly2Tri.triangulate(context)
             }
             triangulationTime = (System.nanoTime() - time) / 1e6

@@ -132,7 +132,7 @@ class Extrude private constructor() {
          * @return List of polygons
          */
         fun combine(p1: Polygon, p2: Polygon): CSG {
-            return CSG.fromPolygons(combine(p1, p2, true, true))
+            return CSG.fromPolygons(combine(p1, p2, true, top = true))
         }
 
         /**
@@ -286,8 +286,8 @@ class Extrude private constructor() {
                 if (v.pos.y() > highestLeftVertex.pos.y()) {
                     highestLeftVertex = v
                     highestLeftVertexIndex = i
-                } else if (v.pos.y() == highestLeftVertex.pos.y()
-                    && v.pos.x() < highestLeftVertex.pos.x()
+                } else if (v.pos.y() == highestLeftVertex.pos.y() &&
+                    v.pos.x() < highestLeftVertex.pos.x()
                 ) {
                     highestLeftVertex = v
                     highestLeftVertexIndex = i
@@ -316,13 +316,13 @@ class Extrude private constructor() {
             } else {
                 prevVertexIndex
             }
-            if (selectedVIndex == 0
-                && highestLeftVertexIndex == polygon.vertices.size - 1
+            if (selectedVIndex == 0 &&
+                highestLeftVertexIndex == polygon.vertices.size - 1
             ) {
                 selectedVIndex = polygon.vertices.size
             }
-            if (highestLeftVertexIndex == 0
-                && selectedVIndex == polygon.vertices.size - 1
+            if (highestLeftVertexIndex == 0 &&
+                selectedVIndex == polygon.vertices.size - 1
             ) {
                 highestLeftVertexIndex = polygon.vertices.size
             }

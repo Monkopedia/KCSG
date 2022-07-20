@@ -59,38 +59,38 @@ package eu.mihosoft.jcsg.ext.org.poly2tri
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */internal open class PointSet(points: List<TriangulationPoint>) : Triangulatable {
-    var _points: MutableList<TriangulationPoint>
-    private var _triangles: MutableList<DelaunayTriangle>? = null
+    protected var mutablePoints: MutableList<TriangulationPoint>
+    private lateinit var mutableTriangles: MutableList<DelaunayTriangle>
     override val triangulationMode: TriangulationMode?
         get() = TriangulationMode.UNCONSTRAINED
     override val points: List<TriangulationPoint>
-        get() = _points
+        get() = mutablePoints
     override val triangles: List<DelaunayTriangle>?
-        get() = _triangles
+        get() = mutableTriangles
 
     override fun addTriangle(t: DelaunayTriangle) {
-        _triangles!!.add(t)
+        mutableTriangles.add(t)
     }
 
     override fun addTriangles(list: List<DelaunayTriangle>) {
-        _triangles!!.addAll(list!!)
+        mutableTriangles.addAll(list)
     }
 
     override fun clearTriangulation() {
-        _triangles!!.clear()
+        mutableTriangles.clear()
     }
 
     override fun prepareTriangulation(tcx: TriangulationContext<*>) {
-        if (_triangles == null) {
-            _triangles = ArrayList(_points.size)
+        if (!::mutableTriangles.isInitialized) {
+            mutableTriangles = ArrayList(mutablePoints.size)
         } else {
-            _triangles!!.clear()
+            mutableTriangles.clear()
         }
-        tcx.addPoints(_points)
+        tcx.addPoints(mutablePoints)
     }
 
     init {
-        _points = ArrayList<TriangulationPoint>().apply {
+        mutablePoints = ArrayList<TriangulationPoint>().apply {
             addAll(points)
         }
     }

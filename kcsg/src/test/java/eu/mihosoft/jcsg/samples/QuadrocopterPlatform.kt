@@ -8,13 +8,7 @@ package eu.mihosoft.jcsg.samples
 import eu.mihosoft.jcsg.CSG
 import eu.mihosoft.jcsg.Cube
 import eu.mihosoft.jcsg.Cylinder
-import eu.mihosoft.jcsg.FileUtil
 import eu.mihosoft.vvecmath.Transform
-import junit.framework.Assert
-import junit.framework.Assert.assertEquals
-import org.junit.Test
-import java.io.IOException
-import java.nio.file.Paths
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -85,7 +79,7 @@ class QuadrocopterPlatform {
         // inradius makes previus calculation obsolete
         // to be sure we use numHoneyCombs*1.3
         numHoneycomb = (numHoneycomb * 1.4).toInt()
-        val centerOffset = 0.0 //+honeycombRadius-inradiusOfHexagon;
+        val centerOffset = 0.0 // +honeycombRadius-inradiusOfHexagon;
         for (y in 0 until numHoneycomb) {
             for (x in 0 until numHoneycomb) {
                 val offset = inradiusOfHexagon * (x % 2)

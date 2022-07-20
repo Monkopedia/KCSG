@@ -5,14 +5,12 @@
  */
 package eu.mihosoft.jcsg.samples
 
-import eu.mihosoft.jcsg.*
+import eu.mihosoft.jcsg.CSG
+import eu.mihosoft.jcsg.Cube
+import eu.mihosoft.jcsg.UnityModifier
+import eu.mihosoft.jcsg.WeightFunction
 import eu.mihosoft.vvecmath.Transform
 import eu.mihosoft.vvecmath.Vector3d
-import junit.framework.Assert
-import junit.framework.Assert.assertEquals
-import org.junit.Test
-import java.io.IOException
-import java.nio.file.Paths
 
 /**
  *

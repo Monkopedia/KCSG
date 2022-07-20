@@ -6,11 +6,7 @@
 package eu.mihosoft.jcsg.samples
 
 import eu.mihosoft.jcsg.*
-import eu.mihosoft.jcsg.CSG.OptType
 import eu.mihosoft.vvecmath.Transform
-import junit.framework.Assert
-import junit.framework.Assert.assertEquals
-import org.junit.Test
 import java.io.IOException
 import java.nio.file.Paths
 

@@ -44,116 +44,116 @@ import java.nio.file.Paths
  */
 object RaspberryPiBPlusMount {
     private fun board(): CSG {
-        val board_thickness = 2.0
-        val bottom_thickness = 3.0
-        val board_mounting_height = 4.0
-        val outer_offset = 4.0
-        val inner_offset = 4.0
-        val board_width = 85.0
-        val board_height = 56.0
+        val boardThickness = 2.0
+        val bottomThickness = 3.0
+        val boardMountingHeight = 4.0
+        val outerOffset = 4.0
+        val innerOffset = 4.0
+        val boardWidth = 85.0
+        val boardHeight = 56.0
         val sd1 = 14.0
         val sd2 = 11.0
         val sd3 = 18.0
-        val board_points_exact: Polygon = Polygon.fromPoints(
+        val boardPointsExact: Polygon = Polygon.fromPoints(
             Vector3d.xy(0.0, 0.0),
-            Vector3d.xy(0.0, board_height),
-            Vector3d.xy(board_width, board_height),
-            Vector3d.xy(board_width, board_height - sd1),
-            Vector3d.xy(board_width - sd3, board_height - sd1),
-            Vector3d.xy(board_width - sd3, sd2),
-            Vector3d.xy(board_width, sd2),
-            Vector3d.xy(board_width, 0.0)
+            Vector3d.xy(0.0, boardHeight),
+            Vector3d.xy(boardWidth, boardHeight),
+            Vector3d.xy(boardWidth, boardHeight - sd1),
+            Vector3d.xy(boardWidth - sd3, boardHeight - sd1),
+            Vector3d.xy(boardWidth - sd3, sd2),
+            Vector3d.xy(boardWidth, sd2),
+            Vector3d.xy(boardWidth, 0.0)
         )
 
-// outer offset 
+// outer offset
 
 // inner offset
         val outer: CSG = Extrude.points(
-            Vector3d.xyz(0.0, 0.0, bottom_thickness),
-            Vector3d.xy(0 - outer_offset, 0 - outer_offset),
-            Vector3d.xy(0 - outer_offset, board_height + outer_offset),
+            Vector3d.xyz(0.0, 0.0, bottomThickness),
+            Vector3d.xy(0 - outerOffset, 0 - outerOffset),
+            Vector3d.xy(0 - outerOffset, boardHeight + outerOffset),
             Vector3d.xy(
-                board_width + outer_offset,
-                board_height + outer_offset
-            ),  //                Vector3d.xy(bw+ox1,bh-sd1),
+                boardWidth + outerOffset,
+                boardHeight + outerOffset
+            ), //                Vector3d.xy(bw+ox1,bh-sd1),
             //                Vector3d.xy(bw-sd3,bh-sd1),
             //                Vector3d.xy(bw-sd3,sd2),
-            Vector3d.xy(board_width + outer_offset, sd2),
-            Vector3d.xy(board_width + outer_offset, 0 - outer_offset)
+            Vector3d.xy(boardWidth + outerOffset, sd2),
+            Vector3d.xy(boardWidth + outerOffset, 0 - outerOffset)
         )
         val inner: CSG = Extrude.points(
-            Vector3d.xyz(0.0, 0.0, bottom_thickness),
-            Vector3d.xy(0 + inner_offset, 0 + inner_offset),
-            Vector3d.xy(0 + inner_offset, board_height - inner_offset),
+            Vector3d.xyz(0.0, 0.0, bottomThickness),
+            Vector3d.xy(0 + innerOffset, 0 + innerOffset),
+            Vector3d.xy(0 + innerOffset, boardHeight - innerOffset),
             Vector3d.xy(
-                board_width - inner_offset,
-                board_height - inner_offset
-            ),  //                Vector3d.xy(bw-ox2,bh-sd1+oy2),
+                boardWidth - innerOffset,
+                boardHeight - innerOffset
+            ), //                Vector3d.xy(bw-ox2,bh-sd1+oy2),
             //                Vector3d.xy(bw-sd3-ox2,bh-sd1+oy2),
             //                Vector3d.xy(bw-sd3-ox2,sd2-oy2),
-            Vector3d.xy(board_width - inner_offset, sd2 - inner_offset),
-            Vector3d.xy(board_width - inner_offset, 0 + inner_offset)
+            Vector3d.xy(boardWidth - innerOffset, sd2 - innerOffset),
+            Vector3d.xy(boardWidth - innerOffset, 0 + innerOffset)
         )
         return outer.difference(inner).transformed(
             Transform.unity().rotX(180.0).translateY(
-                -board_height
+                -boardHeight
             )
         )
     }
 
     private fun boardAndPegs(): CSG {
-        val board_width = 85.6
-        val board_height = 56.0
-        val outer_offset = 4.0
-        val bottom_thickness = 3.0
+        val boardWidth = 85.6
+        val boardHeight = 56.0
+        val outerOffset = 4.0
+        val bottomThickness = 3.0
         val board = board()
         val peg1 =
             RaspberryPeg.peg().transformed(Transform.unity().scaleY(0.9))
                 .transformed(
                     Transform.unity()
-                        .translate(0.0, board_height - 36, -bottom_thickness)
+                        .translate(0.0, boardHeight - 36, -bottomThickness)
                 )
         val peg2 =
             RaspberryPeg.peg().transformed(Transform.unity().scaleY(2.0))
                 .transformed(
                     Transform.unity().translate(
                         22.0,
-                        board_height,
-                        -bottom_thickness
+                        boardHeight,
+                        -bottomThickness
                     )
                         .rotZ(90.0)
                 )
         val peg3 = RaspberryPeg.peg()
             .transformed(
                 Transform.unity()
-                    .translate(board_width - outer_offset, board_height, -bottom_thickness)
+                    .translate(boardWidth - outerOffset, boardHeight, -bottomThickness)
                     .rotZ(90.0)
             )
 
 //        translate([bw,outer_offset,0])
-//rotate([0,0,180])
+// rotate([0,0,180])
         val peg4 = RaspberryPeg.peg().transformed(
             Transform.unity()
-                .translate(board_width, board_height - outer_offset * 2, -bottom_thickness)
+                .translate(boardWidth, boardHeight - outerOffset * 2, -bottomThickness)
                 .rotZ(180.0)
         )
         val peg4b = RaspberryPeg.peg()
             .transformed(
                 Transform.unity()
-                    .translate(board_width, outer_offset, -bottom_thickness).rotZ(180.0)
+                    .translate(boardWidth, outerOffset, -bottomThickness).rotZ(180.0)
             )
         val peg5 =
             RaspberryPeg.peg().transformed(Transform.unity().scaleY(2.0))
                 .transformed(
                     Transform.unity()
-                        .translate(board_width - 19, 0.0, -bottom_thickness).rotZ(270.0)
+                        .translate(boardWidth - 19, 0.0, -bottomThickness).rotZ(270.0)
                 )
         val peg6 = RaspberryPeg.peg()
             .transformed(
                 Transform.unity().translate(
-                    board_width - 62,
+                    boardWidth - 62,
                     0.0,
-                    -bottom_thickness
+                    -bottomThickness
                 )
                     .rotZ(270.0)
             )

@@ -8,11 +8,6 @@ package eu.mihosoft.jcsg.samples
 import eu.mihosoft.jcsg.*
 import eu.mihosoft.vvecmath.Transform
 import eu.mihosoft.vvecmath.Vector3d
-import junit.framework.Assert
-import junit.framework.Assert.assertEquals
-import org.junit.Test
-import java.io.IOException
-import java.nio.file.Paths
 
 /**
  *

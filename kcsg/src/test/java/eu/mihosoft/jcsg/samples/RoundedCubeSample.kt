@@ -6,14 +6,7 @@
 package eu.mihosoft.jcsg.samples
 
 import eu.mihosoft.jcsg.CSG
-import eu.mihosoft.jcsg.FileUtil
 import eu.mihosoft.jcsg.RoundedCube
-import eu.mihosoft.vvecmath.Transform
-import junit.framework.Assert
-import junit.framework.Assert.assertEquals
-import org.junit.Test
-import java.io.IOException
-import java.nio.file.Paths
 
 /**
  *

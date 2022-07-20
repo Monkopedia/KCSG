@@ -131,10 +131,10 @@ internal class AdvancingFront(var head: AdvancingFrontNode, var tail: AdvancingF
      * @param point
      * @return
      */
-    fun locatePoint(point: TriangulationPoint): AdvancingFrontNode? {
+    fun locatePoint(point: TriangulationPoint): AdvancingFrontNode {
         val px = point.x
         var node = findSearchNode(px)
-        val nx = node!!.point.x
+        val nx = node.point.x
         if (px == nx) {
             if (point !== node.point) {
                 // We might have two nodes with same x value for a short time

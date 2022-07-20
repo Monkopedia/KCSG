@@ -65,7 +65,7 @@ class QuadrocopterBottom {
         // inradius makes previus calculation obsolete
         // to be sure we use numHoneyCombs*1.3
         numHoneycomb = (numHoneycomb * 1.4).toInt()
-        val centerOffset = 0.0 //+honeycombRadius-inradiusOfHexagon;
+        val centerOffset = 0.0 // +honeycombRadius-inradiusOfHexagon;
         for (y in 0 until numHoneycomb) {
             for (x in 0 until numHoneycomb) {
                 val offset = inradiusOfHexagon * (x % 2)

@@ -6,15 +6,10 @@
 package eu.mihosoft.jcsg.samples
 
 import eu.mihosoft.jcsg.CSG
-import eu.mihosoft.jcsg.CSG.OptType
 import eu.mihosoft.jcsg.Cylinder
 import eu.mihosoft.jcsg.FileUtil
 import eu.mihosoft.vvecmath.Transform
-import junit.framework.Assert
-import org.junit.Test
 import java.io.IOException
-import java.lang.Math.cos
-import java.lang.Math.sin
 import java.nio.file.Paths
 
 /**
@@ -60,8 +55,8 @@ class QuadrocopterBottom {
         val honeycombPrototype = Cylinder(honeycombRadius, platformThickness, 6).toCSG()
         var numHoneycomb = (platformRadius * 2 / (honeycombRadius * 2)).toInt()
         var hexagons: CSG? = null
-        val inradiusOfHexagon = honeycombRadius * cos(180.0 / 6.0 * Math.PI / 180)
-        val sideLength = honeycombRadius * 2 * sin(180.0 / 6.0 * Math.PI / 180)
+        val inradiusOfHexagon = honeycombRadius * kotlin.math.cos(180.0 / 6.0 * Math.PI / 180)
+        val sideLength = honeycombRadius * 2 * kotlin.math.sin(180.0 / 6.0 * Math.PI / 180)
 
         // TODO: change that!
         // inradius makes previus calculation obsolete

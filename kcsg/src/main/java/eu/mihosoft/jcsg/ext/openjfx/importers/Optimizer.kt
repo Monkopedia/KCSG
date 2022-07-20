@@ -195,8 +195,8 @@ internal class Optimizer @JvmOverloads constructor(
                 val c = p3.distance(p1)
                 val p = (a + b + c) / 2
                 val sqarea = p * (p - a) * (p - b) * (p - c)
-                val DEAD_FACE = 1f / 1024 / 1024 / 1024 / 1024 // taken from MeshNormal code
-                if (sqarea < DEAD_FACE) {
+                val deadFace = 1f / 1024 / 1024 / 1024 / 1024 // taken from MeshNormal code
+                if (sqarea < deadFace) {
                     smallArea++
                     i += faceElementSize
                     //                    System.out.printf("a = %e, b = %e, c = %e, sqarea = %e\n"
@@ -220,7 +220,7 @@ internal class Optimizer @JvmOverloads constructor(
             """
     Removed %d (%.2f%%) faces with same point indexes, %d (%.2f%%) faces with same points, %d (%.2f%%) faces with small area. Total %d (%.2f%%) bad faces out of %d total.
     
-    """.trimIndent(),
+            """.trimIndent(),
             sameIndexes, 100.0 * sameIndexes / total,
             samePoints, 100.0 * samePoints / total,
             smallArea, 100.0 * smallArea / total,
@@ -456,8 +456,8 @@ kvDup = $kvDup"""
                 if (prev != null && prev.keyValue.endValue == keyValue.endValue) {
 //                if (prev != null && (prev.keyValue.equals(keyValue) || (prev.first && prev.keyValue.getEndValue().equals(keyValue.getEndValue())))) {
                     val prevPrev = prevPrevValues[target]
-                    if (prevPrev != null && prevPrev.keyValue.endValue == keyValue.endValue
-                        || prev.first && target.value == prev.keyValue.endValue
+                    if (prevPrev != null && prevPrev.keyValue.endValue == keyValue.endValue ||
+                        prev.first && target.value == prev.keyValue.endValue
                     ) {
                         // All prevPrev, prev and current match, so prev can be removed
                         // or prev is first and its value equals to the property existing value, so prev can be removed
@@ -538,7 +538,7 @@ kvDup = $kvDup"""
                         i--
                         kfRemoved++
                         i++
-                        continue  // for i
+                        continue // for i
                     } else {
                         kfNotRemoved++
                     }

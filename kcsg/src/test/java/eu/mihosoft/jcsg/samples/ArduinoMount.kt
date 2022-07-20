@@ -8,12 +8,8 @@ package eu.mihosoft.jcsg.samples
 import eu.mihosoft.jcsg.CSG
 import eu.mihosoft.jcsg.Cube
 import eu.mihosoft.jcsg.Cylinder
-import eu.mihosoft.jcsg.FileUtil
 import eu.mihosoft.vvecmath.Transform
 import eu.mihosoft.vvecmath.Vector3d
-import junit.framework.Assert.assertEquals
-import org.junit.Test
-import java.nio.file.Paths
 
 /**
  *
@@ -48,7 +44,7 @@ class ArduinoMount {
         return pins.difference(board)
     }
 
-    private fun pinConnections(): CSG? {
+    private fun pinConnections(): CSG {
         val first = Cube(Vector3d.ZERO, Vector3d.xyz(bottomWidth / 2, 3.0, bottomThickness)).toCSG()
             .transformed(
                 Transform.unity().translate(-bottomWidth / 4, 0.0, bottomThickness / 2)
@@ -68,7 +64,7 @@ class ArduinoMount {
         return first.union(second).union(third)
     }
 
-    private fun servoConnect(): CSG? {
+    private fun servoConnect(): CSG {
         val firstA = Cube(
             Vector3d.ZERO,
             Vector3d.xyz(bottomWidth, servoConnectThickness, bottomThickness)
@@ -91,6 +87,6 @@ class ArduinoMount {
     }
 
     fun toCSG(): CSG {
-        return pins().union(pinConnections()!!).union(servoConnect()!!)
+        return pins().union(pinConnections()).union(servoConnect())
     }
 }

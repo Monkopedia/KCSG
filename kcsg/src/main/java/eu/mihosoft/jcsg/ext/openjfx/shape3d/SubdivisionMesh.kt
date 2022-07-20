@@ -120,7 +120,7 @@ internal class SubdivisionMesh(
         }
         if (subdivisionLevelDirty) {
             faces = symbolicMeshes[_subdivisionLevel].faces!!
-            _numEdgesInfaces = -1
+            numEdgesInfaces = -1
             faceSmoothingGroups.setAll(*symbolicMeshes[_subdivisionLevel].faceSmoothingGroups)
             texCoords.setAll(*symbolicMeshes[_subdivisionLevel].texCoords)
         }

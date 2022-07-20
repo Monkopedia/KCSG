@@ -10,8 +10,6 @@ import eu.mihosoft.jcsg.Cube
 import eu.mihosoft.jcsg.Cylinder
 import eu.mihosoft.vvecmath.Transform
 import eu.mihosoft.vvecmath.Vector3d
-import junit.framework.Assert.assertEquals
-import org.junit.Test
 
 /**
  *

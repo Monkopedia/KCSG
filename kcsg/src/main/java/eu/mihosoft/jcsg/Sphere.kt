@@ -34,8 +34,6 @@
 package eu.mihosoft.jcsg
 
 import eu.mihosoft.vvecmath.Vector3d
-import java.lang.Math.cos
-import java.lang.Math.sin
 
 /**
  * A solid sphere.
@@ -75,9 +73,9 @@ class Sphere(
         theta *= Math.PI * 2
         phi *= Math.PI
         val dir = Vector3d.xyz(
-            cos(theta) * sin(phi),
-            cos(phi),
-            sin(theta) * sin(phi)
+            kotlin.math.cos(theta) * kotlin.math.sin(phi),
+            kotlin.math.cos(phi),
+            kotlin.math.sin(theta) * kotlin.math.sin(phi)
         )
         return Vertex(c.plus(dir.times(r)), dir)
     }

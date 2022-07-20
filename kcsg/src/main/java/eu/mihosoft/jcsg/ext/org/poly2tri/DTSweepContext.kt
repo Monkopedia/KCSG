@@ -65,9 +65,6 @@ import java.util.*
  * @author Thomas ??? (thahlen@gmail.com)
  */
 internal class DTSweepContext : TriangulationContext<DTSweepDebugContext>() {
-    // Inital triangle factor, seed triangle will extend 30% of
-    // PointSet width to both left and right.
-    private val ALPHA = 0.3f
 
     /** Advancing front  */
     lateinit var advancingFront: AdvancingFront
@@ -90,7 +87,7 @@ internal class DTSweepContext : TriangulationContext<DTSweepDebugContext>() {
     }
 
     fun removeFromList(triangle: DelaunayTriangle?) {
-        _triList.remove(triangle)
+        mutableTriangles.remove(triangle)
         // TODO: remove all neighbor pointers to this triangle
 //        for( int i=0; i<3; i++ )
 //        {
@@ -127,7 +124,7 @@ internal class DTSweepContext : TriangulationContext<DTSweepDebugContext>() {
 
     override fun clear() {
         super.clear()
-        _triList.clear()
+        mutableTriangles.clear()
     }
 
     fun addNode(node: AdvancingFrontNode?) {
@@ -152,7 +149,7 @@ internal class DTSweepContext : TriangulationContext<DTSweepDebugContext>() {
         val middle: AdvancingFrontNode
         // Initial triangle
         val iTriangle = DelaunayTriangle(
-            _points[0],
+            mutablePoints[0],
             this.tail,
             this.head
         )
@@ -197,7 +194,7 @@ internal class DTSweepContext : TriangulationContext<DTSweepDebugContext>() {
         for (i in 0..2) {
             if (t.neighbors[i] == null) {
                 n = advancingFront.locatePoint(t.pointCW(t.points[i]!!))
-                n?.triangle = t
+                n.triangle = t
             }
         }
     }
@@ -208,12 +205,12 @@ internal class DTSweepContext : TriangulationContext<DTSweepDebugContext>() {
         var xmin: Double
         var ymax: Double
         var ymin: Double
-        xmin = _points[0].x
+        xmin = mutablePoints[0].x
         xmax = xmin
-        ymin = _points[0].y
+        ymin = mutablePoints[0].y
         ymax = ymin
         // Calculate bounds. Should be combined with the sorting
-        for (p in _points) {
+        for (p in mutablePoints) {
             if (p.x > xmax) xmax = p.x
             if (p.x < xmin) xmin = p.x
             if (p.y > ymax) ymax = p.y
@@ -228,13 +225,13 @@ internal class DTSweepContext : TriangulationContext<DTSweepDebugContext>() {
 
 //        long time = System.nanoTime();
         // Sort the points along y-axis
-        Collections.sort(_points, _comparator)
+        Collections.sort(mutablePoints, _comparator)
         //        logger.info( "Triangulation setup [{}ms]", ( System.nanoTime() - time ) / 1e6 );
     }
 
     fun finalizeTriangulation() {
-        triangulatable!!.addTriangles(_triList)
-        _triList.clear()
+        triangulatable!!.addTriangles(mutableTriangles)
+        mutableTriangles.clear()
     }
 
     override fun newConstraint(
@@ -249,6 +246,10 @@ internal class DTSweepContext : TriangulationContext<DTSweepDebugContext>() {
     }
 
     companion object {
+        // Inital triangle factor, seed triangle will extend 30% of
+        // PointSet width to both left and right.
+        private const val ALPHA = 0.3f
+
         private val logger = LoggerFactory.getLogger(DTSweepContext::class.java)
     }
 

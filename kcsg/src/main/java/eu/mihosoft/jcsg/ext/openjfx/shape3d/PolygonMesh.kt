@@ -45,8 +45,9 @@ internal open class PolygonMesh {
     val texCoords: ObservableFloatArray = FXCollections.observableFloatArray()
     var faces = Array(0) { IntArray(0) }
     val faceSmoothingGroups: ObservableIntegerArray = FXCollections.observableIntegerArray()
-    protected var _numEdgesInfaces =
-        -1 // TODO invalidate automatically by listening to faces (whenever it is an observable)
+
+    // TODO invalidate automatically by listening to faces (whenever it is an observable)
+    protected var numEdgesInfaces = -1
 
     constructor()
     constructor(points: FloatArray, texCoords: FloatArray, faces: Array<IntArray?>) {
@@ -57,14 +58,14 @@ internal open class PolygonMesh {
 
     val numEdgesInFaces: Int
         get() {
-            if (_numEdgesInfaces == -1) {
-                _numEdgesInfaces = 0
+            if (numEdgesInfaces == -1) {
+                numEdgesInfaces = 0
                 for (face in faces) {
-                    _numEdgesInfaces += face.size
+                    numEdgesInfaces += face.size
                 }
-                _numEdgesInfaces /= 2
+                numEdgesInfaces /= 2
             }
-            return _numEdgesInfaces
+            return numEdgesInfaces
         }
 
     companion object {

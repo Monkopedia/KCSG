@@ -84,12 +84,8 @@ class Plane(normal: Vector3d, dist: Double) : Cloneable {
         front: MutableList<Polygon>,
         back: MutableList<Polygon>
     ) {
-        val COPLANAR = 0
-        val FRONT = 1
-        val BACK = 2
-        val SPANNING = 3 // == some in the FRONT + some in the BACK
 
-        // Classify each point as well as the entire polygon into one of the 
+        // Classify each point as well as the entire polygon into one of the
         // above four classes.
         var polygonType = 0
         val types: MutableList<Int> = ArrayList(polygon.vertices.size)
@@ -100,16 +96,16 @@ class Plane(normal: Vector3d, dist: Double) : Cloneable {
             types.add(type)
         }
         when (polygonType) {
-            COPLANAR ->                 //System.out.println(" -> coplanar");
-                (if (normal.dot(polygon._csg_plane.normal) > 0) coplanarFront else coplanarBack).add(
+            COPLANAR -> // System.out.println(" -> coplanar");
+                (if (normal.dot(polygon.csgPlane.normal) > 0) coplanarFront else coplanarBack).add(
                     polygon
                 )
-            FRONT ->                 //System.out.println(" -> front");
+            FRONT -> // System.out.println(" -> front");
                 front.add(polygon)
-            BACK ->                 //System.out.println(" -> back");
+            BACK -> // System.out.println(" -> back");
                 back.add(polygon)
             SPANNING -> {
-                //System.out.println(" -> spanning");
+                // System.out.println(" -> spanning");
                 val f: MutableList<Vertex> = ArrayList()
                 val b: MutableList<Vertex> = ArrayList()
                 var i = 0
@@ -126,8 +122,10 @@ class Plane(normal: Vector3d, dist: Double) : Cloneable {
                         b.add(if (ti != BACK) vi.clone() else vi)
                     }
                     if (ti or tj == SPANNING) {
-                        val t = ((dist - normal.dot(vi.pos))
-                            / normal.dot(vj.pos.minus(vi.pos)))
+                        val t = (
+                            (dist - normal.dot(vi.pos)) /
+                                normal.dot(vj.pos.minus(vi.pos))
+                            )
                         val v = vi.interpolate(vj, t)
                         f.add(v)
                         b.add(v.clone())
@@ -145,6 +143,11 @@ class Plane(normal: Vector3d, dist: Double) : Cloneable {
     }
 
     companion object {
+        const val COPLANAR = 0
+        const val FRONT = 1
+        const val BACK = 2
+        const val SPANNING = 3 // == some in the FRONT + some in the BACK
+
         /**
          * EPSILON is the tolerance used by [ ][.splitPolygon] to decide if a point is on the plane.
          */

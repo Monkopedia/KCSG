@@ -166,7 +166,7 @@ class SampleTests {
 
     @Test
     fun testHexamail() {
-        var fractal = HexaMail().toCSG(6, 3, 3)
+        val fractal = HexaMail().toCSG(6, 3, 3)
         val expected = getResource("/hexamail.stl")
 
         assertStlEquals(expected, fractal!!)
@@ -174,7 +174,7 @@ class SampleTests {
 
     @Test
     fun testHinge() {
-        var hinge = Hinge()
+        val hinge = Hinge()
         val expected = getResource("/hinge.stl")
 
         assertStlEquals(expected, hinge.toCSG())
@@ -182,7 +182,7 @@ class SampleTests {
 
     @Test
     fun testLeapMotionCase() {
-        var leapMotionCase = LeapMotionCase()
+        val leapMotionCase = LeapMotionCase()
         val expected = getResource("/leapmotion.stl")
 
         assertStlEquals(expected, leapMotionCase.toCSG())
@@ -190,7 +190,7 @@ class SampleTests {
 
     @Test
     fun testMicroSDCard() {
-        var microSdCard = MicroSDCard()
+        val microSdCard = MicroSDCard()
         val expected = getResource("/mircosd.stl")
 
         assertStlEquals(expected, microSdCard.toCSG())
@@ -198,7 +198,7 @@ class SampleTests {
 
     @Test
     fun testMoebiusband() {
-        var moebius = Moebiusband()
+        val moebius = Moebiusband()
         val expected = getResource("/möbiusband.stl")
 
         assertStlEquals(expected, moebius.toCSG())
@@ -206,7 +206,7 @@ class SampleTests {
 
     @Test
     fun testMoebiusStairs() {
-        var moebiusStairs = MoebiusStairs()
+        val moebiusStairs = MoebiusStairs()
         val expected = getResource("/moebius-stairs.stl")
 
         assertStlEquals(expected, moebiusStairs.toCSG())
@@ -214,7 +214,7 @@ class SampleTests {
 
     @Test
     fun testNaze32Holder() {
-        var naze32 = Naze32Holder()
+        val naze32 = Naze32Holder()
         val expected = getResource("/naze32-mount.stl")
 
         assertStlEquals(expected, naze32.toCSG())
@@ -223,7 +223,7 @@ class SampleTests {
     @Test
     fun testPlaneWithHoles() {
         CSG.setDefaultOptType(CSG.OptType.CSG_BOUND)
-        var csg = PlaneWithHoles()
+        val csg = PlaneWithHoles()
         val expected = getResource("/plane_with_holes.stl")
 
         assertStlEquals(expected, csg.toCSG())
@@ -231,7 +231,7 @@ class SampleTests {
 
     @Test
     fun testQuadrocopter() {
-        var csg = QuadrocopterArm()
+        val csg = QuadrocopterArm()
         val expected = getResource("/quadrocopter-arm.stl")
 
         assertStlEquals(expected, csg.toCSG())

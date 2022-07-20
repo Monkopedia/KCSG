@@ -84,7 +84,7 @@ internal class PolygonUtil private constructor() {
 
             val triangles = p.triangles
             var triPoints: MutableList<Vertex> = ArrayList()
-            for (t in triangles!!) {
+            for (t in triangles) {
                 var counter = 0
                 for (tp in t.points) {
                     triPoints.add(

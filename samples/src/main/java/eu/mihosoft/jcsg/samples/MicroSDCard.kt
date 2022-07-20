@@ -22,37 +22,37 @@ class MicroSDCard {
         // data taken from
         // https://www.sparkfun.com/datasheets/Prototyping/microSD_Spec.pdf
         // total card width
-        val A = 10.9
+        val a = 10.9
         // front width
-        val A1 = 9.6
-        val A8 = 0.6
+        val a1 = 9.6
+        val a8 = 0.6
 
         // total card length
-        val B = 14.9
-        val B1 = 6.3
+        val b = 14.9
+        val b1 = 6.3
 
         // slit pos relative to front
-        val B10 = 7.8
+        val b10 = 7.8
 
         // slit thickness
-        val B11 = 1.1
+        val b11 = 1.1
 
-        // total card thickness 
-        val C1 = 0.6
-        val A_ = A - A1
-        val B_ = B - B1 + A_
+        // total card thickness
+        val c1 = 0.6
+        val a2 = a - a1
+        val b2 = b - b1 + a2
         return Extrude.points(
-            Vector3d.xyz(0.0, 0.0, C1),
+            Vector3d.xyz(0.0, 0.0, c1),
             Vector3d.xy(0.0, 0.0),
-            Vector3d.xy(A, 0.0),
-            Vector3d.xy(A, B),
-            Vector3d.xy(A_, B),
-            Vector3d.xy(A_, B_),
-            Vector3d.xy(0.0, B - B1),
-            Vector3d.xy(0.0, B - B10),
-            Vector3d.xy(A8, B - B10),
-            Vector3d.xy(A8, B - B10 - B11),
-            Vector3d.xy(0.0, B - B10 - B11 - A8)
+            Vector3d.xy(a, 0.0),
+            Vector3d.xy(a, b),
+            Vector3d.xy(a2, b),
+            Vector3d.xy(a2, b2),
+            Vector3d.xy(0.0, b - b1),
+            Vector3d.xy(0.0, b - b10),
+            Vector3d.xy(a8, b - b10),
+            Vector3d.xy(a8, b - b10 - b11),
+            Vector3d.xy(0.0, b - b10 - b11 - a8)
         )
     }
 

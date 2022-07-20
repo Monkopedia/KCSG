@@ -7,7 +7,7 @@ import java.util.*
 import java.util.stream.Collectors
 
 class ConcavePolygonExtrusionTest {
-    private var helvetica_H = arrayOf(
+    private var helveticaH = arrayOf(
         Vector3d.xyz(2.9375, -21.875, 0.0),
         Vector3d.xyz(5.90625, -21.875, 0.0),
         Vector3d.xyz(5.90625, -12.90625, 0.0),
@@ -21,7 +21,7 @@ class ConcavePolygonExtrusionTest {
         Vector3d.xyz(5.90625, 0.0, 0.0),
         Vector3d.xyz(2.9375, 0.0, 0.0)
     )
-    private var helvetica_e = arrayOf(
+    private var helveticaE = arrayOf(
         Vector3d.xyz(39.41796875, -8.875, 0.0),
         Vector3d.xyz(39.41796875, -7.5625, 0.0),
         Vector3d.xyz(27.02734375, -7.5625, 0.0),
@@ -269,19 +269,18 @@ class ConcavePolygonExtrusionTest {
 
     @Test
     fun test() {
-        var H_points: List<Vector3d> = ArrayList(listOf(*helvetica_H))
-        var e_points: List<Vector3d> = ArrayList(listOf(*helvetica_e))
-        H_points = H_points.stream().distinct().collect(Collectors.toList())
-        e_points = e_points.stream().distinct().collect(Collectors.toList())
-        val HLetter = points(Vector3d.xyz(0.0, 0.0, 10.0), H_points)
-        val eLetter = points(Vector3d.xyz(0.0, 0.0, 10.0), e_points)
-        println("H number of polygons: " + HLetter.polygons.size)
+        var hPoints: List<Vector3d> = ArrayList(listOf(*helveticaH))
+        var ePoints: List<Vector3d> = ArrayList(listOf(*helveticaE))
+        hPoints = hPoints.stream().distinct().collect(Collectors.toList())
+        ePoints = ePoints.stream().distinct().collect(Collectors.toList())
+        val hLetter = points(Vector3d.xyz(0.0, 0.0, 10.0), hPoints)
+        val eLetter = points(Vector3d.xyz(0.0, 0.0, 10.0), ePoints)
+        println("H number of polygons: " + hLetter.polygons.size)
         println("e number of polygons: " + eLetter.polygons.size)
 
-
         // CSG.setDefaultOptType(CSG.OptType.CSG_BOUND);
-        val simpleUnionOfNonIntersectingBodies = eLetter.union(HLetter)
-        val numPolysExpected = HLetter.polygons.size + eLetter.polygons.size
+        val simpleUnionOfNonIntersectingBodies = eLetter.union(hLetter)
+        val numPolysExpected = hLetter.polygons.size + eLetter.polygons.size
         println("Both number of polygons: " + simpleUnionOfNonIntersectingBodies.polygons.size)
 
         // assumption only valid if optimization is enabled! (see above)

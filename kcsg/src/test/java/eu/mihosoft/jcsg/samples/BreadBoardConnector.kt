@@ -7,14 +7,7 @@ package eu.mihosoft.jcsg.samples
 
 import eu.mihosoft.jcsg.CSG
 import eu.mihosoft.jcsg.Extrude
-import eu.mihosoft.jcsg.FileUtil
-import eu.mihosoft.vvecmath.Plane
-import eu.mihosoft.vvecmath.Transform
 import eu.mihosoft.vvecmath.Vector3d
-import junit.framework.Assert.assertEquals
-import org.junit.Test
-import java.io.IOException
-import java.nio.file.Paths
 import kotlin.math.max
 
 /**

@@ -167,10 +167,10 @@ class Edge(private val p1: Vertex, private val p2: Vertex) : Cloneable {
         val z = p.z()
         val z1 = p1.pos.z()
         val z2 = p2.pos.z()
-        val AB = sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1) + (z2 - z1) * (z2 - z1))
-        val AP = sqrt((x - x1) * (x - x1) + (y - y1) * (y - y1) + (z - z1) * (z - z1))
-        val PB = sqrt((x2 - x) * (x2 - x) + (y2 - y) * (y2 - y) + (z2 - z) * (z2 - z))
-        return abs(AB - (AP + PB)) < TOL
+        val ab = sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1) + (z2 - z1) * (z2 - z1))
+        val ap = sqrt((x - x1) * (x - x1) + (y - y1) * (y - y1) + (z - z1) * (z - z1))
+        val pb = sqrt((x2 - x) * (x2 - x) + (y2 - y) * (y2 - y) + (z2 - z) * (z2 - z))
+        return abs(ab - (ap + pb)) < TOL
     }
 
     override fun hashCode(): Int {
@@ -448,7 +448,7 @@ class Edge(private val p1: Vertex, private val p2: Vertex) : Cloneable {
             return -1
         }
 
-        fun _toPolygons(boundaryEdges: List<Edge>, plane: Plane): List<Polygon> {
+        fun polygons(boundaryEdges: List<Edge>, plane: Plane): List<Polygon> {
             val boundaryPath: MutableList<Vector3d> = ArrayList()
             val used = BooleanArray(boundaryEdges.size)
             var edge = boundaryEdges[0]
@@ -575,8 +575,8 @@ class Edge(private val p1: Vertex, private val p2: Vertex) : Cloneable {
                     if (pOuter == pInner) {
                         continue
                     }
-                    val nOuter = pOuter._csg_plane.normal
-                    val nInner = pInner._csg_plane.normal
+                    val nOuter = pOuter.csgPlane.normal
+                    val nInner = pInner.csgPlane.normal
 
                     // TODO do we need radians or degrees?
                     val angle = nOuter.angle(nInner)

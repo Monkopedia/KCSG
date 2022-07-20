@@ -8,13 +8,8 @@ package eu.mihosoft.jcsg.samples
 import eu.mihosoft.jcsg.CSG
 import eu.mihosoft.jcsg.Cylinder
 import eu.mihosoft.jcsg.Extrude
-import eu.mihosoft.jcsg.FileUtil
 import eu.mihosoft.vvecmath.Transform
 import eu.mihosoft.vvecmath.Vector3d
-import junit.framework.Assert.assertEquals
-import org.junit.Test
-import java.io.IOException
-import java.nio.file.Paths
 
 /**
  *
@@ -96,7 +91,7 @@ class ServoHead {
         //        cyl1 = cyl1.transformed(Transform.unity().translateZ(0.1));
         val cyl2 = Cylinder(headScrewDiameter / 2, 10.0, 16).toCSG()
         val head = servoHeadMale()
-        val headFinal = cyl1.difference(cyl2).difference(head!!)
+        val headFinal = cyl1.difference(cyl2).difference(head)
         return headFinal.transformed(
             Transform.unity().rotX(180.0).translateZ(-headHeight - headThickness)
         )

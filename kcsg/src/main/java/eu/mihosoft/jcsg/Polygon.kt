@@ -66,18 +66,15 @@ class Polygon : Cloneable {
      *
      * **Note:** uses first three vertices to define the plane.
      */
-    val _csg_plane: Plane
-    private var _plane: eu.mihosoft.vvecmath.Plane
+    val csgPlane: Plane
 
     /**
      * Returns the plane defined by this triangle.
      *
      * @return plane
      */
-    val plane: eu.mihosoft.vvecmath.Plane
-        get() {
-            return _plane
-        }
+    var plane: eu.mihosoft.vvecmath.Plane
+    private set
 
     /**
      * Indicates whether this polyon is valid, i.e., if it
@@ -104,20 +101,20 @@ class Polygon : Cloneable {
     constructor(vertices: List<Vertex>, shared: PropertyStorage?) {
         this._vertices = vertices.toMutableList()
         this.shared = shared
-        _csg_plane = Plane.createFromPoints(
+        csgPlane = Plane.createFromPoints(
             vertices[0].pos,
             vertices[1].pos,
             vertices[2].pos
         )
-        _plane = eu.mihosoft.vvecmath.Plane.fromPointAndNormal(centroid(), _csg_plane.normal)
+        plane = eu.mihosoft.vvecmath.Plane.fromPointAndNormal(centroid(), csgPlane.normal)
         validateAndInit(vertices)
     }
 
     private fun validateAndInit(vertices1: List<Vertex>) {
         for (v in vertices1) {
-            v.normal = _csg_plane.normal
+            v.normal = csgPlane.normal
         }
-        if (Vector3d.ZERO == _csg_plane.normal) {
+        if (Vector3d.ZERO == csgPlane.normal) {
             valid = false
             System.err.println(
                 """
@@ -148,12 +145,12 @@ class Polygon : Cloneable {
      */
     constructor(vertices: List<Vertex>) {
         this._vertices = vertices.toMutableList()
-        _csg_plane = Plane.createFromPoints(
+        csgPlane = Plane.createFromPoints(
             vertices[0].pos,
             vertices[1].pos,
             vertices[2].pos
         )
-        _plane = eu.mihosoft.vvecmath.Plane.fromPointAndNormal(centroid(), _csg_plane.normal)
+        plane = eu.mihosoft.vvecmath.Plane.fromPointAndNormal(centroid(), csgPlane.normal)
         validateAndInit(vertices)
     }
 
@@ -188,8 +185,8 @@ class Polygon : Cloneable {
     fun flip(): Polygon {
         vertices.forEach { vertex: Vertex -> vertex.flip() }
         _vertices.reverse()
-        _csg_plane.flip()
-        _plane = _plane.flipped()
+        csgPlane.flip()
+        plane = plane.flipped()
         return this
     }
 
@@ -230,7 +227,7 @@ class Polygon : Cloneable {
             // multiple triangles:
             val firstVertexStl = vertices[0].toStlString()
             for (i in 0 until vertices.size - 2) {
-                sb.append("  facet normal ").append(_csg_plane.normal.toStlString()).append("\n")
+                sb.append("  facet normal ").append(csgPlane.normal.toStlString()).append("\n")
                     .append("    outer loop\n").append("      ").append(firstVertexStl).append("\n")
                     .append("      ")
                 vertices[i + 1].toStlString(sb).append("\n").append("      ")
@@ -282,8 +279,8 @@ class Polygon : Cloneable {
         val c = vertices[2].pos
 
         // TODO plane update correct?
-        _csg_plane.normal = b.minus(a).crossed(c.minus(a))
-        _plane = eu.mihosoft.vvecmath.Plane.fromPointAndNormal(centroid(), _csg_plane.normal)
+        csgPlane.normal = b.minus(a).crossed(c.minus(a))
+        plane = eu.mihosoft.vvecmath.Plane.fromPointAndNormal(centroid(), csgPlane.normal)
         return this
     }
 
@@ -315,10 +312,10 @@ class Polygon : Cloneable {
         val a = vertices[0].pos
         val b = vertices[1].pos
         val c = vertices[2].pos
-        _csg_plane.normal = b.minus(a).crossed(c.minus(a)).normalized()
-        _csg_plane.dist = _csg_plane.normal.dot(a)
-        _plane = eu.mihosoft.vvecmath.Plane.fromPointAndNormal(centroid(), _csg_plane.normal)
-        vertices.forEach(Consumer { vertex: Vertex -> vertex.normal = _plane.normal })
+        csgPlane.normal = b.minus(a).crossed(c.minus(a)).normalized()
+        csgPlane.dist = csgPlane.normal.dot(a)
+        plane = eu.mihosoft.vvecmath.Plane.fromPointAndNormal(centroid(), csgPlane.normal)
+        vertices.forEach(Consumer { vertex: Vertex -> vertex.normal = plane.normal })
         if (transform.isMirror) {
             // the transformation includes mirroring. flip polygon
             flip()
@@ -399,7 +396,7 @@ class Polygon : Cloneable {
     operator fun contains(p: Vector3d): Boolean {
 
         // P not on the plane
-        if (_plane.distance(p) > Plane.EPSILON) {
+        if (plane.distance(p) > Plane.EPSILON) {
             return false
         }
 
@@ -433,7 +430,7 @@ class Polygon : Cloneable {
         var coordIndex2 = 1
         val orthogonalToXY: Boolean = abs(
             eu.mihosoft.vvecmath.Plane.XY_PLANE.normal
-                .dot(_plane.normal)
+                .dot(plane.normal)
         ) < Plane.EPSILON
         var foundProjectionPlane = false
         if (!orthogonalToXY && !foundProjectionPlane) {
@@ -443,7 +440,7 @@ class Polygon : Cloneable {
         }
         val orthogonalToXZ: Boolean = abs(
             eu.mihosoft.vvecmath.Plane.XZ_PLANE.normal
-                .dot(_plane.normal)
+                .dot(plane.normal)
         ) < Plane.EPSILON
         if (!orthogonalToXZ && !foundProjectionPlane) {
             coordIndex1 = 0
@@ -452,7 +449,7 @@ class Polygon : Cloneable {
         }
         val orthogonalToYZ: Boolean = abs(
             eu.mihosoft.vvecmath.Plane.YZ_PLANE.normal
-                .dot(_plane.normal)
+                .dot(plane.normal)
         ) < Plane.EPSILON
         if (!orthogonalToYZ && !foundProjectionPlane) {
             coordIndex1 = 1

@@ -8,6 +8,7 @@ package eu.mihosoft.jcsg.samples
 import eu.mihosoft.jcsg.CSG
 import eu.mihosoft.jcsg.Extrude
 import eu.mihosoft.vvecmath.Vector3d
+import kotlin.math.max
 
 /**
  *
@@ -37,7 +38,7 @@ class BatteryHolder {
             Vector3d.xyz(0.0, 0.0, connectorDepth),
             Vector3d.xy(-th, -th),
             Vector3d.xy(smh + pth + ph + o, -th),
-            Vector3d.xy(smh + pth + Math.max(ph / 3, 0.4) + o, 0 + po),
+            Vector3d.xy(smh + pth + max(ph / 3, 0.4) + o, 0 + po),
             Vector3d.xy(smh + pth + o, 0 + po),
             Vector3d.xy(smh + o, 0.0),
             Vector3d.xy(0 + o, 0.0),

@@ -1,6 +1,8 @@
 package eu.mihosoft.jcsg.samples
 
-import eu.mihosoft.jcsg.*
+import eu.mihosoft.jcsg.CSG
+import eu.mihosoft.jcsg.FileUtil
+import eu.mihosoft.jcsg.Polygon
 import eu.mihosoft.vvecmath.Vector3d
 import java.io.IOException
 import java.nio.file.Paths
@@ -14,9 +16,13 @@ import kotlin.math.sin
  * @author cpoliwoda
  */
 class FractalStructure(
-    groundCenter: Vector3d, topCenter: Vector3d,
-    numberOfGroundEdges: Int, thickness: Double, level: Int,
-    orthoVecToRotAxis1: Vector3d?, orthoVecToRotAxis2: Vector3d?
+    groundCenter: Vector3d,
+    topCenter: Vector3d,
+    numberOfGroundEdges: Int,
+    thickness: Double,
+    level: Int,
+    orthoVecToRotAxis1: Vector3d?,
+    orthoVecToRotAxis2: Vector3d?
 ) {
     // decides which kind of polygon base should be created: triangle, hexagon, general n-polygon with n>2
     private var numberOfGroundEdges = 3
@@ -26,41 +32,42 @@ class FractalStructure(
 
     // divider 5 makes a good look for the structure
     // divider bigger 5 makes the structure thinner, lower than 5 makes it wider
-    private var NextThicknessDivider = 6.0
+    private var nextThicknessDivider = 6.0
 
     // the thickness of the child tubes in the next level
-    private var NextThickness = thickness / NextThicknessDivider
+    private var nextThickness = thickness / nextThicknessDivider
 
     // decides who many connections there should be in the next level between
     // two subFractalStructures (position parent edge and center)
-    private var crossConnectionsRate = 25 //percent
+    private var crossConnectionsRate = 25 // percent
 
     // maxAngleForCrossConections dominates crossConnectionsRate
-    private var maxAngleForCrossConections = 45 //degree
+    private var maxAngleForCrossConections = 45 // degree
 
-    //the distance between groundCenter and topCenter decides about the height of the tu
-    //the center of the bottom polygon of the first FractalStructure (level=0) / tube
+    // the distance between groundCenter and topCenter decides about the height of the tu
+    // the center of the bottom polygon of the first FractalStructure (level=0) / tube
     private var groundCenter: Vector3d? = null
 
-    //the center of the top polygon of the first FractalStructure (level=0) / tube
+    // the center of the top polygon of the first FractalStructure (level=0) / tube
     private var topCenter: Vector3d? = null
 
-    //collection of the bottom polygon points of a FractalStructure (edges & center)
-    //used for the new bottom centers of the child FractalStructures
+    // collection of the bottom polygon points of a FractalStructure (edges & center)
+    // used for the new bottom centers of the child FractalStructures
     private var groundPoints: MutableList<Vector3d>? = null
 
-    //collection of the top polygon points of a FractalStructure (edges & center)
+    // collection of the top polygon points of a FractalStructure (edges & center)
     private var topPoints: MutableList<Vector3d>? = null
 
-    //collection of all child tubes, together they build the fractal structure we want
+    // collection of all child tubes, together they build the fractal structure we want
     private var subStructures: MutableList<CSG>? = null
 
-    //how many recursion should be done before drawing (level 0), level 2 means draw after 2 refinments
+    // how many recursion should be done before drawing (level 0), level 2 means draw after 2 refinments
     var level = 0
 
     companion object {
         // list which gives the user the controll of thickness in each level
         var thicknessList: ArrayList<Double>? = null
+
         @Throws(IOException::class)
         @JvmStatic
         fun main(args: Array<String>) {
@@ -76,19 +83,19 @@ class FractalStructure(
 
         init {
             thicknessList = ArrayList()
-            thicknessList!!.add(0.01) //level 0
-            thicknessList!!.add(0.1) //level 1
-            thicknessList!!.add(4.0) //level 2
-            thicknessList!!.add(80.0) //level 3
-            thicknessList!!.add(160.0) //level 4
+            thicknessList!!.add(0.01) // level 0
+            thicknessList!!.add(0.1) // level 1
+            thicknessList!!.add(4.0) // level 2
+            thicknessList!!.add(80.0) // level 3
+            thicknessList!!.add(160.0) // level 4
         }
     }
 
-    //we need two vectors which span the plane where the circle lies in       
+    // we need two vectors which span the plane where the circle lies in
     private var orthoVecToRotAxis1: Vector3d? = null
     private var orthoVecToRotAxis2: Vector3d? = null
 
-    //if dot of two vectors is lower than threshhold we assume they are orthogonal
+    // if dot of two vectors is lower than threshhold we assume they are orthogonal
     private var orthoThreshhold = 1E-16
 
     /**
@@ -101,20 +108,20 @@ class FractalStructure(
         val polygonList: ArrayList<Polygon> = ArrayList()
         var tmpList: ArrayList<Vector3d> = ArrayList()
 
-        //all ground points without the center point
+        // all ground points without the center point
         for (i in 0 until groundPoints!!.size - 1) {
             tmpList.add(groundPoints!![i])
         }
 
-        //add the ground polygon
-        //flip is needed to set the normal int the right direction (out)
+        // add the ground polygon
+        // flip is needed to set the normal int the right direction (out)
         polygonList.add(Polygon.fromPoints(tmpList).flip())
         var groundP1: Vector3d? = null
         var groundP2: Vector3d? = null
         var topP1: Vector3d? = null
         var topP2: Vector3d? = null
 
-        //collect the points of the edge planes
+        // collect the points of the edge planes
         for (i in 0 until tmpList.size - 1) {
             groundP1 = groundPoints!![i]
             groundP2 = groundPoints!![i + 1]
@@ -125,7 +132,7 @@ class FractalStructure(
             polygonList.add(Polygon.fromPoints(groundP1, groundP2, topP2, topP1))
         }
 
-        //collect the points of the last edge plane
+        // collect the points of the last edge plane
         groundP1 = groundPoints!![tmpList.size - 1]
         groundP2 = groundPoints!![0]
         topP1 = topPoints!![tmpList.size - 1]
@@ -134,15 +141,15 @@ class FractalStructure(
         // added in counter clockwise orientation: groundP1, groundP2, topP2, topP1
         polygonList.add(Polygon.fromPoints(groundP1, groundP2, topP2, topP1))
 
-        //clear tmp list
+        // clear tmp list
         tmpList = ArrayList()
 
-        //all top points without the center point
+        // all top points without the center point
         for (i in 0 until topPoints!!.size - 1) {
             tmpList.add(topPoints!![i])
         }
 
-        //add the top polygon
+        // add the top polygon
         polygonList.add(Polygon.fromPoints(tmpList))
         return CSG.fromPolygons(polygonList)
     }
@@ -168,19 +175,19 @@ class FractalStructure(
 
         // is a bias the new center points needs to lie a bit more to the center
         // co the diameter of the fractal won't be increased.
-        val correction = -1 * NextThickness / 2.0
+        val correction = -1 * nextThickness / 2.0
 
-        // create the edge subStructures 
+        // create the edge subStructures
         for (i in 0 until numberOfGroundEdges) {
             tmpGroundPoint = groundPoints!![i]
 
-            // one of the new a bit translated groundCenterpoint 
+            // one of the new a bit translated groundCenterpoint
             // subGc = groundEdge - (NextThickness / 2) * (groundCenter - groundEdge )
             subGroundCenter =
                 tmpGroundPoint.minus(groundCenter!!.minus(tmpGroundPoint).times(correction))
             tmpTopPoint = topPoints!![i]
 
-            // one of the new a bit translated topCenterpoint 
+            // one of the new a bit translated topCenterpoint
             // subTc = topEdge - (NextThickness / 2) * (topCenter - topEdge )
             subTopCenter = tmpTopPoint.minus(topCenter!!.minus(tmpTopPoint).times(correction))
 
@@ -190,7 +197,7 @@ class FractalStructure(
                     subGroundCenter,
                     subTopCenter,
                     numberOfGroundEdges,
-                    NextThickness,
+                    nextThickness,
                     level - 1,
                     orthoVecToRotAxis1,
                     orthoVecToRotAxis2
@@ -203,7 +210,7 @@ class FractalStructure(
                 groundCenter!!,
                 topCenter!!,
                 numberOfGroundEdges,
-                NextThickness,
+                nextThickness,
                 level - 1,
                 orthoVecToRotAxis1,
                 orthoVecToRotAxis2
@@ -239,7 +246,7 @@ class FractalStructure(
         var tmpStructure: FractalStructure? = null
 
         //
-        //helper points for creating the cross connections to the center
+        // helper points for creating the cross connections to the center
         //
         // top and ground of the center subStructure
         val centerGroundPoint = centerStructure.groundCenter
@@ -257,7 +264,7 @@ class FractalStructure(
         val connectionLineVector = centerTopPoint!!.minus(centerGroundPoint)
         val connectionLineVectorNormalized = connectionLineVector.normalized()
 
-        //discribes where the help(Edge/Center)Points should lie on connection line of ground and top
+        // discribes where the help(Edge/Center)Points should lie on connection line of ground and top
         var stepSizeOnConnectionLine =
             10.0 / crossConnectionsRate * connectionLineVector.magnitude() // sSoCL
         var stepSizeOnConnectionLineHalf = stepSizeOnConnectionLine / 2.0
@@ -268,9 +275,9 @@ class FractalStructure(
             tmpGroundPoint = tmpStructure.groundCenter
 
             // optional part , needed to reduce cross connections with big increase
-            // 
+            //
             // check maxAngleForCrossConections for angle a
-            // 
+            //
             //                |    / |hCP0
             //                |   /  |
             //         hEP0 | /a  |
@@ -280,7 +287,7 @@ class FractalStructure(
             // cos(a) = | ANKATHETE | / | HYPOTHENUSE |
             // cos(a) = | CG - EG | / | hCP0 - EG |
             //
-            //hCP0
+            // hCP0
             helpCenterPoint = connectionLineVectorNormalized.times(stepSizeOnConnectionLineHalf)
                 .plus(centerGroundPoint)
             // tmpGroundPoint = EG
@@ -289,7 +296,7 @@ class FractalStructure(
             var hypothenuse = helpCenterPoint.minus(tmpGroundPoint).magnitude()
             var angle = Math.toDegrees(acos(ankathete / hypothenuse))
 
-            //check maxAngleForCrossConections for angle a and recalculate stepsize until angle
+            // check maxAngleForCrossConections for angle a and recalculate stepsize until angle
             while (angle >= maxAngleForCrossConections) {
                 stepSizeOnConnectionLine = stepSizeOnConnectionLineHalf
                 stepSizeOnConnectionLineHalf /= 2.0
@@ -311,12 +318,11 @@ class FractalStructure(
             var j = 0.0
             while (j < connectionLineVector.magnitude()) {
 
-
-                //from bottom left to top right beginning at the ground point position
-                //hEP0,2,4,....
+                // from bottom left to top right beginning at the ground point position
+                // hEP0,2,4,....
                 helpEdgePoint = connectionLineVectorNormalized.times(j).plus(tmpGroundPoint)
                     .plus(correctionInRotationAxisDirection)
-                //hCP0,1,2,....
+                // hCP0,1,2,....
                 helpCenterPoint = connectionLineVectorNormalized.times(j)
                     .plus(connectionLineVectorNormalized.times(stepSizeOnConnectionLineHalf))
                     .plus(centerGroundPoint).plus(correctionInRotationAxisDirection)
@@ -327,7 +333,7 @@ class FractalStructure(
 
                 // prevent that the last cross connactions from bottom left to top right has a to above end point in the top plane
                 if (connectionLineVector.magnitude() > helpCenterPoint.minus(centerGroundPoint)
-                        .magnitude()
+                    .magnitude()
                 ) {
                     // collects the cross subStructure from bottom left to top right
                     crossSubFractalStructures.add(
@@ -335,21 +341,21 @@ class FractalStructure(
                             helpEdgePoint,
                             helpCenterPoint,
                             numberOfGroundEdges,
-                            NextThickness,
+                            nextThickness,
                             level - 1,
                             connectionLineVectorNormalized, secondOrthoVec
                         )
                     )
                 }
 
-                //from top left to bottom right beginning at the ground point position
-                //hEP1,3,5,....
+                // from top left to bottom right beginning at the ground point position
+                // hEP1,3,5,....
                 helpEdgePoint = connectionLineVectorNormalized.times(j + stepSizeOnConnectionLine)
                     .plus(tmpGroundPoint).plus(correctionInRotationAxisDirection)
 
                 // prevent that the last cross connactions from top left to bottom right has a to above end point in the top plane
                 if (connectionLineVector.magnitude() > helpEdgePoint.minus(tmpGroundPoint)
-                        .magnitude()
+                    .magnitude()
                 ) {
 //
                     // collects the cross subStructure from top left to bottom right
@@ -358,7 +364,7 @@ class FractalStructure(
                             helpEdgePoint,
                             helpCenterPoint,
                             numberOfGroundEdges,
-                            NextThickness,
+                            nextThickness,
                             level - 1,
                             connectionLineVectorNormalized, secondOrthoVec
                         )
@@ -366,7 +372,7 @@ class FractalStructure(
                 }
                 j += stepSizeOnConnectionLine
             }
-        } //for edges
+        } // for edges
         subFractalStructures.addAll(crossSubFractalStructures)
 
         // create cross connections from one edge subStructures to the neighbour edge subStructure
@@ -409,7 +415,7 @@ class FractalStructure(
      */
     init {
         var numberOfGroundEdges = numberOfGroundEdges
-        NextThickness = thickness / NextThicknessDivider
+        nextThickness = thickness / nextThicknessDivider
         if (numberOfGroundEdges < 3) {
             numberOfGroundEdges = 3
             System.err.println("numberOfGroundEdges need to be at least 3 and is set therefore to 3.")
@@ -428,23 +434,23 @@ class FractalStructure(
         // Circle equation C_r_(x,y):  x^2 + y^2 = r^2
         // with x = r * cos(angle)
         //      y = r * sin(angle)
-        // 
-        // Plane equation E(x,y) = S + P * x + Q * y 
+        //
+        // Plane equation E(x,y) = S + P * x + Q * y
         // with vectors S, P, Q and  P othogonal to Q
-        // 
+        //
         val rotationAxis = Vector3d.xyz(
             topCenter.x() - groundCenter.x(),
             topCenter.y() - groundCenter.y(),
             topCenter.z() - groundCenter.z()
         ).normalized()
 
-        //        
-        //we need two vectors which span the plane where the circle lies in   
-        //        
-        //if the user did not give us an orthogonal vector to the rotation axis we need to calculate one
+        //
+        // we need two vectors which span the plane where the circle lies in
+        //
+        // if the user did not give us an orthogonal vector to the rotation axis we need to calculate one
         if (orthoVecToRotAxis1 != null) {
 
-            //checking EQUAL to ZERO is a BAD IDEA
+            // checking EQUAL to ZERO is a BAD IDEA
             if (abs(orthoVecToRotAxis1.dot(rotationAxis)) < orthoThreshhold) {
                 this.orthoVecToRotAxis1 = orthoVecToRotAxis1.normalized()
             } else {
@@ -454,11 +460,11 @@ class FractalStructure(
             this.orthoVecToRotAxis1 = rotationAxis.orthogonal().normalized()
         }
 
-        //if the user did not give us an second orthogonal vector to the rotation axis and orthoVecToRotAxis1 we need to calculate one
+        // if the user did not give us an second orthogonal vector to the rotation axis and orthoVecToRotAxis1 we need to calculate one
         if (orthoVecToRotAxis2 != null) {
-            //checking EQUAL to ZERO is a BAD IDEA
-            if (abs(orthoVecToRotAxis2.dot(this.orthoVecToRotAxis1)) < orthoThreshhold
-                && abs(orthoVecToRotAxis2.dot(rotationAxis)) < orthoThreshhold
+            // checking EQUAL to ZERO is a BAD IDEA
+            if (abs(orthoVecToRotAxis2.dot(this.orthoVecToRotAxis1)) < orthoThreshhold &&
+                abs(orthoVecToRotAxis2.dot(rotationAxis)) < orthoThreshhold
             ) {
                 this.orthoVecToRotAxis2 = orthoVecToRotAxis2.normalized()
             } else {
@@ -469,7 +475,7 @@ class FractalStructure(
         }
 
         // x, y, z
-        //the first point is the most in the north in the x-y-plane
+        // the first point is the most in the north in the x-y-plane
         var circlePoint: Vector3d? = null
         val angleStepSize = 360.0 / numberOfGroundEdges
         var angle = 0.0
@@ -484,7 +490,7 @@ class FractalStructure(
         var x = 0.0
         var y = 0.0
 
-        // add/create the points around the ground and top center 
+        // add/create the points around the ground and top center
         for (i in 0 until numberOfGroundEdges) {
             angle = i * angleStepSize
             radians = Math.toRadians(angle)
@@ -494,22 +500,22 @@ class FractalStructure(
             // Plane equation E(x,y) = S + P * x + Q * y
             // with P,Q orthogonal to the center rotation axis and
             // with x,y from the cirlce gives use the cirlce in 3d space
-            //ground points
+            // ground points
             circlePoint = groundCenter.plus(this.orthoVecToRotAxis1!!.times(x))
                 .plus(this.orthoVecToRotAxis2!!.times(y))
             groundPoints!!.add(circlePoint)
 
-            //top points
+            // top points
             circlePoint = topCenter.plus(this.orthoVecToRotAxis1!!.times(x))
                 .plus(this.orthoVecToRotAxis2!!.times(y))
             topPoints!!.add(circlePoint)
         }
 
-        //the last points in the list are the center points 
+        // the last points in the list are the center points
         groundPoints!!.add(groundCenter)
         topPoints!!.add(topCenter)
 
-        //here we want to save the substructures
+        // here we want to save the substructures
         subStructures = ArrayList()
         if (level == 0) {
             subStructures!!.add(createStructure())

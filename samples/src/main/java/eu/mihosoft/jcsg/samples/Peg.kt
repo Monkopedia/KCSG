@@ -70,7 +70,7 @@ class Peg {
     //   __    _
     //  |  \   ptoph
     //  |   \  _
-    //  |   /  pth 
+    //  |   /  pth
     //  |  /   _
     //  | |    bt
     //  | |__  _
@@ -96,7 +96,7 @@ class Peg {
 
         // inner offset
         val oi = getInnerOffset()
-        //outer offset
+        // outer offset
         val oo = getOuterOffset()
         val bh = getBoardMountingHeight()
         val bt = getBoardThickness()
@@ -108,7 +108,7 @@ class Peg {
         val bs = getBoardSpacing()
         val pd = getPegDepth()
         val pw = oo + oi
-        val peg_points: CSG = Extrude.points(
+        val pegPoints: CSG = Extrude.points(
             Vector3d.xyz(0.0, 0.0, pd),
             Vector3d.xy(0.0, 0.0),
             Vector3d.xy(pw, 0.0),
@@ -120,7 +120,7 @@ class Peg {
             Vector3d.xy(oo, bh + bt + pth + ptoph),
             Vector3d.xy(0.0, bh + bt + pth + ptoph)
         )
-        return peg_points.transformed(Transform.unity().translateX(-oo))
+        return pegPoints.transformed(Transform.unity().translateX(-oo))
             .transformed(Transform.unity().rotX(90.0).translateZ(-pd / 2))
     }
 

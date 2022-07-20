@@ -725,16 +725,19 @@ internal object DTSweep {
         ot: DelaunayTriangle,
         op: TriangulationPoint
     ): TriangulationPoint {
-        val o2d = TriangulationUtil.orient2d(eq, op, ep)
-        return if (o2d == TriangulationUtil.Orientation.CW) {
-            // Right
-            ot.pointCCW(op)
-        } else if (o2d == TriangulationUtil.Orientation.CCW) {
-            // Left
-            ot.pointCW(op)
-        } else {
-            // TODO: implement support for point on constraint edge
-            throw PointOnEdgeException("Point on constrained edge not supported yet")
+        return when (TriangulationUtil.orient2d(eq, op, ep)) {
+            TriangulationUtil.Orientation.CW -> {
+                // Right
+                ot.pointCCW(op)
+            }
+            TriangulationUtil.Orientation.CCW -> {
+                // Left
+                ot.pointCW(op)
+            }
+            else -> {
+                // TODO: implement support for point on constraint edge
+                throw PointOnEdgeException("Point on constrained edge not supported yet")
+            }
         }
     }
 

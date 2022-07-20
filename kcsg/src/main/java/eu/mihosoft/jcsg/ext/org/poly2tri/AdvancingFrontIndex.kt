@@ -60,8 +60,8 @@ package eu.mihosoft.jcsg.ext.org.poly2tri
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 internal class AdvancingFrontIndex<A>(min: Double, max: Double, depth: Int) {
-    var _min = 0.0
-    var _max = 0.0
+    var min = 0.0
+    var max = 0.0
     private var _root: IndexNode<A>?
     private fun createIndex(n: Int): IndexNode<A>? {
         var node: IndexNode<A>? = null

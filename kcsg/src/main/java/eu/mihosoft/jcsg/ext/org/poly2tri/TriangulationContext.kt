@@ -58,13 +58,14 @@ package eu.mihosoft.jcsg.ext.org.poly2tri
  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */internal abstract class TriangulationContext<A : TriangulationDebugContext?>: Object() {
+ */
+internal abstract class TriangulationContext<A : TriangulationDebugContext?> : Object() {
     var debugContext: A? = null
         protected set
     var isDebugEnabled = false
         protected set
-    protected var _triList = ArrayList<DelaunayTriangle>()
-    var _points = ArrayList<TriangulationPoint>(200)
+    protected var mutableTriangles = ArrayList<DelaunayTriangle>()
+    var mutablePoints = ArrayList<TriangulationPoint>(200)
     var triangulationMode: TriangulationMode? = null
         protected set
     var triangulatable: Triangulatable? = null
@@ -92,13 +93,13 @@ package eu.mihosoft.jcsg.ext.org.poly2tri
     ): TriangulationConstraint
 
     fun addToList(triangle: DelaunayTriangle) {
-        _triList.add(triangle)
+        mutableTriangles.add(triangle)
     }
 
     val triangles: List<DelaunayTriangle>
-        get() = _triList
+        get() = mutableTriangles
     val points: List<TriangulationPoint>
-        get() = _points
+        get() = mutablePoints
 
     @Synchronized
     fun update(message: String?) {
@@ -128,7 +129,7 @@ package eu.mihosoft.jcsg.ext.org.poly2tri
     }
 
     open fun clear() {
-        _points.clear()
+        mutablePoints.clear()
         _terminated = false
         if (isDebugEnabled) {
             debugContext?.clear()
@@ -147,6 +148,6 @@ package eu.mihosoft.jcsg.ext.org.poly2tri
 
     abstract fun isDebugEnabled(b: Boolean)
     fun addPoints(points: List<TriangulationPoint>?) {
-        _points.addAll(points!!)
+        mutablePoints.addAll(points!!)
     }
 }

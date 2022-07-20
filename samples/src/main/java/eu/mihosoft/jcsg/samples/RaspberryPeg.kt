@@ -45,7 +45,7 @@ object RaspberryPeg {
         //   __    _
         //  |  \   ptoph
         //  |   \  _
-        //  |   /  pth 
+        //  |   /  pth
         //  |  /   _
         //  | |    bt
         //  | |__  _
@@ -59,46 +59,46 @@ object RaspberryPeg {
         // pth   = peg tooth hight
         // ptoph = peg top height
         // ol    = overlap between board and peg
-        val outer_offset = 4.0
-        val inner_offset = 4.0
-        val board_mounting_height = 5.5
-        val board_thickness = 2.0
+        val outerOffset = 4.0
+        val innerOffset = 4.0
+        val boardMountingHeight = 5.5
+        val boardThickness = 2.0
         val overlap = 1.0
-        val peg_depth = 3.0
-        val peg_tooth_height = 1.0
-        val peg_top_height = 2.0
-        val board_spacing = 0.2
+        val pegDepth = 3.0
+        val pegToothHeight = 1.0
+        val pegTopHeight = 2.0
+        val boardSpacing = 0.2
 
         // inner offset
-        //outer offset
+        // outer offset
 
         // board spacing (small spacing between peg and board, should be < 0.5mm)
-        val pw = outer_offset + inner_offset
-        val peg_points: CSG = Extrude.points(
-            Vector3d.xyz(0.0, 0.0, peg_depth),
+        val pw = outerOffset + innerOffset
+        val pegPoints: CSG = Extrude.points(
+            Vector3d.xyz(0.0, 0.0, pegDepth),
             Vector3d.xy(0.0, 0.0),
             Vector3d.xy(pw, 0.0),
-            Vector3d.xy(pw, board_mounting_height / 5),
-            Vector3d.xy(pw - inner_offset / 2, board_mounting_height),
-            Vector3d.xy(outer_offset - board_spacing, board_mounting_height),
+            Vector3d.xy(pw, boardMountingHeight / 5),
+            Vector3d.xy(pw - innerOffset / 2, boardMountingHeight),
+            Vector3d.xy(outerOffset - boardSpacing, boardMountingHeight),
             Vector3d.xy(
-                outer_offset - board_spacing,
-                board_mounting_height + board_thickness
+                outerOffset - boardSpacing,
+                boardMountingHeight + boardThickness
             ),
             Vector3d.xy(
-                outer_offset + overlap,
-                board_mounting_height + board_thickness + peg_tooth_height
+                outerOffset + overlap,
+                boardMountingHeight + boardThickness + pegToothHeight
             ),
             Vector3d.xy(
-                outer_offset,
-                board_mounting_height + board_thickness + peg_tooth_height + peg_top_height
+                outerOffset,
+                boardMountingHeight + boardThickness + pegToothHeight + pegTopHeight
             ),
             Vector3d.xy(
                 0.0,
-                board_mounting_height + board_thickness + peg_tooth_height + peg_top_height
+                boardMountingHeight + boardThickness + pegToothHeight + pegTopHeight
             )
         )
-        return peg_points.transformed(Transform.unity().translateX(-outer_offset))
-            .transformed(Transform.unity().rotX(90.0).translateZ(-peg_depth / 2))
+        return pegPoints.transformed(Transform.unity().translateX(-outerOffset))
+            .transformed(Transform.unity().rotX(90.0).translateZ(-pegDepth / 2))
     }
 }

@@ -55,7 +55,7 @@ internal class Node @JvmOverloads constructor(polygons: List<Polygon>? = null) :
      * Plane used for BSP.
      */
     private val plane: Plane
-        get() = planeImpl ?: this.polygons.firstOrNull()?._csg_plane?.clone()?.also {
+        get() = planeImpl ?: this.polygons.firstOrNull()?.csgPlane?.clone()?.also {
             planeImpl = it
         } ?: error("Please fix me! I don't know what to do?")
 
@@ -168,7 +168,7 @@ internal class Node @JvmOverloads constructor(polygons: List<Polygon>? = null) :
         var polygons = polygons
         if (polygons.isEmpty()) return
         if (planeImpl == null) {
-            planeImpl = polygons.first()._csg_plane.clone()
+            planeImpl = polygons.first().csgPlane.clone()
         }
         polygons = polygons.stream().filter { p: Polygon -> p.isValid }.distinct()
             .collect(Collectors.toList())

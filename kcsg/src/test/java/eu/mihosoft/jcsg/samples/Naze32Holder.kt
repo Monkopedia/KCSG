@@ -8,8 +8,6 @@ package eu.mihosoft.jcsg.samples
 import eu.mihosoft.jcsg.CSG
 import eu.mihosoft.jcsg.Cylinder
 import eu.mihosoft.vvecmath.Transform
-import junit.framework.Assert.assertEquals
-import org.junit.Test
 
 /**
  *

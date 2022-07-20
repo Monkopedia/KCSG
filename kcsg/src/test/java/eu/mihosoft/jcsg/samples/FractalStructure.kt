@@ -1,8 +1,10 @@
 package eu.mihosoft.jcsg.samples
 
-import eu.mihosoft.jcsg.*
+import eu.mihosoft.jcsg.CSG
+import eu.mihosoft.jcsg.Polygon
 import eu.mihosoft.vvecmath.Vector3d
-import java.lang.Math.*
+import java.lang.Math.toDegrees
+import java.lang.Math.toRadians
 
 var count = 0
 
@@ -27,10 +29,10 @@ class FractalStructure(
 
     // divider 5 makes a good look for the structure
     // divider bigger 5 makes the structure thinner, lower than 5 makes it wider
-    private var NextThicknessDivider = 6.0
+    private var nextThicknessDivider = 6.0
 
     // the thickness of the child tubes in the next level
-    private var NextThickness = thickness / NextThicknessDivider
+    private var nextThickness = thickness / nextThicknessDivider
 
     // decides who many connections there should be in the next level between
     // two subFractalStructures (position parent edge and center)
@@ -157,7 +159,7 @@ class FractalStructure(
 
         // is a bias the new center points needs to lie a bit more to the center
         // co the diameter of the fractal won't be increased.
-        val correction = -1 * NextThickness / 2.0
+        val correction = -1 * nextThickness / 2.0
 
         // create the edge subStructures
         for (i in 0 until numberOfGroundEdges) {
@@ -181,7 +183,7 @@ class FractalStructure(
                     subGroundCenter,
                     subTopCenter,
                     numberOfGroundEdges,
-                    NextThickness,
+                    nextThickness,
                     level - 1,
                     orthoVecToRotAxis1,
                     orthoVecToRotAxis2
@@ -194,7 +196,7 @@ class FractalStructure(
                 groundCenter!!,
                 topCenter!!,
                 numberOfGroundEdges,
-                NextThickness,
+                nextThickness,
                 level - 1,
                 orthoVecToRotAxis1,
                 orthoVecToRotAxis2
@@ -278,7 +280,7 @@ class FractalStructure(
             // centerGroundPoint = CG
             val ankathete = centerGroundPoint!!.minus(tmpGroundPoint).magnitude()
             var hypothenuse = helpCenterPoint.minus(tmpGroundPoint).magnitude()
-            var angle = Math.toDegrees(acos(ankathete / hypothenuse))
+            var angle = toDegrees(kotlin.math.acos(ankathete / hypothenuse))
 
             // check maxAngleForCrossConections for angle a and recalculate stepsize until angle
             while (angle >= maxAngleForCrossConections) {
@@ -287,7 +289,7 @@ class FractalStructure(
                 helpCenterPoint = connectionLineVectorNormalized.times(stepSizeOnConnectionLineHalf)
                     .plus(centerGroundPoint)
                 hypothenuse = helpCenterPoint.minus(tmpGroundPoint).magnitude()
-                angle = Math.toDegrees(acos(ankathete / hypothenuse))
+                angle = toDegrees(kotlin.math.acos(ankathete / hypothenuse))
             }
 
             // prevent that the cross connactions are to low in the bottom plane
@@ -325,7 +327,7 @@ class FractalStructure(
                             helpEdgePoint,
                             helpCenterPoint,
                             numberOfGroundEdges,
-                            NextThickness,
+                            nextThickness,
                             level - 1,
                             connectionLineVectorNormalized, secondOrthoVec
                         )
@@ -348,7 +350,7 @@ class FractalStructure(
                             helpEdgePoint,
                             helpCenterPoint,
                             numberOfGroundEdges,
-                            NextThickness,
+                            nextThickness,
                             level - 1,
                             connectionLineVectorNormalized, secondOrthoVec
                         )
@@ -400,7 +402,7 @@ class FractalStructure(
     init {
         println("Pos $groundCenter $topCenter $numberOfGroundEdges $thickness $level $orthoVecToRotAxis1 $orthoVecToRotAxis2")
         var numberOfGroundEdges = numberOfGroundEdges
-        NextThickness = thickness / NextThicknessDivider
+        nextThickness = thickness / nextThicknessDivider
         if (numberOfGroundEdges < 3) {
             numberOfGroundEdges = 3
             System.err.println("numberOfGroundEdges need to be at least 3 and is set therefore to 3.")
@@ -436,7 +438,7 @@ class FractalStructure(
         if (orthoVecToRotAxis1 != null) {
 
             // checking EQUAL to ZERO is a BAD IDEA
-            if (abs(orthoVecToRotAxis1.dot(rotationAxis)) < orthoThreshhold) {
+            if (kotlin.math.abs(orthoVecToRotAxis1.dot(rotationAxis)) < orthoThreshhold) {
                 this.orthoVecToRotAxis1 = orthoVecToRotAxis1.normalized()
             } else {
                 this.orthoVecToRotAxis1 = rotationAxis.orthogonal().normalized()
@@ -448,8 +450,8 @@ class FractalStructure(
         // if the user did not give us an second orthogonal vector to the rotation axis and orthoVecToRotAxis1 we need to calculate one
         if (orthoVecToRotAxis2 != null) {
             // checking EQUAL to ZERO is a BAD IDEA
-            if (abs(orthoVecToRotAxis2.dot(this.orthoVecToRotAxis1)) < orthoThreshhold &&
-                abs(orthoVecToRotAxis2.dot(rotationAxis)) < orthoThreshhold
+            if (kotlin.math.abs(orthoVecToRotAxis2.dot(this.orthoVecToRotAxis1)) < orthoThreshhold &&
+                kotlin.math.abs(orthoVecToRotAxis2.dot(rotationAxis)) < orthoThreshhold
             ) {
                 this.orthoVecToRotAxis2 = orthoVecToRotAxis2.normalized()
             } else {
@@ -478,9 +480,9 @@ class FractalStructure(
         // add/create the points around the ground and top center
         for (i in 0 until numberOfGroundEdges) {
             angle = i * angleStepSize
-            radians = Math.toRadians(angle)
-            x = radius * cos(radians)
-            y = radius * sin(radians)
+            radians = toRadians(angle)
+            x = radius * kotlin.math.cos(radians)
+            y = radius * kotlin.math.sin(radians)
 
             // Plane equation E(x,y) = S + P * x + Q * y
             // with P,Q orthogonal to the center rotation axis and

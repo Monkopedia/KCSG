@@ -29,7 +29,6 @@
  */
 package eu.mihosoft.jcsg.ext.org.poly2tri
 
-import eu.mihosoft.jcsg.ext.org.poly2tri.DTSweepConstraint
 import org.slf4j.LoggerFactory
 
 /* Poly2Tri
@@ -73,7 +72,7 @@ internal class DTSweepConstraint(p1: TriangulationPoint, p2: TriangulationPoint)
     //    public TPoint intersect( TPoint a, TPoint b )
     //    {
     //        double pqx,pqy,bax,bay,t;
-    //        
+    //
     //        pqx = p.getX()-q.getX();
     //        pqy = p.getY()-q.getY();
     //        t = pqy*(a.getX()-q.getX()) - pqx*(a.getY()-q.getY() );
@@ -101,7 +100,7 @@ internal class DTSweepConstraint(p1: TriangulationPoint, p2: TriangulationPoint)
      * @param p1
      * @param p2
      */
-    init  //        throws DuplicatePointException
+    init //        throws DuplicatePointException
     {
         p = p1
         q = p2
@@ -118,6 +117,6 @@ internal class DTSweepConstraint(p1: TriangulationPoint, p2: TriangulationPoint)
 //                return;
             }
         }
-        q!!.addEdge(this)
+        q.addEdge(this)
     }
 }

@@ -142,10 +142,10 @@ class CSG private constructor(
      */
     fun union(csg: CSG): CSG {
         return when (getOptType()) {
-            OptType.CSG_BOUND -> _unionCSGBoundsOpt(csg)
-            OptType.POLYGON_BOUND -> _unionPolygonBoundsOpt(csg)
+            OptType.CSG_BOUND -> unionCSGBoundsOpt(csg)
+            OptType.POLYGON_BOUND -> unionPolygonBoundsOpt(csg)
             else -> //                return _unionIntersectOpt(csg);
-                _unionNoOpt(csg)
+                unionNoOpt(csg)
         }
     }
 
@@ -274,15 +274,15 @@ class CSG private constructor(
         return hull(listOf(*csgs))
     }
 
-    private fun _unionCSGBoundsOpt(csg: CSG): CSG {
+    private fun unionCSGBoundsOpt(csg: CSG): CSG {
         System.err.println(
             "WARNING: using " + OptType.NONE +
                 " since other optimization types missing for union operation."
         )
-        return _unionIntersectOpt(csg)
+        return unionIntersectOpt(csg)
     }
 
-    private fun _unionPolygonBoundsOpt(csg: CSG): CSG {
+    private fun unionPolygonBoundsOpt(csg: CSG): CSG {
         val inner: MutableList<Polygon> = ArrayList()
         val outer: MutableList<Polygon> = ArrayList()
         val bounds = csg.bounds
@@ -297,7 +297,7 @@ class CSG private constructor(
         if (inner.isNotEmpty()) {
             val innerCSG = fromPolygons(inner)
             allPolygons.addAll(outer)
-            allPolygons.addAll(innerCSG._unionNoOpt(csg)._polygons)
+            allPolygons.addAll(innerCSG.unionNoOpt(csg)._polygons)
         } else {
             allPolygons.addAll(_polygons)
             allPolygons.addAll(csg._polygons)
@@ -312,7 +312,7 @@ class CSG private constructor(
      * @param csg csg
      * @return the union of this csg and the specified csg
      */
-    private fun _unionIntersectOpt(csg: CSG): CSG {
+    private fun unionIntersectOpt(csg: CSG): CSG {
         var intersects = false
         val bounds = csg.bounds
         for (p in _polygons) {
@@ -323,7 +323,7 @@ class CSG private constructor(
         }
         val allPolygons: MutableList<Polygon> = ArrayList()
         if (intersects) {
-            return _unionNoOpt(csg)
+            return unionNoOpt(csg)
         } else {
             allPolygons.addAll(_polygons)
             allPolygons.addAll(csg._polygons)
@@ -331,7 +331,7 @@ class CSG private constructor(
         return fromPolygons(allPolygons).optimization(getOptType())
     }
 
-    private fun _unionNoOpt(csg: CSG): CSG {
+    private fun unionNoOpt(csg: CSG): CSG {
         val a = Node(clone()._polygons)
         val b = Node(csg.clone()._polygons)
         a.clipTo(b)
@@ -423,19 +423,19 @@ class CSG private constructor(
      */
     fun difference(csg: CSG): CSG {
         return when (getOptType()) {
-            OptType.CSG_BOUND -> _differenceCSGBoundsOpt(csg)
-            OptType.POLYGON_BOUND -> _differencePolygonBoundsOpt(csg)
-            else -> _differenceNoOpt(csg)
+            OptType.CSG_BOUND -> differenceCSGBoundsOpt(csg)
+            OptType.POLYGON_BOUND -> differencePolygonBoundsOpt(csg)
+            else -> differenceNoOpt(csg)
         }
     }
 
-    private fun _differenceCSGBoundsOpt(csg: CSG): CSG {
-        val a1 = _differenceNoOpt(csg.bounds.toCSG())
+    private fun differenceCSGBoundsOpt(csg: CSG): CSG {
+        val a1 = differenceNoOpt(csg.bounds.toCSG())
         val a2 = this.intersect(csg.bounds.toCSG())
-        return a2._differenceNoOpt(csg)._unionIntersectOpt(a1).optimization(getOptType())
+        return a2.differenceNoOpt(csg).unionIntersectOpt(a1).optimization(getOptType())
     }
 
-    private fun _differencePolygonBoundsOpt(csg: CSG): CSG {
+    private fun differencePolygonBoundsOpt(csg: CSG): CSG {
         val inner: MutableList<Polygon> = ArrayList()
         val outer: MutableList<Polygon> = ArrayList()
         val bounds = csg.bounds
@@ -452,11 +452,11 @@ class CSG private constructor(
         val innerCSG = fromPolygons(inner)
         val allPolygons: MutableList<Polygon> = ArrayList()
         allPolygons.addAll(outer)
-        allPolygons.addAll(innerCSG._differenceNoOpt(csg)._polygons)
+        allPolygons.addAll(innerCSG.differenceNoOpt(csg)._polygons)
         return fromPolygons(allPolygons).optimization(getOptType())
     }
 
-    private fun _differenceNoOpt(csg: CSG): CSG {
+    private fun differenceNoOpt(csg: CSG): CSG {
         val a = Node(clone()._polygons)
         val b = Node(csg.clone()._polygons)
         a.invert()

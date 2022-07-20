@@ -62,9 +62,9 @@ import org.slf4j.LoggerFactory
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */internal object Poly2Tri {
     private val logger = LoggerFactory.getLogger(Poly2Tri::class.java)
-    private val _defaultAlgorithm = TriangulationAlgorithm.DTSweep
+    private val defaultAlgorithm = TriangulationAlgorithm.DTSweep
     fun triangulate(ps: PolygonSet) {
-        val tcx = createContext(_defaultAlgorithm)
+        val tcx = createContext(defaultAlgorithm)
         for (p in ps.polygons) {
             tcx.prepareTriangulation(p)
             triangulate(tcx)
@@ -73,15 +73,15 @@ import org.slf4j.LoggerFactory
     }
 
     fun triangulate(p: Polygon) {
-        triangulate(_defaultAlgorithm, p)
+        triangulate(defaultAlgorithm, p)
     }
 
     fun triangulate(cps: ConstrainedPointSet) {
-        triangulate(_defaultAlgorithm, cps)
+        triangulate(defaultAlgorithm, cps)
     }
 
     fun triangulate(ps: PointSet) {
-        triangulate(_defaultAlgorithm, ps)
+        triangulate(defaultAlgorithm, ps)
     }
 
     fun createContext(algorithm: TriangulationAlgorithm?): TriangulationContext<*> {

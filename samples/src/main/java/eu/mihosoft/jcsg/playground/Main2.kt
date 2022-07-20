@@ -5,7 +5,13 @@
  */
 package eu.mihosoft.jcsg.playground
 
-import eu.mihosoft.jcsg.*
+import eu.mihosoft.jcsg.Bounds
+import eu.mihosoft.jcsg.CSG
+import eu.mihosoft.jcsg.Cube
+import eu.mihosoft.jcsg.ObjFile
+import eu.mihosoft.jcsg.Polygon
+import eu.mihosoft.jcsg.STL
+import eu.mihosoft.jcsg.Sphere
 import eu.mihosoft.vvecmath.Plane
 import eu.mihosoft.vvecmath.Transform
 import eu.mihosoft.vvecmath.Vector3d
@@ -17,6 +23,7 @@ import java.util.function.Predicate
 import java.util.logging.Level
 import java.util.logging.Logger
 import java.util.stream.Collectors
+import kotlin.collections.ArrayList
 import kotlin.math.abs
 
 /**
@@ -103,7 +110,7 @@ object Main2 {
         val b1 = s1.bounds
         val b2 = s2.bounds
         val ps1 = s1.polygons
-        var ps2 = s2.polygons //.stream().filter(p->b1.intersects(p)).collect(Collectors.toList());
+        var ps2 = s2.polygons // .stream().filter(p->b1.intersects(p)).collect(Collectors.toList());
 
         // step 2
 
@@ -113,10 +120,10 @@ object Main2 {
             ps2,
             b1,
             b2
-        ) //.stream().filter(p->p.vertices.stream().filter(v->b1.contains(v)).count()==p.vertices.size()).collect(Collectors.toList());
+        ) // .stream().filter(p->p.vertices.stream().filter(v->b1.contains(v)).count()==p.vertices.size()).collect(Collectors.toList());
 
         // step 3
-        val TOL = 1e-10
+        val tol = 1e-10
         val polygons = ps2.parallelStream().collect(
             Collectors.partitioningBy { p: Polygon ->
                 classifyPolygon(
@@ -135,7 +142,7 @@ object Main2 {
     }
 
     private fun classifyPolygon(p1: Polygon, polygons: List<Polygon>?, b: Bounds): PolygonType {
-        val TOL = 1e-10
+        val tol = 1e-10
 
         // we are definitely outside if bounding boxes don't intersect
         if (!p1.bounds.intersects(b)) {
@@ -144,7 +151,7 @@ object Main2 {
         val rayCenter = p1.centroid()
         val rayDirection = p1.plane.normal
         val intersections = getPolygonsThatIntersectWithRay(
-            rayCenter, rayDirection, polygons!!, TOL
+            rayCenter, rayDirection, polygons!!, tol
         )
         if (intersections.isEmpty()) {
             return PolygonType.OUTSIDE
@@ -152,27 +159,27 @@ object Main2 {
 
         // find the closest polygon to the centroid of p1 which intersects the
         // ray
-        var min: RayIntersection? = null //intersections.get(0);
+        var min: RayIntersection? = null // intersections.get(0);
         var dist = 0.0
         var prevDist = Double.MAX_VALUE // min.polygon.centroid().minus(rayCenter).magnitude();
         var i = 0
         for (ri in intersections) {
-            val frontOrBack = p1.plane.compare(ri.intersectionPoint, TOL)
+            val frontOrBack = p1.plane.compare(ri.intersectionPoint, tol)
             if (frontOrBack < 0) {
                 // System.out.println("  -> skipping intersection behind ray " + i);
                 continue
             }
 
-            //try {
+            // try {
             //    ObjFile objF = CSG.fromPolygons(ri.polygon).toObj(3);
             //    objF.toFiles(Paths.get("test-intersection-" + i + ".obj"));
-            //} catch (IOException ex) {
+            // } catch (IOException ex) {
             //    Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-            //}
+            // }
             dist = ri.polygon.centroid().minus(rayCenter).magnitude()
 
-            //System.out.println("dist-"+i+": " + dist);
-            if (dist < TOL && ri.polygon.plane.normal.dot(rayDirection) < TOL) {
+            // System.out.println("dist-"+i+": " + dist);
+            if (dist < tol && ri.polygon.plane.normal.dot(rayDirection) < tol) {
                 // System.out.println("  -> skipping intersection " + i);
                 continue
             }
@@ -189,13 +196,13 @@ object Main2 {
         // try {
         //    ObjFile objF = CSG.fromPolygons(min.polygon).toObj();
         //    objF.toFiles(Paths.get("test-intersection-min.obj"));
-        //} catch (IOException ex) {
+        // } catch (IOException ex) {
         //    Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-        //}
-        val frontOrBack = p1.plane.compare(min.intersectionPoint, TOL)
+        // }
+        val frontOrBack = p1.plane.compare(min.intersectionPoint, tol)
         val planePoint = p1.plane.anchor
         val sameOrOpposite = p1.plane.compare(
-            planePoint.plus(min.polygon.plane.normal), TOL
+            planePoint.plus(min.polygon.plane.normal), tol
         )
         if (frontOrBack > 0 && sameOrOpposite > 0) {
             return PolygonType.INSIDE
@@ -220,7 +227,10 @@ object Main2 {
     }
 
     private fun getPolygonsThatIntersectWithRay(
-        point: Vector3d, direction: Vector3d, polygons: List<Polygon>, TOL: Double
+        point: Vector3d,
+        direction: Vector3d,
+        polygons: List<Polygon>,
+        TOL: Double
     ): List<RayIntersection> {
         val intersection: MutableList<RayIntersection> = ArrayList()
         for (p in polygons) {
@@ -235,28 +245,31 @@ object Main2 {
     }
 
     private fun computePlaneIntersection(
-        plane: Plane, point: Vector3d, direction: Vector3d, TOL: Double
+        plane: Plane,
+        point: Vector3d,
+        direction: Vector3d,
+        TOL: Double
     ): PlaneIntersection {
 
-        //Ax + By + Cz + D = 0
-        //x = x0 + t(x1  x0)
-        //y = y0 + t(y1  y0)
-        //z = z0 + t(z1  z0)
-        //(x1 - x0) = dx, (y1 - y0) = dy, (z1 - z0) = dz
-        //t = -(A*x0 + B*y0 + C*z0 )/(A*dx + B*dy + C*dz)
+        // Ax + By + Cz + D = 0
+        // x = x0 + t(x1  x0)
+        // y = y0 + t(y1  y0)
+        // z = z0 + t(z1  z0)
+        // (x1 - x0) = dx, (y1 - y0) = dy, (z1 - z0) = dz
+        // t = -(A*x0 + B*y0 + C*z0 )/(A*dx + B*dy + C*dz)
         val normal = plane.normal
         val planePoint = plane.anchor
-        val A = normal.x()
-        val B = normal.y()
-        val C = normal.z()
-        val D =
+        val a = normal.x()
+        val b = normal.y()
+        val c = normal.z()
+        val d =
             -(normal.x() * planePoint.x() + normal.y() * planePoint.y() + normal.z() * planePoint.z())
-        val numerator = A * point.x() + B * point.y() + C * point.z() + D
-        val denominator = A * direction.x() + B * direction.y() + C * direction.z()
+        val numerator = a * point.x() + b * point.y() + c * point.z() + d
+        val denominator = a * direction.x() + b * direction.y() + c * direction.z()
 
-        //if line is parallel to the plane...
+        // if line is parallel to the plane...
         return if (abs(denominator) < TOL) {
-            //if line is contained in the plane...
+            // if line is contained in the plane...
             if (abs(numerator) < TOL) {
                 PlaneIntersection(
                     PlaneIntersection.IntersectionType.ON,
@@ -268,7 +281,7 @@ object Main2 {
                     Optional.empty()
                 )
             }
-        } //if line intercepts the plane...
+        } // if line intercepts the plane...
         else {
             val t = -numerator / denominator
             val resultPoint = Vector3d.xyz(
@@ -315,10 +328,11 @@ object Main2 {
                 if (!p1.bounds.intersects(p2.bounds)) {
                     continue
                 }
-                val cutsOfP2WithP1 = cutPolygonWithPlaneIf(p2, p1.plane,
+                val cutsOfP2WithP1 = cutPolygonWithPlaneIf(
+                    p2, p1.plane,
                     label@ Predicate { segments: List<Vector3d> ->
 
-                        //if(true)return true;
+                        // if(true)return true;
                         if (segments.size != 2) return@Predicate true
                         val s1 = segments[0]
                         val s2 = segments[1]
@@ -327,7 +341,7 @@ object Main2 {
                             var i = 0
                             while (i < p1.vertices.size - 1) {
 
-                                //System.out.println("i,j : " + i + ", " + (i+1%p1.vertices.size()));
+                                // System.out.println("i,j : " + i + ", " + (i+1%p1.vertices.size()));
                                 val e1 = p1.vertices[i].pos
                                 val e2 = p1.vertices[i + 1 % p1.vertices.size].pos
                                 val iRes = calculateLineLineIntersection(e1, e2, s1, s2)
@@ -353,7 +367,8 @@ object Main2 {
                             i++
                         }
                         numIntersectionsPoly1 > 0 && numIntersectionsPoly2 > 0
-                    })
+                    }
+                )
                 if (cutsOfP2WithP1.isNotEmpty()) {
                     cutsWithP1.addAll(cutsOfP2WithP1)
                     p2ToDelete.add(p2)
@@ -366,9 +381,12 @@ object Main2 {
     }
 
     private fun cutPolygonWithPlaneAndTypes(
-        polygon: Polygon, cutPlane: Plane,
-        vertexTypes: IntArray, frontPolygon: MutableList<Vector3d>,
-        backPolygon: MutableList<Vector3d>, onPlane: MutableList<Vector3d>
+        polygon: Polygon,
+        cutPlane: Plane,
+        vertexTypes: IntArray,
+        frontPolygon: MutableList<Vector3d>,
+        backPolygon: MutableList<Vector3d>,
+        onPlane: MutableList<Vector3d>
     ) {
 
 //        System.out.println("polygon: \n" + polygon.toStlString());
@@ -394,9 +412,11 @@ object Main2 {
             }
             if (ti != tj && ti != 0 && tj != 0 /*spanning*/) {
                 val pI = computePlaneIntersection(
-                    cutPlane, vi.pos, vj.pos.minus(
+                    cutPlane, vi.pos,
+                    vj.pos.minus(
                         vi.pos
-                    ), EPS
+                    ),
+                    EPS
                 )
                 if (pI.type != PlaneIntersection.IntersectionType.NON_PARALLEL) {
                     throw RuntimeException("I need help (3)!")
@@ -431,7 +451,7 @@ object Main2 {
 //        );
         val cubePolyFrom = 0
         val cubePolyTo = 6
-        val cubePolys = cube.polygons //.subList(cubePolyFrom, cubePolyTo);
+        val cubePolys = cube.polygons // .subList(cubePolyFrom, cubePolyTo);
         println("p: " + p.toStlString())
         println("p-centroid: " + p.centroid())
         val intersections = getPolygonsThatIntersectWithRay(
@@ -530,8 +550,10 @@ object Main2 {
      * @return `true` if the intersection line segment exists; `false` otherwise
      */
     private fun calculateLineLineIntersection(
-        line1Point1: Vector3d, line1Point2: Vector3d,
-        line2Point1: Vector3d, line2Point2: Vector3d
+        line1Point1: Vector3d,
+        line1Point2: Vector3d,
+        line2Point1: Vector3d,
+        line2Point2: Vector3d
     ): LineIntersectionResult {
         // Algorithm is ported from the C algorithm of
         // Paul Bourke at http://local.wasp.uwa.edu.au/~pbourke/geometry/lineline3d/
@@ -595,7 +617,8 @@ object Main2 {
     }
 
     class PlaneIntersection(
-        val type: IntersectionType, var point: Optional<Vector3d>
+        val type: IntersectionType,
+        var point: Optional<Vector3d>
     ) {
         enum class IntersectionType {
             ON, PARALLEL, NON_PARALLEL
@@ -604,7 +627,8 @@ object Main2 {
 
     class RayIntersection(
         val intersectionPoint: Vector3d,
-        val polygon: Polygon, val type: PlaneIntersection.IntersectionType
+        val polygon: Polygon,
+        val type: PlaneIntersection.IntersectionType
     ) {
         override fun toString(): String {
             return """[

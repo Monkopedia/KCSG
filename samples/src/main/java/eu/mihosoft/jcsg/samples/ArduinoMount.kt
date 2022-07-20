@@ -9,7 +9,6 @@ import com.monkopedia.kcsg.*
 import com.monkopedia.kcsg.TransformBuilder.translate
 import eu.mihosoft.jcsg.CSG
 import eu.mihosoft.jcsg.FileUtil
-import eu.mihosoft.vvecmath.Transform
 import eu.mihosoft.vvecmath.Vector3d
 import java.io.IOException
 import java.nio.file.Paths
