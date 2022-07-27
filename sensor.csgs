@@ -1,0 +1,11 @@
+val sensorWidth = 11.0
+val sensorLength = 25.125
+val sensorHeight = 9.09
+val corners = sensorWidth / 5
+
+val sensor by primitive {
+    roundedCube {
+        dimensions = xyz(sensorWidth, sensorLength, sensorHeight)
+        cornerRadius = corners
+    }
+}

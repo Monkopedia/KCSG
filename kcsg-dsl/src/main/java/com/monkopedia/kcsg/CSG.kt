@@ -6,6 +6,9 @@ import com.monkopedia.kcsg.KcsgScript.BuilderContext
 import eu.mihosoft.jcsg.CSG
 import eu.mihosoft.jcsg.Cube
 import eu.mihosoft.jcsg.Cylinder
+import eu.mihosoft.jcsg.Primitive
+import eu.mihosoft.jcsg.RoundedCube
+import eu.mihosoft.jcsg.WeightFunction
 import eu.mihosoft.vvecmath.Transform
 import eu.mihosoft.vvecmath.Vector3d
 
@@ -17,6 +20,15 @@ object CSGBuilder {
 
 @CsgDsl
 fun BuilderContext.xyz(x: Double, y: Double, z: Double): Vector3d = Vector3d.xyz(x, y, z)
+
+@CsgDsl
+inline fun Primitive.weighted(weightFunction: WeightFunction): CSG {
+    return toCSG().weighted(weightFunction)
+}
+@CsgDsl
+inline fun BuilderContext.roundedCube(size: Double = 1.0, builder: RoundedCube.() -> Unit = {}): RoundedCube {
+    return RoundedCube(size).also(builder)
+}
 
 @CsgDsl
 inline fun BuilderContext.cube(size: Double = 1.0, builder: Cube.() -> Unit = {}): Cube {
