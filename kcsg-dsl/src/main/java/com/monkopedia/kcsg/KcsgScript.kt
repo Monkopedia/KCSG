@@ -1,86 +1,51 @@
 package com.monkopedia.kcsg
 
 import eu.mihosoft.jcsg.CSG
-import eu.mihosoft.jcsg.Primitive
-import eu.mihosoft.jcsg.STL
 import java.nio.file.Path
-import kotlin.properties.PropertyDelegateProvider
-import kotlin.properties.ReadOnlyProperty
-import kotlin.reflect.KProperty
 
-abstract class KcsgScript {
-    /**
-     * Version of [csg] that allows a primitive to be returned from the builder instead.
-     */
-    fun primitive(exported: Boolean = false, lazyBuilder: BuilderContext.() -> Primitive): PropertyDelegateProvider<Nothing?, ReadOnlyProperty<Nothing?, CSG>> {
-        return PropertyDelegateProvider { _, property ->
-            val propertyName = property.name
-            val lazy = lazy { BuilderContextImpl.lazyBuilder().toCSG() }
-            track(propertyName, lazy)
-            if (exported) {
-                export(propertyName)
-            }
-            ReadOnlyProperty { _, _ ->
-                lazy.value
-            }
+class KcsgScript : KcsgBuilder() {
+    private val properties = mutableMapOf<String, Lazy<CSG>>()
+    private val exportedProperties = mutableSetOf<String>()
+
+    override fun exportProperty(propertyName: String) {
+        exportedProperties.add(propertyName)
+    }
+
+    override fun track(propertyName: String, lazy: Lazy<CSG>) {
+        properties[propertyName] = lazy
+    }
+
+    override fun findStl(stlName: String): Path = error("Not implemented")
+
+    fun overrideExport(propertyName: String, export: Boolean) {
+        if (export) {
+            exportedProperties.add(propertyName)
+        } else {
+            exportedProperties.remove(propertyName)
         }
     }
 
-    /**
-     * Creates a lazy CSG property labeled by name of the property. By default this property is not
-     * exported and will only be built if exported by default or caller.
-     *
-     * Setting [exported] to true has the same effect as calling [export] on the property.
-     */
-    fun csg(exported: Boolean = false, lazyBuilder: BuilderContext.() -> CSG): PropertyDelegateProvider<Nothing?, ReadOnlyProperty<Nothing?, CSG>> {
-        return PropertyDelegateProvider { _, property ->
-            val propertyName = property.name
-            val lazy = lazy { BuilderContextImpl.lazyBuilder() }
-            track(propertyName, lazy)
-            if (exported) {
-                export(propertyName)
-            }
-            ReadOnlyProperty { _, _ ->
-                lazy.value
-            }
+    fun generateExports(): Map<String, CSG> {
+        return exportedProperties.associateWith {
+            properties[it]!!.value
         }
     }
 
-    /**
-     * Loads an STL with the same registration as a named lazy object as [csg].
-     */
-    fun stl(stlName: String): PropertyDelegateProvider<Nothing, ReadOnlyProperty<Nothing?, CSG>> {
-        return PropertyDelegateProvider { _, property ->
-            val propertyName = property.name
-            val lazy = lazy { STL.file(findStl(stlName)) }
-            track(propertyName, lazy)
-            ReadOnlyProperty { _, _ ->
-                lazy.value
-            }
-        }
+    fun targets(): Collection<String> {
+        return properties.keys
     }
 
-    /**
-     * Exports [name] by default in execution. This will only set it for default exporting,
-     * and can be overridden to false by the executor. Similarly, the executor can also export
-     * properties that are not exported by default.
-     */
-    fun export(name: String) {
-        exportProperty(name)
+    companion object {
+
+        val HEADER = """
+            |import com.monkopedia.kcsg.*
+            |import eu.mihosoft.jcsg.*
+            |import eu.mihosoft.vvecmath.*
+            |
+            |com.monkopedia.kcsg.KcsgScript().apply {
+            """.trimMargin()
+        val FOOTER = """
+            |}
+            """.trimMargin()
     }
-
-    /**
-     * Same effect as [export] but for typo proof execution.
-     */
-    fun export(property: KProperty<CSG>) {
-        export(property.name)
-    }
-
-    protected abstract fun exportProperty(propertyName: String)
-    protected abstract fun track(propertyName: String, lazy: Lazy<CSG>)
-    protected abstract fun findStl(stlName: String): Path
-
-    sealed class BuilderContext
-
-    private object BuilderContextImpl : BuilderContext()
 }

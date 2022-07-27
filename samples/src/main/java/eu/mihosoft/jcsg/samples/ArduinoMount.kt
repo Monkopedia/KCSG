@@ -26,7 +26,7 @@ class ArduinoMount {
         fun main(args: Array<String>) {
             val properties = mutableMapOf<String, Lazy<CSG>>()
             val exportedProperties = mutableSetOf<String>()
-            val scriptInstance = object : KcsgScript() {
+            val scriptInstance = object : KcsgBuilder() {
                 override fun exportProperty(propertyName: String) {
                     exportedProperties.add(propertyName)
                 }
@@ -46,7 +46,7 @@ class ArduinoMount {
     }
 }
 
-fun KcsgScript.buildArduinoMount() {
+fun KcsgBuilder.buildArduinoMount() {
     val bottomWidth = 68.6
     val bottomHeight = 53.3
     val bottomThickness = 2.0

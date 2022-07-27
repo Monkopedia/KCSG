@@ -16,12 +16,12 @@ class RoundedCube : Primitive {
     /**
      * Cube dimensions.
      */
-    private var dimensions: Vector3d
-    private var center: Vector3d
+    var dimensions: Vector3d
+    var center: Vector3d
     private var centered = true
     private val properties = PropertyStorage()
-    private var cornerRadius = 0.1
-    private var resolution = 8
+    var cornerRadius: Double = 0.1
+    var resolution: Int = 8
 
     /**
      * Constructor. Creates a new rounded cube with center `[0,0,0]` and
@@ -67,10 +67,10 @@ class RoundedCube : Primitive {
 
     override fun toPolygons(): List<Polygon> {
         val spherePrototype =
-            Sphere(getCornerRadius(), getResolution() * 2, getResolution()).toCSG()
-        val x = dimensions.x() / 2.0 - getCornerRadius()
-        val y = dimensions.y() / 2.0 - getCornerRadius()
-        val z = dimensions.z() / 2.0 - getCornerRadius()
+            Sphere(cornerRadius, resolution * 2, resolution).toCSG()
+        val x = dimensions.x() / 2.0 - cornerRadius
+        val y = dimensions.y() / 2.0 - cornerRadius
+        val z = dimensions.z() / 2.0 - cornerRadius
         val sphere1 = spherePrototype.transformed(Transform.unity().translate(-x, -y, -z))
         val sphere2 = spherePrototype.transformed(Transform.unity().translate(x, -y, -z))
         val sphere3 = spherePrototype.transformed(Transform.unity().translate(x, y, -z))
@@ -105,34 +105,6 @@ class RoundedCube : Primitive {
     }
 
     /**
-     * @return the center
-     */
-    fun getCenter(): Vector3d {
-        return center
-    }
-
-    /**
-     * @param center the center to set
-     */
-    fun setCenter(center: Vector3d) {
-        this.center = center
-    }
-
-    /**
-     * @return the dimensions
-     */
-    fun getDimensions(): Vector3d {
-        return dimensions
-    }
-
-    /**
-     * @param dimensions the dimensions to set
-     */
-    fun setDimensions(dimensions: Vector3d) {
-        this.dimensions = dimensions
-    }
-
-    /**
      * Defines that this cube will not be centered.
      *
      * @return this cube
@@ -143,40 +115,12 @@ class RoundedCube : Primitive {
     }
 
     /**
-     * @return the resolution
-     */
-    private fun getResolution(): Int {
-        return resolution
-    }
-
-    /**
-     * @param resolution the resolution to set
-     */
-    fun setResolution(resolution: Int) {
-        this.resolution = resolution
-    }
-
-    /**
      * @param resolution the resolution to set
      * @return this cube
      */
     fun resolution(resolution: Int): RoundedCube {
         this.resolution = resolution
         return this
-    }
-
-    /**
-     * @return the corner radius
-     */
-    private fun getCornerRadius(): Double {
-        return cornerRadius
-    }
-
-    /**
-     * @param cornerRadius the corner radius to set
-     */
-    fun setCornerRadius(cornerRadius: Double) {
-        this.cornerRadius = cornerRadius
     }
 
     /**

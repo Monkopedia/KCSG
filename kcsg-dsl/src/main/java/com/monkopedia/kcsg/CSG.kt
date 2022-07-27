@@ -2,10 +2,13 @@
 
 package com.monkopedia.kcsg
 
-import com.monkopedia.kcsg.KcsgScript.BuilderContext
+import com.monkopedia.kcsg.KcsgBuilder.BuilderContext
 import eu.mihosoft.jcsg.CSG
 import eu.mihosoft.jcsg.Cube
 import eu.mihosoft.jcsg.Cylinder
+import eu.mihosoft.jcsg.Primitive
+import eu.mihosoft.jcsg.RoundedCube
+import eu.mihosoft.jcsg.WeightFunction
 import eu.mihosoft.vvecmath.Transform
 import eu.mihosoft.vvecmath.Vector3d
 
@@ -17,6 +20,15 @@ object CSGBuilder {
 
 @CsgDsl
 fun BuilderContext.xyz(x: Double, y: Double, z: Double): Vector3d = Vector3d.xyz(x, y, z)
+
+@CsgDsl
+inline fun Primitive.weighted(weightFunction: WeightFunction): CSG {
+    return toCSG().weighted(weightFunction)
+}
+@CsgDsl
+inline fun BuilderContext.roundedCube(size: Double = 1.0, builder: RoundedCube.() -> Unit = {}): RoundedCube {
+    return RoundedCube(size).also(builder)
+}
 
 @CsgDsl
 inline fun BuilderContext.cube(size: Double = 1.0, builder: Cube.() -> Unit = {}): Cube {
@@ -45,21 +57,6 @@ inline fun BuilderContext.cylinder(
 }
 
 @CsgDsl
-inline operator fun CSG.plus(other: CSG): CSG {
-    return union(other)
-}
-
-@CsgDsl
-inline operator fun CSG.minus(other: CSG): CSG {
-    return difference(other)
-}
-
-@CsgDsl
-inline operator fun CSG.times(other: CSG): CSG {
-    return intersect(other)
-}
-
-@CsgDsl
-inline operator fun CSG.times(other: Transform): CSG {
-    return clone().transformed(other)
+inline fun BuilderContext.transform(transform: Transform.() -> Transform): Transform {
+    return TransformBuilder.unity.transform()
 }

@@ -1,0 +1,52 @@
+    val sensorWidth = 11.0
+    val sensorLength = 25.125
+    val sensorHeight = 9.09
+    val corners = sensorWidth / 5
+
+    val sensor by csg {
+        val sensorTall = roundedCube {
+            dimensions = xyz(sensorWidth, sensorLength, sensorHeight * 2)
+            cornerRadius = corners
+        }
+        val sensorBounds = cube {
+            dimensions = xyz(sensorWidth, sensorLength, sensorHeight)
+        }
+        sensorTall and sensorBounds
+    }
+    val sensorWallSize = 1.5
+    val baseWidth = sensorWidth + 25
+    val baseLength = sensorLength + 25
+    val baseHeight = 18.0
+    val sensorXOffset = (baseWidth - sensorWidth) / 2 - sensorWallSize
+    val sensorYOffset = (baseLength - sensorLength) / 2 - sensorWallSize
+    val sensorZOffset = (baseHeight - sensorHeight) / 2 + 5
+    val xCylSize = baseWidth - sensorWidth - sensorWallSize
+    val yCylSize = baseLength - sensorLength - sensorWallSize
+
+    val xCyl by primitive {
+        cylinder {
+            radius = xCylSize
+            start = xyz(baseWidth / 2, baseLength / 2, baseHeight / 1)
+            end = xyz(baseWidth / 2, -baseLength / 2, baseHeight / 1)
+            numSlices = 64
+        }
+    }
+    val yCyl by primitive {
+        cylinder {
+            radius = yCylSize
+            start = xyz(baseWidth / 2, -baseLength / 2, baseHeight / 1)
+            end = xyz(-baseWidth / 2, -baseLength / 2, baseHeight / 1)
+            numSlices = 64
+        }
+    }
+
+    val base by csg {
+        val block = cube {
+            dimensions = xyz(baseWidth, baseLength, baseHeight)
+        }
+        val positionedSensor = sensor.transform {
+            translate(-sensorXOffset, sensorYOffset, sensorZOffset)
+        }
+        block - positionedSensor - xCyl - yCyl
+    }
+

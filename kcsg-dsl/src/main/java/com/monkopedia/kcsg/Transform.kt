@@ -8,30 +8,28 @@ object TransformBuilder {
     val unity: Transform
         get() = Transform.unity()
 
-    inline fun translate(x: Double = 0.0, y: Double = 0.0, z: Double = 0.0): Transform {
-        return unity.translate(x, y, z)
-    }
-
-    fun rotZ(d: Double): Transform {
-        return unity.rotZ(d)
-    }
-
-    fun rotX(d: Double): Transform {
-        return unity.rotX(d)
-    }
-
-    fun rotY(d: Double): Transform {
-        return unity.rotY(d)
-    }
 }
 
 inline fun Transform.translate(x: Double = 0.0, y: Double = 0.0, z: Double = 0.0): Transform {
     return translate(x, y, z)
 }
 
+inline fun Transform.scale(scale: Double = 0.0): Transform {
+    return scale(scale)
+}
+
+inline fun Transform.scale(x: Double = 0.0, y: Double = 0.0, z: Double = 0.0): Transform {
+    return scale(x, y, z)
+}
+
 @CsgDsl
-inline fun CSG.transform(transform: TransformBuilder.() -> Transform): CSG {
-    return clone().transformed(TransformBuilder.transform())
+inline fun CSG.transform(transform: Transform.() -> Transform): CSG {
+    return clone().transformed(TransformBuilder.unity.transform())
+}
+
+@CsgDsl
+operator fun CSG.times(other: Transform): CSG {
+    return clone().transformed(other)
 }
 
 @CsgDsl
@@ -40,6 +38,6 @@ inline operator fun Primitive.times(transform: Transform): CSG {
 }
 
 @CsgDsl
-inline fun Primitive.transform(transform: TransformBuilder.() -> Transform): CSG {
-    return toCSG().transformed(TransformBuilder.transform())
+inline fun Primitive.transform(transform: Transform.() -> Transform): CSG {
+    return toCSG().transformed(TransformBuilder.unity.transform())
 }
