@@ -9,28 +9,60 @@ import com.monkopedia.kcsg.*
 import com.monkopedia.kcsg.TransformBuilder.translate
 import eu.mihosoft.jcsg.CSG
 import eu.mihosoft.jcsg.FileUtil
-import eu.mihosoft.vvecmath.Vector3d
 import java.io.IOException
+import java.nio.file.Path
 import java.nio.file.Paths
 
 /**
  *
- * @author miho
+ * original @author miho
+ * @author monkopedia
  */
 class ArduinoMount {
-    private val bottomWidth = 68.6
-    private val bottomHeight = 53.3
-    private val bottomThickness = 2.0
-    private val pinHeight = 12.0
-    private val pinHoleHeight = 4.8
-    private val pinRadius = 2.0
-    private val boardThickness = 2.0
-    private val servoConnectThickness = 7.0
-    private fun board() = cube {
-        dimensions = Vector3d.xyz(bottomWidth, bottomHeight, bottomThickness)
+
+    companion object {
+        @Throws(IOException::class)
+        @JvmStatic
+        fun main(args: Array<String>) {
+            val properties = mutableMapOf<String, Lazy<CSG>>()
+            val exportedProperties = mutableSetOf<String>()
+            val scriptInstance = object : KcsgScript() {
+                override fun exportProperty(propertyName: String) {
+                    exportedProperties.add(propertyName)
+                }
+
+                override fun track(propertyName: String, lazy: Lazy<CSG>) {
+                    properties[propertyName] = lazy
+                }
+
+                override fun findStl(stlName: String): Path = error("Not implemented")
+            }
+            scriptInstance.buildArduinoMount()
+
+            for (property in exportedProperties) {
+                FileUtil.write(Paths.get("$property.stl"), properties[property]!!.value.toStlString())
+            }
+        }
+    }
+}
+
+fun KcsgScript.buildArduinoMount() {
+    val bottomWidth = 68.6
+    val bottomHeight = 53.3
+    val bottomThickness = 2.0
+    val pinHeight = 12.0
+    val pinHoleHeight = 4.8
+    val pinRadius = 2.0
+    val boardThickness = 2.0
+    val servoConnectThickness = 7.0
+
+    val board by primitive {
+        cube {
+            dimensions = xyz(bottomWidth, bottomHeight, bottomThickness)
+        }
     }
 
-    private fun pins(): CSG {
+    val pins by csg {
         val prototype = cylinder(pinRadius, pinHeight, 16)
         val first = prototype.transform {
             translate(x = bottomWidth / 2.0, y = bottomHeight / 2.0)
@@ -42,13 +74,13 @@ class ArduinoMount {
             translate(x = -bottomWidth / 2.0)
         }
         val pins = first + second + third
-        val board = board().transform {
+        val board = board.transform {
             translate(z = pinHoleHeight * 2)
         }
-        return pins - board
+        pins - board
     }
 
-    private fun pinConnections(): CSG {
+    val pinConnections by csg {
         val first = cube {
             dimensions = xyz(bottomWidth / 2, 3.0, bottomThickness)
         } * translate(x = -bottomWidth / 4, z = bottomThickness / 2)
@@ -62,10 +94,10 @@ class ArduinoMount {
         }.transform {
             rotZ(-37.8).translate(x = bottomWidth / 4 + 5, z = bottomThickness / 2)
         }
-        return first + second + third
+        first + second + third
     }
 
-    private fun servoConnect(): CSG {
+    val servoConnect by csg {
         val firstA = cube {
             dimensions = xyz(bottomWidth, servoConnectThickness, bottomThickness)
         } * translate(y = -bottomHeight / 2, z = bottomThickness / 2)
@@ -84,22 +116,10 @@ class ArduinoMount {
         val second = first.transform {
             rotX(180.0).translateZ(-bottomThickness)
         }
-        return first + second
+        first + second
     }
 
-    fun toCSG(): CSG {
-        return pins() + pinConnections() + servoConnect()
-    }
-
-    companion object {
-        @Throws(IOException::class)
-        @JvmStatic
-        fun main(args: Array<String>) {
-            val aMount = ArduinoMount()
-
-            // save union as stl
-//        FileUtil.write(Paths.get("sample.stl"), new ServoHead().servoHeadFemale().transformed(Transform.unity().scale(1.0)).toStlString());
-            FileUtil.write(Paths.get("sample.stl"), aMount.toCSG().toStlString())
-        }
+    val sample by csg(exported = true) {
+        pins + pinConnections + servoConnect
     }
 }
