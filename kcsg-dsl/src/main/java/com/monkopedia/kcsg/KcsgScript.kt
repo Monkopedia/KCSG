@@ -31,6 +31,14 @@ class KcsgScript : KcsgBuilder() {
         }
     }
 
+    fun generateTarget(target: String): CSG {
+        return properties[target]?.value ?: error("Unknown target $target")
+    }
+
+    fun exports(): Collection<String> {
+        return exportedProperties
+    }
+
     fun targets(): Collection<String> {
         return properties.keys
     }
