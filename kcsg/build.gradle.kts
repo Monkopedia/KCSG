@@ -1,19 +1,19 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("application")
     id("java")
     id("org.openjfx.javafxplugin") version "0.0.7"
-    kotlin("jvm") version "1.7.0"
+    kotlin("jvm") version "1.7.20"
+    `maven-publish`
+    `signing`
 }
 
-application {
-    mainClass.set("eu.mihosoft.vrl.v3d.Main")
-    applicationDefaultJvmArgs = listOf("-Xss515m")
-}
+group = "com.monkopedia"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_11
+    withJavadocJar()
+    withSourcesJar()
 }
 
 javafx {
@@ -28,7 +28,6 @@ repositories {
 }
 
 dependencies {
-
     testImplementation(group = "junit", name = "junit", version = "4.+")
 
     // compile group: "eu.mihosoft.ext.org.fxyz", name: "extfxyz", version: "0.4"
@@ -51,4 +50,54 @@ compileKotlin.kotlinOptions {
 val compileTestKotlin: KotlinCompile by tasks
 compileTestKotlin.kotlinOptions {
     jvmTarget = "1.8"
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("kcsg") {
+            from(components["java"])
+        }
+    }
+    publications.all {
+        if (this !is MavenPublication) return@all
+
+        afterEvaluate {
+            pom {
+                name.set("kcsg")
+                description.set(project.description)
+                url.set("http://www.github.com/Monkopedia/kcsg")
+                licenses {
+                    license {
+                        name.set("The Apache License, Version 2.0")
+                        url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
+                    }
+                }
+                developers {
+                    developer {
+                        id.set("monkopedia")
+                        name.set("Jason Monk")
+                        email.set("monkopedia@gmail.com")
+                    }
+                }
+                scm {
+                    connection.set("scm:git:git://github.com/Monkopedia/kcsg.git")
+                    developerConnection.set("scm:git:ssh://github.com/Monkopedia/kcsg.git")
+                    url.set("http://github.com/Monkopedia/kcsg/")
+                }
+            }
+        }
+    }
+    repositories {
+        maven(url = "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+            name = "OSSRH"
+            credentials {
+                username = System.getenv("MAVEN_USERNAME")
+                password = System.getenv("MAVEN_PASSWORD")
+            }
+        }
+    }
+}
+
+signing {
+    useGpgCmd()
 }

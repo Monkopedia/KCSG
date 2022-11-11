@@ -28,11 +28,6 @@ repositories {
 }
 
 dependencies {
-
-    testImplementation(group = "junit", name = "junit", version = "4.+")
-
-    // compile group: "eu.mihosoft.ext.org.fxyz", name: "extfxyz", version: "0.4"
-    // compile group: "eu.mihosoft.ext.org.fxyz", name: "extfxyz", version: "0.4", classifier: "sources"
     implementation(group = "eu.mihosoft.vvecmath", name = "vvecmath", version = "0.3.8")
     implementation(
         group = "eu.mihosoft.vvecmath",

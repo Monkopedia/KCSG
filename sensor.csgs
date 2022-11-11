@@ -16,7 +16,7 @@
     val sensorWallSize = 1.5
     val baseWidth = sensorWidth + 25
     val baseLength = sensorLength + 25
-    val baseHeight = 18.0
+    val baseHeight = 28.0
     val sensorXOffset = (baseWidth - sensorWidth) / 2 - sensorWallSize
     val sensorYOffset = (baseLength - sensorLength) / 2 - sensorWallSize
     val sensorZOffset = (baseHeight - sensorHeight) / 2 + 5
@@ -45,6 +45,8 @@
             dimensions = xyz(baseWidth, baseLength, baseHeight)
         }
         val positionedSensor = sensor.transform {
+            scale(1.02, 1.02, 1.0)
+        }.transform {
             translate(-sensorXOffset, sensorYOffset, sensorZOffset)
         }
         block - positionedSensor - xCyl - yCyl
