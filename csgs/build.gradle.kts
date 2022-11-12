@@ -4,7 +4,7 @@ plugins {
     id("application")
     id("java")
     id("org.openjfx.javafxplugin") version "0.0.7"
-    kotlin("jvm") version "1.7.0"
+    kotlin("jvm") version "1.7.20"
 }
 
 application {
@@ -25,6 +25,18 @@ repositories {
     jcenter()
 
     mavenLocal()
+}
+
+tasks.register("fatJar", type = Jar::class) {
+    baseName = "${project.name}-all"
+    manifest {
+        attributes["Implementation-Title"] = "CSGS Script Executor"
+        attributes["Implementation-Version"] = version
+        attributes["Main-Class"] = "com.monkopedia.csgs.MainKt"
+    }
+    from(configurations["runtimeClasspath"].map({ if (it.isDirectory) it else zipTree(it) }))
+    with(tasks["jar"] as CopySpec)
+    duplicatesStrategy = DuplicatesStrategy.WARN
 }
 
 dependencies {
@@ -51,3 +63,4 @@ val compileTestKotlin: KotlinCompile by tasks
 compileTestKotlin.kotlinOptions {
     jvmTarget = "1.8"
 }
+
