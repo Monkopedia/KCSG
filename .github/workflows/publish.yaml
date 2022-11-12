@@ -40,5 +40,5 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
-            csgs/build/libs/csgs-all.jar
+            csgs/build/libs/csgs-all-*.jar
 
