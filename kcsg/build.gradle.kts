@@ -9,6 +9,7 @@ plugins {
 }
 
 group = "com.monkopedia"
+description = "Kotlin port of the JCSG library"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_11
@@ -99,5 +100,6 @@ publishing {
 }
 
 signing {
+    sign(publishing.publications["kcsg"])
     useGpgCmd()
 }

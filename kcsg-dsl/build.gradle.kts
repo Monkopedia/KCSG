@@ -9,6 +9,7 @@ plugins {
 }
 
 group = "com.monkopedia"
+description = "DSL wrappers and utilities for KCSG"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_11
@@ -101,5 +102,6 @@ publishing {
 }
 
 signing {
+    sign(publishing.publications["kcsg-dsl"])
     useGpgCmd()
 }
