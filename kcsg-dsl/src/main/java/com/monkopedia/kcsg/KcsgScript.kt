@@ -3,7 +3,7 @@ package com.monkopedia.kcsg
 import eu.mihosoft.jcsg.CSG
 import java.nio.file.Path
 
-class KcsgScript : KcsgBuilder() {
+class KcsgScript(var host: KcsgHost = EmptyHost) : KcsgBuilder() {
     private val properties = mutableMapOf<String, Lazy<CSG>>()
     private val exportedProperties = mutableSetOf<String>()
 
@@ -15,7 +15,7 @@ class KcsgScript : KcsgBuilder() {
         properties[propertyName] = lazy
     }
 
-    override fun findStl(stlName: String): Path = error("Not implemented")
+    override fun findStl(stlName: String): Path = host.findStl(stlName)
 
     fun overrideExport(propertyName: String, export: Boolean) {
         if (export) {
@@ -51,9 +51,9 @@ class KcsgScript : KcsgBuilder() {
             |import eu.mihosoft.vvecmath.*
             |
             |com.monkopedia.kcsg.KcsgScript().apply {
-            """.trimMargin()
+        """.trimMargin()
         val FOOTER = """
             |}
-            """.trimMargin()
+        """.trimMargin()
     }
 }

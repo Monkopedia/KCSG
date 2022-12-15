@@ -46,6 +46,7 @@ inline fun BuilderContext.cylinder(
 ): Cylinder {
     return Cylinder(start, end, radius, endRadius, numSlices).also(builder)
 }
+
 @CsgDsl
 inline fun BuilderContext.cylinder(
     radius: Double,

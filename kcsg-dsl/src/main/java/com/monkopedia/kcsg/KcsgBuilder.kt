@@ -49,7 +49,7 @@ abstract class KcsgBuilder {
     /**
      * Loads an STL with the same registration as a named lazy object as [csg].
      */
-    fun stl(stlName: String): PropertyDelegateProvider<Nothing, ReadOnlyProperty<Nothing?, CSG>> {
+    fun stl(stlName: String): PropertyDelegateProvider<Nothing?, ReadOnlyProperty<Nothing?, CSG>> {
         return PropertyDelegateProvider { _, property ->
             val propertyName = property.name
             val lazy = lazy { STL.file(findStl(stlName)) }

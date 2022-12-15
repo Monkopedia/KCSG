@@ -42,6 +42,11 @@ class Csgs : CliktCommand() {
         "--export",
         help = "Force a named target to be exported, use ? to list available"
     ).multiple()
+    val imports by option(
+        "-I",
+        "--imports",
+        help = "Include a directory or specific file as resolvable for dependency imports."
+    ).file(mustExist = true, mustBeReadable = true).multiple(listOf(File(".")))
 
     override fun run() {
         if (clear) {
@@ -66,6 +71,7 @@ class Csgs : CliktCommand() {
                 output.overrideExport(export, true)
             }
         }
+        output.host = FileImportHost(imports)
         output.generateExports().forEach { (name, csg) ->
             when (outputType) {
                 STL -> {
