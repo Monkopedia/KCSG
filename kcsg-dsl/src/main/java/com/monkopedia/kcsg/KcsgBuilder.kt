@@ -12,7 +12,10 @@ abstract class KcsgBuilder {
     /**
      * Version of [csg] that allows a primitive to be returned from the builder instead.
      */
-    fun primitive(exported: Boolean = false, lazyBuilder: BuilderContext.() -> Primitive): PropertyDelegateProvider<Nothing?, ReadOnlyProperty<Nothing?, CSG>> {
+    fun primitive(
+        exported: Boolean = false,
+        lazyBuilder: BuilderContext.() -> Primitive
+    ): PropertyDelegateProvider<Nothing?, ReadOnlyProperty<Nothing?, CSG>> {
         return PropertyDelegateProvider { _, property ->
             val propertyName = property.name
             val lazy = lazy { BuilderContextImpl.lazyBuilder().toCSG() }
@@ -32,7 +35,10 @@ abstract class KcsgBuilder {
      *
      * Setting [exported] to true has the same effect as calling [export] on the property.
      */
-    fun csg(exported: Boolean = false, lazyBuilder: BuilderContext.() -> CSG): PropertyDelegateProvider<Nothing?, ReadOnlyProperty<Nothing?, CSG>> {
+    fun csg(
+        exported: Boolean = false,
+        lazyBuilder: BuilderContext.() -> CSG
+    ): PropertyDelegateProvider<Nothing?, ReadOnlyProperty<Nothing?, CSG>> {
         return PropertyDelegateProvider { _, property ->
             val propertyName = property.name
             val lazy = lazy { BuilderContextImpl.lazyBuilder() }
@@ -44,6 +50,15 @@ abstract class KcsgBuilder {
                 lazy.value
             }
         }
+    }
+
+    /**
+     * Imports another script.
+     *
+     * The resolve behavior depends on the host that is executing this script.
+     */
+    fun import(csgsName: String): Lazy<ImportedScript> {
+        return lazy { findScript(csgsName) }
     }
 
     /**
@@ -79,6 +94,7 @@ abstract class KcsgBuilder {
     protected abstract fun exportProperty(propertyName: String)
     protected abstract fun track(propertyName: String, lazy: Lazy<CSG>)
     protected abstract fun findStl(stlName: String): Path
+    protected abstract fun findScript(csgsName: String): ImportedScript
 
     sealed class BuilderContext
 

@@ -59,8 +59,8 @@ class Csgs : CliktCommand() {
                 "Cannot create output directory ${outputDirectory.absolutePath}"
             }
         }
-        val content = File(targetFile).readText()
-        val output = executeCode(content, targetFile)
+        val host = FileImportHost(imports)
+        val output = host.createScript(File(targetFile))
         for (export in exports) {
             if (export.trim() == "?") {
                 println("Listing targets:")
@@ -71,7 +71,6 @@ class Csgs : CliktCommand() {
                 output.overrideExport(export, true)
             }
         }
-        output.host = FileImportHost(imports)
         output.generateExports().forEach { (name, csg) ->
             when (outputType) {
                 STL -> {
@@ -83,20 +82,6 @@ class Csgs : CliktCommand() {
                     outputFile.writeText(csg.toObjString())
                 }
             }
-        }
-    }
-}
-
-private fun executeCode(testCode: String, file: String): KcsgScript {
-    val engine = ScriptEngineManager().getEngineByExtension("kts")!!
-    try {
-        return engine.eval(HEADER + "\n" + testCode + "\n" + FOOTER) as KcsgScript
-    } catch (t: ScriptException) {
-        val offsetCount = HEADER.split("\n").count()
-        if (t.lineNumber < offsetCount) {
-            throw RuntimeException("Internal exception in scripting engine", t)
-        } else {
-            throw ScriptException(t.message, file, t.lineNumber - offsetCount, t.columnNumber)
         }
     }
 }

@@ -17,6 +17,8 @@ class KcsgScript(var host: KcsgHost = EmptyHost) : KcsgBuilder() {
 
     override fun findStl(stlName: String): Path = host.findStl(stlName)
 
+    override fun findScript(csgsName: String): ImportedScript = host.findScript(csgsName)
+
     fun overrideExport(propertyName: String, export: Boolean) {
         if (export) {
             exportedProperties.add(propertyName)
