@@ -59,11 +59,4 @@ package eu.mihosoft.jcsg.ext.org.poly2tri
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-internal class PointOnEdgeException(msg: String?) : RuntimeException(msg) {
-    companion object {
-        /**
-         *
-         */
-        private const val serialVersionUID = 1L
-    }
-}
+internal class PointOnEdgeException(msg: String?) : RuntimeException(msg)

@@ -58,7 +58,8 @@ package eu.mihosoft.jcsg.ext.org.poly2tri
  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */internal abstract class TriangulationPoint : Point() {
+ */
+internal abstract class TriangulationPoint : Point() {
     // List of edges this point constitutes an upper ending point (CDT)
     lateinit var edges: ArrayList<DTSweepConstraint>
 

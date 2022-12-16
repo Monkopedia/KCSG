@@ -64,10 +64,8 @@ internal abstract class TriangulationContext<A : TriangulationDebugContext?> : O
         protected set
     var isDebugEnabled = false
         protected set
-    protected var mutableTriangles = ArrayList<DelaunayTriangle>()
-    var mutablePoints = ArrayList<TriangulationPoint>(200)
-    var triangulationMode: TriangulationMode? = null
-        protected set
+    protected var mutableTriangles = mutableListOf<DelaunayTriangle>()
+    var mutablePoints = mutableListOf<TriangulationPoint>()
     var triangulatable: Triangulatable? = null
         protected set
     private var _terminated = false
@@ -80,10 +78,8 @@ internal abstract class TriangulationContext<A : TriangulationDebugContext?> : O
         stepCount++
     }
 
-    abstract fun algorithm(): TriangulationAlgorithm?
     open fun prepareTriangulation(t: Triangulatable) {
         triangulatable = t
-        triangulationMode = t.triangulationMode
         t.prepareTriangulation(this)
     }
 

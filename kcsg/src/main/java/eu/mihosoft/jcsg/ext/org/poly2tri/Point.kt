@@ -67,17 +67,4 @@ internal abstract class Point {
     abstract val yf: Float
     abstract val zf: Float
     abstract operator fun set(x: Double, y: Double, z: Double)
-
-    companion object {
-        protected fun calculateHashCode(x: Double, y: Double, z: Double): Int {
-            var result = 17
-            val a = java.lang.Double.doubleToLongBits(x)
-            result += 31 * result + (a xor (a ushr 32)).toInt()
-            val b = java.lang.Double.doubleToLongBits(y)
-            result += 31 * result + (b xor (b ushr 32)).toInt()
-            val c = java.lang.Double.doubleToLongBits(z)
-            result += 31 * result + (c xor (c ushr 32)).toInt()
-            return result
-        }
-    }
 }

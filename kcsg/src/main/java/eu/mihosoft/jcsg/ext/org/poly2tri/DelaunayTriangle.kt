@@ -62,7 +62,8 @@ import kotlin.math.abs
  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */internal class DelaunayTriangle(
+ */
+internal class DelaunayTriangle(
     p1: TriangulationPoint?,
     p2: TriangulationPoint?,
     p3: TriangulationPoint?
@@ -79,7 +80,7 @@ import kotlin.math.abs
     /** Has this triangle been marked as an interior triangle?  */
     var isInterior = false
         private set
-    val points = arrayOfNulls<TriangulationPoint>(3)
+    val points = arrayOf(p1, p2, p3)
     fun index(p: TriangulationPoint): Int {
         if (p === points[0]) {
             return 0
@@ -89,22 +90,6 @@ import kotlin.math.abs
             return 2
         }
         throw RuntimeException("Calling index with a point that doesn't exist in triangle")
-    }
-
-    fun indexCW(p: TriangulationPoint): Int {
-        return when (index(p)) {
-            0 -> 2
-            1 -> 0
-            else -> 1
-        }
-    }
-
-    fun indexCCW(p: TriangulationPoint): Int {
-        return when (index(p)) {
-            0 -> 1
-            1 -> 2
-            else -> 0
-        }
     }
 
     operator fun contains(p: TriangulationPoint?): Boolean {
@@ -268,68 +253,8 @@ import kotlin.math.abs
         }
     }
 
-    fun printDebug() {
-        println(points[0].toString() + "," + points[1] + "," + points[2])
-    }
-
-    // Finalize edge marking
-    fun markNeighborEdges() {
-        for (i in 0..2) {
-            if (cEdge[i]) {
-                when (i) {
-                    0 -> neighbors[0]?.markConstrainedEdge(points[1], points[2])
-                    1 -> neighbors[1]?.markConstrainedEdge(points[0], points[2])
-                    2 -> neighbors[2]?.markConstrainedEdge(points[0], points[1])
-                }
-            }
-        }
-    }
-
-    fun markEdge(triangle: DelaunayTriangle) {
-        for (i in 0..2) {
-            if (cEdge[i]) {
-                when (i) {
-                    0 -> triangle.markConstrainedEdge(points[1], points[2])
-                    1 -> triangle.markConstrainedEdge(points[0], points[2])
-                    2 -> triangle.markConstrainedEdge(points[0], points[1])
-                }
-            }
-        }
-    }
-
-    fun markEdge(tList: ArrayList<DelaunayTriangle>) {
-        for (t in tList) {
-            for (i in 0..2) {
-                if (t.cEdge[i]) {
-                    when (i) {
-                        0 -> markConstrainedEdge(t.points[1], t.points[2])
-                        1 -> markConstrainedEdge(t.points[0], t.points[2])
-                        2 -> markConstrainedEdge(t.points[0], t.points[1])
-                    }
-                }
-            }
-        }
-    }
-
     fun markConstrainedEdge(index: Int) {
         cEdge[index] = true
-    }
-
-    fun markConstrainedEdge(edge: DTSweepConstraint) {
-        markConstrainedEdge(edge.p, edge.q)
-        if (edge.q === points[0] && edge.p === points[1]
-            || edge.q === points[1] && edge.p === points[0]
-        ) {
-            cEdge[2] = true
-        } else if (edge.q === points[0] && edge.p === points[2]
-            || edge.q === points[2] && edge.p === points[0]
-        ) {
-            cEdge[1] = true
-        } else if (edge.q === points[1] && edge.p === points[2]
-            || edge.q === points[2] && edge.p === points[1]
-        ) {
-            cEdge[0] = true
-        }
     }
 
     // Mark edge as constrained
@@ -341,18 +266,6 @@ import kotlin.math.abs
         } else if (q === points[1] && p === points[2] || q === points[2] && p === points[1]) {
             cEdge[0] = true
         }
-    }
-
-    fun area(): Double {
-        val a = (points[0]!!.x - points[2]!!.x) * (points[1]!!.y - points[0]!!.y)
-        val b = (points[0]!!.x - points[1]!!.x) * (points[2]!!.y - points[0]!!.y)
-        return 0.5 * abs(a - b)
-    }
-
-    fun centroid(): TPoint {
-        val cx = (points[0]!!.x + points[1]!!.x + points[2]!!.x) / 3.0
-        val cy = (points[0]!!.y + points[1]!!.y + points[2]!!.y) / 3.0
-        return TPoint(cx, cy)
     }
 
     /**
@@ -431,16 +344,6 @@ import kotlin.math.abs
         }
     }
 
-    fun setConstrainedEdgeAcross(p: TriangulationPoint, ce: Boolean) {
-        if (p === points[0]) {
-            cEdge[0] = ce
-        } else if (p === points[1]) {
-            cEdge[1] = ce
-        } else {
-            cEdge[2] = ce
-        }
-    }
-
     fun getDelunayEdgeCCW(p: TriangulationPoint): Boolean {
         if (p === points[0]) {
             return dEdge[2]
@@ -457,15 +360,6 @@ import kotlin.math.abs
             return dEdge[2]
         }
         return dEdge[0]
-    }
-
-    fun getDelunayEdgeAcross(p: TriangulationPoint): Boolean {
-        if (p === points[0]) {
-            return dEdge[0]
-        } else if (p === points[1]) {
-            return dEdge[1]
-        }
-        return dEdge[2]
     }
 
     fun setDelunayEdgeCCW(p: TriangulationPoint, e: Boolean) {
@@ -488,16 +382,6 @@ import kotlin.math.abs
         }
     }
 
-    fun setDelunayEdgeAcross(p: TriangulationPoint, e: Boolean) {
-        if (p === points[0]) {
-            dEdge[0] = e
-        } else if (p === points[1]) {
-            dEdge[1] = e
-        } else {
-            dEdge[2] = e
-        }
-    }
-
     fun clearDelunayEdges() {
         dEdge[0] = false
         dEdge[1] = false
@@ -510,11 +394,5 @@ import kotlin.math.abs
 
     companion object {
         private val logger = LoggerFactory.getLogger(DelaunayTriangle::class.java)
-    }
-
-    init {
-        points[0] = p1
-        points[1] = p2
-        points[2] = p3
     }
 }

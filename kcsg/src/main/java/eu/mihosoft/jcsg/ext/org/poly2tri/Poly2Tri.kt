@@ -29,8 +29,6 @@
  */
 package eu.mihosoft.jcsg.ext.org.poly2tri
 
-import org.slf4j.LoggerFactory
-
 /* Poly2Tri
  * Copyright (c) 2009-2010, Poly2Tri Contributors
  * http://code.google.com/p/poly2tri/
@@ -60,68 +58,12 @@ import org.slf4j.LoggerFactory
  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */internal object Poly2Tri {
-    private val logger = LoggerFactory.getLogger(Poly2Tri::class.java)
-    private val defaultAlgorithm = TriangulationAlgorithm.DTSweep
-    fun triangulate(ps: PolygonSet) {
-        val tcx = createContext(defaultAlgorithm)
-        for (p in ps.polygons) {
-            tcx.prepareTriangulation(p)
-            triangulate(tcx)
-            tcx.clear()
-        }
-    }
+ */
+internal object Poly2Tri {
 
     fun triangulate(p: Polygon) {
-        triangulate(defaultAlgorithm, p)
-    }
-
-    fun triangulate(cps: ConstrainedPointSet) {
-        triangulate(defaultAlgorithm, cps)
-    }
-
-    fun triangulate(ps: PointSet) {
-        triangulate(defaultAlgorithm, ps)
-    }
-
-    fun createContext(algorithm: TriangulationAlgorithm?): TriangulationContext<*> {
-        return when (algorithm) {
-            TriangulationAlgorithm.DTSweep -> DTSweepContext()
-            else -> DTSweepContext()
-        }
-    }
-
-    fun triangulate(
-        algorithm: TriangulationAlgorithm?,
-        t: Triangulatable
-    ) {
-
-//        long time = System.nanoTime();
-        val tcx: TriangulationContext<*> = createContext(algorithm)
-        tcx.prepareTriangulation(t)
-        triangulate(tcx)
-        //        logger.info( "Triangulation of {} points [{}ms]", tcx.getPoints().size(), ( System.nanoTime() - time ) / 1e6 );
-    }
-
-    fun triangulate(tcx: TriangulationContext<*>) {
-        when (tcx.algorithm()) {
-            TriangulationAlgorithm.DTSweep -> DTSweep.triangulate(tcx as DTSweepContext)
-            else -> DTSweep.triangulate(tcx as DTSweepContext)
-        }
-    }
-
-    /**
-     * Will do a warmup run to let the JVM optimize the triangulation code
-     */
-    fun warmup() {
-        /*
-         * After a method is run 10000 times, the Hotspot compiler will compile
-         * it into native code. Periodically, the Hotspot compiler may recompile
-         * the method. After an unspecified amount of time, then the compilation
-         * system should become quiet.
-         */
-        val poly = PolygonGenerator.randomCircleSweep2(50.0, 50000)
-        val process = TriangulationProcess()
-        process.triangulate(poly)
+        val tcx = DTSweepContext()
+        tcx.prepareTriangulation(p)
+        DTSweep.triangulate(tcx)
     }
 }

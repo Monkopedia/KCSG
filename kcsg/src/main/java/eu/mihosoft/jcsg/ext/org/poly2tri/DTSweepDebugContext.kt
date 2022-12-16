@@ -68,8 +68,6 @@ internal class DTSweepDebugContext(tcx: DTSweepContext) : TriangulationDebugCont
     private var activePoint: TriangulationPoint? = null
     private var _activeNode: AdvancingFrontNode? = null
     private var _activeConstraint: DTSweepConstraint? = null
-    val isDebugContext: Boolean
-        get() = true
 
     //  private Tuple2<TPoint,Double> m_circumCircle = new Tuple2<TPoint,Double>( new TPoint(), new Double(0) );
     //  public Tuple2<TPoint,Double> getCircumCircle() { return m_circumCircle; }
@@ -104,7 +102,9 @@ internal class DTSweepDebugContext(tcx: DTSweepContext) : TriangulationDebugCont
         activePoint = null
         _activeNode = null
         _activeConstraint = null
-    } //  public void setWorkingCircumCircle( TPoint point, TPoint point2, TPoint point3 )
+    }
+
+    //  public void setWorkingCircumCircle( TPoint point, TPoint point2, TPoint point3 )
     //  {
     //          double dx,dy;
     //          

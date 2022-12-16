@@ -58,7 +58,8 @@ package eu.mihosoft.jcsg.ext.org.poly2tri
  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */internal interface Triangulatable {
+ */
+internal interface Triangulatable {
     /**
      * Preparations needed before triangulation start should be handled here
      * @param tcx
@@ -69,5 +70,4 @@ package eu.mihosoft.jcsg.ext.org.poly2tri
     fun addTriangle(t: DelaunayTriangle)
     fun addTriangles(list: List<DelaunayTriangle>)
     fun clearTriangulation()
-    val triangulationMode: TriangulationMode?
 }

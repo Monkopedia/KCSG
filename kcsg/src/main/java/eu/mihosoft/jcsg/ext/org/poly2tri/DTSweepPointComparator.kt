@@ -58,18 +58,23 @@ package eu.mihosoft.jcsg.ext.org.poly2tri
  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */internal class DTSweepPointComparator : Comparator<TriangulationPoint> {
+ */
+internal class DTSweepPointComparator : Comparator<TriangulationPoint> {
     override fun compare(p1: TriangulationPoint, p2: TriangulationPoint): Int {
-        return if (p1.y < p2.y) {
-            -1
-        } else if (p1.y > p2.y) {
-            1
-        } else {
-            if (p1.x < p2.x) {
+        return when {
+            p1.y < p2.y -> {
                 -1
-            } else if (p1.x > p2.x) {
+            }
+            p1.y > p2.y -> {
                 1
-            } else {
+            }
+            p1.x < p2.x -> {
+                -1
+            }
+            p1.x > p2.x -> {
+                1
+            }
+            else -> {
                 0
             }
         }

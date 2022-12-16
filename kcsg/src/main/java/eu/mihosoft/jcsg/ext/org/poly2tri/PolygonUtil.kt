@@ -43,76 +43,70 @@ import java.util.*
  *
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
-internal class PolygonUtil private constructor() {
-    companion object {
-        /**
-         * Converts a CSG polygon to a poly2tri polygon (including holes)
-         * @param polygon the polygon to convert
-         * @return a CSG polygon to a poly2tri polygon (including holes)
-         */
-        private fun fromCSGPolygon(
-            polygon: eu.mihosoft.jcsg.Polygon
-        ): Polygon {
-
-            // convert polygon
-            val points: MutableList<PolygonPoint> = ArrayList()
-            for (v in polygon.vertices) {
-                val vp = PolygonPoint(v.pos.x(), v.pos.y(), v.pos.z())
-                points.add(vp)
-            }
-            val result = Polygon(points)
-
-            // convert holes
-            polygon.storage.getValue<List<eu.mihosoft.jcsg.Polygon>>(Edge.KEY_POLYGON_HOLES)
-                ?.forEach { hP: eu.mihosoft.jcsg.Polygon ->
-                    result.addHole(
-                        fromCSGPolygon(hP)
-                    )
-                }
-            return result
+internal object PolygonUtil {
+    /**
+     * Converts a CSG polygon to a poly2tri polygon (including holes)
+     * @param polygon the polygon to convert
+     * @return a CSG polygon to a poly2tri polygon (including holes)
+     */
+    private fun fromCSGPolygon(
+        polygon: eu.mihosoft.jcsg.Polygon
+    ): Polygon {
+        // convert polygon
+        val points: MutableList<PolygonPoint> = ArrayList()
+        for (v in polygon.vertices) {
+            val vp = PolygonPoint(v.pos.x(), v.pos.y(), v.pos.z())
+            points.add(vp)
         }
+        val result = Polygon(points)
 
-        fun concaveToConvex(
-            concave: eu.mihosoft.jcsg.Polygon
-        ): List<eu.mihosoft.jcsg.Polygon> {
-            val result: MutableList<eu.mihosoft.jcsg.Polygon> = ArrayList()
-            val normal = concave.vertices[0].normal.clone()
-            val cw: Boolean = !Extrude.isCCW(concave)
-            val p = fromCSGPolygon(concave)
-
-            Poly2Tri.triangulate(p)
-
-            val triangles = p.triangles
-            var triPoints: MutableList<Vertex> = ArrayList()
-            for (t in triangles) {
-                var counter = 0
-                for (tp in t.points) {
-                    triPoints.add(
-                        Vertex(
-                            Vector3d.xyz(tp!!.x, tp.y, tp.z),
-                            normal
-                        )
-                    )
-                    if (counter == 2) {
-                        if (!cw) {
-                            triPoints.reverse()
-                        }
-                        val poly = eu.mihosoft.jcsg.Polygon(
-                            triPoints, concave.storage
-                        )
-                        result.add(poly)
-                        counter = 0
-                        triPoints = ArrayList()
-                    } else {
-                        counter++
-                    }
-                }
+        // convert holes
+        polygon.storage.getValue<List<eu.mihosoft.jcsg.Polygon>>(Edge.KEY_POLYGON_HOLES)
+            ?.forEach { hP: eu.mihosoft.jcsg.Polygon ->
+                result.addHole(
+                    fromCSGPolygon(hP)
+                )
             }
-            return result
-        }
+        return result
     }
 
-    init {
-        throw AssertionError("Don't instantiate me!", null)
+    fun concaveToConvex(
+        concave: eu.mihosoft.jcsg.Polygon
+    ): List<eu.mihosoft.jcsg.Polygon> {
+        val result: MutableList<eu.mihosoft.jcsg.Polygon> = ArrayList()
+        val normal = concave.vertices[0].normal.clone()
+        val cw: Boolean = !Extrude.isCCW(concave)
+        val p = fromCSGPolygon(concave)
+
+        Poly2Tri.triangulate(p)
+
+        val triangles = p.triangles
+        var triPoints: MutableList<Vertex> = ArrayList()
+        for (t in triangles) {
+            var counter = 0
+            for (tp in t.points) {
+                triPoints.add(
+                    Vertex(
+                        Vector3d.xyz(tp!!.x, tp.y, tp.z),
+                        normal
+                    )
+                )
+                if (counter == 2) {
+                    if (!cw) {
+                        triPoints.reverse()
+                    }
+                    val poly = eu.mihosoft.jcsg.Polygon(
+                        triPoints,
+                        concave.storage
+                    )
+                    result.add(poly)
+                    counter = 0
+                    triPoints = ArrayList()
+                } else {
+                    counter++
+                }
+            }
+        }
+        return result
     }
 }

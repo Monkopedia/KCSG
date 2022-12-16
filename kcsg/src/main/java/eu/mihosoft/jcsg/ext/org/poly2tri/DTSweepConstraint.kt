@@ -66,28 +66,6 @@ import org.slf4j.LoggerFactory
  */
 internal class DTSweepConstraint(p1: TriangulationPoint, p2: TriangulationPoint) :
     TriangulationConstraint() {
-//    override var p: TriangulationPoint
-//    override var q: TriangulationPoint
-
-    //    public TPoint intersect( TPoint a, TPoint b )
-    //    {
-    //        double pqx,pqy,bax,bay,t;
-    //
-    //        pqx = p.getX()-q.getX();
-    //        pqy = p.getY()-q.getY();
-    //        t = pqy*(a.getX()-q.getX()) - pqx*(a.getY()-q.getY() );
-    //        t /= pqx*(b.getY()-a.getY()) - pqy*(b.getX()-a.getX());
-    //        bax = t*(b.getX()-a.getX()) + a.getX();
-    //        bay = t*(b.getY()-a.getY()) + a.getY();
-    //        return new TPoint( bax, bay );
-    //    }
-//    override fun getP(): TriangulationPoint? {
-//        return p
-//    }
-//
-//    override fun getQ(): TriangulationPoint? {
-//        return q
-//    }
 
     companion object {
         private val logger = LoggerFactory.getLogger(DTSweepConstraint::class.java)
@@ -100,8 +78,7 @@ internal class DTSweepConstraint(p1: TriangulationPoint, p2: TriangulationPoint)
      * @param p1
      * @param p2
      */
-    init //        throws DuplicatePointException
-    {
+    init {
         p = p1
         q = p2
         if (p1.y > p2.y) {
@@ -113,8 +90,6 @@ internal class DTSweepConstraint(p1: TriangulationPoint, p2: TriangulationPoint)
                 p = p2
             } else if (p1.x == p2.x) {
                 logger.info("Failed to create constraint {}={}", p1, p2)
-                //                throw new DuplicatePointException( p1 + "=" + p2 );
-//                return;
             }
         }
         q.addEdge(this)

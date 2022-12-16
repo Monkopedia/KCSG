@@ -62,12 +62,13 @@ import kotlin.collections.ArrayList
  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */internal class Polygon : Triangulatable {
-    private var _points = ArrayList<TriangulationPoint>()
+ */
+internal class Polygon : Triangulatable {
+    private var _points = mutableListOf<TriangulationPoint>()
     private var _steinerPoints: ArrayList<TriangulationPoint>? = null
     private var _holes: ArrayList<Polygon>? = null
     private val tranglesImpl: MutableList<DelaunayTriangle> by lazy {
-        ArrayList(_points.size)
+        mutableListOf()
     }
     var point: PolygonPoint? = null
         private set
@@ -111,38 +112,7 @@ import kotlin.collections.ArrayList
      *
      * @param points
      */
-    constructor(points: Array<PolygonPoint>) : this(mutableListOf<PolygonPoint>(*points))
-
-    override val triangulationMode: TriangulationMode
-        get() = TriangulationMode.POLYGON
-
-    fun pointCount(): Int {
-        var count = _points.size
-        if (_steinerPoints != null) {
-            count += _steinerPoints!!.size
-        }
-        return count
-    }
-
-    fun addSteinerPoint(point: TriangulationPoint) {
-        if (_steinerPoints == null) {
-            _steinerPoints = ArrayList()
-        }
-        _steinerPoints!!.add(point)
-    }
-
-    fun addSteinerPoints(points: List<TriangulationPoint>) {
-        if (_steinerPoints == null) {
-            _steinerPoints = ArrayList()
-        }
-        _steinerPoints!!.addAll(points)
-    }
-
-    fun clearSteinerPoints() {
-        if (_steinerPoints != null) {
-            _steinerPoints!!.clear()
-        }
-    }
+    constructor(points: Array<PolygonPoint>) : this(points.toMutableList())
 
     /**
      * Assumes: that given polygon is fully inside the current polygon
@@ -155,62 +125,6 @@ import kotlin.collections.ArrayList
         _holes!!.add(poly)
         // XXX: tests could be made here to be sure it is fully inside
 //        addSubtraction( poly.getPoints() );
-    }
-
-    /**
-     * Will insert a point in the polygon after given point
-     *
-     * @param a
-     * @param b
-     * @param p
-     */
-    fun insertPointAfter(a: PolygonPoint, newPoint: PolygonPoint) {
-        // Validate that
-        val index = _points.indexOf(a)
-        if (index != -1) {
-            newPoint.next = a.next
-            newPoint.previous = a
-            a.next!!.previous = newPoint
-            a.next = newPoint
-            _points.add(index + 1, newPoint)
-        } else {
-            throw RuntimeException("Tried to insert a point into a Polygon after a point not belonging to the Polygon")
-        }
-    }
-
-    fun addPoints(list: List<PolygonPoint>) {
-        for (p in list) {
-            p.previous = point
-            if (point != null) {
-                p.next = point!!.next
-                point!!.next = p
-            }
-            point = p
-            _points.add(p)
-        }
-        val first: PolygonPoint? = _points[0] as PolygonPoint?
-        point!!.next = first
-        first!!.previous = point
-    }
-
-    /**
-     * Will add a point after the last point added
-     *
-     * @param p
-     */
-    fun addPoint(p: PolygonPoint) {
-        p.previous = point
-        p.next = point!!.next
-        point!!.next = p
-        _points.add(p)
-    }
-
-    fun removePoint(p: PolygonPoint) {
-        val next: PolygonPoint? = p.next
-        val prev: PolygonPoint? = p.previous
-        prev!!.next = next
-        next!!.previous = prev
-        _points.remove(p)
     }
 
     override val points: List<TriangulationPoint>

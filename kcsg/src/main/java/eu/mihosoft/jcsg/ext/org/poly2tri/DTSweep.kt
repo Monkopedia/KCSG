@@ -81,11 +81,7 @@ internal object DTSweep {
     fun triangulate(tcx: DTSweepContext) {
         tcx.createAdvancingFront()
         sweep(tcx)
-        if (tcx.triangulationMode == TriangulationMode.POLYGON) {
-            finalizationPolygon(tcx)
-        } else {
-            finalizationConvexHull(tcx)
-        }
+        finalizationPolygon(tcx)
         tcx.done()
     }
 
@@ -270,7 +266,6 @@ internal object DTSweep {
         if (point.x <= node.point.x + TriangulationUtil.EPSILON) {
             fill(tcx, node)
         }
-        tcx.addNode(newNode)
         fillAdvancingFront(tcx, newNode)
         return newNode
     }
@@ -296,7 +291,6 @@ internal object DTSweep {
         newNode.previous = node
         node.next!!.previous = newNode
         node.next = newNode
-        tcx.addNode(newNode) // XXX: BST
         if (tcx.isDebugEnabled) {
             tcx.debugContext?.activeNode = newNode
         }
@@ -1102,7 +1096,6 @@ internal object DTSweep {
         // Update the advancing front
         node.previous!!.next = node.next
         node.next!!.previous = node.previous
-        tcx.removeNode(node)
 
         // If it was legalized the triangle has already been mapped
         if (!legalize(tcx, triangle)) {

@@ -29,7 +29,6 @@
  */
 package eu.mihosoft.jcsg.ext.org.poly2tri
 
-import org.slf4j.LoggerFactory
 import java.util.*
 
 /* Poly2Tri
@@ -77,6 +76,7 @@ internal class DTSweepContext : TriangulationContext<DTSweepDebugContext>() {
     var basin = Basin()
     var edgeEvent = EdgeEvent()
     private val _comparator = DTSweepPointComparator()
+
     override fun isDebugEnabled(b: Boolean) {
         if (b) {
             if (debugContext == null) {
@@ -89,14 +89,8 @@ internal class DTSweepContext : TriangulationContext<DTSweepDebugContext>() {
     fun removeFromList(triangle: DelaunayTriangle?) {
         mutableTriangles.remove(triangle)
         // TODO: remove all neighbor pointers to this triangle
-//        for( int i=0; i<3; i++ )
-//        {
-//            if( triangle.neighbors[i] != null )
-//            {
-//                triangle.neighbors[i].clearNeighbor( triangle );
-//            }
-//        }
-//        triangle.clearNeighbors();
+//        triangle?.neighbors?.forEach { it?.clearNeighbor(triangle) }
+//        triangle?.clearNeighbors()
     }
 
     fun meshClean(triangle: DelaunayTriangle?) {
@@ -127,18 +121,6 @@ internal class DTSweepContext : TriangulationContext<DTSweepDebugContext>() {
         mutableTriangles.clear()
     }
 
-    fun addNode(node: AdvancingFrontNode?) {
-//        System.out.println( "add:" + node.key + ":" + System.identityHashCode(node.key));
-//        m_nodeTree.put( node.getKey(), node );
-        advancingFront.addNode(node)
-    }
-
-    fun removeNode(node: AdvancingFrontNode?) {
-//        System.out.println( "remove:" + node.key + ":" + System.identityHashCode(node.key));
-//        m_nodeTree.delete( node.getKey() );
-        advancingFront.removeNode(node)
-    }
-
     fun locateNode(point: TriangulationPoint): AdvancingFrontNode? {
         return advancingFront.locateNode(point)
     }
@@ -160,7 +142,6 @@ internal class DTSweepContext : TriangulationContext<DTSweepDebugContext>() {
         middle.triangle = iTriangle
         tail = AdvancingFrontNode(iTriangle.points[2]!!)
         advancingFront = AdvancingFront(head, tail)
-        advancingFront.addNode(middle)
 
         // TODO: I think it would be more intuitive if head is middles next and not previous
         //       so swap head and tail
@@ -223,10 +204,7 @@ internal class DTSweepContext : TriangulationContext<DTSweepDebugContext>() {
         head = p1
         tail = p2
 
-//        long time = System.nanoTime();
-        // Sort the points along y-axis
-        Collections.sort(mutablePoints, _comparator)
-        //        logger.info( "Triangulation setup [{}ms]", ( System.nanoTime() - time ) / 1e6 );
+        mutablePoints.sortWith(_comparator)
     }
 
     fun finalizeTriangulation() {
@@ -241,16 +219,10 @@ internal class DTSweepContext : TriangulationContext<DTSweepDebugContext>() {
         return DTSweepConstraint(a, b)
     }
 
-    override fun algorithm(): TriangulationAlgorithm {
-        return TriangulationAlgorithm.DTSweep
-    }
-
     companion object {
         // Inital triangle factor, seed triangle will extend 30% of
         // PointSet width to both left and right.
         private const val ALPHA = 0.3f
-
-        private val logger = LoggerFactory.getLogger(DTSweepContext::class.java)
     }
 
     init {

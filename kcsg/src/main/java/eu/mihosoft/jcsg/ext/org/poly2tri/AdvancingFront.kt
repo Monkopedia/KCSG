@@ -64,19 +64,6 @@ package eu.mihosoft.jcsg.ext.org.poly2tri
 internal class AdvancingFront(var head: AdvancingFrontNode, var tail: AdvancingFrontNode) {
     private var search: AdvancingFrontNode = head
 
-    init {
-        addNode(head)
-        addNode(tail)
-    }
-
-    fun addNode(node: AdvancingFrontNode?) {
-//        _searchTree.put( node.key, node );
-    }
-
-    fun removeNode(node: AdvancingFrontNode?) {
-//        _searchTree.delete( node.key );
-    }
-
     override fun toString(): String {
         val sb = StringBuilder()
         var node: AdvancingFrontNode? = head
@@ -88,7 +75,7 @@ internal class AdvancingFront(var head: AdvancingFrontNode, var tail: AdvancingF
         return sb.toString()
     }
 
-    private fun findSearchNode(x: Double): AdvancingFrontNode {
+    private fun findSearchNode(): AdvancingFrontNode {
         // TODO: implement BST index
         return search
     }
@@ -105,7 +92,7 @@ internal class AdvancingFront(var head: AdvancingFrontNode, var tail: AdvancingF
     }
 
     private fun locateNode(x: Double): AdvancingFrontNode? {
-        var node = findSearchNode(x)
+        var node = findSearchNode()
         if (x < node.value) {
             while (node.previous?.also { node = it } != null) {
                 if (x >= node.value) {
@@ -133,7 +120,7 @@ internal class AdvancingFront(var head: AdvancingFrontNode, var tail: AdvancingF
      */
     fun locatePoint(point: TriangulationPoint): AdvancingFrontNode {
         val px = point.x
-        var node = findSearchNode(px)
+        var node = findSearchNode()
         val nx = node.point.x
         if (px == nx) {
             if (point !== node.point) {
