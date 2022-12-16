@@ -43,44 +43,21 @@ import java.util.Objects
  * primitives like [Cube] can return a smooth vertex normal, but
  * [.normal] is not used anywhere else.
  */
-class Vertex : Cloneable {
+class Vertex(
     /**
      * Vertex position.
      */
-    var pos: Vector3d
+    var pos: Vector3d,
 
     /**
      * Normal.
      */
-    var normal: Vector3d
-    private var _weight = 1.0
-
-    /**
-     * Constructor. Creates a vertex.
-     *
-     * @param pos position
-     * @param normal normal
-     */
-    constructor(pos: Vector3d, normal: Vector3d) {
-        this.pos = pos
-        this.normal = normal
-    }
-
-    /**
-     * Constructor. Creates a vertex.
-     *
-     * @param pos position
-     * @param normal normal
-     * @param weight weight
-     */
-    private constructor(pos: Vector3d, normal: Vector3d, weight: Double) {
-        this.pos = pos
-        this.normal = normal
-        this._weight = weight
-    }
+    var normal: Vector3d,
+    var weight: Double = 1.0
+) : Cloneable {
 
     public override fun clone(): Vertex {
-        return Vertex(pos.clone(), normal.clone(), _weight)
+        return Vertex(pos.clone(), normal.clone(), weight)
     }
 
     /**
@@ -152,7 +129,7 @@ class Vertex : Cloneable {
      * @return this vertex
      */
     fun transform(transform: Transform): Vertex {
-        pos = pos.transformed(transform, _weight)
+        pos = pos.transformed(transform, weight)
         return this
     }
 
@@ -166,31 +143,20 @@ class Vertex : Cloneable {
         return clone().transform(transform)
     }
 
-    /**
-     * @return the weight
-     */
-    var weight: Double
-        get() {
-            return _weight
-        }
-        set(weight) {
-            this._weight = weight
-        }
-
     override fun hashCode(): Int {
         var hash = 7
         hash = 53 * hash + Objects.hashCode(pos)
         return hash
     }
 
-    override fun equals(obj: Any?): Boolean {
-        if (obj == null) {
+    override fun equals(other: Any?): Boolean {
+        if (other == null) {
             return false
         }
-        if (javaClass != obj.javaClass) {
+        if (javaClass != other.javaClass) {
             return false
         }
-        val other = obj as Vertex
+        val other = other as Vertex
         return pos == other.pos
     }
 

@@ -42,12 +42,23 @@ import kotlin.math.abs
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 class Bounds(min: Vector3d, max: Vector3d) : Cloneable {
-    private val _center: Vector3d = Vector3d.xyz(
+    /**
+     * Returns the position of the center.
+     *
+     * @return the center position
+     */
+    val center: Vector3d = Vector3d.xyz(
         (max.x() + min.x()) / 2,
         (max.y() + min.y()) / 2,
         (max.z() + min.z()) / 2
     )
-    private val _bounds: Vector3d = Vector3d.xyz(
+
+    /**
+     * Returns the bounds (width,height,depth).
+     *
+     * @return the bounds (width,height,depth)
+     */
+    val bounds: Vector3d = Vector3d.xyz(
         abs(max.x() - min.x()),
         abs(max.y() - min.y()),
         abs(max.z() - min.z())
@@ -63,31 +74,11 @@ class Bounds(min: Vector3d, max: Vector3d) : Cloneable {
      */
     val max: Vector3d = max.clone()
     private var csg: CSG? = null
-    private val cube: Cube = Cube(_center, _bounds)
+    private val cube: Cube = Cube(this.center, this.bounds)
 
     public override fun clone(): Bounds {
         return Bounds(min.clone(), max.clone())
     }
-
-    /**
-     * Returns the position of the center.
-     *
-     * @return the center position
-     */
-    val center: Vector3d
-        get() {
-            return _center
-        }
-
-    /**
-     * Returns the bounds (width,height,depth).
-     *
-     * @return the bounds (width,height,depth)
-     */
-    val bounds: Vector3d
-        get() {
-            return _bounds
-        }
 
     /**
      * Returns this bounding box as csg.
@@ -180,6 +171,6 @@ class Bounds(min: Vector3d, max: Vector3d) : Cloneable {
     }
 
     override fun toString(): String {
-        return "[center: $_center, bounds: $_bounds]"
+        return "[center: ${this.center}, bounds: ${this.bounds}]"
     }
 }

@@ -45,102 +45,9 @@ import kotlin.math.sqrt
  *
  * @author miho
  */
-class Edge(private val p1: Vertex, private val p2: Vertex) : Cloneable {
+class Edge(val p1: Vertex, val p2: Vertex) : Cloneable {
     private val direction: Vector3d = p2.pos.minus(p1.pos).normalized()
 
-    /**
-     * @return the p1
-     */
-    fun getP1(): Vertex {
-        return p1
-    }
-    //    /**
-    //     * @param p1 the p1 to set
-    //     */
-    //    public void setP1(Vertex p1) {
-    //        this.p1 = p1;
-    //    }
-    /**
-     * @return the p2
-     */
-    fun getP2(): Vertex {
-        return p2
-    }
-
-    private class Node<T>(private val index: Int, private val value: T) {
-        private val parent: Node<*>? = null
-        private val children: MutableList<Node<*>> = ArrayList()
-        private var isHole = false
-        fun addChild(index: Int, value: T) {
-            children.add(Node(index, value))
-        }
-
-        fun getChildren(): List<Node<*>> {
-            return children
-        }
-
-        /**
-         * @return the parent
-         */
-        fun getParent(): Node<*>? {
-            return parent
-        }
-
-        /**
-         * @return the index
-         */
-        fun getIndex(): Int {
-            return index
-        }
-
-        /**
-         * @return the value
-         */
-        fun getValue(): T {
-            return value
-        }
-
-        override fun hashCode(): Int {
-            var hash = 7
-            hash = 67 * hash + index
-            return hash
-        }
-
-        override fun equals(obj: Any?): Boolean {
-            if (obj == null) {
-                return false
-            }
-            if (javaClass != obj.javaClass) {
-                return false
-            }
-            val other = obj as Node<*>
-            return index == other.index
-        }
-
-        fun distanceToRoot(): Int {
-            var dist = 0
-            var pNode = getParent()
-            while (pNode != null) {
-                dist++
-                pNode = getParent()
-            }
-            return dist
-        }
-
-        /**
-         * @return the isHole
-         */
-        fun isIsHole(): Boolean {
-            return isHole
-        }
-
-        /**
-         * @param isHole the isHole to set
-         */
-        fun setIsHole(isHole: Boolean) {
-            this.isHole = isHole
-        }
-    }
     /**
      * Determines whether the specified point lies on tthis edge.
      *
@@ -553,10 +460,10 @@ class Edge(private val p1: Vertex, private val p2: Vertex) : Cloneable {
             // we don't consider edges with shared end-points since we are only
             // interested in "false-boundary-edge"-cases
             val sharedEndPoints =
-                e.getP1().pos == fbe.getP1().pos || e.getP1().pos == fbe.getP2().pos || e.getP2().pos == fbe.getP1().pos || e.getP2().pos == fbe.getP2().pos
+                e.p1.pos == fbe.p1.pos || e.p1.pos == fbe.p2.pos || e.p2.pos == fbe.p1.pos || e.p2.pos == fbe.p2.pos
             return if (sharedEndPoints) {
                 false
-            } else fbe.contains(e.getP1().pos) || fbe.contains(e.getP2().pos)
+            } else fbe.contains(e.p1.pos) || fbe.contains(e.p2.pos)
         }
 
         private fun searchPlaneGroups(polygons: List<Polygon>): List<List<Polygon>> {

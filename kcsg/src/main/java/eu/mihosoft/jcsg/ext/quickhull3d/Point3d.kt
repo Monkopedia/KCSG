@@ -30,15 +30,6 @@ internal class Point3d : Vector3d {
     constructor()
 
     /**
-     * Creates a Point3d by copying a vector
-     *
-     * @param v vector to be copied
-     */
-    constructor(v: Vector3d) {
-        set(v)
-    }
-
-    /**
      * Creates a Point3d with the supplied element values.
      *
      * @param x first element

@@ -12,7 +12,6 @@
  */
 package eu.mihosoft.jcsg.ext.quickhull3d
 
-import java.util.*
 import kotlin.math.sqrt
 
 /**
@@ -162,17 +161,6 @@ internal open class Vector3d {
     }
 
     /**
-     * Subtracts v1 from this vector and places the result in this vector.
-     *
-     * @param v1 right-hand vector
-     */
-    fun sub(v1: Vector3d) {
-        x -= v1.x
-        y -= v1.y
-        z -= v1.z
-    }
-
-    /**
      * Scales the elements of this vector by `s`.
      *
      * @param s scaling factor
@@ -303,22 +291,6 @@ internal open class Vector3d {
         x = tmpx
         y = tmpy
         z = tmpz
-    }
-
-    /**
-     * Sets the elements of this vector to uniformly distributed
-     * random values in a specified range, using a supplied
-     * random number generator.
-     *
-     * @param lower lower random value (inclusive)
-     * @param upper upper random value (exclusive)
-     * @param generator random number generator
-     */
-    fun setRandom(lower: Double, upper: Double, generator: Random) {
-        val range = upper - lower
-        x = generator.nextDouble() * range + lower
-        y = generator.nextDouble() * range + lower
-        z = generator.nextDouble() * range + lower
     }
 
     /**

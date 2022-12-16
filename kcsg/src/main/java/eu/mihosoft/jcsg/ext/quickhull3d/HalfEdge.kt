@@ -95,11 +95,9 @@ internal class HalfEdge
     val vertexString: String
         get() {
             return if (tail() != null) {
-                "" +
-                    tail()!!.index + "-" +
-                    head().index
+                "${tail()!!.index}-${head().index}"
             } else {
-                "?-" + head().index
+                "?-${head().index}"
             }
         }
 

@@ -1,6 +1,6 @@
 package eu.mihosoft.jcsg
 
-import eu.mihosoft.jcsg.Extrude.Companion.points
+import eu.mihosoft.jcsg.Extrude.points
 import eu.mihosoft.vvecmath.Vector3d
 import org.junit.Test
 import java.util.*
