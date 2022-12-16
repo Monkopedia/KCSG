@@ -1,7 +1,9 @@
 package eu.mihosoft.jcsg.ext.imagej
 
 import eu.mihosoft.vvecmath.Vector3d
-import java.io.*
+import java.io.File
+import java.io.FileInputStream
+import java.io.InputStream
 
 /**
  * Fork of
@@ -10,25 +12,7 @@ import java.io.*
  * TODO: license unclear
  */
 internal class STLLoader {
-//        /**
-//         * Load the specified stl file and returns the result as a hash map, mapping
-//         * the object names to the corresponding <code>CustomMesh</code> objects.
-//         */
-//        public static Map<String, CustomMesh> load(String stlfile)
-//                        throws IOException {
-//                STLLoader sl = new STLLoader();
-//                try {
-//                        sl.parse(stlfile);
-//                } catch (RuntimeException e) {
-//                        System.out.println("error reading " + sl.name);
-//                        throw e;
-//                }
-//                return sl.meshes;
-//        } { // { //        private HashMap<String, CustomMesh> meshes;
 
-    // attributes of the currently read mesh
-
-    //    private DecimalFormat decimalFormat = new DecimalFormat("0.0E0");
     fun parse(f: File): List<Vector3d> {
         return parse({ FileInputStream(f) }, { f.length() })
     }
@@ -117,13 +101,6 @@ internal class STLLoader {
         }
     }
 
-    //    private float parseFloat(String string) throws ParseException {
-    //        //E+05 -> E05, e+05 -> E05
-    //        string = string.replaceFirst("[eE]\\+", "E");
-    //        //E-05 -> E-05, e-05 -> E-05
-    //        string = string.replaceFirst("e\\-", "E-");
-    //        return decimalFormat.parse(string).floatValue();
-    //    }
     private fun parseFloat(string: String): Float {
         return string.toFloat()
     }

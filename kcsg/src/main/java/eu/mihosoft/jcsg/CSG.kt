@@ -81,12 +81,6 @@ class CSG private constructor(
     private var _optType: OptType? = null
     private var _storage: PropertyStorage = PropertyStorage()
     public override fun clone(): CSG {
-
-        // sequential code
-//        csg.polygons = new ArrayList<>();
-//        polygons.forEach((polygon) -> {
-//            csg.polygons.add(polygon.clone());
-//        });
         val polygonStream: Stream<Polygon> = if (_polygons.size > 200) {
             _polygons.parallelStream()
         } else {
@@ -254,14 +248,6 @@ class CSG private constructor(
         }
         csgsUnion._polygons.forEach { p: Polygon -> p.storage = _storage }
         return csgsUnion.hull()
-
-//        CSG csgsUnion = this;
-//
-//        for (CSG csg : csgs) {
-//            csgsUnion = csgsUnion.union(csg);
-//        }
-//
-//        return csgsUnion.hull();
     }
 
     /**
@@ -662,11 +648,6 @@ class CSG private constructor(
                 objSb.append("f ").append(index1).append(" ").append(index2).append(" ")
                     .append(index3).append("\n")
             }
-            //
-//            objSb.append("f ");
-//            for (int i = 0; i < pVerts.size(); i++) {
-//                objSb.append(pVerts.get(i)).append(" ");
-//            }
             objSb.append("\n")
         }
         objSb.append("\n# End Group v3d.csg").append("\n")
@@ -765,19 +746,6 @@ class CSG private constructor(
     // TODO finish experiment (20.7.2014)
     fun toJavaFXMesh(): MeshContainer {
         return toJavaFXMeshSimple()
-
-// TODO test obj approach with multiple materials
-//        try {
-//            ObjImporter importer = new ObjImporter(toObj());
-//
-//            List<Mesh> meshes = new ArrayList<>(importer.getMeshCollection());
-//            return new MeshContainer(getBounds().getMin(), getBounds().getMax(),
-//                    meshes, new ArrayList<>(importer.getMaterialCollection()));
-//        } catch (IOException ex) {
-//            Logger.getLogger(CSG.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//        // we have no backup strategy for broken streams :(
-//        return null;
     }
 
     /**
