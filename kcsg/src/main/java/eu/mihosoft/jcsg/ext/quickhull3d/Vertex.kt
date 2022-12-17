@@ -1,5 +1,7 @@
 package eu.mihosoft.jcsg.ext.quickhull3d
 
+import eu.mihosoft.vvecmath.Vector3d
+
 /**
  * Represents vertices of the hull, as well as the points from
  * which it is formed.
@@ -10,7 +12,7 @@ internal class Vertex {
     /**
      * Spatial point associated with this vertex.
      */
-    var pnt: Point3d
+    var pnt: Vector3d
 
     /**
      * Back index into an array.

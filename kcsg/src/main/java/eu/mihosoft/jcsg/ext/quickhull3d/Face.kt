@@ -13,6 +13,8 @@
   */
 package eu.mihosoft.jcsg.ext.quickhull3d
 
+import eu.mihosoft.vvecmath.Vector3d
+import eu.mihosoft.vvecmath.Vector3d.Companion.ZERO
 import kotlin.math.abs
 import kotlin.math.sqrt
 
@@ -28,27 +30,30 @@ import kotlin.math.sqrt
  */
 internal class Face {
     var he0: HalfEdge? = null
-    val normal: Vector3d = Vector3d()
+    var normal: Vector3d = Vector3d.ZERO
+        private set
     var area = 0.0
-    val centroid: Point3d = Point3d()
+    var centroid: Point3d = Point3d.ZERO
+        private set
     private var planeOffset = 0.0
     var index = 0
     private var numVerts = 0
     var next: Face? = null
     var mark = VISIBLE
     var outside: Vertex? = null
-    private fun computeCentroid(centroid: Point3d) {
-        centroid.setZero()
+
+    private fun computeCentroid(): Point3d {
+        var centroid = Vector3d.ZERO
         var he = he0
         do {
-            centroid.add(he!!.head().pnt)
+            centroid += he!!.head().pnt
             he = he.next
         } while (he !== he0)
-        centroid.scale(1 / numVerts.toDouble())
+        return centroid * (1 / numVerts.toDouble())
     }
 
-    private fun computeNormal(normal: Vector3d, minArea: Double) {
-        computeNormal(normal)
+    private fun computeNormal(minArea: Double): Vector3d {
+        var normal = computeNormal()
         if (area < minArea) {
             // make the normal more robust by removing
             // components parallel to the longest edge
@@ -70,14 +75,16 @@ internal class Face {
             val uy = (p2.y - p1.y) / lenMax
             val uz = (p2.z - p1.z) / lenMax
             val dot = normal.x * ux + normal.y * uy + normal.z * uz
-            normal.x -= dot * ux
-            normal.y -= dot * uy
-            normal.z -= dot * uz
-            normal.normalize()
+            normal = normal.minus(
+                dot * ux,
+                dot * uy,
+                dot * uz
+            ).normalized()
         }
+        return normal
     }
 
-    private fun computeNormal(normal: Vector3d) {
+    private fun computeNormal(): Vector3d {
         var he1 = he0!!.next
         var he2 = he1!!.next
         val p0 = he0!!.head().pnt
@@ -85,7 +92,7 @@ internal class Face {
         var d2x = p2.x - p0.x
         var d2y = p2.y - p0.y
         var d2z = p2.z - p0.z
-        normal.setZero()
+        var normal = ZERO
         numVerts = 2
         while (he2 !== he0) {
             val d1x = d2x
@@ -95,20 +102,22 @@ internal class Face {
             d2x = p2.x - p0.x
             d2y = p2.y - p0.y
             d2z = p2.z - p0.z
-            normal.x += d1y * d2z - d1z * d2y
-            normal.y += d1z * d2x - d1x * d2z
-            normal.z += d1x * d2y - d1y * d2x
+            normal += Vector3d.xyz(
+                d1y * d2z - d1z * d2y,
+                d1z * d2x - d1x * d2z,
+                d1x * d2y - d1y * d2x
+            )
             he1 = he2
             he2 = he2.next
             numVerts++
         }
-        area = normal.norm()
-        normal.scale(1 / area)
+        area = normal.magnitude()
+        return normal * (1 / area)
     }
 
     private fun computeNormalAndCentroid() {
-        computeNormal(normal)
-        computeCentroid(centroid)
+        normal = computeNormal()
+        centroid = computeCentroid()
         planeOffset = normal.dot(centroid)
         var numv = 0
         var he = he0
@@ -124,8 +133,8 @@ internal class Face {
     }
 
     private fun computeNormalAndCentroid(minArea: Double) {
-        computeNormal(normal, minArea)
-        computeCentroid(centroid)
+        normal = computeNormal(minArea)
+        centroid = computeCentroid()
         planeOffset = normal.dot(centroid)
     }
 

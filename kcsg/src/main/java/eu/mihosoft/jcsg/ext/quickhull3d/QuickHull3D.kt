@@ -15,6 +15,7 @@
 package eu.mihosoft.jcsg.ext.quickhull3d
 
 import eu.mihosoft.jcsg.ext.quickhull3d.Face.Companion.createTriangle
+import eu.mihosoft.vvecmath.Vector3d
 import java.io.*
 import java.util.*
 import kotlin.math.abs
@@ -474,7 +475,7 @@ internal class QuickHull3D {
     private fun setPoints(coords: DoubleArray, nump: Int) {
         for (i in 0 until nump) {
             val vtx = pointBuffer[i]
-            vtx.pnt[coords[i * 3 + 0], coords[i * 3 + 1]] = coords[i * 3 + 2]
+            vtx.pnt = Vector3d.xyz(coords[i * 3 + 0], coords[i * 3 + 1] , coords[i * 3 + 2])
             vtx.index = i
         }
     }
@@ -482,41 +483,39 @@ internal class QuickHull3D {
     private fun setPoints(pnts: Array<Point3d>, nump: Int) {
         for (i in 0 until nump) {
             val vtx = pointBuffer[i]
-            vtx.pnt.set(pnts[i])
+            vtx.pnt = pnts[i]
             vtx.index = i
         }
     }
 
     private fun computeMaxAndMin() {
-        val max = Vector3d()
-        val min = Vector3d()
         for (i in 0..2) {
             minVtxs[i] = pointBuffer[0]
             maxVtxs[i] = minVtxs[i]
         }
-        max.set(pointBuffer[0].pnt)
-        min.set(pointBuffer[0].pnt)
+        var max = pointBuffer[0].pnt
+        var min = pointBuffer[0].pnt
         for (i in 1 until numPoints) {
             val pnt = pointBuffer[i].pnt
             if (pnt.x > max.x) {
-                max.x = pnt.x
+                max = max.copy(x = pnt.x)
                 maxVtxs[0] = pointBuffer[i]
             } else if (pnt.x < min.x) {
-                min.x = pnt.x
+                min = min.copy(x = pnt.x)
                 minVtxs[0] = pointBuffer[i]
             }
             if (pnt.y > max.y) {
-                max.y = pnt.y
+                max = max.copy(y = pnt.y)
                 maxVtxs[1] = pointBuffer[i]
             } else if (pnt.y < min.y) {
-                min.y = pnt.y
+                min = min.copy(y = pnt.y)
                 minVtxs[1] = pointBuffer[i]
             }
             if (pnt.z > max.z) {
-                max.z = pnt.z
+                max = max.copy(z = pnt.z)
                 maxVtxs[2] = pointBuffer[i]
             } else if (pnt.z < min.z) {
-                min.z = pnt.z
+                min = min.copy(z = pnt.z)
                 minVtxs[2] = pointBuffer[i]
             }
         }
@@ -560,27 +559,25 @@ internal class QuickHull3D {
 
         // set third vertex to be the vertex farthest from
         // the line between vtx0 and vtx1
-        val u01 = Vector3d()
-        val diff02 = Vector3d()
-        val nrml = Vector3d()
-        val xprod = Vector3d()
+        val u01 = (vtxInit[1]!!.pnt - vtxInit[0]!!.pnt).normalized()
+        var diff02: Vector3d
+        var nrml = Vector3d.ZERO
+        var xprod: Vector3d
         var maxSqr = 0.0
-        u01.sub(vtxInit[1]!!.pnt, vtxInit[0]!!.pnt)
-        u01.normalize()
         for (i in 0 until numPoints) {
-            diff02.sub(pointBuffer[i].pnt, vtxInit[0]!!.pnt)
-            xprod.cross(u01, diff02)
-            val lenSqr = xprod.normSquared()
+            diff02 = (pointBuffer[i].pnt - vtxInit[0]!!.pnt)
+            xprod = u01.crossed(diff02)
+            val lenSqr = xprod.magnitudeSq()
             if (lenSqr > maxSqr && pointBuffer[i] !== vtxInit[0] && // paranoid
                 pointBuffer[i] !== vtxInit[1]
             ) {
                 maxSqr = lenSqr
                 vtxInit[2] = pointBuffer[i]
-                nrml.set(xprod)
+                nrml = xprod
             }
         }
         require(sqrt(maxSqr) > 100 * tolerance) { "Input points appear to be colinear" }
-        nrml.normalize()
+        nrml = nrml.normalized()
         var maxDist = 0.0
         val d0 = vtxInit[2]!!.pnt.dot(nrml)
         for (i in 0 until numPoints) {

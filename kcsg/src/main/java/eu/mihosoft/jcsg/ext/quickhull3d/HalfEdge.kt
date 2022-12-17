@@ -121,7 +121,7 @@ internal class HalfEdge
      */
     fun lengthSquared(): Double {
         return if (tail() != null) {
-            head().pnt.distanceSquared(tail()!!.pnt)
+            (head().pnt - tail()!!.pnt).magnitudeSq()
         } else {
             (-1).toDouble()
         }
