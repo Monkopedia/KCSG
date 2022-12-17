@@ -403,7 +403,6 @@ class Transform {
             -2.0 * nx * w, -2.0 * ny * w, -2.0 * nz * w, 1.0
         )
         m *= Matrix4d(elemenents)
-        m.mul(Matrix4d(elemenents))
         return this
     }
 
@@ -434,7 +433,7 @@ class Transform {
             0.0,
             1.0
         )
-        m.mul(Matrix4d(elemenents))
+        m *= Matrix4d(elemenents)
         return this
     }
 
@@ -452,7 +451,7 @@ class Transform {
         val elemenents = doubleArrayOf(
             x, 0.0, 0.0, 0.0, 0.0, y, 0.0, 0.0, 0.0, 0.0, z, 0.0, 0.0, 0.0, 0.0, 1.0
         )
-        m.mul(Matrix4d(elemenents))
+        m *= Matrix4d(elemenents)
         return this
     }
 
@@ -468,7 +467,7 @@ class Transform {
         val elemenents = doubleArrayOf(
             s, 0.0, 0.0, 0.0, 0.0, s, 0.0, 0.0, 0.0, 0.0, s, 0.0, 0.0, 0.0, 0.0, 1.0
         )
-        m.mul(Matrix4d(elemenents))
+        m *= Matrix4d(elemenents)
         return this
     }
 
@@ -484,7 +483,7 @@ class Transform {
         val elemenents = doubleArrayOf(
             s, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0
         )
-        m.mul(Matrix4d(elemenents))
+        m *= Matrix4d(elemenents)
         return this
     }
 
@@ -515,7 +514,7 @@ class Transform {
             0.0,
             1.0
         )
-        m.mul(Matrix4d(elemenents))
+        m *= Matrix4d(elemenents)
         return this
     }
 
@@ -546,7 +545,7 @@ class Transform {
             0.0,
             1.0
         )
-        m.mul(Matrix4d(elemenents))
+        m *= Matrix4d(elemenents)
         return this
     }
 
@@ -628,7 +627,7 @@ class Transform {
      * @return this transform
      */
     fun apply(t: Transform): Transform {
-        m.mul(t.m)
+        m *= t.m
         return this
     }
 

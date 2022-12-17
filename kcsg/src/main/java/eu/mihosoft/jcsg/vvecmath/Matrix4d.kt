@@ -123,10 +123,6 @@ internal value class Matrix4d(
             marr[15] = value
         }
 
-    fun set(values: DoubleArray = DoubleArray(16)) {
-        marr = values.clone()
-    }
-
     operator fun get(values: DoubleArray? = null): DoubleArray {
         return values?.also {
             marr.copyInto(values)
