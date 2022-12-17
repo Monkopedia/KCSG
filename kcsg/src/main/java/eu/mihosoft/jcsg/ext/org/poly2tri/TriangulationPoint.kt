@@ -29,6 +29,8 @@
  */
 package eu.mihosoft.jcsg.ext.org.poly2tri
 
+import eu.mihosoft.vvecmath.Vector3d
+
 /* Poly2Tri
  * Copyright (c) 2009-2010, Poly2Tri Contributors
  * http://code.google.com/p/poly2tri/
@@ -59,20 +61,16 @@ package eu.mihosoft.jcsg.ext.org.poly2tri
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-internal abstract class TriangulationPoint : Point() {
+internal open class TriangulationPoint(val vec: Vector3d) {
+    constructor(x: Double, y: Double, z: Double = 0.0) : this(Vector3d.xyz(x, y, z))
+
     // List of edges this point constitutes an upper ending point (CDT)
     lateinit var edges: ArrayList<DTSweepConstraint>
 
     override fun toString(): String {
-        return "[$x,$y]"
+        return "[${vec.x},${vec.y}]"
     }
 
-    abstract override val x: Double
-    abstract override val y: Double
-    abstract override val z: Double
-    abstract override val xf: Float
-    abstract override val yf: Float
-    abstract override val zf: Float
     fun addEdge(e: DTSweepConstraint) {
         if (!::edges.isInitialized) {
             edges = ArrayList()
@@ -99,14 +97,27 @@ internal abstract class TriangulationPoint : Point() {
 
     override fun equals(obj: Any?): Boolean {
         if (obj is TriangulationPoint) {
-            return x == obj.x && y == obj.y
+            return vec.x == obj.vec.x && vec.y == obj.vec.y
         }
         return super.equals(obj)
     }
 
     override fun hashCode(): Int {
-        var bits = java.lang.Double.doubleToLongBits(x)
-        bits = bits xor java.lang.Double.doubleToLongBits(y) * 31
+        var bits = java.lang.Double.doubleToLongBits(vec.x)
+        bits = bits xor java.lang.Double.doubleToLongBits(vec.y) * 31
         return bits.toInt() xor (bits shr 32).toInt()
     }
 }
+
+internal inline val TriangulationPoint.x: Double
+    get() = vec.x
+internal inline val TriangulationPoint.y: Double
+    get() = vec.y
+internal inline val TriangulationPoint.z: Double
+    get() = vec.z
+internal inline val TriangulationPoint.xf: Float
+    get() = vec.xf
+internal inline val TriangulationPoint.yf: Float
+    get() = vec.yf
+internal inline val TriangulationPoint.zf: Float
+    get() = vec.zf

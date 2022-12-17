@@ -29,6 +29,7 @@
  */
 package eu.mihosoft.jcsg.ext.org.poly2tri
 
+import eu.mihosoft.vvecmath.Vector3d
 import java.util.*
 
 /* Poly2Tri
@@ -199,8 +200,8 @@ internal class DTSweepContext : TriangulationContext<DTSweepDebugContext>() {
         }
         val deltaX = ALPHA * (xmax - xmin)
         val deltaY = ALPHA * (ymax - ymin)
-        val p1 = TPoint(xmax + deltaX, ymin - deltaY)
-        val p2 = TPoint(xmin - deltaX, ymin - deltaY)
+        val p1 = TriangulationPoint(Vector3d.xy(xmax + deltaX, ymin - deltaY))
+        val p2 = TriangulationPoint(Vector3d.xy(xmin - deltaX, ymin - deltaY))
         head = p1
         tail = p2
 

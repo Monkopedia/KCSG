@@ -55,7 +55,7 @@ internal object PolygonUtil {
         // convert polygon
         val points: MutableList<PolygonPoint> = ArrayList()
         for (v in polygon.vertices) {
-            val vp = PolygonPoint(v.pos.x, v.pos.y, v.pos.z)
+            val vp = PolygonPoint(v.pos)
             points.add(vp)
         }
         val result = Polygon(points)

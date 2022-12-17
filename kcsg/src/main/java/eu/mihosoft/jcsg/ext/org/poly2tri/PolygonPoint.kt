@@ -29,6 +29,8 @@
  */
 package eu.mihosoft.jcsg.ext.org.poly2tri
 
+import eu.mihosoft.vvecmath.Vector3d
+
 /* Poly2Tri
  * Copyright (c) 2009-2010, Poly2Tri Contributors
  * http://code.google.com/p/poly2tri/
@@ -59,7 +61,8 @@ package eu.mihosoft.jcsg.ext.org.poly2tri
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-internal class PolygonPoint(x: Double, y: Double, z: Double) : TPoint(x, y, z) {
+internal class PolygonPoint(vec: Vector3d) : TriangulationPoint(vec) {
+
     var next: PolygonPoint? = null
     var previous: PolygonPoint? = null
 }
