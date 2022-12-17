@@ -41,7 +41,7 @@ import eu.mihosoft.vvecmath.Vector3d
  *
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
-class Plane(normal: Vector3d, dist: Double) : Cloneable {
+class Plane(normal: Vector3d, dist: Double) {
     /**
      * Normal vector.
      */
@@ -51,7 +51,7 @@ class Plane(normal: Vector3d, dist: Double) : Cloneable {
      * Distance to origin.
      */
     var dist: Double
-    public override fun clone(): Plane {
+    public fun copy(): Plane {
         return Plane(normal.copy(), dist)
     }
 
@@ -84,7 +84,6 @@ class Plane(normal: Vector3d, dist: Double) : Cloneable {
         front: MutableList<Polygon>,
         back: MutableList<Polygon>
     ) {
-
         // Classify each point as well as the entire polygon into one of the
         // above four classes.
         var polygonType = 0

@@ -33,12 +33,12 @@ class ArduinoMount {
 
     private fun pins(): CSG {
         val prototype = Cylinder(pinRadius, pinHeight, 16).toCSG()
-        val first = prototype.clone()
+        val first = prototype.copy()
             .transformed(Transform.unity().translate(bottomWidth / 2.0, bottomHeight / 2.0, 0.0))
-        val second = prototype.clone()
+        val second = prototype.copy()
             .transformed(Transform.unity().translate(bottomWidth / 2.0, -bottomHeight / 2.0, 0.0))
         val third =
-            prototype.clone().transformed(Transform.unity().translate(-bottomWidth / 2.0, 0.0, 0.0))
+            prototype.copy().transformed(Transform.unity().translate(-bottomWidth / 2.0, 0.0, 0.0))
         val pins = first.union(second).union(third)
         val board = board().transformed(Transform.unity().translateZ(pinHoleHeight * 2))
         return pins.difference(board)

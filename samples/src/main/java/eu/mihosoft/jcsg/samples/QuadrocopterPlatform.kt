@@ -45,7 +45,7 @@ class QuadrocopterPlatform {
             holderPlatformRadius,
             platformThickness
         ).transformed(Transform.unity().translateX(-platformRadius))
-        var armHolders = armHolderPrototype.clone()
+        var armHolders = armHolderPrototype.copy()
         for (i in 1..3) {
             armHolders = armHolders.union(
                 armHolderPrototype.transformed(

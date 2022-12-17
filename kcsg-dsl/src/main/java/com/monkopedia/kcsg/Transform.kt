@@ -24,12 +24,12 @@ inline fun Transform.scale(x: Double = 0.0, y: Double = 0.0, z: Double = 0.0): T
 
 @CsgDsl
 inline fun CSG.transform(transform: Transform.() -> Transform): CSG {
-    return clone().transformed(TransformBuilder.unity.transform())
+    return copy().transformed(TransformBuilder.unity.transform())
 }
 
 @CsgDsl
 operator fun CSG.times(other: Transform): CSG {
-    return clone().transformed(other)
+    return copy().transformed(other)
 }
 
 @CsgDsl

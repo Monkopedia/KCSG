@@ -8,11 +8,9 @@ package eu.mihosoft.jcsg.samples
 import eu.mihosoft.jcsg.CSG
 import eu.mihosoft.jcsg.Cube
 import eu.mihosoft.jcsg.Cylinder
-import eu.mihosoft.jcsg.FileUtil
 import eu.mihosoft.vvecmath.Transform
 import eu.mihosoft.vvecmath.Vector3d
 import java.io.IOException
-import java.nio.file.Paths
 
 /**
  *
@@ -36,13 +34,13 @@ class BreadBoardMount {
 
     private fun pins(): CSG {
         val prototype = Cylinder(pinRadius, pinHeight, 16).toCSG()
-        val first = prototype.clone().transformed(
+        val first = prototype.copy().transformed(
             Transform.unity().translate(breadBoardWidth / 2.0, breadBoardHeight / 2.0, 0.0)
         )
-        val second = prototype.clone().transformed(
+        val second = prototype.copy().transformed(
             Transform.unity().translate(breadBoardWidth / 2.0, -breadBoardHeight / 2.0, 0.0)
         )
-        val third = prototype.clone()
+        val third = prototype.copy()
             .transformed(Transform.unity().translate(-breadBoardWidth / 2.0 - 1, 0.0, 0.0))
         val pins = first.union(second).union(third)
         val board = board().transformed(Transform.unity().translateZ(pinHoleHeight * 2))

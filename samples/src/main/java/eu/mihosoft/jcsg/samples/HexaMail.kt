@@ -36,9 +36,9 @@ class HexaMail {
                 val translateY = (-tile.radius * 0.5 - tile.radius) * y - yOffset * y
                 var part2: CSG?
                 part2 = if (x % 2 == 0) {
-                    femalePart.clone()
+                    femalePart.copy()
                 } else {
-                    malePart.clone()
+                    malePart.copy()
                 }
                 if (numEdges % 2 != 0) {
                     part2 = part2.transformed(
@@ -49,7 +49,7 @@ class HexaMail {
                     Transform.unity().translate(translateX, translateY, 0.0)
                 )
                 if (result == null) {
-                    result = part2.clone()
+                    result = part2.copy()
                 }
                 result = result.dumbUnion(part2)
             }

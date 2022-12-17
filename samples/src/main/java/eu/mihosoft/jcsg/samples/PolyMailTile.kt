@@ -103,7 +103,7 @@ class PolyMailTile {
         }
         val malePart = mainPrism.union(hinges)
         val femalePart = mainPrism.difference(hingeHoles)
-        var combinedPart = mainPrism.clone()
+        var combinedPart = mainPrism.copy()
         for (i in 0 until numEdges) {
             combinedPart = if (i % 2 == 0) {
                 combinedPart.union(hinges[i])

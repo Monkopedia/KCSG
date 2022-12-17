@@ -47,7 +47,7 @@ class QuadrocopterLadingGearsAndHolders {
         val legPrototype =
             Cube(gearDepth, gearLegHeight / legResolution, gearWidth).noCenter().toCSG()
                 .transformed(Transform.unity().translate(0.0, gearHeadHeight, -gearWidth / 2.0))
-        var leg = legPrototype.clone()
+        var leg = legPrototype.copy()
         val dH = gearLegHeight / legResolution
         for (i in 1 until legResolution) {
             leg = leg.union(legPrototype.transformed(Transform.unity().translateY(i * dH)))

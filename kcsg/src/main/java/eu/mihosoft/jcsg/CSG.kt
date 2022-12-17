@@ -77,16 +77,17 @@ import kotlin.math.abs
  */
 class CSG private constructor(
     private var _polygons: MutableList<Polygon>
-) : Cloneable {
+) {
     private var _optType: OptType? = null
     private var _storage: PropertyStorage = PropertyStorage()
-    public override fun clone(): CSG {
+
+    fun copy(): CSG {
         val polygonStream: Stream<Polygon> = if (_polygons.size > 200) {
             _polygons.parallelStream()
         } else {
             _polygons.stream()
         }
-        val csg = CSG(polygonStream.map { p: Polygon -> p.clone() }.collect(Collectors.toList()))
+        val csg = CSG(polygonStream.map { p: Polygon -> p.copy() }.collect(Collectors.toList()))
         csg.setOptType(getOptType())
         return csg
     }
@@ -158,8 +159,8 @@ class CSG private constructor(
      * @return a csg consisting of the polygons of this csg and the specified csg
      */
     fun dumbUnion(csg: CSG): CSG {
-        val result = clone()
-        val other = csg.clone()
+        val result = copy()
+        val other = csg.copy()
         result._polygons.addAll(other._polygons)
         return result
     }
@@ -238,12 +239,12 @@ class CSG private constructor(
      * @return the convex hull of this csg and the specified csgs
      */
     fun hull(csgs: List<CSG>): CSG {
-        val csgsUnion = CSG(clone()._polygons)
+        val csgsUnion = CSG(copy()._polygons)
         csgsUnion._storage = _storage
         csgsUnion._optType = _optType
         csgs.stream().forEach { csg: CSG ->
             csgsUnion._polygons.addAll(
-                csg.clone()._polygons
+                csg.copy()._polygons
             )
         }
         csgsUnion._polygons.forEach { p: Polygon -> p.storage = _storage }
@@ -318,8 +319,8 @@ class CSG private constructor(
     }
 
     private fun unionNoOpt(csg: CSG): CSG {
-        val a = Node(clone()._polygons)
-        val b = Node(csg.clone()._polygons)
+        val a = Node(copy()._polygons)
+        val b = Node(csg.copy()._polygons)
         a.clipTo(b)
         b.clipTo(a)
         b.invert()
@@ -352,7 +353,7 @@ class CSG private constructor(
      */
     fun difference(csgs: List<CSG>): CSG {
         if (csgs.isEmpty()) {
-            return clone()
+            return copy()
         }
         var csgsUnion = csgs[0]
         for (i in 1 until csgs.size) {
@@ -443,8 +444,8 @@ class CSG private constructor(
     }
 
     private fun differenceNoOpt(csg: CSG): CSG {
-        val a = Node(clone()._polygons)
-        val b = Node(csg.clone()._polygons)
+        val a = Node(copy()._polygons)
+        val b = Node(csg.copy()._polygons)
         a.invert()
         a.clipTo(b)
         b.clipTo(a)
@@ -479,8 +480,8 @@ class CSG private constructor(
      * @return intersection of this csg and the specified csg
      */
     fun intersect(csg: CSG): CSG {
-        val a = Node(clone()._polygons)
-        val b = Node(csg.clone()._polygons)
+        val a = Node(copy()._polygons)
+        val b = Node(csg.copy()._polygons)
         a.invert()
         b.clipTo(a)
         b.invert()
@@ -515,7 +516,7 @@ class CSG private constructor(
      */
     fun intersect(csgs: List<CSG>): CSG {
         if (csgs.isEmpty()) {
-            return clone()
+            return copy()
         }
         var csgsUnion = csgs[0]
         for (i in 1 until csgs.size) {
@@ -576,7 +577,7 @@ class CSG private constructor(
     }
 
     fun color(c: Color): CSG {
-        val result = clone()
+        val result = copy()
         _storage["material:color"] = (
             "" + c.red +
                 " " + c.green +
@@ -734,7 +735,7 @@ class CSG private constructor(
      */
     fun transformed(transform: Transform): CSG {
         if (_polygons.isEmpty()) {
-            return clone()
+            return copy()
         }
         val newpolygons = _polygons.stream().map { p: Polygon -> p.transformed(transform) }
             .collect(Collectors.toList())

@@ -241,7 +241,7 @@ class QuadrocopterArm {
                     Transform.unity().rotZ(-135.0)
                 )
         var washerPrototype = Cylinder(screwRadius + washerWallThickness, washerHeight, 16).toCSG()
-        val washerHole = washerPrototype.clone()
+        val washerHole = washerPrototype.copy()
         washerPrototype = washerPrototype.weighted(ZModifier())
             .transformed(Transform.unity().scale(1.35, 1.35, 1.0)).weighted(UnityModifier())
         washerPrototype = washerPrototype.difference(screwHolePrototype)

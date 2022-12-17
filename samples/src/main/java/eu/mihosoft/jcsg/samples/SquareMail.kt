@@ -78,7 +78,7 @@ class SquareMail {
                 val part2 =
                     part.transformed(Transform.unity().translate(translateX, translateY, 0.0))
                 if (result == null) {
-                    result = part2.clone()
+                    result = part2.copy()
                 }
                 result = result.dumbUnion(part2)
             }

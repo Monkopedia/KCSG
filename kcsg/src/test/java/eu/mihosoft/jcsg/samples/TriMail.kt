@@ -41,15 +41,15 @@ class TriMail {
                 val translateX = (-tile.sideLength - pinOffset) * x + xOffset
                 val translateY = tile.radius * y - yOffset
                 var part2: CSG? = if (y % 2 == 0) {
-                    femalePart.clone()
+                    femalePart.copy()
                 } else {
-                    malePart.clone()
+                    malePart.copy()
                 }
                 part2 = part2!!.transformed(
                     Transform.unity().translate(translateX, translateY, 0.0)
                 )
                 if (result == null) {
-                    result = part2.clone()
+                    result = part2.copy()
                 }
                 result = result.dumbUnion(part2)
             }

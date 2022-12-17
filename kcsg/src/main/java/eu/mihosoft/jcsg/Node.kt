@@ -43,7 +43,7 @@ import java.util.stream.Stream
  * the front and/or back subtrees. This is not a leafy BSP tree since there is
  * no distinction between internal and leaf nodes.
  */
-internal class Node @JvmOverloads constructor(polygons: List<Polygon>? = null) : Cloneable {
+internal class Node @JvmOverloads constructor(polygons: List<Polygon>? = null) {
     /**
      * Polygons.
      */
@@ -55,7 +55,7 @@ internal class Node @JvmOverloads constructor(polygons: List<Polygon>? = null) :
      * Plane used for BSP.
      */
     private val plane: Plane
-        get() = planeImpl ?: this.polygons.firstOrNull()?.csgPlane?.clone()?.also {
+        get() = planeImpl ?: this.polygons.firstOrNull()?.csgPlane?.copy()?.also {
             planeImpl = it
         } ?: error("Please fix me! I don't know what to do?")
 
@@ -68,11 +68,12 @@ internal class Node @JvmOverloads constructor(polygons: List<Polygon>? = null) :
      * Polygons in back of the plane.
      */
     private var back: Node? = null
-    public override fun clone(): Node {
+
+    fun copy(): Node {
         val node = Node()
-        node.planeImpl = planeImpl?.clone()
-        node.front = front?.clone()
-        node.back = back?.clone()
+        node.planeImpl = planeImpl?.copy()
+        node.front = front?.copy()
+        node.back = back?.copy()
         //        node.polygons = new ArrayList<>();
 //        polygons.parallelStream().forEach((Polygon p) -> {
 //            node.polygons.add(p.clone());
@@ -82,7 +83,7 @@ internal class Node @JvmOverloads constructor(polygons: List<Polygon>? = null) :
         } else {
             polygons.stream()
         }
-        node.polygons = polygonStream.map { p: Polygon -> p.clone() }
+        node.polygons = polygonStream.map { p: Polygon -> p.copy() }
             .collect(Collectors.toList())
         return node
     }
@@ -168,7 +169,7 @@ internal class Node @JvmOverloads constructor(polygons: List<Polygon>? = null) :
         var polygons = polygons
         if (polygons.isEmpty()) return
         if (planeImpl == null) {
-            planeImpl = polygons.first().csgPlane.clone()
+            planeImpl = polygons.first().csgPlane.copy()
         }
         polygons = polygons.stream().filter { p: Polygon -> p.isValid }.distinct()
             .collect(Collectors.toList())
@@ -178,7 +179,11 @@ internal class Node @JvmOverloads constructor(polygons: List<Polygon>? = null) :
         // parellel version does not work here
         polygons.forEach { polygon: Polygon ->
             plane.splitPolygon(
-                polygon, this.polygons, this.polygons, frontP, backP
+                polygon,
+                this.polygons,
+                this.polygons,
+                frontP,
+                backP
             )
         }
         if (frontP.size > 0) {

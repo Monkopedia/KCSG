@@ -48,7 +48,7 @@ import kotlin.math.abs
  * polygon. This can be used to define per-polygon properties (such as surface
  * color).
  */
-class Polygon : Cloneable {
+class Polygon {
     private var _vertices: MutableList<Vertex>
 
     /**
@@ -166,7 +166,7 @@ class Polygon : Cloneable {
      */
     constructor(vararg vertices: Vertex) : this(listOf<Vertex>(*vertices))
 
-    public override fun clone(): Polygon {
+    fun copy(): Polygon {
         val newVertices: MutableList<Vertex> = ArrayList()
         vertices.forEach(
             Consumer { vertex: Vertex ->
@@ -199,7 +199,7 @@ class Polygon : Cloneable {
      * @return a flipped copy of this polygon
      */
     fun flipped(): Polygon {
-        return clone().flip()
+        return copy().flip()
     }
 
     /**
@@ -292,7 +292,7 @@ class Polygon : Cloneable {
      * @return a translated copy of this polygon
      */
     fun translated(v: Vector3d): Polygon {
-        return clone().translate(v)
+        return copy().translate(v)
     }
 
     /**
@@ -333,7 +333,7 @@ class Polygon : Cloneable {
      * @return a transformed copy of this polygon
      */
     fun transformed(transform: Transform): Polygon {
-        return clone().transform(transform)
+        return copy().transform(transform)
     }
 
     /**

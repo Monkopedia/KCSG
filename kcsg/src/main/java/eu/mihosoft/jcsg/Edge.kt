@@ -241,7 +241,7 @@ data class Edge(val p1: Vertex, val p2: Vertex) {
 
         @kotlin.jvm.JvmStatic
         fun boundaryPathsWithHoles(boundaryPaths: List<Polygon>): List<Polygon> {
-            val result = boundaryPaths.map { p: Polygon -> p.clone() }
+            val result = boundaryPaths.map { p: Polygon -> p.copy() }
             val parents: MutableList<List<Int>> = ArrayList()
             val isHole = BooleanArray(result.size)
             for (i in result.indices) {
