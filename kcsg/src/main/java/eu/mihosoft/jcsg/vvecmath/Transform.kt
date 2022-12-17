@@ -60,7 +60,7 @@ class Transform {
     /**
      * Internal 4x4 matrix.
      */
-    private val m: Matrix4d
+    private var m: Matrix4d
 
     /**
      * Constructor.
@@ -83,15 +83,6 @@ class Transform {
      */
     fun to(values: DoubleArray): DoubleArray {
         return m[values]
-    }
-
-    /**
-     * Returns this transform as matrix (4x4).
-     *
-     * @return a new transform
-     */
-    fun to(): DoubleArray {
-        return m.get()
     }
 
     /**
@@ -131,7 +122,7 @@ class Transform {
             0.0,
             1.0
         )
-        m.mul(Matrix4d(elemenents))
+        m *= Matrix4d(elemenents)
         return this
     }
 
@@ -149,7 +140,7 @@ class Transform {
         val elemenents = doubleArrayOf(
             cos, 0.0, -sin, 0.0, 0.0, 1.0, 0.0, 0.0, sin, 0.0, cos, 0.0, 0.0, 0.0, 0.0, 1.0
         )
-        m.mul(Matrix4d(elemenents))
+        m *= Matrix4d(elemenents)
         return this
     }
 
@@ -167,7 +158,7 @@ class Transform {
         val elemenents = doubleArrayOf(
             cos, sin, 0.0, 0.0, -sin, cos, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0
         )
-        m.mul(Matrix4d(elemenents))
+        m *= Matrix4d(elemenents)
         return this
     }
 
@@ -298,7 +289,7 @@ class Transform {
     fun translate(x: Double, y: Double, z: Double): Transform {
         val elemenents =
             doubleArrayOf(1.0, 0.0, 0.0, x, 0.0, 1.0, 0.0, y, 0.0, 0.0, 1.0, z, 0.0, 0.0, 0.0, 1.0)
-        m.mul(Matrix4d(elemenents))
+        m *= Matrix4d(elemenents)
         return this
     }
 
@@ -328,7 +319,7 @@ class Transform {
             0.0,
             1.0
         )
-        m.mul(Matrix4d(elemenents))
+        m *= Matrix4d(elemenents)
         return this
     }
 
@@ -358,7 +349,7 @@ class Transform {
             0.0,
             1.0
         )
-        m.mul(Matrix4d(elemenents))
+        m *= Matrix4d(elemenents)
         return this
     }
 
@@ -388,7 +379,7 @@ class Transform {
             0.0,
             1.0
         )
-        m.mul(Matrix4d(elemenents))
+        m *= Matrix4d(elemenents)
         return this
     }
 
@@ -411,6 +402,7 @@ class Transform {
             -2.0 * nx * nz, -2.0 * ny * nz, 1.0 - 2.0 * nz * nz, 0.0,
             -2.0 * nx * w, -2.0 * ny * w, -2.0 * nz * w, 1.0
         )
+        m *= Matrix4d(elemenents)
         m.mul(Matrix4d(elemenents))
         return this
     }

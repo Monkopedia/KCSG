@@ -38,81 +38,99 @@ package eu.mihosoft.vvecmath
  *
  * @author Michael Hoffer (info@michaelhoffer.de)
  */
-internal class Matrix4d {
-    var m00 = 0.0
-    var m01 = 0.0
-    var m02 = 0.0
-    var m03 = 0.0
-    var m10 = 0.0
-    var m11 = 0.0
-    var m12 = 0.0
-    var m13 = 0.0
-    var m20 = 0.0
-    var m21 = 0.0
-    var m22 = 0.0
-    var m23 = 0.0
-    var m30 = 0.0
-    var m31 = 0.0
-    var m32 = 0.0
-    var m33 = 0.0
-
-    constructor()
-    constructor(v: DoubleArray) {
-        m00 = v[0]
-        m01 = v[1]
-        m02 = v[2]
-        m03 = v[3]
-        m10 = v[4]
-        m11 = v[5]
-        m12 = v[6]
-        m13 = v[7]
-        m20 = v[8]
-        m21 = v[9]
-        m22 = v[10]
-        m23 = v[11]
-        m30 = v[12]
-        m31 = v[13]
-        m32 = v[14]
-        m33 = v[15]
-    }
+@JvmInline
+internal value class Matrix4d(
+    private val marr: DoubleArray = DoubleArray(16)
+) {
+    internal inline var m00: Double
+        get() = marr[0]
+        set(value) {
+            marr[0] = value
+        }
+    internal inline var m01: Double
+        get() = marr[1]
+        set(value) {
+            marr[1] = value
+        }
+    internal inline var m02: Double
+        get() = marr[2]
+        set(value) {
+            marr[2] = value
+        }
+    internal inline var m03: Double
+        get() = marr[3]
+        set(value) {
+            marr[3] = value
+        }
+    internal inline var m10: Double
+        get() = marr[4]
+        set(value) {
+            marr[4] = value
+        }
+    internal inline var m11: Double
+        get() = marr[5]
+        set(value) {
+            marr[5] = value
+        }
+    internal inline var m12: Double
+        get() = marr[6]
+        set(value) {
+            marr[6] = value
+        }
+    internal inline var m13: Double
+        get() = marr[7]
+        set(value) {
+            marr[7] = value
+        }
+    internal inline var m20: Double
+        get() = marr[8]
+        set(value) {
+            marr[8] = value
+        }
+    internal inline var m21: Double
+        get() = marr[9]
+        set(value) {
+            marr[9] = value
+        }
+    internal inline var m22: Double
+        get() = marr[10]
+        set(value) {
+            marr[10] = value
+        }
+    internal inline var m23: Double
+        get() = marr[11]
+        set(value) {
+            marr[11] = value
+        }
+    internal inline var m30: Double
+        get() = marr[12]
+        set(value) {
+            marr[12] = value
+        }
+    internal inline var m31: Double
+        get() = marr[13]
+        set(value) {
+            marr[13] = value
+        }
+    internal inline var m32: Double
+        get() = marr[14]
+        set(value) {
+            marr[14] = value
+        }
+    internal inline var m33: Double
+        get() = marr[15]
+        set(value) {
+            marr[15] = value
+        }
 
     fun set(values: DoubleArray = DoubleArray(16)) {
-        m00 = values[0]
-        m01 = values[1]
-        m02 = values[2]
-        m03 = values[3]
-        m10 = values[4]
-        m11 = values[5]
-        m12 = values[6]
-        m13 = values[7]
-        m20 = values[8]
-        m21 = values[9]
-        m22 = values[10]
-        m23 = values[11]
-        m30 = values[12]
-        m31 = values[13]
-        m32 = values[14]
-        m33 = values[15]
+        marr = values.clone()
     }
 
-    operator fun get(values: DoubleArray = DoubleArray(16)): DoubleArray {
-        values[0] = m00
-        values[1] = m01
-        values[2] = m02
-        values[3] = m03
-        values[4] = m10
-        values[5] = m11
-        values[6] = m12
-        values[7] = m13
-        values[8] = m20
-        values[9] = m21
-        values[10] = m22
-        values[11] = m23
-        values[12] = m30
-        values[13] = m31
-        values[14] = m32
-        values[15] = m33
-        return values
+    operator fun get(values: DoubleArray? = null): DoubleArray {
+        return values?.also {
+            marr.copyInto(values)
+        } ?: marr.clone()
     }
 
     /**
@@ -120,55 +138,26 @@ internal class Matrix4d {
      *
      * @param m matrix to multiply
      */
-    fun mul(m: Matrix4d) {
-        val m00: Double
-        val m01: Double
-        val m02: Double
-        val m03: Double
-        val m10: Double
-        val m11: Double
-        val m12: Double
-        val m13: Double
-        val m20: Double
-        val m21: Double
-        val m22: Double
-        val m23: Double
-        val m30: Double
-        val m31: Double
-        val m32: Double
-        val m33: Double // vars for temp result matrix
-        m00 = this.m00 * m.m00 + this.m01 * m.m10 + this.m02 * m.m20 + this.m03 * m.m30
-        m01 = this.m00 * m.m01 + this.m01 * m.m11 + this.m02 * m.m21 + this.m03 * m.m31
-        m02 = this.m00 * m.m02 + this.m01 * m.m12 + this.m02 * m.m22 + this.m03 * m.m32
-        m03 = this.m00 * m.m03 + this.m01 * m.m13 + this.m02 * m.m23 + this.m03 * m.m33
-        m10 = this.m10 * m.m00 + this.m11 * m.m10 + this.m12 * m.m20 + this.m13 * m.m30
-        m11 = this.m10 * m.m01 + this.m11 * m.m11 + this.m12 * m.m21 + this.m13 * m.m31
-        m12 = this.m10 * m.m02 + this.m11 * m.m12 + this.m12 * m.m22 + this.m13 * m.m32
-        m13 = this.m10 * m.m03 + this.m11 * m.m13 + this.m12 * m.m23 + this.m13 * m.m33
-        m20 = this.m20 * m.m00 + this.m21 * m.m10 + this.m22 * m.m20 + this.m23 * m.m30
-        m21 = this.m20 * m.m01 + this.m21 * m.m11 + this.m22 * m.m21 + this.m23 * m.m31
-        m22 = this.m20 * m.m02 + this.m21 * m.m12 + this.m22 * m.m22 + this.m23 * m.m32
-        m23 = this.m20 * m.m03 + this.m21 * m.m13 + this.m22 * m.m23 + this.m23 * m.m33
-        m30 = this.m30 * m.m00 + this.m31 * m.m10 + this.m32 * m.m20 + this.m33 * m.m30
-        m31 = this.m30 * m.m01 + this.m31 * m.m11 + this.m32 * m.m21 + this.m33 * m.m31
-        m32 = this.m30 * m.m02 + this.m31 * m.m12 + this.m32 * m.m22 + this.m33 * m.m32
-        m33 = this.m30 * m.m03 + this.m31 * m.m13 + this.m32 * m.m23 + this.m33 * m.m33
-        this.m00 = m00
-        this.m01 = m01
-        this.m02 = m02
-        this.m03 = m03
-        this.m10 = m10
-        this.m11 = m11
-        this.m12 = m12
-        this.m13 = m13
-        this.m20 = m20
-        this.m21 = m21
-        this.m22 = m22
-        this.m23 = m23
-        this.m30 = m30
-        this.m31 = m31
-        this.m32 = m32
-        this.m33 = m33
+    operator fun times(m: Matrix4d): Matrix4d {
+        val newArray = doubleArrayOf(
+            this.m00 * m.m00 + this.m01 * m.m10 + this.m02 * m.m20 + this.m03 * m.m30,
+            this.m00 * m.m01 + this.m01 * m.m11 + this.m02 * m.m21 + this.m03 * m.m31,
+            this.m00 * m.m02 + this.m01 * m.m12 + this.m02 * m.m22 + this.m03 * m.m32,
+            this.m00 * m.m03 + this.m01 * m.m13 + this.m02 * m.m23 + this.m03 * m.m33,
+            this.m10 * m.m00 + this.m11 * m.m10 + this.m12 * m.m20 + this.m13 * m.m30,
+            this.m10 * m.m01 + this.m11 * m.m11 + this.m12 * m.m21 + this.m13 * m.m31,
+            this.m10 * m.m02 + this.m11 * m.m12 + this.m12 * m.m22 + this.m13 * m.m32,
+            this.m10 * m.m03 + this.m11 * m.m13 + this.m12 * m.m23 + this.m13 * m.m33,
+            this.m20 * m.m00 + this.m21 * m.m10 + this.m22 * m.m20 + this.m23 * m.m30,
+            this.m20 * m.m01 + this.m21 * m.m11 + this.m22 * m.m21 + this.m23 * m.m31,
+            this.m20 * m.m02 + this.m21 * m.m12 + this.m22 * m.m22 + this.m23 * m.m32,
+            this.m20 * m.m03 + this.m21 * m.m13 + this.m22 * m.m23 + this.m23 * m.m33,
+            this.m30 * m.m00 + this.m31 * m.m10 + this.m32 * m.m20 + this.m33 * m.m30,
+            this.m30 * m.m01 + this.m31 * m.m11 + this.m32 * m.m21 + this.m33 * m.m31,
+            this.m30 * m.m02 + this.m31 * m.m12 + this.m32 * m.m22 + this.m33 * m.m32,
+            this.m30 * m.m03 + this.m31 * m.m13 + this.m32 * m.m23 + this.m33 * m.m33
+        )
+        return Matrix4d( newArray)
     }
 
     //    public final double getScale() {
