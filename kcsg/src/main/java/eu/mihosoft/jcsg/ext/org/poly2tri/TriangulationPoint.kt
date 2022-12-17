@@ -73,7 +73,6 @@ internal abstract class TriangulationPoint : Point() {
     abstract override val xf: Float
     abstract override val yf: Float
     abstract override val zf: Float
-    abstract override fun set(x: Double, y: Double, z: Double)
     fun addEdge(e: DTSweepConstraint) {
         if (!::edges.isInitialized) {
             edges = ArrayList()

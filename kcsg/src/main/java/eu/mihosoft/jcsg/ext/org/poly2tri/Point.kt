@@ -66,5 +66,4 @@ internal abstract class Point {
     abstract val xf: Float
     abstract val yf: Float
     abstract val zf: Float
-    abstract operator fun set(x: Double, y: Double, z: Double)
 }

@@ -71,9 +71,4 @@ internal open class TPoint @JvmOverloads constructor(
     override val zf: Float
         get() = z.toFloat()
 
-    override fun set(x: Double, y: Double, z: Double) {
-        this.x = x
-        this.y = y
-        this.z = z
-    }
 }
