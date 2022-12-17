@@ -48,12 +48,12 @@ class QuadrocopterLadingGears {
             leg = leg.union(legPrototype.transformed(Transform.unity().translateY(i * dH)))
         }
         val translateWeight = label@ WeightFunction { v: Vector3d?, csg: CSG? ->
-            if (v!!.y() < 2 * dH) {
+            if (v!!.y < 2 * dH) {
                 return@WeightFunction 0.0
             } else {
 
 //                System.out.println("val: " + val + ", " + Math.min(1,val));
-                return@WeightFunction 0.9 + v.y() * v.y() / (gearLegHeight * gearLegHeight + gearLegHeight * 10)
+                return@WeightFunction 0.9 + v.y * v.y / (gearLegHeight * gearLegHeight + gearLegHeight * 10)
             }
         }
         leg = leg.weighted(translateWeight)

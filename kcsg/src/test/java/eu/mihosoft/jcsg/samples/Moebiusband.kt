@@ -34,7 +34,7 @@ class Moebiusband {
                 facets.add(facet.union(prev).hull())
             }
             originalFacets.add(facet)
-            points.stream().forEach { p: Vector3d? -> t.transform(p) }
+            points.stream().forEach { p: Vector3d? -> t.transform(p!!) }
             prev = facet
         }
         var result = facets[0]

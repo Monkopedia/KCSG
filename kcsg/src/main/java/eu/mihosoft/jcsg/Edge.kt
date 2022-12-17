@@ -65,15 +65,15 @@ class Edge(val p1: Vertex, val p2: Vertex) : Cloneable {
      */
     @JvmOverloads
     fun contains(p: Vector3d, TOL: Double = Plane.EPSILON): Boolean {
-        val x = p.x()
-        val x1 = p1.pos.x()
-        val x2 = p2.pos.x()
-        val y = p.y()
-        val y1 = p1.pos.y()
-        val y2 = p2.pos.y()
-        val z = p.z()
-        val z1 = p1.pos.z()
-        val z2 = p2.pos.z()
+        val x = p.x
+        val x1 = p1.pos.x
+        val x2 = p2.pos.x
+        val y = p.y
+        val y1 = p1.pos.y
+        val y2 = p2.pos.y
+        val z = p.z
+        val z1 = p1.pos.z
+        val z2 = p2.pos.z
         val ab = sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1) + (z2 - z1) * (z2 - z1))
         val ap = sqrt((x - x1) * (x - x1) + (y - y1) * (y - y1) + (z - z1) * (z - z1))
         val pb = sqrt((x2 - x) * (x2 - x) + (y2 - y) * (y2 - y) + (z2 - z) * (z2 - z))
@@ -201,7 +201,7 @@ class Edge(val p1: Vertex, val p2: Vertex) : Cloneable {
 //                collect(Collectors.toList());
             val p: Polygon = Polygon.fromPoints(points)
             p.vertices.forEach { vertex: Vertex ->
-                vertex.normal = plane.normal.clone()
+                vertex.normal = plane.normal.copy()
             }
 
 //        // we try to detect wrong orientation by comparing normals

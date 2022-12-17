@@ -48,9 +48,9 @@ class Bounds(min: Vector3d, max: Vector3d) : Cloneable {
      * @return the center position
      */
     val center: Vector3d = Vector3d.xyz(
-        (max.x() + min.x()) / 2,
-        (max.y() + min.y()) / 2,
-        (max.z() + min.z()) / 2
+        (max.x + min.x) / 2,
+        (max.y + min.y) / 2,
+        (max.z + min.z) / 2
     )
 
     /**
@@ -59,25 +59,25 @@ class Bounds(min: Vector3d, max: Vector3d) : Cloneable {
      * @return the bounds (width,height,depth)
      */
     val bounds: Vector3d = Vector3d.xyz(
-        abs(max.x() - min.x()),
-        abs(max.y() - min.y()),
-        abs(max.z() - min.z())
+        abs(max.x - min.x),
+        abs(max.y - min.y),
+        abs(max.z - min.z)
     )
 
     /**
      * @return the min x,y,z values
      */
-    val min: Vector3d = min.clone()
+    val min: Vector3d = min.copy()
 
     /**
      * @return the max x,y,z values
      */
-    val max: Vector3d = max.clone()
+    val max: Vector3d = max.copy()
     private var csg: CSG? = null
     private val cube: Cube = Cube(this.center, this.bounds)
 
     public override fun clone(): Bounds {
-        return Bounds(min.clone(), max.clone())
+        return Bounds(min.copy(), max.copy())
     }
 
     /**
@@ -122,9 +122,9 @@ class Bounds(min: Vector3d, max: Vector3d) : Cloneable {
      * `false` otherwise
      */
     operator fun contains(v: Vector3d?): Boolean {
-        val inX = min.x() <= v!!.x() && v.x() <= max.x()
-        val inY = min.y() <= v.y() && v.y() <= max.y()
-        val inZ = min.z() <= v.z() && v.z() <= max.z()
+        val inX = min.x <= v!!.x && v.x <= max.x
+        val inY = min.y <= v.y && v.y <= max.y
+        val inZ = min.z <= v.z && v.z <= max.z
         return inX && inY && inZ
     }
 
@@ -161,13 +161,13 @@ class Bounds(min: Vector3d, max: Vector3d) : Cloneable {
      * `false` otherwise
      */
     fun intersects(b: Bounds): Boolean {
-        if (b.min.x() > max.x() || b.max.x() < min.x()) {
+        if (b.min.x > max.x || b.max.x < min.x) {
             return false
         }
-        if (b.min.y() > max.y() || b.max.y() < min.y()) {
+        if (b.min.y > max.y || b.max.y < min.y) {
             return false
         }
-        return !(b.min.z() > max.z() || b.max.z() < min.z())
+        return !(b.min.z > max.z || b.max.z < min.z)
     }
 
     override fun toString(): String {

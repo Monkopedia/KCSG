@@ -52,7 +52,7 @@ class Plane(normal: Vector3d, dist: Double) : Cloneable {
      */
     var dist: Double
     public override fun clone(): Plane {
-        return Plane(normal.clone(), dist)
+        return Plane(normal.copy(), dist)
     }
 
     /**

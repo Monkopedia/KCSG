@@ -772,80 +772,80 @@ class CSG private constructor(
                 // multiple triangles:
                 val firstVertex = p.vertices[0]
                 for (i in 0 until p.vertices.size - 2) {
-                    if (firstVertex.pos.x() < minX) {
-                        minX = firstVertex.pos.x()
+                    if (firstVertex.pos.x < minX) {
+                        minX = firstVertex.pos.x
                     }
-                    if (firstVertex.pos.y() < minY) {
-                        minY = firstVertex.pos.y()
+                    if (firstVertex.pos.y < minY) {
+                        minY = firstVertex.pos.y
                     }
-                    if (firstVertex.pos.z() < minZ) {
-                        minZ = firstVertex.pos.z()
+                    if (firstVertex.pos.z < minZ) {
+                        minZ = firstVertex.pos.z
                     }
-                    if (firstVertex.pos.x() > maxX) {
-                        maxX = firstVertex.pos.x()
+                    if (firstVertex.pos.x > maxX) {
+                        maxX = firstVertex.pos.x
                     }
-                    if (firstVertex.pos.y() > maxY) {
-                        maxY = firstVertex.pos.y()
+                    if (firstVertex.pos.y > maxY) {
+                        maxY = firstVertex.pos.y
                     }
-                    if (firstVertex.pos.z() > maxZ) {
-                        maxZ = firstVertex.pos.z()
+                    if (firstVertex.pos.z > maxZ) {
+                        maxZ = firstVertex.pos.z
                     }
                     mesh.points.addAll(
-                        firstVertex.pos.x().toFloat(),
-                        firstVertex.pos.y().toFloat(),
-                        firstVertex.pos.z().toFloat()
+                        firstVertex.pos.x.toFloat(),
+                        firstVertex.pos.y.toFloat(),
+                        firstVertex.pos.z.toFloat()
                     )
                     mesh.texCoords.addAll(0f) // texture (not covered)
                     mesh.texCoords.addAll(0f)
                     val secondVertex = p.vertices[i + 1]
-                    if (secondVertex.pos.x() < minX) {
-                        minX = secondVertex.pos.x()
+                    if (secondVertex.pos.x < minX) {
+                        minX = secondVertex.pos.x
                     }
-                    if (secondVertex.pos.y() < minY) {
-                        minY = secondVertex.pos.y()
+                    if (secondVertex.pos.y < minY) {
+                        minY = secondVertex.pos.y
                     }
-                    if (secondVertex.pos.z() < minZ) {
-                        minZ = secondVertex.pos.z()
+                    if (secondVertex.pos.z < minZ) {
+                        minZ = secondVertex.pos.z
                     }
-                    if (secondVertex.pos.x() > maxX) {
-                        maxX = firstVertex.pos.x()
+                    if (secondVertex.pos.x > maxX) {
+                        maxX = firstVertex.pos.x
                     }
-                    if (secondVertex.pos.y() > maxY) {
-                        maxY = firstVertex.pos.y()
+                    if (secondVertex.pos.y > maxY) {
+                        maxY = firstVertex.pos.y
                     }
-                    if (secondVertex.pos.z() > maxZ) {
-                        maxZ = firstVertex.pos.z()
+                    if (secondVertex.pos.z > maxZ) {
+                        maxZ = firstVertex.pos.z
                     }
                     mesh.points.addAll(
-                        secondVertex.pos.x().toFloat(),
-                        secondVertex.pos.y().toFloat(),
-                        secondVertex.pos.z().toFloat()
+                        secondVertex.pos.x.toFloat(),
+                        secondVertex.pos.y.toFloat(),
+                        secondVertex.pos.z.toFloat()
                     )
                     mesh.texCoords.addAll(0f) // texture (not covered)
                     mesh.texCoords.addAll(0f)
                     val thirdVertex = p.vertices[i + 2]
                     mesh.points.addAll(
-                        thirdVertex.pos.x().toFloat(),
-                        thirdVertex.pos.y().toFloat(),
-                        thirdVertex.pos.z().toFloat()
+                        thirdVertex.pos.x.toFloat(),
+                        thirdVertex.pos.y.toFloat(),
+                        thirdVertex.pos.z.toFloat()
                     )
-                    if (thirdVertex.pos.x() < minX) {
-                        minX = thirdVertex.pos.x()
+                    if (thirdVertex.pos.x < minX) {
+                        minX = thirdVertex.pos.x
                     }
-                    if (thirdVertex.pos.y() < minY) {
-                        minY = thirdVertex.pos.y()
+                    if (thirdVertex.pos.y < minY) {
+                        minY = thirdVertex.pos.y
                     }
-                    if (thirdVertex.pos.z() < minZ) {
-                        minZ = thirdVertex.pos.z()
+                    if (thirdVertex.pos.z < minZ) {
+                        minZ = thirdVertex.pos.z
                     }
-                    if (thirdVertex.pos.x() > maxX) {
-                        maxX = firstVertex.pos.x()
+                    if (thirdVertex.pos.x > maxX) {
+                        maxX = firstVertex.pos.x
                     }
-                    if (thirdVertex.pos.y() > maxY) {
-                        maxY = firstVertex.pos.y()
+                    if (thirdVertex.pos.y > maxY) {
+                        maxY = firstVertex.pos.y
                     }
-                    if (thirdVertex.pos.z() > maxZ) {
-                        maxZ = firstVertex.pos.z()
+                    if (thirdVertex.pos.z > maxZ) {
+                        maxZ = firstVertex.pos.z
                     }
                     mesh.texCoords.addAll(0f) // texture (not covered)
                     mesh.texCoords.addAll(0f)
@@ -878,32 +878,32 @@ class CSG private constructor(
                 return Bounds(Vector3d.ZERO, Vector3d.ZERO)
             }
             val initial = _polygons[0].vertices[0].pos
-            var minX = initial.x()
-            var minY = initial.y()
-            var minZ = initial.z()
-            var maxX = initial.x()
-            var maxY = initial.y()
-            var maxZ = initial.z()
+            var minX = initial.x
+            var minY = initial.y
+            var minZ = initial.z
+            var maxX = initial.x
+            var maxY = initial.y
+            var maxZ = initial.z
             for (p in polygons) {
                 for (i in p.vertices.indices) {
                     val vert = p.vertices[i]
-                    if (vert.pos.x() < minX) {
-                        minX = vert.pos.x()
+                    if (vert.pos.x < minX) {
+                        minX = vert.pos.x
                     }
-                    if (vert.pos.y() < minY) {
-                        minY = vert.pos.y()
+                    if (vert.pos.y < minY) {
+                        minY = vert.pos.y
                     }
-                    if (vert.pos.z() < minZ) {
-                        minZ = vert.pos.z()
+                    if (vert.pos.z < minZ) {
+                        minZ = vert.pos.z
                     }
-                    if (vert.pos.x() > maxX) {
-                        maxX = vert.pos.x()
+                    if (vert.pos.x > maxX) {
+                        maxX = vert.pos.x
                     }
-                    if (vert.pos.y() > maxY) {
-                        maxY = vert.pos.y()
+                    if (vert.pos.y > maxY) {
+                        maxY = vert.pos.y
                     }
-                    if (vert.pos.z() > maxZ) {
-                        maxZ = vert.pos.z()
+                    if (vert.pos.z > maxZ) {
+                        maxZ = vert.pos.z
                     }
                 } // end for vertices
             } // end for polygon

@@ -33,8 +33,8 @@ class SquareMail {
         val hingeBounds = hinge1.bounds.bounds
         hinge1 = hinge1.intersect(
             Cube(
-                hingeBounds.x(),
-                min(hingeBounds.y(), d), hingeBounds.z()
+                hingeBounds.x,
+                min(hingeBounds.y, d), hingeBounds.z
             ).toCSG()
         )
         hinge1 = hinge1.transformed(Transform.unity().rotX(90.0))
@@ -69,9 +69,9 @@ class SquareMail {
         for (y in 0 until numY) {
             for (x in 0 until numX) {
                 val translateX =
-                    (-partBounds.x() + jointRadius + jointRadius * hingeHoleScale) * x
+                    (-partBounds.x + jointRadius + jointRadius * hingeHoleScale) * x
                 val translateY =
-                    (-partBounds.y() + jointRadius + jointRadius * hingeHoleScale) * y
+                    (-partBounds.y + jointRadius + jointRadius * hingeHoleScale) * y
                 val part2 =
                     part.transformed(Transform.unity().translate(translateX, translateY, 0.0))
                 if (result == null) {

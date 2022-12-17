@@ -37,9 +37,9 @@ class XModifier : WeightFunction {
     override fun eval(pos: Vector3d, csg: CSG): Double {
         if (bounds == null) {
             bounds = csg.bounds
-            sPerUnit = (max - min) / (bounds!!.max.x() - bounds!!.min.x())
+            sPerUnit = (max - min) / (bounds!!.max.x - bounds!!.min.x)
         }
-        var s = sPerUnit * (pos.x() - bounds!!.min.x())
+        var s = sPerUnit * (pos.x - bounds!!.min.x)
         if (centered) {
             s -= (max - min) / 2.0
             s = abs(s) * 2

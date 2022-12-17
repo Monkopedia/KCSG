@@ -59,9 +59,9 @@ class Matrix3d(
      */
     operator fun times(a: Vector3d): Vector3d {
         return Vector3d.xyz(
-            m11 * a.x() + m12 * a.y() + m13 * a.z(),
-            m21 * a.x() + m22 * a.y() + m23 * a.z(),
-            m31 * a.x() + m32 * a.y() + m33 * a.z()
+            m11 * a.x + m12 * a.y + m13 * a.z,
+            m21 * a.x + m22 * a.y + m23 * a.z,
+            m31 * a.x + m32 * a.y + m33 * a.z
         )
     }
 

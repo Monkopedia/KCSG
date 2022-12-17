@@ -152,7 +152,7 @@ class Cylinder : Primitive {
         val e = end
         val ray = e.minus(s)
         val axisZ = ray.normalized()
-        val isY = abs(axisZ.y()) > 0.5
+        val isY = abs(axisZ.y) > 0.5
         val axisX =
             Vector3d.xyz(if (isY) 1.0 else 0.toDouble(), if (!isY) 1.0 else 0.toDouble(), 0.0)
                 .crossed(axisZ).normalized()

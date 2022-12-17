@@ -247,7 +247,7 @@ class FractalStructure(
 
         // vector that shows / discribes the connection line from ground to top
         // the same for edge line and for center line because parallel and have the same lenght
-        val connectionLineVector = centerTopPoint!!.minus(centerGroundPoint)
+        val connectionLineVector = centerTopPoint!!.minus(centerGroundPoint!!)
         val connectionLineVectorNormalized = connectionLineVector.normalized()
 
         // discribes where the help(Edge/Center)Points should lie on connection line of ground and top
@@ -278,7 +278,7 @@ class FractalStructure(
                 .plus(centerGroundPoint)
             // tmpGroundPoint = EG
             // centerGroundPoint = CG
-            val ankathete = centerGroundPoint!!.minus(tmpGroundPoint).magnitude()
+            val ankathete = centerGroundPoint!!.minus(tmpGroundPoint!!).magnitude()
             var hypothenuse = helpCenterPoint.minus(tmpGroundPoint).magnitude()
             var angle = toDegrees(kotlin.math.acos(ankathete / hypothenuse))
 
@@ -426,9 +426,9 @@ class FractalStructure(
         // with vectors S, P, Q and  P othogonal to Q
         //
         val rotationAxis = Vector3d.xyz(
-            topCenter.x() - groundCenter.x(),
-            topCenter.y() - groundCenter.y(),
-            topCenter.z() - groundCenter.z()
+            topCenter.x - groundCenter.x,
+            topCenter.y - groundCenter.y,
+            topCenter.z - groundCenter.z
         ).normalized()
 
         //
@@ -450,15 +450,15 @@ class FractalStructure(
         // if the user did not give us an second orthogonal vector to the rotation axis and orthoVecToRotAxis1 we need to calculate one
         if (orthoVecToRotAxis2 != null) {
             // checking EQUAL to ZERO is a BAD IDEA
-            if (kotlin.math.abs(orthoVecToRotAxis2.dot(this.orthoVecToRotAxis1)) < orthoThreshhold &&
+            if (kotlin.math.abs(orthoVecToRotAxis2.dot(this.orthoVecToRotAxis1!!)) < orthoThreshhold &&
                 kotlin.math.abs(orthoVecToRotAxis2.dot(rotationAxis)) < orthoThreshhold
             ) {
                 this.orthoVecToRotAxis2 = orthoVecToRotAxis2.normalized()
             } else {
-                this.orthoVecToRotAxis2 = rotationAxis.crossed(this.orthoVecToRotAxis1).normalized()
+                this.orthoVecToRotAxis2 = rotationAxis.crossed(this.orthoVecToRotAxis1!!).normalized()
             }
         } else {
-            this.orthoVecToRotAxis2 = rotationAxis.crossed(this.orthoVecToRotAxis1).normalized()
+            this.orthoVecToRotAxis2 = rotationAxis.crossed(this.orthoVecToRotAxis1!!).normalized()
         }
 
         // x, y, z

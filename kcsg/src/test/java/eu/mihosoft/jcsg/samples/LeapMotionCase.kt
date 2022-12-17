@@ -69,7 +69,7 @@ class LeapMotionCase {
         val cyl = Cylinder(grabSpace / 2.0, h + caseThickness * 2, arcRes).toCSG()
             .transformed(
                 Transform.unity().rotX(90.0).translate(
-                    outline.bounds.bounds.x() / 2.0 - caseThickness,
+                    outline.bounds.bounds.x / 2.0 - caseThickness,
                     -d,
                     -caseThickness
                 ).scaleX(3.0)
@@ -113,7 +113,7 @@ class LeapMotionCase {
                 Transform.unity().translate(0.0, 0.0, caseThickness / 2.0)
             )
         )
-        val outlineWidth = caseOutline.bounds.bounds.x()
+        val outlineWidth = caseOutline.bounds.bounds.x
         caseOutline = addPegsToOutline(caseOutline, outlineWidth * 0.25)
         caseOutline = addPegsToOutline(caseOutline, outlineWidth * 0.75)
         return caseOutline

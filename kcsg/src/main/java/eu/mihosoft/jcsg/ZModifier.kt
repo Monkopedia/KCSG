@@ -37,9 +37,9 @@ class ZModifier : WeightFunction {
     override fun eval(pos: Vector3d, csg: CSG): Double {
         if (bounds == null) {
             bounds = csg.bounds
-            sPerUnit = (max - min) / (bounds!!.max.z() - bounds!!.min.z())
+            sPerUnit = (max - min) / (bounds!!.max.z - bounds!!.min.z)
         }
-        var s = sPerUnit * (pos.z() - bounds!!.min.z())
+        var s = sPerUnit * (pos.z - bounds!!.min.z)
         if (centered) {
             s -= (max - min) / 2.0
             s = abs(s) * 2

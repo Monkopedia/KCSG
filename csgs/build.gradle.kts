@@ -40,13 +40,6 @@ tasks.register("fatJar", type = Jar::class) {
 }
 
 dependencies {
-    implementation(group = "eu.mihosoft.vvecmath", name = "vvecmath", version = "0.3.8")
-    implementation(
-        group = "eu.mihosoft.vvecmath",
-        name = "vvecmath",
-        version = "0.3.8",
-        classifier = "sources"
-    )
     implementation("com.github.ajalt.clikt:clikt:3.4.0")
     implementation("org.slf4j:slf4j-simple:1.6.1")
     implementation(kotlin("stdlib-jdk8"))

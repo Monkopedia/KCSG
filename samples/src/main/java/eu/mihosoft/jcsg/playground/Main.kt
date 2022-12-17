@@ -253,13 +253,13 @@ object Main {
         // t = -(A*x0 + B*y0 + C*z0 )/(A*dx + B*dy + C*dz)
         val normal = plane.normal
         val planePoint = plane.anchor
-        val a = normal.x()
-        val b = normal.y()
-        val c = normal.z()
+        val a = normal.x
+        val b = normal.y
+        val c = normal.z
         val d =
-            -(normal.x() * planePoint.x() + normal.y() * planePoint.y() + normal.z() * planePoint.z())
-        val numerator = a * point.x() + b * point.y() + c * point.z() + d
-        val denominator = a * direction.x() + b * direction.y() + c * direction.z()
+            -(normal.x * planePoint.x + normal.y * planePoint.y + normal.z * planePoint.z)
+        val numerator = a * point.x + b * point.y + c * point.z + d
+        val denominator = a * direction.x + b * direction.y + c * direction.z
 
         // if line is paralel to the plane...
         return if (abs(denominator) < TOL) {
@@ -279,9 +279,9 @@ object Main {
         else {
             val t = -numerator / denominator
             val resultPoint = Vector3d.xyz(
-                point.x() + t * direction.x(),
-                point.y() + t * direction.y(),
-                point.z() + t * direction.z()
+                point.x + t * direction.x,
+                point.y + t * direction.y,
+                point.z + t * direction.z
             )
             PlaneIntersection(
                 PlaneIntersection.IntersectionType.NON_PARALLEL,
@@ -561,15 +561,15 @@ object Main {
             return LineIntersectionResult.PARALLEL
         }
         val d1343 =
-            p13.x() * p43.x() + p13.y() * p43.y() + p13.z() * p43.z()
+            p13.x * p43.x + p13.y * p43.y + p13.z * p43.z
         val d4321 =
-            p43.x() * p21.x() + p43.y() * p21.y() + p43.z() * p21.z()
+            p43.x * p21.x + p43.y * p21.y + p43.z * p21.z
         val d1321 =
-            p13.x() * p21.x() + p13.y() * p21.y() + p13.z() * p21.z()
+            p13.x * p21.x + p13.y * p21.y + p13.z * p21.z
         val d4343 =
-            p43.x() * p43.x() + p43.y() * p43.y() + p43.z() * p43.z()
+            p43.x * p43.x + p43.y * p43.y + p43.z * p43.z
         val d2121 =
-            p21.x() * p21.x() + p21.y() * p21.y() + p21.z() * p21.z()
+            p21.x * p21.x + p21.y * p21.y + p21.z * p21.z
         val denom = d2121 * d4343 - d4321 * d4321
         if (abs(denom) < EPS) {
             return LineIntersectionResult.PARALLEL
@@ -579,12 +579,12 @@ object Main {
         val mub = (d1343 + d4321 * mua) / d4343
         val resultSegmentPoint1 = Vector3d.zero().asModifiable()
         val resultSegmentPoint2 = Vector3d.zero().asModifiable()
-        resultSegmentPoint1.x = line1Point1.x() + mua * p21.x()
-        resultSegmentPoint1.y = line1Point1.y() + mua * p21.y()
-        resultSegmentPoint1.z = line1Point1.z() + mua * p21.z()
-        resultSegmentPoint2.x = line2Point1.x() + mub * p43.x()
-        resultSegmentPoint2.y = line2Point1.y() + mub * p43.y()
-        resultSegmentPoint2.z = line2Point1.z() + mub * p43.z()
+        resultSegmentPoint1.x = line1Point1.x + mua * p21.x
+        resultSegmentPoint1.y = line1Point1.y + mua * p21.y
+        resultSegmentPoint1.z = line1Point1.z + mua * p21.z
+        resultSegmentPoint2.x = line2Point1.x + mub * p43.x
+        resultSegmentPoint2.y = line2Point1.y + mub * p43.y
+        resultSegmentPoint2.z = line2Point1.z + mub * p43.z
         return if (resultSegmentPoint1 == resultSegmentPoint2) {
             LineIntersectionResult(
                 LineIntersectionResult.IntersectionType.INTERSECTING,

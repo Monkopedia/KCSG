@@ -439,9 +439,9 @@ class FractalStructure(
         // with vectors S, P, Q and  P othogonal to Q
         //
         val rotationAxis = Vector3d.xyz(
-            topCenter.x() - groundCenter.x(),
-            topCenter.y() - groundCenter.y(),
-            topCenter.z() - groundCenter.z()
+            topCenter.x - groundCenter.x,
+            topCenter.y - groundCenter.y,
+            topCenter.z - groundCenter.z
         ).normalized()
 
         //

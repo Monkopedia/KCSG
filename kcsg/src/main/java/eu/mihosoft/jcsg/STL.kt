@@ -53,7 +53,7 @@ object STL {
         val polygons: MutableList<Polygon> = ArrayList()
         var vertices: MutableList<Vector3d> = ArrayList()
         for (p in loader.parse(path.toFile())) {
-            vertices.add(p.clone())
+            vertices.add(p.copy())
             if (vertices.size == 3) {
                 polygons.add(Polygon.fromPoints(vertices))
                 vertices = ArrayList()
@@ -72,7 +72,7 @@ object STL {
         val polygons: MutableList<Polygon> = ArrayList()
         var vertices: MutableList<Vector3d> = ArrayList()
         for (p in loader.parse(inputStreamFactory, length)) {
-            vertices.add(p.clone())
+            vertices.add(p.copy())
             if (vertices.size == 3) {
                 polygons.add(Polygon.fromPoints(vertices))
                 vertices = ArrayList()

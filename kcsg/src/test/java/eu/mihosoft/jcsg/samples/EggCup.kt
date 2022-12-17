@@ -27,11 +27,11 @@ class EggCup {
         val eggBounds = egg.bounds.bounds
         val upperNegativeEgg = egg.transformed(
             Transform.unity().translateZ(
-                eggBounds.z() * 0.175
+                eggBounds.z * 0.175
             ).scale(0.88, 0.88, 1.0)
         )
         val lowerNegativeEgg =
-            egg.transformed(Transform.unity().translateZ(-eggBounds.z() * 0.50))
+            egg.transformed(Transform.unity().translateZ(-eggBounds.z * 0.50))
         println("egg-size: " + upperNegativeEgg.bounds)
         try {
             FileUtil.write(Paths.get("eggcup-neg.stl"), upperNegativeEgg.toStlString())
@@ -40,7 +40,7 @@ class EggCup {
         }
         val resolution = 64
         val wallThickness = 5.0
-        val radius = eggBounds.x() / 2.0 + wallThickness
+        val radius = eggBounds.x / 2.0 + wallThickness
         CSG.setDefaultOptType(OptType.NONE)
         var feet = MoebiusStairs().resolution(90.0).twists(2.0).toCSG()
         feet = feet.transformed(Transform.unity().translateZ(-radius).scale(1.2, 1.2, 1.3))
@@ -48,10 +48,10 @@ class EggCup {
         val shellOuter = Sphere(radius, resolution, resolution / 2).toCSG()
             .transformed(Transform.unity().scaleZ(1.25))
         var shell = shellOuter.difference(lowerNegativeEgg)
-        val shellHeight = shell.bounds.bounds.z()
+        val shellHeight = shell.bounds.bounds.z
         val shrinkTransformZ = 0.8
         shell = shell.transformed(Transform.unity().scaleZ(shrinkTransformZ))
-        var lowerIntersectionHeight = shellOuter.bounds.bounds.z() - shellHeight
+        var lowerIntersectionHeight = shellOuter.bounds.bounds.z - shellHeight
         lowerIntersectionHeight *= shrinkTransformZ
         val shellTransform = Transform.unity().translateZ(-lowerIntersectionHeight)
         shell = shell.transformed(shellTransform)

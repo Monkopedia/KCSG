@@ -145,9 +145,9 @@ class Cube : Primitive {
     //        
     //        if(!centered) {
     //            Transform centerTransform = Transform.unity().
-    //                    translate(dimensions.x() / 2.0,
-    //                            dimensions.y() / 2.0,
-    //                            dimensions.z() / 2.0);
+    //                    translate(dimensions.x / 2.0,
+    //                            dimensions.y / 2.0,
+    //                            dimensions.z / 2.0);
     //
     //            for (Polygon p : result) {
     //                p.transform(centerTransform);
@@ -170,9 +170,9 @@ class Cube : Primitive {
             val vertices: MutableList<Vertex> = ArrayList()
             for (i in info[0]) {
                 val pos = Vector3d.xyz(
-                    center.x() + dimensions.x() * (1 * min(1, i and 1) - 0.5),
-                    center.y() + dimensions.y() * (1 * min(1, i and 2) - 0.5),
-                    center.z() + dimensions.z() * (1 * min(1, i and 4) - 0.5)
+                    center.x + dimensions.x * (1 * min(1, i and 1) - 0.5),
+                    center.y + dimensions.y * (1 * min(1, i and 2) - 0.5),
+                    center.z + dimensions.z * (1 * min(1, i and 4) - 0.5)
                 )
                 vertices.add(
                     Vertex(
@@ -188,9 +188,9 @@ class Cube : Primitive {
         }
         if (!centered) {
             val centerTransform = Transform.unity().translate(
-                dimensions.x() / 2.0,
-                dimensions.y() / 2.0,
-                dimensions.z() / 2.0
+                dimensions.x / 2.0,
+                dimensions.y / 2.0,
+                dimensions.z / 2.0
             )
             for (p in polygons) {
                 p.transform(centerTransform)

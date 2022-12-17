@@ -180,7 +180,7 @@ object Extrude {
 
     private fun extrude(dir: Vector3d, polygon1: Polygon): CSG {
         val newPolygons: MutableList<Polygon> = ArrayList()
-        require(dir.z() >= 0) { "z < 0 currently not supported for extrude: $dir" }
+        require(dir.z >= 0) { "z < 0 currently not supported for extrude: $dir" }
         newPolygons.addAll(PolygonUtil.concaveToConvex(polygon1))
         var polygon2 = polygon1.translated(dir)
         val numvertices = polygon1.vertices.size
@@ -223,9 +223,9 @@ object Extrude {
             var sz = 0.0
             val n = polygon2.vertices.size
             for (v in polygon2.vertices) {
-                sx += v.pos.x()
-                sy += v.pos.y()
-                sz += v.pos.z()
+                sx += v.pos.x
+                sy += v.pos.y
+                sz += v.pos.z
             }
             val center = Vector3d.xyz(sx / n, sy / n, sz / n)
             rot = rot.rot(center, axis, angle * Math.PI / 180.0)
@@ -282,11 +282,11 @@ object Extrude {
         var highestLeftVertex = polygon.vertices[0]
         for (i in polygon.vertices.indices) {
             val v = polygon.vertices[i]
-            if (v.pos.y() > highestLeftVertex.pos.y()) {
+            if (v.pos.y > highestLeftVertex.pos.y) {
                 highestLeftVertex = v
                 highestLeftVertexIndex = i
-            } else if (v.pos.y() == highestLeftVertex.pos.y() &&
-                v.pos.x() < highestLeftVertex.pos.x()
+            } else if (v.pos.y == highestLeftVertex.pos.y &&
+                v.pos.x < highestLeftVertex.pos.x
             ) {
                 highestLeftVertex = v
                 highestLeftVertexIndex = i
@@ -333,7 +333,7 @@ object Extrude {
 
     private fun normalizedX(v1: Vector3d, v2: Vector3d): Double {
         val v2MinusV1 = v2.minus(v1)
-        return v2MinusV1.divided(v2MinusV1.magnitude()).times(Vector3d.X_ONE).x()
+        return v2MinusV1.divided(v2MinusV1.magnitude()).times(Vector3d.X_ONE).x
     } //    public static void main(String[] args) {
     //        System.out.println("1 CCW: " + isCCW(Polygon.fromPoints(
     //                new Vector3d(-1, -1),

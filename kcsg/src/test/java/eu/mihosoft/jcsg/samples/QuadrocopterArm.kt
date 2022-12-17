@@ -55,7 +55,7 @@ class QuadrocopterArm {
                 )
             )
             cyl = cyl.transformed(
-                Transform.unity().translateX(cyl.bounds.bounds.z() / 2.0).rotY(90.0)
+                Transform.unity().translateX(cyl.bounds.bounds.z / 2.0).rotY(90.0)
             )
             cyl = cyl.transformed(
                 Transform.unity().rot(

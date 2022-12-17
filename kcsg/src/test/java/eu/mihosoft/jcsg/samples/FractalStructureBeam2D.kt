@@ -26,7 +26,7 @@ class FractalStructureBeam2D {
             return createBeamTerminal(b, start, stop)
         }
         val l = stop.minus(start).magnitude()
-        val a = stop.y() - start.y()
+        val a = stop.y - start.y
         val alpha = asin(a / l) * 180.0 / Math.PI
         println("level: $i alpha: $alpha : $start : $stop : l(c) = $l : a = $a")
         val localToGlobalTransform = Transform.unity().rotZ(-alpha).translate(start)

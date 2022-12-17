@@ -68,9 +68,9 @@ class RoundedCube : Primitive {
     override fun toPolygons(): List<Polygon> {
         val spherePrototype =
             Sphere(cornerRadius, resolution * 2, resolution).toCSG()
-        val x = dimensions.x() / 2.0 - cornerRadius
-        val y = dimensions.y() / 2.0 - cornerRadius
-        val z = dimensions.z() / 2.0 - cornerRadius
+        val x = dimensions.x / 2.0 - cornerRadius
+        val y = dimensions.y / 2.0 - cornerRadius
+        val z = dimensions.z / 2.0 - cornerRadius
         val sphere1 = spherePrototype.transformed(Transform.unity().translate(-x, -y, -z))
         val sphere2 = spherePrototype.transformed(Transform.unity().translate(x, -y, -z))
         val sphere3 = spherePrototype.transformed(Transform.unity().translate(x, y, -z))
@@ -89,9 +89,9 @@ class RoundedCube : Primitive {
         }
         if (!centered) {
             val centerTransform = Transform.unity().translate(
-                dimensions.x() / 2.0,
-                dimensions.y() / 2.0,
-                dimensions.z() / 2.0
+                dimensions.x / 2.0,
+                dimensions.y / 2.0,
+                dimensions.z / 2.0
             )
             for (p in result) {
                 p.transform(centerTransform)

@@ -18,7 +18,7 @@ internal class HullUtil private constructor() {
     companion object {
         fun hull(points: List<Vector3d>, storage: PropertyStorage?): CSG {
             val hullPoints =
-                points.map { vec: Vector3d -> Point3d(vec.x(), vec.y(), vec.z()) }
+                points.map { vec: Vector3d -> Point3d(vec.x, vec.y, vec.z) }
                     .toTypedArray()
             val hull = QuickHull3D()
             hull.build(hullPoints)

@@ -19,7 +19,7 @@ import kotlin.math.max
 class WeightedTubeSample {
     fun toCSG(): CSG {
         val weight = WeightFunction { v: Vector3d?, csg: CSG? ->
-            val w = max(1.0, (0.1 + Math.random()) / (v!!.z() * 0.1 + 0.1))
+            val w = max(1.0, (0.1 + Math.random()) / (v!!.z * 0.1 + 0.1))
             w
         }
 

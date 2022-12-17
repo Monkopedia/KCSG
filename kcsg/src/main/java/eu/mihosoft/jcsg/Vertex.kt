@@ -57,7 +57,7 @@ class Vertex(
 ) : Cloneable {
 
     public override fun clone(): Vertex {
-        return Vertex(pos.clone(), normal.clone(), weight)
+        return Vertex(pos.copy(), normal.copy(), weight)
     }
 
     /**

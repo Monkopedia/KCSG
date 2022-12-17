@@ -29,7 +29,7 @@ object DualMaterialRobot {
         val middle = robotBounds.toCSG()
             .transformed(
                 Transform.unity().scaleZ(1 / 2.0).translateZ(
-                    robotBounds.bounds.z() / 3.0
+                    robotBounds.bounds.z / 3.0
                 )
             )
         return robot!!.intersect(middle)
@@ -44,7 +44,7 @@ object DualMaterialRobot {
         val middle = robotBounds.toCSG()
             .transformed(
                 Transform.unity().scaleZ(1 / 2.0).translateZ(
-                    robotBounds.bounds.z() / 3.0
+                    robotBounds.bounds.z / 3.0
                 )
             )
         return robot!!.difference(middle)

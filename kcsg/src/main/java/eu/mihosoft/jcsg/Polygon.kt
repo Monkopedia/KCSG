@@ -353,23 +353,23 @@ class Polygon : Cloneable {
             var maxZ = Double.NEGATIVE_INFINITY
             for (i in vertices.indices) {
                 val vert = vertices[i]
-                if (vert.pos.x() < minX) {
-                    minX = vert.pos.x()
+                if (vert.pos.x < minX) {
+                    minX = vert.pos.x
                 }
-                if (vert.pos.y() < minY) {
-                    minY = vert.pos.y()
+                if (vert.pos.y < minY) {
+                    minY = vert.pos.y
                 }
-                if (vert.pos.z() < minZ) {
-                    minZ = vert.pos.z()
+                if (vert.pos.z < minZ) {
+                    minZ = vert.pos.z
                 }
-                if (vert.pos.x() > maxX) {
-                    maxX = vert.pos.x()
+                if (vert.pos.x > maxX) {
+                    maxX = vert.pos.x
                 }
-                if (vert.pos.y() > maxY) {
-                    maxY = vert.pos.y()
+                if (vert.pos.y > maxY) {
+                    maxY = vert.pos.y
                 }
-                if (vert.pos.z() > maxZ) {
-                    maxZ = vert.pos.z()
+                if (vert.pos.z > maxZ) {
+                    maxZ = vert.pos.z
                 }
             } // end for vertices
             return Bounds(
@@ -694,7 +694,7 @@ class Polygon : Cloneable {
             shared: PropertyStorage?,
             plane: Plane?
         ): Polygon {
-            var normal = plane?.normal?.clone()
+            var normal = plane?.normal?.copy()
             if (normal == null) {
                 normal = Plane.createFromPoints(
                     points[0],
@@ -704,7 +704,7 @@ class Polygon : Cloneable {
             }
             val vertices: MutableList<Vertex> = ArrayList()
             for (p in points) {
-                val vec = p.clone()
+                val vec = p.copy()
                 val vertex = Vertex(vec, normal)
                 vertices.add(vertex)
             }

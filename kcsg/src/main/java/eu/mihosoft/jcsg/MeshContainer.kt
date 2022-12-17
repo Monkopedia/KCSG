@@ -42,9 +42,9 @@ class MeshContainer {
         this.meshes = meshes
         materials = ArrayList()
         bounds = Bounds(min, max)
-        width = bounds.bounds.x()
-        height = bounds.bounds.y()
-        depth = bounds.bounds.z()
+        width = bounds.bounds.x
+        height = bounds.bounds.y
+        depth = bounds.bounds.z
         val material = PhongMaterial(Color.RED)
         for (mesh in meshes) {
             materials.add(material)
@@ -60,9 +60,9 @@ class MeshContainer {
         this.meshes = meshes
         this.materials = materials
         bounds = Bounds(min, max)
-        width = bounds.bounds.x()
-        height = bounds.bounds.y()
-        depth = bounds.bounds.z()
+        width = bounds.bounds.x
+        height = bounds.bounds.y
+        depth = bounds.bounds.z
         require(materials.size == meshes.size) { "Mesh list and Material list must not differ in size!" }
     }
 

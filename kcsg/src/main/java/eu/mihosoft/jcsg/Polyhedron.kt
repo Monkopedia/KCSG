@@ -47,7 +47,7 @@ class Polyhedron : Primitive {
     override fun toPolygons(): List<Polygon> {
         return faces.map { faceList ->
             Polygon.fromPoints(
-                faceList.map { points[it].clone() },
+                faceList.map { points[it].copy() },
                 properties
             )
         }
