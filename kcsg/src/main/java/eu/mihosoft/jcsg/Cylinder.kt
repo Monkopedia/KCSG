@@ -46,28 +46,16 @@ import kotlin.math.sin
  *
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
-class Cylinder : Primitive {
-    var start: Vector3d
-    var end: Vector3d
-    var startRadius: Double
-    var endRadius: Double
-    var numSlices: Int
+data class Cylinder(
+    var start: Vector3d = Vector3d.xyz(0.0, -0.5, 0.0),
+    var end: Vector3d = Vector3d.xyz(0.0, 0.5, 0.0),
+    var startRadius: Double = 1.0,
+    var endRadius: Double = 1.0,
+    var numSlices: Int = 16
+) : Primitive {
     private val properties = PropertyStorage()
 
     /**
-     * Constructor. Creates a new cylinder with center `[0,0,0]` and
-     * ranging from `[0,-0.5,0]` to `[0,0.5,0]`, i.e.
-     * `size = 1`.
-     */
-    constructor() {
-        start = Vector3d.xyz(0.0, -0.5, 0.0)
-        end = Vector3d.xyz(0.0, 0.5, 0.0)
-        startRadius = 1.0
-        endRadius = 1.0
-        numSlices = 16
-    }
-
-    /**
      * Constructor. Creates a cylinder ranging from `start` to `end`
      * with the specified `radius`. The resolution of the tessellation can
      * be controlled with `numSlices`.
@@ -77,38 +65,13 @@ class Cylinder : Primitive {
      * @param radius cylinder radius
      * @param numSlices number of slices (used for tessellation)
      */
-    constructor(start: Vector3d, end: Vector3d, radius: Double, numSlices: Int) {
-        this.start = start
-        this.end = end
-        startRadius = radius
-        endRadius = radius
-        this.numSlices = numSlices
-    }
-
-    /**
-     * Constructor. Creates a cylinder ranging from `start` to `end`
-     * with the specified `radius`. The resolution of the tessellation can
-     * be controlled with `numSlices`.
-     *
-     * @param start cylinder start
-     * @param end cylinder end
-     * @param startRadius cylinder start radius
-     * @param endRadius cylinder end radius
-     * @param numSlices number of slices (used for tessellation)
-     */
-    constructor(
-        start: Vector3d,
-        end: Vector3d,
-        startRadius: Double,
-        endRadius: Double,
-        numSlices: Int
-    ) {
-        this.start = start
-        this.end = end
-        this.startRadius = startRadius
-        this.endRadius = endRadius
-        this.numSlices = numSlices
-    }
+    constructor(start: Vector3d, end: Vector3d, radius: Double, numSlices: Int) : this(
+        start,
+        end,
+        radius,
+        radius,
+        numSlices
+    )
 
     /**
      * Constructor. Creates a cylinder ranging from `[0,0,0]` to
@@ -120,13 +83,13 @@ class Cylinder : Primitive {
      * @param height cylinder height
      * @param numSlices number of slices (used for tessellation)
      */
-    constructor(radius: Double, height: Double, numSlices: Int) {
-        start = Vector3d.ZERO
-        end = Vector3d.Z_ONE.times(height)
-        startRadius = radius
-        endRadius = radius
-        this.numSlices = numSlices
-    }
+    constructor(radius: Double, height: Double, numSlices: Int) : this(
+        start = Vector3d.ZERO,
+        end = Vector3d.Z_ONE.times(height),
+        startRadius = radius,
+        endRadius = radius,
+        numSlices = numSlices
+    )
 
     /**
      * Constructor. Creates a cylinder ranging from `[0,0,0]` to
@@ -139,13 +102,13 @@ class Cylinder : Primitive {
      * @param height cylinder height
      * @param numSlices number of slices (used for tessellation)
      */
-    constructor(startRadius: Double, endRadius: Double, height: Double, numSlices: Int) {
-        start = Vector3d.ZERO
-        end = Vector3d.Z_ONE.times(height)
-        this.startRadius = startRadius
-        this.endRadius = endRadius
-        this.numSlices = numSlices
-    }
+    constructor(startRadius: Double, endRadius: Double, height: Double, numSlices: Int) : this(
+        start = Vector3d.ZERO,
+        end = Vector3d.Z_ONE.times(height),
+        startRadius = startRadius,
+        endRadius = endRadius,
+        numSlices = numSlices
+    )
 
     override fun toPolygons(): MutableList<Polygon> {
         val s = start

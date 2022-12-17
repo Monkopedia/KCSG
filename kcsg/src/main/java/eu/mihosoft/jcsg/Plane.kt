@@ -119,7 +119,7 @@ class Plane(normal: Vector3d, dist: Double) : Cloneable {
                         f.add(vi)
                     }
                     if (ti != FRONT) {
-                        b.add(if (ti != BACK) vi.clone() else vi)
+                        b.add(if (ti != BACK) vi.copy() else vi)
                     }
                     if (ti or tj == SPANNING) {
                         val t = (
@@ -128,7 +128,7 @@ class Plane(normal: Vector3d, dist: Double) : Cloneable {
                             )
                         val v = vi.interpolate(vj, t)
                         f.add(v)
-                        b.add(v.clone())
+                        b.add(v.copy())
                     }
                     i++
                 }

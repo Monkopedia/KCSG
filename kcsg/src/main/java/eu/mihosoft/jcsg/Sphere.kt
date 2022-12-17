@@ -43,11 +43,11 @@ import eu.mihosoft.vvecmath.Vector3d
  *
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
-class Sphere(
-    private var radius: Double = 1.0,
-    private var numSlices: Int = 16,
-    private var numStacks: Int = 8,
-    private var center: Vector3d = Vector3d.xyz(0.0, 0.0, 0.0)
+data class Sphere(
+    var radius: Double = 1.0,
+    var numSlices: Int = 16,
+    var numStacks: Int = 8,
+    var center: Vector3d = Vector3d.xyz(0.0, 0.0, 0.0)
 ) : Primitive {
     private val properties = PropertyStorage()
 
@@ -117,62 +117,6 @@ class Sphere(
             }
         }
         return polygons
-    }
-
-    /**
-     * @return the center
-     */
-    fun getCenter(): Vector3d {
-        return center
-    }
-
-    /**
-     * @param center the center to set
-     */
-    fun setCenter(center: Vector3d) {
-        this.center = center
-    }
-
-    /**
-     * @return the radius
-     */
-    fun getRadius(): Double {
-        return radius
-    }
-
-    /**
-     * @param radius the radius to set
-     */
-    fun setRadius(radius: Double) {
-        this.radius = radius
-    }
-
-    /**
-     * @return the numSlices
-     */
-    fun getNumSlices(): Int {
-        return numSlices
-    }
-
-    /**
-     * @param numSlices the numSlices to set
-     */
-    fun setNumSlices(numSlices: Int) {
-        this.numSlices = numSlices
-    }
-
-    /**
-     * @return the numStacks
-     */
-    fun getNumStacks(): Int {
-        return numStacks
-    }
-
-    /**
-     * @param numStacks the numStacks to set
-     */
-    fun setNumStacks(numStacks: Int) {
-        this.numStacks = numStacks
     }
 
     override fun getProperties(): PropertyStorage {

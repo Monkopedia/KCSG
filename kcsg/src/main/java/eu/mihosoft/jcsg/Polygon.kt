@@ -50,6 +50,7 @@ import kotlin.math.abs
  */
 class Polygon : Cloneable {
     private var _vertices: MutableList<Vertex>
+
     /**
      * Polygon vertices
      */
@@ -74,7 +75,7 @@ class Polygon : Cloneable {
      * @return plane
      */
     var plane: eu.mihosoft.vvecmath.Plane
-    private set
+        private set
 
     /**
      * Indicates whether this polyon is valid, i.e., if it
@@ -170,7 +171,7 @@ class Polygon : Cloneable {
         vertices.forEach(
             Consumer { vertex: Vertex ->
                 newVertices.add(
-                    vertex.clone()
+                    vertex.copy()
                 )
             }
         )
@@ -219,7 +220,6 @@ class Polygon : Cloneable {
      */
     fun toStlString(sb: StringBuilder): StringBuilder {
         if (vertices.size >= 3) {
-
             // TODO: improve the triangulation?
             //
             // STL requires triangular polygons.
@@ -246,14 +246,12 @@ class Polygon : Cloneable {
     fun toTriangles(): List<Polygon> {
         val result: MutableList<Polygon> = ArrayList()
         if (vertices.size >= 3) {
-
             // TODO: improve the triangulation?
             //
             // If our polygon has more vertices, create
             // multiple triangles:
             val firstVertexStl = vertices[0]
             for (i in 0 until vertices.size - 2) {
-
                 // create triangle
                 val polygon = fromPoints(
                     firstVertexStl.pos,
@@ -394,7 +392,6 @@ class Polygon : Cloneable {
      * edges; `false` otherwise
      */
     operator fun contains(p: Vector3d): Boolean {
-
         // P not on the plane
         if (plane.distance(p) > Plane.EPSILON) {
             return false
@@ -651,24 +648,10 @@ class Polygon : Cloneable {
          * Creates a polygon from the specified point list.
          *
          * @param points the points that define the polygon
-         * @param shared shared property storage
-         * @return a polygon defined by the specified point list
-         */
-        fun fromPoints(
-            points: List<Vector3d>,
-            shared: PropertyStorage?
-        ): Polygon {
-            return fromPoints(points, shared, null)
-        }
-
-        /**
-         * Creates a polygon from the specified point list.
-         *
-         * @param points the points that define the polygon
          * @return a polygon defined by the specified point list
          */
         fun fromPoints(points: List<Vector3d>): Polygon {
-            return fromPoints(points, PropertyStorage(), null)
+            return fromPoints(points, PropertyStorage())
         }
 
         /**
@@ -678,7 +661,7 @@ class Polygon : Cloneable {
          * @return a polygon defined by the specified point list
          */
         fun fromPoints(vararg points: Vector3d): Polygon {
-            return fromPoints(listOf(*points), PropertyStorage(), null)
+            return fromPoints(listOf(*points), PropertyStorage())
         }
 
         /**
@@ -689,19 +672,15 @@ class Polygon : Cloneable {
          * @param plane may be null
          * @return a polygon defined by the specified point list
          */
-        private fun fromPoints(
+        fun fromPoints(
             points: List<Vector3d>,
-            shared: PropertyStorage?,
-            plane: Plane?
+            shared: PropertyStorage?
         ): Polygon {
-            var normal = plane?.normal?.copy()
-            if (normal == null) {
-                normal = Plane.createFromPoints(
-                    points[0],
-                    points[1],
-                    points[2]
-                ).normal
-            }
+            var normal = Plane.createFromPoints(
+                points[0],
+                points[1],
+                points[2]
+            ).normal
             val vertices: MutableList<Vertex> = ArrayList()
             for (p in points) {
                 val vec = p.copy()

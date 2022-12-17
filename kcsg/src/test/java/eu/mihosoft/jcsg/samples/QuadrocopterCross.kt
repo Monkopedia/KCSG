@@ -77,8 +77,11 @@ class QuadrocopterCross {
             armCubeThickness, holderPlatformRadius, platformThickness
         ).transformed(Transform.unity().translateX(68.0).translateZ(14.0))
         var armHolders = armHolderPrototype.clone()
-        val quarterPrototype = RoundedCube(platformRadius).noCenter().cornerRadius(10.0)
-            .resolution(16).toCSG()
+        val quarterPrototype = RoundedCube(platformRadius).apply {
+            centered = false
+            cornerRadius = 10.0
+            resolution = 16
+        }.toCSG()
             .transformed(Transform.unity().rotZ(45.0)).transformed(Transform.unity().scaleY(3.0))
             .transformed(
                 Transform.unity().translate(

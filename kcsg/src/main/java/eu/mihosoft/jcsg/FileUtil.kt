@@ -29,7 +29,6 @@
  */
 package eu.mihosoft.jcsg
 
-import eu.mihosoft.jcsg.CSG
 import java.io.IOException
 import java.nio.charset.Charset
 import java.nio.file.Files
@@ -43,65 +42,63 @@ import java.util.logging.Logger
  *
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
-class FileUtil private constructor() {
-    companion object {
-        /**
-         * Writes the specified string to a file.
-         *
-         * @param p file destination (existing files will be overwritten)
-         * @param s string to save
-         *
-         * @throws IOException if writing to file fails
-         */
-        @Throws(IOException::class)
-        fun write(p: Path, s: String) {
-            Files.newBufferedWriter(
-                p, Charset.forName("UTF-8"),
-                StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING
-            ).use { writer -> writer.write(s, 0, s.length) }
-        }
-
-        /**
-         * Reads the specified file to a string.
-         *
-         * @param p file to read
-         * @return the content of the file
-         *
-         * @throws IOException if reading from file failed
-         */
-        @Throws(IOException::class)
-        fun read(p: Path): String {
-            return String(Files.readAllBytes(p), Charset.forName("UTF-8"))
-        }
-
-        /**
-         * Saves the specified csg using STL ASCII format.
-         *
-         * @param path destination path
-         * @param csg csg to save
-         * @throws java.io.IOException
-         */
-        @Throws(IOException::class)
-        fun toStlFile(path: Path, csg: CSG) {
-            Files.newBufferedWriter(
-                path, Charset.forName("UTF-8"),
-                StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING
-            ).use { out ->
-                out.append("solid v3d.csg\n")
-                csg.polygons.stream().forEach { p: Polygon ->
-                    try {
-                        out.append(p.toStlString())
-                    } catch (ex: IOException) {
-                        Logger.getLogger(CSG::class.java.name).log(Level.SEVERE, null, ex)
-                        throw RuntimeException(ex)
-                    }
-                }
-                out.append("endsolid v3d.csg\n")
-            }
-        }
+object FileUtil {
+    /**
+     * Writes the specified string to a file.
+     *
+     * @param p file destination (existing files will be overwritten)
+     * @param s string to save
+     *
+     * @throws IOException if writing to file fails
+     */
+    @Throws(IOException::class)
+    fun write(p: Path, s: String) {
+        Files.newBufferedWriter(
+            p,
+            Charset.forName("UTF-8"),
+            StandardOpenOption.CREATE,
+            StandardOpenOption.TRUNCATE_EXISTING
+        ).use { writer -> writer.write(s, 0, s.length) }
     }
 
-    init {
-        throw AssertionError("Don't instantiate me", null)
+    /**
+     * Reads the specified file to a string.
+     *
+     * @param p file to read
+     * @return the content of the file
+     *
+     * @throws IOException if reading from file failed
+     */
+    @Throws(IOException::class)
+    fun read(p: Path): String {
+        return String(Files.readAllBytes(p), Charset.forName("UTF-8"))
+    }
+
+    /**
+     * Saves the specified csg using STL ASCII format.
+     *
+     * @param path destination path
+     * @param csg csg to save
+     * @throws java.io.IOException
+     */
+    @Throws(IOException::class)
+    fun toStlFile(path: Path, csg: CSG) {
+        Files.newBufferedWriter(
+            path,
+            Charset.forName("UTF-8"),
+            StandardOpenOption.CREATE,
+            StandardOpenOption.TRUNCATE_EXISTING
+        ).use { out ->
+            out.append("solid v3d.csg\n")
+            csg.polygons.stream().forEach { p: Polygon ->
+                try {
+                    out.append(p.toStlString())
+                } catch (ex: IOException) {
+                    Logger.getLogger(CSG::class.java.name).log(Level.SEVERE, null, ex)
+                    throw RuntimeException(ex)
+                }
+            }
+            out.append("endsolid v3d.csg\n")
+        }
     }
 }

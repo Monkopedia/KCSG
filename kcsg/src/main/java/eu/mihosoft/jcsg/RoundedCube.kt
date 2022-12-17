@@ -12,25 +12,17 @@ import eu.mihosoft.vvecmath.Vector3d
  *
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
-class RoundedCube : Primitive {
+data class RoundedCube(
+    var center: Vector3d = Vector3d.xyz(0.0, 0.0, 0.0),
     /**
      * Cube dimensions.
      */
-    var dimensions: Vector3d
-    var center: Vector3d
-    private var centered = true
+    var dimensions: Vector3d = Vector3d.xyz(1.0, 1.0, 1.0),
+    var cornerRadius: Double = 0.1,
+    var resolution: Int = 8,
+    var centered: Boolean = true
+) : Primitive {
     private val properties = PropertyStorage()
-    var cornerRadius: Double = 0.1
-    var resolution: Int = 8
-
-    /**
-     * Constructor. Creates a new rounded cube with center `[0,0,0]` and
-     * dimensions `[1,1,1]`.
-     */
-    constructor() {
-        center = Vector3d.xyz(0.0, 0.0, 0.0)
-        dimensions = Vector3d.xyz(1.0, 1.0, 1.0)
-    }
 
     /**
      * Constructor. Creates a new rounded cube with center `[0,0,0]` and
@@ -38,22 +30,10 @@ class RoundedCube : Primitive {
      *
      * @param size size
      */
-    constructor(size: Double) {
-        center = Vector3d.xyz(0.0, 0.0, 0.0)
+    constructor(size: Double) : this(
+        center = Vector3d.xyz(0.0, 0.0, 0.0),
         dimensions = Vector3d.xyz(size, size, size)
-    }
-
-    /**
-     * Constructor. Creates a new rounded cuboid with the specified center and
-     * dimensions.
-     *
-     * @param center center of the cuboid
-     * @param dimensions cube dimensions
-     */
-    constructor(center: Vector3d, dimensions: Vector3d) {
-        this.center = center
-        this.dimensions = dimensions
-    }
+    )
 
     /**
      * Constructor. Creates a new rounded cuboid with center `[0,0,0]` and
@@ -111,24 +91,6 @@ class RoundedCube : Primitive {
      */
     fun noCenter(): RoundedCube {
         centered = false
-        return this
-    }
-
-    /**
-     * @param resolution the resolution to set
-     * @return this cube
-     */
-    fun resolution(resolution: Int): RoundedCube {
-        this.resolution = resolution
-        return this
-    }
-
-    /**
-     * @param cornerRadius the corner radius to set
-     * @return this cube
-     */
-    fun cornerRadius(cornerRadius: Double): RoundedCube {
-        this.cornerRadius = cornerRadius
         return this
     }
 }

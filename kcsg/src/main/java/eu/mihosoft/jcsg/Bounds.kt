@@ -41,7 +41,16 @@ import kotlin.math.abs
  *
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
-class Bounds(min: Vector3d, max: Vector3d) : Cloneable {
+data class Bounds(
+    /**
+     * @return the min x,y,z values
+     */
+    val min: Vector3d,
+    /**
+     * @return the max x,y,z values
+     */
+    val max: Vector3d
+) {
     /**
      * Returns the position of the center.
      *
@@ -64,21 +73,8 @@ class Bounds(min: Vector3d, max: Vector3d) : Cloneable {
         abs(max.z - min.z)
     )
 
-    /**
-     * @return the min x,y,z values
-     */
-    val min: Vector3d = min.copy()
-
-    /**
-     * @return the max x,y,z values
-     */
-    val max: Vector3d = max.copy()
     private var csg: CSG? = null
     private val cube: Cube = Cube(this.center, this.bounds)
-
-    public override fun clone(): Bounds {
-        return Bounds(min.copy(), max.copy())
-    }
 
     /**
      * Returns this bounding box as csg.
@@ -121,8 +117,8 @@ class Bounds(min: Vector3d, max: Vector3d) : Cloneable {
      * @return `true` if the point is contained within this bounding box;
      * `false` otherwise
      */
-    operator fun contains(v: Vector3d?): Boolean {
-        val inX = min.x <= v!!.x && v.x <= max.x
+    operator fun contains(v: Vector3d): Boolean {
+        val inX = min.x <= v.x && v.x <= max.x
         val inY = min.y <= v.y && v.y <= max.y
         val inZ = min.z <= v.z && v.z <= max.z
         return inX && inY && inZ

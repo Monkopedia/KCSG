@@ -14,6 +14,9 @@ import eu.mihosoft.jcsg.RoundedCube
  */
 class RoundedCubeSample {
     fun toCSG(): CSG {
-        return RoundedCube(3.0).resolution(8).cornerRadius(0.2).toCSG()
+        return RoundedCube(3.0).apply {
+            resolution = 8
+            cornerRadius = 0.2
+        }.toCSG()
     }
 }

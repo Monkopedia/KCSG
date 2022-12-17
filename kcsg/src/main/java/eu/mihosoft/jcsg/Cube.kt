@@ -43,27 +43,19 @@ import kotlin.math.min
  *
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
-class Cube : Primitive {
+data class Cube(
     /**
      * Center of this cube.
      */
-    var center: Vector3d
+    var center: Vector3d = Vector3d.xyz(0.0, 0.0, 0.0),
 
     /**
      * Cube dimensions.
      */
-    var dimensions: Vector3d
+    var dimensions: Vector3d = Vector3d.xyz(1.0, 1.0, 1.0)
+) : Primitive {
     private var centered = true
     private val properties = PropertyStorage()
-
-    /**
-     * Constructor. Creates a new cube with center `[0,0,0]` and
-     * dimensions `[1,1,1]`.
-     */
-    constructor() {
-        center = Vector3d.xyz(0.0, 0.0, 0.0)
-        dimensions = Vector3d.xyz(1.0, 1.0, 1.0)
-    }
 
     /**
      * Constructor. Creates a new cube with center `[0,0,0]` and
@@ -71,22 +63,10 @@ class Cube : Primitive {
      *
      * @param size size
      */
-    constructor(size: Double) {
-        center = Vector3d.xyz(0.0, 0.0, 0.0)
+    constructor(size: Double) : this(
+        center = Vector3d.xyz(0.0, 0.0, 0.0),
         dimensions = Vector3d.xyz(size, size, size)
-    }
-
-    /**
-     * Constructor. Creates a new cuboid with the specified center and
-     * dimensions.
-     *
-     * @param center center of the cuboid
-     * @param dimensions cube dimensions
-     */
-    constructor(center: Vector3d, dimensions: Vector3d) {
-        this.center = center
-        this.dimensions = dimensions
-    }
+    )
 
     /**
      * Constructor. Creates a new cuboid with center `[0,0,0]` and with
@@ -142,7 +122,7 @@ class Cube : Primitive {
     //            )
     //        }
     //        ));
-    //        
+    //
     //        if(!centered) {
     //            Transform centerTransform = Transform.unity().
     //                    translate(dimensions.x / 2.0,
@@ -176,7 +156,8 @@ class Cube : Primitive {
                 )
                 vertices.add(
                     Vertex(
-                        pos, Vector3d.xyz(
+                        pos,
+                        Vector3d.xyz(
                             info[1][0].toDouble(),
                             info[1][1].toDouble(),
                             info[1][2].toDouble()

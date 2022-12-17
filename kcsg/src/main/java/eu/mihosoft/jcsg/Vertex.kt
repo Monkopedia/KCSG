@@ -43,7 +43,7 @@ import java.util.Objects
  * primitives like [Cube] can return a smooth vertex normal, but
  * [.normal] is not used anywhere else.
  */
-class Vertex(
+data class Vertex(
     /**
      * Vertex position.
      */
@@ -54,11 +54,7 @@ class Vertex(
      */
     var normal: Vector3d,
     var weight: Double = 1.0
-) : Cloneable {
-
-    public override fun clone(): Vertex {
-        return Vertex(pos.copy(), normal.copy(), weight)
-    }
+) {
 
     /**
      * Inverts all orientation-specific data. (e.g. vertex normal).
@@ -140,7 +136,7 @@ class Vertex(
      * @return a copy of this transform
      */
     fun transformed(transform: Transform): Vertex {
-        return clone().transform(transform)
+        return copy().transform(transform)
     }
 
     override fun hashCode(): Int {

@@ -45,7 +45,7 @@ import kotlin.math.sqrt
  *
  * @author miho
  */
-class Edge(val p1: Vertex, val p2: Vertex) : Cloneable {
+data class Edge(val p1: Vertex, val p2: Vertex) {
     private val direction: Vector3d = p2.pos.minus(p1.pos).normalized()
 
     /**
