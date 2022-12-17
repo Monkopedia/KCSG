@@ -47,7 +47,15 @@ class Plane
  * @param normal plane normal
  * @param dist distance to origin
  */
-private constructor(anchor: Vector3d, normal: Vector3d) {
+private constructor(
+    /**
+     * Return the anchor point of this plane.
+     *
+     * @return anchor point of this plane
+     */
+    val anchor: Vector3d,
+    normal: Vector3d
+) {
     /**
      * Normal vector.
      */
@@ -60,12 +68,6 @@ private constructor(anchor: Vector3d, normal: Vector3d) {
     /**
      * Distance to origin.
      */
-    /**
-     * Return the anchor point of this plane.
-     *
-     * @return anchor point of this plane
-     */
-    val anchor: Vector3d = anchor
 
     fun copy(anchor: Vector3d = this.anchor, normal: Vector3d = this.normal): Plane {
         return Plane(anchor, normal)

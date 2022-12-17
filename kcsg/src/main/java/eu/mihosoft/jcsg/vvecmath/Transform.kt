@@ -34,7 +34,6 @@
  */
 package eu.mihosoft.vvecmath
 
-import java.lang.Math
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -566,34 +565,16 @@ class Transform {
      *
      * @return the specified vector
      */
-    fun transform(vec: ModifiableVector3d): ModifiableVector3d {
-        val x: Double
-        val y: Double
-        x = m.m00 * vec.x + m.m01 * vec.y + m.m02 * vec.z + m.m03
-        y = m.m10 * vec.x + m.m11 * vec.y + m.m12 * vec.z + m.m13
-        vec.z = (m.m20 * vec.x + m.m21 * vec.y + m.m22 * vec.z + m.m23)
-        vec.x = (x)
-        vec.y = (y)
-        return vec
-    }
-
-    /**
-     * Applies this transform to the specified vector.
-     *
-     * @param vec vector to transform
-     *
-     * @return the specified vector
-     */
     fun transform(vec: Vector3d): Vector3d {
-        val result: ModifiableVector3d = vec.asModifiable()
         val x: Double
         val y: Double
         x = m.m00 * vec.x + m.m01 * vec.y + m.m02 * vec.z + m.m03
         y = m.m10 * vec.x + m.m11 * vec.y + m.m12 * vec.z + m.m13
-        result.z = (m.m20 * vec.x + m.m21 * vec.y + m.m22 * vec.z + m.m23)
-        result.x = (x)
-        result.y = (y)
-        return result
+        return Vector3d.xyz(
+            x,
+            y,
+            m.m20 * vec.x + m.m21 * vec.y + m.m22 * vec.z + m.m23,
+        )
     }
 
     /**
@@ -604,7 +585,7 @@ class Transform {
      *
      * @return the specified vector
      */
-    fun transform(vec: ModifiableVector3d, amount: Double): ModifiableVector3d {
+    fun transform(vec: Vector3d, amount: Double): Vector3d {
         val prevX: Double = vec.x
         val prevY: Double = vec.y
         val prevZ: Double = vec.z
@@ -612,16 +593,17 @@ class Transform {
         val y: Double
         x = m.m00 * vec.x + m.m01 * vec.y + m.m02 * vec.z + m.m03
         y = m.m10 * vec.x + m.m11 * vec.y + m.m12 * vec.z + m.m13
-        vec.z = (m.m20 * vec.x + m.m21 * vec.y + m.m22 * vec.z + m.m23)
-        vec.x = (x)
-        vec.y = (y)
-        val diffX: Double = vec.x - prevX
-        val diffY: Double = vec.y - prevY
-        val diffZ: Double = vec.z - prevZ
-        vec.x = (prevX + diffX * amount)
-        vec.y = (prevY + diffY * amount)
-        vec.z = (prevZ + diffZ * amount)
-        return vec
+        val vz = (m.m20 * vec.x + m.m21 * vec.y + m.m22 * vec.z + m.m23)
+        val vx = (x)
+        val vy = (y)
+        val diffX: Double = vx - prevX
+        val diffY: Double = vy - prevY
+        val diffZ: Double = vz - prevZ
+        return Vector3d.xyz(
+            (prevX + diffX * amount),
+            (prevY + diffY * amount),
+            (prevZ + diffZ * amount),
+        )
     }
     //    /**
     //     * Performs an SVD normalization of the underlying matrix to calculate and

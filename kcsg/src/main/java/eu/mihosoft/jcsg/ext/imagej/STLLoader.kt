@@ -59,9 +59,9 @@ internal class STLLoader {
                     val vertex = Vector3d.xyz(x.toDouble(), y.toDouble(), z.toDouble())
                     add(vertex)
                 } else if (numbers[0] == "facet" && numbers[1] == "normal") {
-                    normal.x = parseFloat(numbers[2]).toDouble()
-                    normal.y = parseFloat(numbers[3]).toDouble()
-                    normal.z = parseFloat(numbers[4]).toDouble()
+                    parseFloat(numbers[2]).toDouble()
+                    parseFloat(numbers[3]).toDouble()
+                    parseFloat(numbers[4]).toDouble()
                 }
             }
         }
@@ -77,9 +77,9 @@ internal class STLLoader {
                 for (tb in 0..49) {
                     tri[tb] = fis.read().toByte()
                 }
-                normal.x = leBytesToFloat(tri[0], tri[1], tri[2], tri[3]).toDouble()
-                normal.y = leBytesToFloat(tri[4], tri[5], tri[6], tri[7]).toDouble()
-                normal.z = leBytesToFloat(tri[8], tri[9], tri[10], tri[11]).toDouble()
+                leBytesToFloat(tri[0], tri[1], tri[2], tri[3]).toDouble()
+                leBytesToFloat(tri[4], tri[5], tri[6], tri[7]).toDouble()
+                leBytesToFloat(tri[8], tri[9], tri[10], tri[11]).toDouble()
                 for (i in 0..2) {
                     val j = i * 12 + 12
                     val px = leBytesToFloat(
@@ -110,9 +110,5 @@ internal class STLLoader {
             b3.toInt() and 0xff shl 24 or (b2.toInt() and 0xff shl 16)
                 or (b1.toInt() and 0xff shl 8) or (b0.toInt() and 0xff)
         )
-    }
-
-    companion object {
-        private val normal = Vector3d.zero().asModifiable() // to be used for file checking
     }
 }

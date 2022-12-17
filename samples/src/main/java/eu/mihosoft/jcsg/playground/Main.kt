@@ -22,7 +22,6 @@ import java.util.*
 import java.util.function.Predicate
 import java.util.logging.Level
 import java.util.logging.Logger
-import kotlin.collections.ArrayList
 import kotlin.math.abs
 
 /**
@@ -474,8 +473,6 @@ object Main {
         } catch (ex: IOException) {
             Logger.getLogger(Main::class.java.name).log(Level.SEVERE, null, ex)
         }
-        val segmentP1 = Vector3d.zero().asModifiable()
-        val segmentP2 = Vector3d.zero().asModifiable()
         val lineRes = calculateLineLineIntersection(
             Vector3d.xyz(-1.0, 0.0, 0.0), Vector3d.xyz(1.0, 0.0, 0.0),
             Vector3d.xyz(0.0, -1.0, 0.0), Vector3d.xyz(0.0, 1.0, 0.0)
@@ -577,14 +574,16 @@ object Main {
         val numer = d1343 * d4321 - d1321 * d4343
         val mua = numer / denom
         val mub = (d1343 + d4321 * mua) / d4343
-        val resultSegmentPoint1 = Vector3d.zero().asModifiable()
-        val resultSegmentPoint2 = Vector3d.zero().asModifiable()
-        resultSegmentPoint1.x = line1Point1.x + mua * p21.x
-        resultSegmentPoint1.y = line1Point1.y + mua * p21.y
-        resultSegmentPoint1.z = line1Point1.z + mua * p21.z
-        resultSegmentPoint2.x = line2Point1.x + mub * p43.x
-        resultSegmentPoint2.y = line2Point1.y + mub * p43.y
-        resultSegmentPoint2.z = line2Point1.z + mub * p43.z
+        val resultSegmentPoint1 = Vector3d.xyz(
+            x = line1Point1.x + mua * p21.x,
+            y = line1Point1.y + mua * p21.y,
+            z = line1Point1.z + mua * p21.z
+        )
+        val resultSegmentPoint2 = Vector3d.xyz(
+            x = line2Point1.x + mub * p43.x,
+            y = line2Point1.y + mub * p43.y,
+            z = line2Point1.z + mub * p43.z
+        )
         return if (resultSegmentPoint1 == resultSegmentPoint2) {
             LineIntersectionResult(
                 LineIntersectionResult.IntersectionType.INTERSECTING,

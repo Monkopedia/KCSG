@@ -44,55 +44,36 @@ import kotlin.math.sqrt
  *
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
-interface Vector3d {
-    // ////////////////////////////////
-    // Cloning and mutabilitization
-    // ////////////////////////////////
-
-    fun copy(x: Double = this.x, y: Double = this.y, z: Double = this.z): Vector3d {
-        return xyz(x, y, z)
-    }
-
-    /**
-     * Returns a modifiable copy of this vector.
-     *
-     * @return a modifiable copy of this vector
-     */
-    fun asModifiable(): ModifiableVector3d {
-        return ModifiableVector3dImpl(this.x, this.y, this.z)
-    }
-    // ////////////////////////////////
-    // Getters
-    // ////////////////////////////////
+data class Vector3d
+/**
+ * Creates a new vector.
+ *
+ * @param x x value
+ * @param y y value
+ * @param z z value
+ */(
     /**
      * Returns the `x` component of this vector.
      *
      * @return the `x` component of this vector
      */
-    val x: Double
-
+    val x: Double = 0.0,
     /**
      * Returns the `y` component of this vector.
      *
      * @return the `y` component of this vector
      */
-    val y: Double
-
+    val y: Double = 0.0,
     /**
      * Returns the `z` component of this vector.
      *
      * @return the `z` component of this vector
      */
-    val z: Double
-
-    /**
-     * Returns the components {code x,y,z} as double array.
-     *
-     * @return the components {code x,y,z} as double array
-     */
-    fun get(): DoubleArray {
-        return doubleArrayOf(x, y, z)
-    }
+    val z: Double = 0.0
+) {
+    // ////////////////////////////////
+    // Cloning and mutabilitization
+    // ////////////////////////////////
 
     /**
      * Returns the i-th component of this vector.
@@ -117,8 +98,6 @@ interface Vector3d {
      *
      * @param v the vector to add
      *
-     * **Note:** this vector is not modified.
-     *
      * @return the sum of this vector and the specified vector
      */
     operator fun plus(v: Vector3d): Vector3d {
@@ -132,8 +111,6 @@ interface Vector3d {
      * @param y y coordinate of the vector to add
      * @param z z coordinate of the vector to add
      *
-     * **Note:** this vector is not modified.
-     *
      * @return the sum of this vector and the specified vector
      */
     fun plus(x: Double, y: Double, z: Double): Vector3d {
@@ -141,24 +118,9 @@ interface Vector3d {
     }
 
     /**
-     * Returns the sum of this vector and the specified vector.
-     *
-     * @param v the vector to add
-     *
-     * **Note:** this vector is not modified.
-     *
-     * @return the sum of this vector and the specified vector
-     */
-    fun added(v: Vector3d): Vector3d {
-        return plus(v.x, v.y, v.z)
-    }
-
-    /**
      * Returns the difference of this vector and the specified vector.
      *
      * @param v the vector to subtract
-     *
-     * **Note:** this vector is not modified.
      *
      * @return the difference of this vector and the specified vector
      */
@@ -173,26 +135,12 @@ interface Vector3d {
      * @param y y coordinate of the vector to subtract
      * @param z z coordinate of the vector to subtract
      *
-     * **Note:** this vector is not modified.
-     *
      * @return the difference of this vector and the specified vector
      */
     fun minus(x: Double, y: Double, z: Double): Vector3d {
         return xyz(this.x - x, this.y - y, this.z - z)
     }
 
-    /**
-     * Returns the difference of this vector and the specified vector.
-     *
-     * @param v the vector to subtract
-     *
-     * **Note:** this vector is not modified.
-     *
-     * @return the difference of this vector and the specified vector
-     */
-    fun subtracted(v: Vector3d): Vector3d {
-        return minus(v.x, v.y, v.z)
-    }
     // ////////////////////////////////
     // Vectorspace scalar mul.
     // ////////////////////////////////
@@ -201,25 +149,10 @@ interface Vector3d {
      *
      * @param a the value
      *
-     * **Note:** this vector is not modified.
-     *
      * @return the product of this vector and the specified value
      */
     operator fun times(a: Double): Vector3d {
-        return Vector3dImpl(x * a, y * a, z * a)
-    }
-
-    /**
-     * Returns the product of this vector and the specified value.
-     *
-     * @param a the value
-     *
-     * **Note:** this vector is not modified.
-     *
-     * @return the product of this vector and the specified value
-     */
-    fun multiplied(a: Double): Vector3d {
-        return times(a)
+        return Vector3d(x * a, y * a, z * a)
     }
 
     /**
@@ -227,13 +160,12 @@ interface Vector3d {
      *
      * @param a the value
      *
-     * **Note:** this vector is not modified.
-     *
      * @return this vector divided by the specified value
      */
     fun divided(a: Double): Vector3d {
-        return Vector3dImpl(x / a, y / a, z / a)
+        return Vector3d(x / a, y / a, z / a)
     }
+
     // ////////////////////////////////
     // Hadamard product
     // ////////////////////////////////
@@ -241,8 +173,6 @@ interface Vector3d {
      * Returns the product of this vector and the specified vector.
      *
      * @param a the vector
-     *
-     * **Note:** this vector is not modified.
      *
      * @return the product of this vector and the specified vector
      */
@@ -257,33 +187,17 @@ interface Vector3d {
      * @param y y coordinate of the vector to multiply
      * @param z z coordinate of the vector to multiply
      *
-     * **Note:** this vector is not modified.
-     *
      * @return the product of this vector and the specified vector
      */
     fun times(x: Double, y: Double, z: Double): Vector3d {
         return xyz(this.x * x, this.y * y, this.z * z)
     }
 
-    /**
-     * Returns the product of this vector and the specified vector.
-     *
-     * @param a the vector
-     *
-     * **Note:** this vector is not modified.
-     *
-     * @return the product of this vector and the specified vector
-     */
-    fun multiplied(a: Vector3d): Vector3d {
-        return times(a.x, a.y, a.z)
-    }
     // ////////////////////////////////
     // Inner product
     // ////////////////////////////////
     /**
      * Returns the dot product of this vector and the specified vector.
-     *
-     * **Note:** this vector is not modified.
      *
      * @param a the second vector
      *
@@ -298,14 +212,12 @@ interface Vector3d {
     /**
      * Returns the cross product of this vector and the specified vector.
      *
-     * **Note:** this vector is not modified.
-     *
      * @param a the vector
      *
      * @return the cross product of this vector and the specified vector.
      */
     fun crossed(a: Vector3d): Vector3d {
-        return Vector3dImpl(
+        return Vector3d(
             this.y * a.z - this.z * a.y,
             this.z * a.x - this.x * a.z,
             this.x * a.y - this.y * a.x
@@ -317,8 +229,6 @@ interface Vector3d {
     /**
      * Returns the magnitude of this vector.
      *
-     * **Note:** this vector is not modified.
-     *
      * @return the magnitude of this vector
      */
     fun magnitude(): Double {
@@ -328,8 +238,6 @@ interface Vector3d {
     /**
      * Returns the squared magnitude of this vector
      * (`this.dot(this)`).
-     *
-     * **Note:** this vector is not modified.
      *
      * @return the squared magnitude of this vector
      */
@@ -374,8 +282,6 @@ interface Vector3d {
     /**
      * Returns a normalized copy of this vector with length `1`.
      *
-     * **Note:** this vector is not modified.
-     *
      * @return a normalized copy of this vector with length `1`
      */
     fun normalized(): Vector3d {
@@ -385,18 +291,14 @@ interface Vector3d {
     /**
      * Returns a negated copy of this vector.
      *
-     * **Note:** this vector is not modified.
-     *
      * @return a negated copy of this vector
      */
     fun negated(): Vector3d {
-        return Vector3dImpl(-x, -y, -z)
+        return Vector3d(-x, -y, -z)
     }
 
     /**
      * Linearly interpolates between this and the specified vector.
-     *
-     * **Note:** this vector is not modified.
      *
      * @param a vector
      * @param t interpolation value
@@ -482,6 +384,7 @@ interface Vector3d {
         }
         return abs(largest - (second + third)) < Plane.TOL
     }
+
     // ////////////////////////////////
     // Transformation
     // ////////////////////////////////
@@ -490,12 +393,10 @@ interface Vector3d {
      *
      * @param transform the transform to apply
      *
-     * **Note:** this vector is not modified.
-     *
      * @return a transformed copy of this vector
      */
     fun transformed(transform: Transform): Vector3d {
-        return transform.transform(asModifiable())
+        return transform.transform(this)
     }
 
     /**
@@ -503,15 +404,14 @@ interface Vector3d {
      *
      * @param transform the transform to apply
      *
-     * **Note:** this vector is not modified.
-     *
      * @param amount
      *
      * @return a transformed copy of this vector
      */
     fun transformed(transform: Transform, amount: Double): Vector3d {
-        return transform.transform(asModifiable(), amount)
+        return transform.transform(this, amount)
     }
+
     // ////////////////////////////////
     // String
     // ////////////////////////////////
@@ -553,6 +453,18 @@ interface Vector3d {
         return sb.append(this.x).append(" ").append(this.y).append(" ").append(this.z)
     }
 
+    override fun toString(): String {
+        return VectorUtilInternal.toString(this)
+    }
+
+    override fun equals(other: Any?): Boolean {
+        return VectorUtilInternal.equals(this, other)
+    }
+
+    override fun hashCode(): Int {
+        return VectorUtilInternal.getHashCode(this)
+    }
+
     companion object {
         // ////////////////////////////////
         // Factory methods
@@ -564,7 +476,7 @@ interface Vector3d {
          * @return a new vector `[x,0,0]`
          */
         fun x(x: Double): Vector3d {
-            return Vector3dImpl(x, 0.0, 0.0)
+            return Vector3d(x, 0.0, 0.0)
         }
 
         /**
@@ -574,7 +486,7 @@ interface Vector3d {
          * @return a new vector `[0,y,0]`
          */
         fun y(y: Double): Vector3d {
-            return Vector3dImpl(0.0, y, 0.0)
+            return Vector3d(0.0, y, 0.0)
         }
 
         /**
@@ -584,7 +496,7 @@ interface Vector3d {
          * @return a new vector `[0,0,z]`
          */
         fun z(z: Double): Vector3d {
-            return Vector3dImpl(0.0, 0.0, z)
+            return Vector3d(0.0, 0.0, z)
         }
 
         /**
@@ -596,7 +508,7 @@ interface Vector3d {
          * @return
          */
         fun xy(x: Double, y: Double): Vector3d {
-            return Vector3dImpl(x, y)
+            return Vector3d(x, y)
         }
 
         /**
@@ -608,7 +520,7 @@ interface Vector3d {
          * @return a new vector
          */
         fun xyz(x: Double, y: Double, z: Double): Vector3d {
-            return Vector3dImpl(x, y, z)
+            return Vector3d(x, y, z)
         }
 
         /**
@@ -619,7 +531,7 @@ interface Vector3d {
          * @return a new vector
          */
         fun yz(y: Double, z: Double): Vector3d {
-            return Vector3dImpl(0.0, y, z)
+            return Vector3d(0.0, y, z)
         }
 
         /**
@@ -630,62 +542,47 @@ interface Vector3d {
          * @return a new vector
          */
         fun xz(x: Double, z: Double): Vector3d {
-            return Vector3dImpl(x, 0.0, z)
+            return Vector3d(x, 0.0, z)
         }
 
         /**
-         * Creates a new vector `(0,0,0)`.
+         * Gets a vector `(0,0,0)`.
          *
          * @return a new vector
          */
-        fun zero(): Vector3d {
-            return Vector3dImpl(0.0, 0.0, 0.0)
-        }
+        fun zero(): Vector3d = ZERO
 
         /**
-         * Creates a new vector `(1,1,1)`.
-         *
-         * @return a new vector
+         * Gets a vector `(1,1,1)`.
          */
-        fun unity(): Vector3d {
-            return Vector3dImpl(0.0, 0.0, 0.0)
-        }
+        fun unity(): Vector3d = UNITY
 
-        /**
-         * Clones the specified vector.
-         *
-         * @param source vector toclone
-         * @return cloned vector
-         */
-        fun clone(source: Vector3d): Vector3d {
-            return Vector3dImpl(source.x, source.y, source.z)
-        }
         // ////////////////////////////////
         // Constants
         // ////////////////////////////////
         /**
          * Unity vector `(1, 1, 1)`.
          */
-        val UNITY: Vector3d = Vector3dImpl(1.0, 1.0, 1.0)
+        val UNITY: Vector3d = Vector3d(1.0, 1.0, 1.0)
 
         /**
          * Vector `(1, 0, 0)`.
          */
-        val X_ONE: Vector3d = Vector3dImpl(1.0, 0.0, 0.0)
+        val X_ONE: Vector3d = Vector3d(1.0, 0.0, 0.0)
 
         /**
          * Vector `(0, 1, 0)`.
          */
-        val Y_ONE: Vector3d = Vector3dImpl(0.0, 1.0, 0.0)
+        val Y_ONE: Vector3d = Vector3d(0.0, 1.0, 0.0)
 
         /**
          * Vector `(0, 0, 0)`.
          */
-        val ZERO: Vector3d = Vector3dImpl(0.0, 0.0, 0.0)
+        val ZERO: Vector3d = Vector3d(0.0, 0.0, 0.0)
 
         /**
          * Vector `(0, 0, 1)`.
          */
-        val Z_ONE: Vector3d = Vector3dImpl(0.0, 0.0, 1.0)
+        val Z_ONE: Vector3d = Vector3d(0.0, 0.0, 1.0)
     }
 }
