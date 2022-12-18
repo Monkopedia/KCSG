@@ -55,8 +55,6 @@ import kotlin.math.sin
 </pre></blockquote> *
  *
  * **TODO:** use quaternions for rotations.
- *
- * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 class Transform {
     /**

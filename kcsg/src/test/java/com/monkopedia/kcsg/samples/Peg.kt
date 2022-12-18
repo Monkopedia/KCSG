@@ -61,8 +61,6 @@ import com.monkopedia.kcsg.Vector3d
  * ptoph = peg top height
  * ol    = overlap between board and peg
 </pre> *
- *
- * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 class Peg {
     //      ol

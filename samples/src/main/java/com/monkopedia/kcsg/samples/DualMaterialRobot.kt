@@ -13,8 +13,6 @@ import java.io.IOException
 import java.nio.file.Paths
 
 /**
- *
- * @author miho
  */
 object DualMaterialRobot {
     private var robot: CSG? = null

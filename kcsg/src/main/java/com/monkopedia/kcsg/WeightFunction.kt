@@ -7,8 +7,6 @@ package com.monkopedia.kcsg
 
 /**
  * Weight function.
- *
- * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 fun interface WeightFunction {
     /**

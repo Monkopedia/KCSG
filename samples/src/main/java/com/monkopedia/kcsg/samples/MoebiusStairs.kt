@@ -13,8 +13,6 @@ import java.io.IOException
 import java.nio.file.Paths
 
 /**
- *
- * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 class MoebiusStairs {
     private var n = 45.0

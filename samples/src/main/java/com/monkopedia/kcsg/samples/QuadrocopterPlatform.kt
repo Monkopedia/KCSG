@@ -16,8 +16,6 @@ import kotlin.math.cos
 import kotlin.math.sin
 
 /**
- *
- * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 class QuadrocopterPlatform {
     private fun toCSG(): CSG {

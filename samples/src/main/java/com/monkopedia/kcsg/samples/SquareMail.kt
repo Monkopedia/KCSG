@@ -14,8 +14,6 @@ import java.nio.file.Paths
 import kotlin.math.min
 
 /**
- *
- * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 class SquareMail {
     private fun toCSG(numX: Int, numY: Int): CSG? {

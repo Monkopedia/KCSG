@@ -14,8 +14,6 @@ import java.nio.file.Paths
 import kotlin.math.max
 
 /**
- *
- * @author miho
  */
 class BatteryHolder {
     private val mountingThickness = 3.0

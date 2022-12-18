@@ -11,8 +11,6 @@ import com.monkopedia.kcsg.Vector3d
 import kotlin.math.max
 
 /**
- *
- * @author miho
  */
 class RaspberryArduinoConnector {
     private val arduinoMountingThickness = 2.0

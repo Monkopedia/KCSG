@@ -36,8 +36,6 @@ package com.monkopedia.kcsg
 // # class Plane
 /**
  * Represents a plane in 3D space.
- *
- * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 class Plane(normal: Vector3d, dist: Double) {
     /**

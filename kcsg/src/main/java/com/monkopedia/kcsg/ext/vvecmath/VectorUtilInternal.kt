@@ -44,8 +44,6 @@ import kotlin.math.abs
 
 /**
  * Internal utility class.
- *
- * @author Michael Hoffer <info></info>@michaelhoffer.de>
  */
 internal object VectorUtilInternal {
     fun toString(v: Vector3d): String {

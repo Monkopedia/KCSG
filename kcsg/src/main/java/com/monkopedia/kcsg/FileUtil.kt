@@ -39,8 +39,6 @@ import java.util.logging.Logger
 
 /**
  * File util class.
- *
- * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 object FileUtil {
     /**

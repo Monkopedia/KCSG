@@ -42,8 +42,6 @@ import kotlin.math.sin
  * A solid cylinder.
  *
  * The tessellation can be controlled via the [.numSlices] parameter.
- *
- * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 data class Cylinder(
     var start: Vector3d = Vector3d.xyz(0.0, -0.5, 0.0),

@@ -17,8 +17,6 @@ import java.io.IOException
 import java.nio.file.Paths
 
 /**
- *
- * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 class QuadrocopterLadingGearsAndHolders {
     private fun toCSG(): CSG {

@@ -113,8 +113,6 @@ import kotlin.system.exitProcess
  * If the input points are detected to be degenerate within
  * the [distance tolerance][.getDistanceTolerance], an
  * IllegalArgumentException will be thrown.
- *
- * @author John E. Lloyd, Fall 2004
  */
 internal class QuickHull3D {
     private var findIndex = -1

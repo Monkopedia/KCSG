@@ -17,8 +17,6 @@ import javafx.scene.shape.MeshView
 import java.util.*
 
 /**
- *
- * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 class MeshContainer {
     private val meshes: List<Mesh>

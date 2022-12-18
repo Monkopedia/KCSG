@@ -9,8 +9,6 @@ import java.util.*
 
 /**
  * Polyhedron.
- *
- * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 class Polyhedron : Primitive {
     private val properties = PropertyStorage()

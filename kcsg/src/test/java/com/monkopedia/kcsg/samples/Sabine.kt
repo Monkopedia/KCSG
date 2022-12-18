@@ -14,8 +14,6 @@ import com.monkopedia.kcsg.Transform
 
 /**
  * Average Chicken Egg.
- *
- * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 class Sabine {
     fun toCSG(): CSG {

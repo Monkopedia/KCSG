@@ -39,8 +39,6 @@ import java.io.IOException
 import java.nio.file.Paths
 
 /**
- *
- * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 object RaspberryPiMount {
     private fun board(): CSG {

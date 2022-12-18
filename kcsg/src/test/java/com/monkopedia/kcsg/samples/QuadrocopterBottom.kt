@@ -13,8 +13,6 @@ import java.io.IOException
 import java.nio.file.Paths
 
 /**
- *
- * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 class QuadrocopterBottom {
     fun print3d(csg: CSG, n: Int) {

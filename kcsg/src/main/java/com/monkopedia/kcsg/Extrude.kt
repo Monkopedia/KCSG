@@ -38,8 +38,6 @@ import java.util.*
 
 /**
  * Extrudes concave and convex polygons.
- *
- * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 object Extrude {
     /**

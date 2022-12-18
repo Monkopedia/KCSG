@@ -35,8 +35,6 @@ import com.monkopedia.kcsg.Transform
 import com.monkopedia.kcsg.Vector3d
 
 /**
- *
- * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 object RaspberryPeg {
     fun peg(): CSG {

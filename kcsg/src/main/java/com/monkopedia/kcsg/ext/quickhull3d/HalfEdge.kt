@@ -16,8 +16,6 @@ package com.monkopedia.kcsg.ext.quickhull3d
 /**
  * Represents the half-edges that surround each
  * face in a counter-clockwise direction.
- *
- * @author John E. Lloyd, Fall 2004
  */
 internal class HalfEdge
 /**

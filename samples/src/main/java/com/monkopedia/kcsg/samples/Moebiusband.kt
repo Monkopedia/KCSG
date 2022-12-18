@@ -15,8 +15,6 @@ import java.nio.file.Paths
 import java.util.*
 
 /**
- *
- * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 class Moebiusband {
     fun toCSG(): CSG {

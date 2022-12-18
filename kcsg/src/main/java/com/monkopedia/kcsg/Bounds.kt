@@ -37,8 +37,6 @@ import kotlin.math.abs
 
 /**
  * Bounding box for CSGs.
- *
- * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 data class Bounds(
     /**

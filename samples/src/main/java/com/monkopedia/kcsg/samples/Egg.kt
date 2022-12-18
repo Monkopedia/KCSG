@@ -15,7 +15,6 @@ import java.nio.file.Paths
 
 /**
  * Average Chicken Egg.
- * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 class Egg {
     fun toCSG(): CSG {

@@ -9,8 +9,6 @@ import com.monkopedia.kcsg.CSG
 import com.monkopedia.kcsg.RoundedCube
 
 /**
- *
- * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 class RoundedCubeSample {
     fun toCSG(): CSG {

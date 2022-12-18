@@ -25,7 +25,6 @@ import java.util.logging.Logger
 import kotlin.math.abs
 
 /**
- * @author Michael Hoffer (info@michaelhoffer.de)
  */
 object Main {
     private const val EPS = 1e-8

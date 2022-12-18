@@ -12,8 +12,6 @@ import java.io.IOException
 import java.nio.file.Paths
 
 /**
- *
- * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 class TriMail {
     fun toCSG(numEdges: Int, numX: Int, numY: Int): CSG? {

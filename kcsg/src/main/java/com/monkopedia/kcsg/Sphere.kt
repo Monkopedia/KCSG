@@ -38,8 +38,6 @@ package com.monkopedia.kcsg
  *
  * Tthe tessellation along the longitude and latitude directions can be
  * controlled via the [.numSlices] and [.numStacks] parameters.
- *
- * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 data class Sphere(
     var radius: Double = 1.0,

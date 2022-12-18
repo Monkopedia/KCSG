@@ -11,8 +11,6 @@ import com.monkopedia.kcsg.Cylinder
 import com.monkopedia.kcsg.Transform
 
 /**
- *
- * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 class Hinge {
     private var jointLength = 10.0

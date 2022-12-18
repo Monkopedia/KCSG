@@ -36,8 +36,6 @@ import java.nio.file.Path
 
 /**
  * Loads a CSG from stl.
- *
- * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 object STL {
     /**

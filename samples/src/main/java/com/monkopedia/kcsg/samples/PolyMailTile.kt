@@ -21,8 +21,6 @@ internal enum class TileType {
 }
 
 /**
- *
- * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 class PolyMailTile {
     private var tileType = TileType.MALE

@@ -14,7 +14,6 @@ import java.nio.file.Paths
 
 
 /**
- * @author monkopedia
  */
 class SensorMount {
 

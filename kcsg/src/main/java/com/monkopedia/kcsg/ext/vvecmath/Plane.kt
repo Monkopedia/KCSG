@@ -38,8 +38,6 @@ import com.monkopedia.kcsg.Vector3d
 
 /**
  * Represents a plane in 3D space.
- *
- * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 class Plane
 /**

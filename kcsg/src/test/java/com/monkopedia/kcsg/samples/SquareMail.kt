@@ -11,8 +11,6 @@ import com.monkopedia.kcsg.Transform
 import kotlin.math.min
 
 /**
- *
- * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 class SquareMail {
     internal fun toCSG(numX: Int, numY: Int): CSG {

@@ -10,8 +10,6 @@ import com.monkopedia.kcsg.Extrude
 import com.monkopedia.kcsg.Vector3d
 
 /**
- *
- * @author miho
  */
 class MicroSDCard {
     fun toCSG(): CSG {

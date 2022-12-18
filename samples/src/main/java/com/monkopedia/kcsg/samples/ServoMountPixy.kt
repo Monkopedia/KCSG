@@ -15,8 +15,6 @@ import java.io.IOException
 import java.nio.file.Paths
 
 /**
- *
- * @author miho
  */
 class ServoMountPixy {
     // mini servo

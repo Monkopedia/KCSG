@@ -9,8 +9,6 @@ import kotlin.math.abs
 
 /**
  * Modifies along y axis.
- *
- * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 class YModifier : WeightFunction {
     private var bounds: Bounds? = null

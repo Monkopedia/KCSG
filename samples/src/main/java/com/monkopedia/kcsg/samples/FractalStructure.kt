@@ -12,8 +12,6 @@ import kotlin.math.cos
 import kotlin.math.sin
 
 /**
- *
- * @author cpoliwoda
  */
 class FractalStructure(
     groundCenter: Vector3d,

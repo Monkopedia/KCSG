@@ -10,8 +10,6 @@ import com.monkopedia.kcsg.Cylinder
 import com.monkopedia.kcsg.Transform
 
 /**
- *
- * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 class Naze32Holder {
     fun toCSG(): CSG {

@@ -38,8 +38,6 @@ import kotlin.math.min
 /**
  * An axis-aligned solid cuboid defined by `center` and
  * `dimensions`.
- *
- * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 data class Cube(
     /**

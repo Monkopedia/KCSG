@@ -13,8 +13,6 @@ import java.nio.charset.StandardCharsets
 import java.nio.file.Path
 
 /**
- *
- * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 class ObjFile internal constructor(private var _obj: String, private val _mtl: String) {
     private var _objStream: InputStream? = null

@@ -9,8 +9,6 @@ import com.monkopedia.kcsg.CSG
 import com.monkopedia.kcsg.Transform
 
 /**
- *
- * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 class HexaMail {
     fun toCSG(numEdges: Int, numX: Int, numY: Int): CSG? {

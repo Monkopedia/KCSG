@@ -17,8 +17,6 @@ import kotlin.math.cos
 import kotlin.math.sin
 
 /**
- *
- * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 class WeightedSphere {
     fun toCSG(): CSG {

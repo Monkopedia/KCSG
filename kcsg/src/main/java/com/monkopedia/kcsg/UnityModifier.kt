@@ -7,8 +7,6 @@ package com.monkopedia.kcsg
 
 /**
  * Modifies along x axis.
- *
- * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 class UnityModifier : WeightFunction {
     override fun eval(pos: Vector3d, csg: CSG): Double {

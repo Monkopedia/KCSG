@@ -13,8 +13,6 @@ import java.io.IOException
 import java.nio.file.Paths
 
 /**
- *
- * @author miho
  */
 class MicroSDCard {
     fun toCSG(): CSG {

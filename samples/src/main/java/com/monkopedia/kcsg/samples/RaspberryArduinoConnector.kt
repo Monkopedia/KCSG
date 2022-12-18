@@ -14,8 +14,6 @@ import java.nio.file.Paths
 import kotlin.math.max
 
 /**
- *
- * @author miho
  */
 class RaspberryArduinoConnector {
     private val arduinoMountingThickness = 2.0

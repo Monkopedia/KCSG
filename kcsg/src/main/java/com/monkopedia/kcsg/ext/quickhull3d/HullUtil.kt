@@ -13,8 +13,6 @@ import com.monkopedia.kcsg.Vector3d
 import java.util.function.Consumer
 
 /**
- *
- * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 internal class HullUtil private constructor() {
     companion object {

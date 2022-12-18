@@ -6,8 +6,6 @@
 package com.monkopedia.kcsg
 
 /**
- *
- * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 internal class Modifier(private val function: WeightFunction) {
     fun modify(csg: CSG) {

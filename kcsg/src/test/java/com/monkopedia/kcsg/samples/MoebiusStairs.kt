@@ -10,8 +10,6 @@ import com.monkopedia.kcsg.Cube
 import com.monkopedia.kcsg.Transform
 
 /**
- *
- * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 class MoebiusStairs {
     private var n = 45.0

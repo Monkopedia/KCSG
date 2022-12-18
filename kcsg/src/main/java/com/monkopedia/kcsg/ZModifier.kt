@@ -9,8 +9,6 @@ import kotlin.math.abs
 
 /**
  * Modifies along z axis.
- *
- * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 class ZModifier : WeightFunction {
     private var bounds: Bounds? = null

@@ -43,8 +43,6 @@ import kotlin.math.min
 import kotlin.math.sqrt
 
 /**
- *
- * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 data class Vector3d
 /**

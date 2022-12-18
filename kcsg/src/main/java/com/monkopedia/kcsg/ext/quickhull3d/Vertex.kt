@@ -5,8 +5,6 @@ import com.monkopedia.kcsg.Vector3d
 /**
  * Represents vertices of the hull, as well as the points from
  * which it is formed.
- *
- * @author John E. Lloyd, Fall 2004
  */
 internal class Vertex {
     /**

@@ -11,8 +11,6 @@ import com.monkopedia.kcsg.Transform
 import com.monkopedia.kcsg.Vector3d
 
 /**
- *
- * @author miho
  */
 class ServoMount {
     // mini servo

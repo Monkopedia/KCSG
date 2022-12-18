@@ -35,8 +35,6 @@
 package com.monkopedia.kcsg.ext.vvecmath
 
 /**
- *
- * @author Michael Hoffer (info@michaelhoffer.de)
  */
 @JvmInline
 internal value class Matrix4d(

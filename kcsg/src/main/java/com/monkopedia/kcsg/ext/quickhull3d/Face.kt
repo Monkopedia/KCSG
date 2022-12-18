@@ -25,8 +25,6 @@ import kotlin.math.sqrt
  * The information stored for each face consists of a planar
  * normal, a planar offset, and a doubly-linked list of three [HalfEdges](HalfEdge) which surround the face in a
  * counter-clockwise direction.
- *
- * @author John E. Lloyd, Fall 2004
  */
 internal class Face {
     var he0: HalfEdge? = null

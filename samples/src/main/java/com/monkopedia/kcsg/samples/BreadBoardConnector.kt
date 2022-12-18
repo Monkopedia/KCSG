@@ -16,8 +16,6 @@ import java.nio.file.Paths
 import kotlin.math.max
 
 /**
- *
- * @author miho
  */
 class BreadBoardConnector {
     private val boardMountingThickness = 2.0

@@ -38,8 +38,6 @@ import java.util.*
 
 /**
  * A simple property storage.
- *
- * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 class PropertyStorage {
     private val map: MutableMap<String, Any> = HashMap()

@@ -9,8 +9,6 @@ import kotlin.math.abs
 
 /**
  * Modifies along x axis.
- *
- * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 class XModifier : WeightFunction {
     private var bounds: Bounds? = null

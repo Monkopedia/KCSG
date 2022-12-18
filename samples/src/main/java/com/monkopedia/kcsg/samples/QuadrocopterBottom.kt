@@ -16,8 +16,6 @@ import kotlin.math.cos
 import kotlin.math.sin
 
 /**
- *
- * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 class QuadrocopterBottom {
     fun print3d(csg: CSG, n: Int) {

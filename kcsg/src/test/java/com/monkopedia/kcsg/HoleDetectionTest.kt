@@ -14,8 +14,6 @@ import org.junit.Assert
 import org.junit.Test
 
 /**
- *
- * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 class HoleDetectionTest {
     @Test

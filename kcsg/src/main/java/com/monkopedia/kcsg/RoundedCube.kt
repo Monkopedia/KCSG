@@ -6,8 +6,6 @@
 package com.monkopedia.kcsg
 
 /**
- *
- * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 data class RoundedCube(
     var center: Vector3d = Vector3d.xyz(0.0, 0.0, 0.0),

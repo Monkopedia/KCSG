@@ -16,8 +16,6 @@ import java.nio.file.Paths
 import kotlin.math.asin
 
 /**
- *
- * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 class FractalStructureBeam2D {
     private fun toCSG(): CSG {

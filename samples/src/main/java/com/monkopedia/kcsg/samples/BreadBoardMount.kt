@@ -13,8 +13,6 @@ import com.monkopedia.kcsg.Vector3d
 import java.io.IOException
 
 /**
- *
- * @author miho
  */
 class BreadBoardMount {
     private val breadBoardWidth = 84.0

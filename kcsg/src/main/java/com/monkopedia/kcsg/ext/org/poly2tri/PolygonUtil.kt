@@ -40,8 +40,6 @@ import com.monkopedia.kcsg.Vector3d
 import java.util.*
 
 /**
- *
- * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 internal object PolygonUtil {
     /**

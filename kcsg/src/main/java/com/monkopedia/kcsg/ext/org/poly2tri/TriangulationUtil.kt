@@ -33,9 +33,6 @@ import com.monkopedia.kcsg.ext.org.poly2tri.TriangulationUtil.Orientation.CCW
 import com.monkopedia.kcsg.ext.org.poly2tri.TriangulationUtil.Orientation.CW
 import com.monkopedia.kcsg.ext.org.poly2tri.TriangulationUtil.Orientation.Collinear
 
-/**
- * @author Thomas ???, thahlen@gmail.com
- */
 internal object TriangulationUtil {
     const val EPSILON = 1e-12
     // Returns triangle circumcircle point and radius

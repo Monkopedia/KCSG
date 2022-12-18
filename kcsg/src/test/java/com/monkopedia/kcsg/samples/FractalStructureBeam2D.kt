@@ -13,8 +13,6 @@ import com.monkopedia.kcsg.Vector3d
 import kotlin.math.asin
 
 /**
- *
- * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 class FractalStructureBeam2D {
     internal fun toCSG(): CSG {

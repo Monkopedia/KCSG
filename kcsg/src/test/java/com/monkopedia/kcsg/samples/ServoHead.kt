@@ -12,8 +12,6 @@ import com.monkopedia.kcsg.Transform
 import com.monkopedia.kcsg.Vector3d
 
 /**
- *
- * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 class ServoHead {
     private var toothLength = 0.7

@@ -9,8 +9,6 @@ import java.lang.Math.toRadians
 var count = 0
 
 /**
- *
- * @author cpoliwoda
  */
 class FractalStructure(
     groundCenter: Vector3d,

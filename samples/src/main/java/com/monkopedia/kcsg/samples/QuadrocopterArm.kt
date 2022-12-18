@@ -23,8 +23,6 @@ import kotlin.math.max
 import kotlin.math.sqrt
 
 /**
- *
- * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 class QuadrocopterArm {
     private fun mainArm(

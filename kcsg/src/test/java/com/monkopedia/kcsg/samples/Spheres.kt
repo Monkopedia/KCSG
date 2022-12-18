@@ -11,8 +11,6 @@ import com.monkopedia.kcsg.Sphere
 import com.monkopedia.kcsg.Transform
 
 /**
- *
- * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 class Spheres {
     fun toCSG(): CSG {

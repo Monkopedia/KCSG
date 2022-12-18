@@ -18,8 +18,6 @@ import java.util.logging.Level
 import java.util.logging.Logger
 
 /**
- *
- * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 class PlaneWithHoles {
     fun toCSG(): CSG {

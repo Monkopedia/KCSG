@@ -26,7 +26,6 @@ import java.util.stream.Collectors
 import kotlin.math.abs
 
 /**
- * @author Michael Hoffer (info@michaelhoffer.de)
  */
 object Main2 {
     private const val EPS = 1e-8
