@@ -83,6 +83,7 @@ class CSG private constructor(
     private var _storage: PropertyStorage = PropertyStorage()
 
     fun copy(): CSG {
+        opOverride?.operation("copy", this)?.let { return it }
         val polygonStream: Stream<Polygon> = if (_polygons.size > 200) {
             _polygons.parallelStream()
         } else {
@@ -137,6 +138,7 @@ class CSG private constructor(
      * @return union of this csg and the specified csg
      */
     fun union(csg: CSG): CSG {
+        opOverride?.operation("union", this, csg)?.let { return it }
         return when (getOptType()) {
             CSG_BOUND -> unionCSGBoundsOpt(csg)
             POLYGON_BOUND -> unionPolygonBoundsOpt(csg)
@@ -160,6 +162,7 @@ class CSG private constructor(
      * @return a csg consisting of the polygons of this csg and the specified csg
      */
     fun dumbUnion(csg: CSG): CSG {
+        opOverride?.operation("dumbUnion", this, csg)?.let { return it }
         val result = copy()
         val other = csg.copy()
         result._polygons.addAll(other._polygons)
@@ -190,6 +193,7 @@ class CSG private constructor(
      * @return union of this csg and the specified csgs
      */
     fun union(csgs: List<CSG>): CSG {
+        opOverride?.operation("union", this, *csgs.toTypedArray())?.let { return it }
         var result = this
         for (csg in csgs) {
             result = result.union(csg)
@@ -221,6 +225,7 @@ class CSG private constructor(
      * @return union of this csg and the specified csgs
      */
     fun union(vararg csgs: CSG): CSG {
+        opOverride?.operation("union", this, *csgs)?.let { return it }
         return union(listOf(*csgs))
     }
 
@@ -230,6 +235,7 @@ class CSG private constructor(
      * @return the convex hull of this csg
      */
     fun hull(): CSG {
+        opOverride?.operation("hull", this)?.let { return it }
         return HullUtil.hull(this, _storage)
     }
 
@@ -240,6 +246,7 @@ class CSG private constructor(
      * @return the convex hull of this csg and the specified csgs
      */
     fun hull(csgs: List<CSG>): CSG {
+        opOverride?.operation("hull", this, *csgs.toTypedArray())?.let { return it }
         val csgsUnion = CSG(copy()._polygons)
         csgsUnion._storage = _storage
         csgsUnion._optType = _optType
@@ -259,6 +266,7 @@ class CSG private constructor(
      * @return the convex hull of this csg and the specified csgs
      */
     fun hull(vararg csgs: CSG): CSG {
+        opOverride?.operation("hull", this, *csgs)?.let { return it }
         return hull(listOf(*csgs))
     }
 
@@ -353,6 +361,7 @@ class CSG private constructor(
      * @return difference of this csg and the specified csgs
      */
     fun difference(csgs: List<CSG>): CSG {
+        opOverride?.operation("diff", this, *csgs.toTypedArray())?.let { return it }
         if (csgs.isEmpty()) {
             return copy()
         }
@@ -385,6 +394,7 @@ class CSG private constructor(
      * @return difference of this csg and the specified csgs
      */
     fun difference(vararg csgs: CSG): CSG {
+        opOverride?.operation("diff", this, *csgs)?.let { return it }
         return difference(listOf(*csgs))
     }
 
@@ -410,6 +420,7 @@ class CSG private constructor(
      * @return difference of this csg and the specified csg
      */
     fun difference(csg: CSG): CSG {
+        opOverride?.operation("diff", this, csg)?.let { return it }
         return when (getOptType()) {
             CSG_BOUND -> differenceCSGBoundsOpt(csg)
             POLYGON_BOUND -> differencePolygonBoundsOpt(csg)
@@ -481,6 +492,7 @@ class CSG private constructor(
      * @return intersection of this csg and the specified csg
      */
     fun intersect(csg: CSG): CSG {
+        opOverride?.operation("intersect", this, csg)?.let { return it }
         val a = Node(copy()._polygons)
         val b = Node(csg.copy()._polygons)
         a.invert()
@@ -516,6 +528,7 @@ class CSG private constructor(
      * @return intersection of this csg and the specified csgs
      */
     fun intersect(csgs: List<CSG>): CSG {
+        opOverride?.operation("intersect", this, *csgs.toTypedArray())?.let { return it }
         if (csgs.isEmpty()) {
             return copy()
         }
@@ -549,6 +562,7 @@ class CSG private constructor(
      * @return intersection of this csg and the specified csgs
      */
     fun intersect(vararg csgs: CSG): CSG {
+        opOverride?.operation("intersect", this, *csgs)?.let { return it }
         return intersect(listOf(*csgs))
     }
 
@@ -724,6 +738,7 @@ class CSG private constructor(
     }
 
     fun weighted(f: WeightFunction): CSG {
+        opOverride?.operation("weighted", this)?.let { return it }
         return Modifier(f).modified(this)
     }
 
@@ -735,6 +750,7 @@ class CSG private constructor(
      * @return a transformed copy of this CSG
      */
     fun transformed(transform: Transform): CSG {
+        opOverride?.operation("transformed", this, transform)?.let { return it }
         if (_polygons.isEmpty()) {
             return copy()
         }
@@ -745,130 +761,6 @@ class CSG private constructor(
         return result
     }
 
-    // TODO finish experiment (20.7.2014)
-    fun toJavaFXMesh(): MeshContainer {
-        return toJavaFXMeshSimple()
-    }
-
-    /**
-     * Returns the CSG as JavaFX triangle mesh.
-     *
-     * @return the CSG as JavaFX triangle mesh
-     */
-    private fun toJavaFXMeshSimple(): MeshContainer {
-        val mesh = TriangleMesh()
-        var minX = Double.POSITIVE_INFINITY
-        var minY = Double.POSITIVE_INFINITY
-        var minZ = Double.POSITIVE_INFINITY
-        var maxX = Double.NEGATIVE_INFINITY
-        var maxY = Double.NEGATIVE_INFINITY
-        var maxZ = Double.NEGATIVE_INFINITY
-        var counter = 0
-        for (p in polygons) {
-            if (p.vertices.size >= 3) {
-                // TODO: improve the triangulation?
-                //
-                // JavaOne requires triangular polygons.
-                // If our polygon has more vertices, create
-                // multiple triangles:
-                val firstVertex = p.vertices[0]
-                for (i in 0 until p.vertices.size - 2) {
-                    if (firstVertex.pos.x < minX) {
-                        minX = firstVertex.pos.x
-                    }
-                    if (firstVertex.pos.y < minY) {
-                        minY = firstVertex.pos.y
-                    }
-                    if (firstVertex.pos.z < minZ) {
-                        minZ = firstVertex.pos.z
-                    }
-                    if (firstVertex.pos.x > maxX) {
-                        maxX = firstVertex.pos.x
-                    }
-                    if (firstVertex.pos.y > maxY) {
-                        maxY = firstVertex.pos.y
-                    }
-                    if (firstVertex.pos.z > maxZ) {
-                        maxZ = firstVertex.pos.z
-                    }
-                    mesh.points.addAll(
-                        firstVertex.pos.x.toFloat(),
-                        firstVertex.pos.y.toFloat(),
-                        firstVertex.pos.z.toFloat()
-                    )
-                    mesh.texCoords.addAll(0f) // texture (not covered)
-                    mesh.texCoords.addAll(0f)
-                    val secondVertex = p.vertices[i + 1]
-                    if (secondVertex.pos.x < minX) {
-                        minX = secondVertex.pos.x
-                    }
-                    if (secondVertex.pos.y < minY) {
-                        minY = secondVertex.pos.y
-                    }
-                    if (secondVertex.pos.z < minZ) {
-                        minZ = secondVertex.pos.z
-                    }
-                    if (secondVertex.pos.x > maxX) {
-                        maxX = firstVertex.pos.x
-                    }
-                    if (secondVertex.pos.y > maxY) {
-                        maxY = firstVertex.pos.y
-                    }
-                    if (secondVertex.pos.z > maxZ) {
-                        maxZ = firstVertex.pos.z
-                    }
-                    mesh.points.addAll(
-                        secondVertex.pos.x.toFloat(),
-                        secondVertex.pos.y.toFloat(),
-                        secondVertex.pos.z.toFloat()
-                    )
-                    mesh.texCoords.addAll(0f) // texture (not covered)
-                    mesh.texCoords.addAll(0f)
-                    val thirdVertex = p.vertices[i + 2]
-                    mesh.points.addAll(
-                        thirdVertex.pos.x.toFloat(),
-                        thirdVertex.pos.y.toFloat(),
-                        thirdVertex.pos.z.toFloat()
-                    )
-                    if (thirdVertex.pos.x < minX) {
-                        minX = thirdVertex.pos.x
-                    }
-                    if (thirdVertex.pos.y < minY) {
-                        minY = thirdVertex.pos.y
-                    }
-                    if (thirdVertex.pos.z < minZ) {
-                        minZ = thirdVertex.pos.z
-                    }
-                    if (thirdVertex.pos.x > maxX) {
-                        maxX = firstVertex.pos.x
-                    }
-                    if (thirdVertex.pos.y > maxY) {
-                        maxY = firstVertex.pos.y
-                    }
-                    if (thirdVertex.pos.z > maxZ) {
-                        maxZ = firstVertex.pos.z
-                    }
-                    mesh.texCoords.addAll(0f) // texture (not covered)
-                    mesh.texCoords.addAll(0f)
-                    mesh.faces.addAll(
-                        counter, // first vertex
-                        0, // texture (not covered)
-                        counter + 1, // second vertex
-                        0, // texture (not covered)
-                        counter + 2, // third vertex
-                        0 // texture (not covered)
-                    )
-                    counter += 3
-                } // end for
-            } // end if #verts >= 3
-        } // end for polygon
-        return MeshContainer(
-            Vector3d.xyz(minX, minY, minZ),
-            Vector3d.xyz(maxX, maxY, maxZ),
-            mesh
-        )
-    }
-
     /**
      * Returns the bounds of this csg.
      *
@@ -876,6 +768,7 @@ class CSG private constructor(
      */
     val bounds: Bounds
         get() {
+            opOverride?.bounds("bounds", this)?.let { return it }
             if (_polygons.isEmpty()) {
                 return Bounds(Vector3d.ZERO, Vector3d.ZERO)
             }
@@ -932,6 +825,7 @@ class CSG private constructor(
      * @return volume of this csg
      */
     fun computeVolume(): Double {
+        opOverride?.double("volume", this)?.let { return it }
         if (polygons.isEmpty()) return 0.0
 
         // triangulate polygons (parallel for larger meshes)
@@ -972,6 +866,7 @@ class CSG private constructor(
          * @return a CSG instance
          */
         fun fromPolygons(polygons: List<Polygon>): CSG {
+            opOverride?.operation("fromPolygons", *polygons.toTypedArray())?.let { return it }
             return CSG(polygons.toMutableList())
         }
 
@@ -982,6 +877,7 @@ class CSG private constructor(
          * @return a CSG instance
          */
         fun fromPolygons(vararg polygons: Polygon): CSG {
+            opOverride?.operation("fromPolygons", *polygons)?.let { return it }
             return fromPolygons(listOf(*polygons))
         }
 
@@ -993,6 +889,7 @@ class CSG private constructor(
          * @return a CSG instance
          */
         fun fromPolygons(storage: PropertyStorage, polygons: List<Polygon>): CSG {
+            opOverride?.operation("fromPolygons", *polygons.toTypedArray())?.let { return it }
             val csg = CSG(polygons.toMutableList())
             csg._storage = storage
             for (polygon in polygons) {
@@ -1009,6 +906,7 @@ class CSG private constructor(
          * @return a CSG instance
          */
         fun fromPolygons(storage: PropertyStorage, vararg polygons: Polygon): CSG {
+            opOverride?.operation("fromPolygons", *polygons)?.let { return it }
             return fromPolygons(storage, listOf(*polygons))
         }
 
@@ -1017,6 +915,13 @@ class CSG private constructor(
          */
         fun setDefaultOptType(optType: OptType) {
             defaultOptType = optType
+        }
+
+        internal var opOverride: OpOverride? = null
+            private set
+
+        fun setOverride(override: OpOverride?) {
+            opOverride = override
         }
     }
 }

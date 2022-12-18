@@ -83,14 +83,18 @@ data class Sphere(
                 val vertices: MutableList<Vertex> = ArrayList()
                 vertices.add(
                     sphereVertex(
-                        center, radius, i / numSlices.toDouble(),
+                        center,
+                        radius,
+                        i / numSlices.toDouble(),
                         j / numStacks.toDouble()
                     )
                 )
                 if (j > 0) {
                     vertices.add(
                         sphereVertex(
-                            center, radius, (i + 1) / numSlices.toDouble(),
+                            center,
+                            radius,
+                            (i + 1) / numSlices.toDouble(),
                             j / numStacks.toDouble()
                         )
                     )
@@ -98,14 +102,18 @@ data class Sphere(
                 if (j < numStacks - 1) {
                     vertices.add(
                         sphereVertex(
-                            center, radius, (i + 1) / numSlices.toDouble(),
+                            center,
+                            radius,
+                            (i + 1) / numSlices.toDouble(),
                             (j + 1) / numStacks.toDouble()
                         )
                     )
                 }
                 vertices.add(
                     sphereVertex(
-                        center, radius, i / numSlices.toDouble(),
+                        center,
+                        radius,
+                        i / numSlices.toDouble(),
                         (j + 1) / numStacks.toDouble()
                     )
                 )

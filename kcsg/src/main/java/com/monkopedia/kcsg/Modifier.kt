@@ -17,6 +17,7 @@ internal class Modifier(private val function: WeightFunction) {
     }
 
     fun modified(csg: CSG): CSG {
+        CSG.opOverride?.operation("modifier", csg, this)?.let { return it }
         val result = csg.copy()
         modify(result)
         return result

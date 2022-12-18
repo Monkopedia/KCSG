@@ -51,6 +51,7 @@ object Extrude {
      * @return a CSG object that consists of the extruded polygon
      */
     fun points(dir: Vector3d, vararg points: Vector3d): CSG {
+        CSG.opOverride?.operation("points", dir, *points)?.let { return it }
         return extrude(dir, Polygon.fromPoints(toCCW(listOf(*points))))
     }
 
@@ -65,6 +66,7 @@ object Extrude {
      * @return a CSG object that consists of the extruded polygon
      */
     fun points(dir: Vector3d, points: List<Vector3d>): CSG {
+        CSG.opOverride?.operation("points", dir, *points.toTypedArray())?.let { return it }
         val newList: List<Vector3d> = ArrayList(points)
         return extrude(dir, Polygon.fromPoints(toCCW(newList)))
     }
@@ -127,6 +129,7 @@ object Extrude {
      * @return List of polygons
      */
     fun combine(p1: Polygon, p2: Polygon): CSG {
+        CSG.opOverride?.operation("combine", p1, p2)?.let { return it }
         return CSG.fromPolygons(combine(p1, p2, true, top = true))
     }
 

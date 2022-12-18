@@ -10,22 +10,18 @@ import java.util.*
 /**
  * Polyhedron.
  */
-class Polyhedron : Primitive {
+data class Polyhedron
+/**
+ * Constructor. Creates a polyhedron defined by a list of points and a list
+ * of faces.
+ *
+ * @param points points ([Vector3d] list)
+ * @param faces list of faces (list of point index lists)
+ */(
+    val points: List<Vector3d> = ArrayList(),
+    val faces: List<List<Int>> = ArrayList()
+) : Primitive {
     private val properties = PropertyStorage()
-    private val points: MutableList<Vector3d> = ArrayList()
-    private val faces: MutableList<List<Int>> = ArrayList()
-
-    /**
-     * Constructor. Creates a polyhedron defined by a list of points and a list
-     * of faces.
-     *
-     * @param points points ([Vector3d] list)
-     * @param faces list of faces (list of point index lists)
-     */
-    constructor(points: List<Vector3d>, faces: List<List<Int>>) {
-        this.points.addAll(points)
-        this.faces.addAll(faces)
-    }
 
     /**
      * Constructor. Creates a polyhedron defined by a list of points and a list
@@ -34,12 +30,10 @@ class Polyhedron : Primitive {
      * @param points points ([Vector3d] array)
      * @param faces list of faces (array of point index arrays)
      */
-    constructor(points: Array<Vector3d>, faces: Array<Array<Int>>) {
-        this.points.addAll(listOf(*points))
-        for (list in faces) {
-            this.faces.add(listOf(*list))
-        }
-    }
+    constructor(points: Array<Vector3d>, faces: Array<Array<Int>>) : this(
+        points.toList(),
+        faces.map { it.toList() }
+    )
 
     override fun toPolygons(): List<Polygon> {
         return faces.map { faceList ->

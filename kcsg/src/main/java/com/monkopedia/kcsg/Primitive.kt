@@ -49,6 +49,7 @@ interface Primitive {
      * @return this primitive as [CSG]
      */
     fun toCSG(): CSG {
+        CSG.opOverride?.operation("toCSG", this)?.let { return it }
         return CSG.fromPolygons(getProperties(), toPolygons())
     }
 

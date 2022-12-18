@@ -4,9 +4,9 @@ import com.monkopedia.kcsg.CSG
 import com.monkopedia.kcsg.Polygon
 import com.monkopedia.kcsg.STL
 import com.monkopedia.kcsg.Sphere
-import com.monkopedia.kcsg.ext.vvecmath.Plane
 import com.monkopedia.kcsg.Transform
 import com.monkopedia.kcsg.Vector3d
+import com.monkopedia.kcsg.ext.vvecmath.Plane
 import org.junit.Before
 import org.junit.Test
 import kotlin.math.abs
@@ -136,8 +136,13 @@ class SampleTests {
     @Test
     fun testFractalLevel1() {
         val fractal = FractalStructure(
-            Vector3d.ZERO, Vector3d.Z_ONE.times(1.0), 4, 15.0, 0,
-            Vector3d.X_ONE, Vector3d.Y_ONE //                null, null
+            Vector3d.ZERO,
+            Vector3d.Z_ONE.times(1.0),
+            4,
+            15.0,
+            0,
+            Vector3d.X_ONE,
+            Vector3d.Y_ONE //                null, null
         )
         val expected = getResource("/fractal-structure-level-1.stl")
 
@@ -147,8 +152,13 @@ class SampleTests {
     @Test
     fun testFractalLevel2() {
         val fractal = FractalStructure(
-            Vector3d.ZERO, Vector3d.Z_ONE.times(1.0), 4, 15.0, 1,
-            Vector3d.X_ONE, Vector3d.Y_ONE //                null, null
+            Vector3d.ZERO,
+            Vector3d.Z_ONE.times(1.0),
+            4,
+            15.0,
+            1,
+            Vector3d.X_ONE,
+            Vector3d.Y_ONE //                null, null
         )
         val expected = getResource("/fractal-structure-level-2.stl")
 

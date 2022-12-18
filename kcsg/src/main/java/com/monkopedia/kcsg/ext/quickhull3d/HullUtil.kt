@@ -17,6 +17,7 @@ import java.util.function.Consumer
 internal class HullUtil private constructor() {
     companion object {
         fun hull(points: List<Vector3d>, storage: PropertyStorage?): CSG {
+            CSG.opOverride?.operation("hull", *points.toTypedArray())?.let { return it }
             val hullPoints =
                 points.map { vec: Vector3d -> Point3d(vec.x, vec.y, vec.z) }
                     .toTypedArray()
@@ -37,6 +38,7 @@ internal class HullUtil private constructor() {
         }
 
         fun hull(csg: CSG, storage: PropertyStorage?): CSG {
+            CSG.opOverride?.operation("hull", csg)?.let { return it }
             val points: MutableList<Vector3d> = ArrayList(
                 csg.polygons.size * 3
             )

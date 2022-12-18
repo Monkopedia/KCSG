@@ -79,6 +79,7 @@ data class Bounds(
      * @return this bounding box as csg
      */
     fun toCSG(): CSG {
+        CSG.opOverride?.operation("boundsToCSG", this)?.let { return it }
         if (csg == null) {
             csg = cube.toCSG()
         }
