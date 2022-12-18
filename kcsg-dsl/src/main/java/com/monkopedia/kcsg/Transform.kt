@@ -1,9 +1,5 @@
 package com.monkopedia.kcsg
 
-import eu.mihosoft.jcsg.CSG
-import eu.mihosoft.jcsg.Primitive
-import eu.mihosoft.jcsg.ext.vvecmath.Transform
-
 object TransformBuilder {
     val unity: Transform
         get() = Transform.unity()

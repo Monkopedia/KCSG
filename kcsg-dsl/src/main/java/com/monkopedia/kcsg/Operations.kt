@@ -1,8 +1,5 @@
 package com.monkopedia.kcsg
 
-import eu.mihosoft.jcsg.CSG
-import eu.mihosoft.jcsg.Primitive
-
 @CsgDsl
 infix fun CSG.and(other: CSG): CSG = intersect(other)
 

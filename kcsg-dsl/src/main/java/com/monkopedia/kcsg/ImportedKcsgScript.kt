@@ -1,7 +1,5 @@
 package com.monkopedia.kcsg
 
-import eu.mihosoft.jcsg.CSG
-
 /**
  * Simple implementation that surfaces a [KcsgScript] as a [ImportedScript]
  */

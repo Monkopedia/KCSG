@@ -1,6 +1,5 @@
 package com.monkopedia.kcsg
 
-import eu.mihosoft.jcsg.CSG
 import java.nio.file.Path
 
 class KcsgScript(var host: KcsgHost = EmptyHost) : KcsgBuilder() {
@@ -49,8 +48,6 @@ class KcsgScript(var host: KcsgHost = EmptyHost) : KcsgBuilder() {
 
         val HEADER = """
             |import com.monkopedia.kcsg.*
-            |import eu.mihosoft.jcsg.*
-            |import eu.mihosoft.vvecmath.*
             |
             |com.monkopedia.kcsg.KcsgScript().apply {
         """.trimMargin()

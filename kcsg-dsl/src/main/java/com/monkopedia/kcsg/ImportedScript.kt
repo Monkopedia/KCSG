@@ -1,7 +1,5 @@
 package com.monkopedia.kcsg
 
-import eu.mihosoft.jcsg.CSG
-
 interface ImportedScript {
     /**
      * List of elements exported by the script.

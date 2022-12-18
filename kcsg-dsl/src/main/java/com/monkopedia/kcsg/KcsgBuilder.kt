@@ -1,8 +1,5 @@
 package com.monkopedia.kcsg
 
-import eu.mihosoft.jcsg.CSG
-import eu.mihosoft.jcsg.Primitive
-import eu.mihosoft.jcsg.STL
 import java.nio.file.Path
 import kotlin.properties.PropertyDelegateProvider
 import kotlin.properties.ReadOnlyProperty
