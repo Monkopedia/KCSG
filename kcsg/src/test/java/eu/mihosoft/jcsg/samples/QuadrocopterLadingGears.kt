@@ -9,8 +9,8 @@ import eu.mihosoft.jcsg.CSG
 import eu.mihosoft.jcsg.Cube
 import eu.mihosoft.jcsg.UnityModifier
 import eu.mihosoft.jcsg.WeightFunction
-import eu.mihosoft.vvecmath.Transform
-import eu.mihosoft.vvecmath.Vector3d
+import eu.mihosoft.jcsg.ext.vvecmath.Transform
+import eu.mihosoft.jcsg.ext.vvecmath.Vector3d
 
 /**
  *

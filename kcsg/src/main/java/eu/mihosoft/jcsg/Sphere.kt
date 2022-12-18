@@ -33,7 +33,7 @@
  */
 package eu.mihosoft.jcsg
 
-import eu.mihosoft.vvecmath.Vector3d
+import eu.mihosoft.jcsg.ext.vvecmath.Vector3d
 
 /**
  * A solid sphere.

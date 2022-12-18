@@ -8,7 +8,7 @@ package eu.mihosoft.jcsg.samples
 import eu.mihosoft.jcsg.CSG
 import eu.mihosoft.jcsg.Cube
 import eu.mihosoft.jcsg.Cylinder
-import eu.mihosoft.vvecmath.Transform
+import eu.mihosoft.jcsg.ext.vvecmath.Transform
 import kotlin.math.cos
 import kotlin.math.min
 import kotlin.math.sin

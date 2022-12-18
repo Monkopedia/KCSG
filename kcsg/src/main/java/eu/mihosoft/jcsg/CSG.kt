@@ -27,8 +27,8 @@
 package eu.mihosoft.jcsg
 
 import eu.mihosoft.jcsg.ext.quickhull3d.HullUtil
-import eu.mihosoft.vvecmath.Transform
-import eu.mihosoft.vvecmath.Vector3d
+import eu.mihosoft.jcsg.ext.vvecmath.Transform
+import eu.mihosoft.jcsg.ext.vvecmath.Vector3d
 import javafx.scene.paint.Color
 import javafx.scene.shape.TriangleMesh
 import java.util.*
@@ -88,7 +88,7 @@ class CSG private constructor(
             _polygons.stream()
         }
         val csg = CSG(polygonStream.map { p: Polygon -> p.copy() }.collect(Collectors.toList()))
-        csg.setOptType(getOptType())
+        csg._optType = getOptType()
         return csg
     }
 
@@ -108,7 +108,7 @@ class CSG private constructor(
      * @return this CSG
      */
     fun optimization(type: OptType): CSG {
-        setOptType(type)
+        this._optType = type
         return this
     }
 
@@ -626,14 +626,14 @@ class CSG private constructor(
             }
             indices.add(
                 PolygonStruct(
-                    p.storage, polyIndices,
+                    p.storage,
+                    polyIndices,
                     "material-" + materialNames[p.storage]
                 )
             )
         }
         objSb.append("\n# Faces").append("\n")
         for (ps in indices) {
-
             // add mtl info
             ps.storage.getValue<Any>("material:color")?.let {
                 objSb.append("usemtl ").append(ps.materialName).append("\n")
@@ -765,7 +765,6 @@ class CSG private constructor(
         var counter = 0
         for (p in polygons) {
             if (p.vertices.size >= 3) {
-
                 // TODO: improve the triangulation?
                 //
                 // JavaOne requires triangular polygons.
@@ -864,7 +863,8 @@ class CSG private constructor(
         } // end for polygon
         return MeshContainer(
             Vector3d.xyz(minX, minY, minZ),
-            Vector3d.xyz(maxX, maxY, maxZ), mesh
+            Vector3d.xyz(maxX, maxY, maxZ),
+            mesh
         )
     }
 
@@ -919,13 +919,6 @@ class CSG private constructor(
      */
     private fun getOptType(): OptType {
         return _optType ?: defaultOptType
-    }
-
-    /**
-     * @param optType the optType to set
-     */
-    private fun setOptType(optType: OptType) {
-        this._optType = optType
     }
 
     enum class OptType {

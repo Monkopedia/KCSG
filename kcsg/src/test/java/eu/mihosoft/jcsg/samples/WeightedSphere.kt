@@ -8,8 +8,8 @@ package eu.mihosoft.jcsg.samples
 import eu.mihosoft.jcsg.CSG
 import eu.mihosoft.jcsg.CSG.OptType
 import eu.mihosoft.jcsg.Sphere
-import eu.mihosoft.vvecmath.Transform
-import eu.mihosoft.vvecmath.Vector3d
+import eu.mihosoft.jcsg.ext.vvecmath.Transform
+import eu.mihosoft.jcsg.ext.vvecmath.Vector3d
 import kotlin.math.cos
 import kotlin.math.sin
 

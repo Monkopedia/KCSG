@@ -7,7 +7,7 @@ package eu.mihosoft.jcsg.ext.quickhull3d
 
 import eu.mihosoft.jcsg.*
 import eu.mihosoft.jcsg.Vertex
-import eu.mihosoft.vvecmath.Vector3d
+import eu.mihosoft.jcsg.ext.vvecmath.Vector3d
 import java.util.function.Consumer
 
 /**

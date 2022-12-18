@@ -30,7 +30,7 @@
 package eu.mihosoft.jcsg
 
 import eu.mihosoft.jcsg.ext.imagej.STLLoader
-import eu.mihosoft.vvecmath.Vector3d
+import eu.mihosoft.jcsg.ext.vvecmath.Vector3d
 import java.io.IOException
 import java.io.InputStream
 import java.nio.file.Path

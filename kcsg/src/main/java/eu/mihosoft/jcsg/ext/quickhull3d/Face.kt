@@ -13,8 +13,8 @@
   */
 package eu.mihosoft.jcsg.ext.quickhull3d
 
-import eu.mihosoft.vvecmath.Vector3d
-import eu.mihosoft.vvecmath.Vector3d.Companion.ZERO
+import eu.mihosoft.jcsg.ext.vvecmath.Vector3d
+import eu.mihosoft.jcsg.ext.vvecmath.Vector3d.Companion.ZERO
 import kotlin.math.abs
 import kotlin.math.sqrt
 

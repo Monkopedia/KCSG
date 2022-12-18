@@ -1,6 +1,6 @@
 package eu.mihosoft.jcsg.ext.imagej
 
-import eu.mihosoft.vvecmath.Vector3d
+import eu.mihosoft.jcsg.ext.vvecmath.Vector3d
 import java.io.File
 import java.io.FileInputStream
 import java.io.InputStream

@@ -8,7 +8,7 @@ package eu.mihosoft.jcsg.samples
 import eu.mihosoft.jcsg.CSG
 import eu.mihosoft.jcsg.CSG.OptType
 import eu.mihosoft.jcsg.Sphere
-import eu.mihosoft.vvecmath.Transform
+import eu.mihosoft.jcsg.ext.vvecmath.Transform
 
 /**
  *

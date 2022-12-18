@@ -8,7 +8,7 @@ package eu.mihosoft.jcsg.samples
 import eu.mihosoft.jcsg.CSG
 import eu.mihosoft.jcsg.FileUtil
 import eu.mihosoft.jcsg.STL
-import eu.mihosoft.vvecmath.Transform
+import eu.mihosoft.jcsg.ext.vvecmath.Transform
 import java.io.IOException
 import java.nio.file.Paths
 

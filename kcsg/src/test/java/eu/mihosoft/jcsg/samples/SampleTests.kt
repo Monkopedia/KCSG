@@ -4,9 +4,9 @@ import eu.mihosoft.jcsg.CSG
 import eu.mihosoft.jcsg.Polygon
 import eu.mihosoft.jcsg.STL
 import eu.mihosoft.jcsg.Sphere
-import eu.mihosoft.vvecmath.Plane
-import eu.mihosoft.vvecmath.Transform
-import eu.mihosoft.vvecmath.Vector3d
+import eu.mihosoft.jcsg.ext.vvecmath.Plane
+import eu.mihosoft.jcsg.ext.vvecmath.Transform
+import eu.mihosoft.jcsg.ext.vvecmath.Vector3d
 import org.junit.Before
 import org.junit.Test
 import kotlin.math.abs

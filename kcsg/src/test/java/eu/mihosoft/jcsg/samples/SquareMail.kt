@@ -7,7 +7,7 @@ package eu.mihosoft.jcsg.samples
 
 import eu.mihosoft.jcsg.CSG
 import eu.mihosoft.jcsg.Cube
-import eu.mihosoft.vvecmath.Transform
+import eu.mihosoft.jcsg.ext.vvecmath.Transform
 import kotlin.math.min
 
 /**

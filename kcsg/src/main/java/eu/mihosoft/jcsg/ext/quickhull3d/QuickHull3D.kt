@@ -15,7 +15,7 @@
 package eu.mihosoft.jcsg.ext.quickhull3d
 
 import eu.mihosoft.jcsg.ext.quickhull3d.Face.Companion.createTriangle
-import eu.mihosoft.vvecmath.Vector3d
+import eu.mihosoft.jcsg.ext.vvecmath.Vector3d
 import java.io.*
 import java.util.*
 import kotlin.math.abs

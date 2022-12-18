@@ -32,7 +32,7 @@
  * authors and should not be interpreted as representing official policies, either expressed
  * or implied, of Michael Hoffer <info@michaelhoffer.de>.
  */
-package eu.mihosoft.vvecmath
+package eu.mihosoft.jcsg.ext.vvecmath
 
 import kotlin.math.abs
 import kotlin.math.acos

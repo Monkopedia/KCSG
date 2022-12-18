@@ -6,7 +6,7 @@
 package eu.mihosoft.jcsg.samples
 
 import eu.mihosoft.jcsg.CSG
-import eu.mihosoft.vvecmath.Transform
+import eu.mihosoft.jcsg.ext.vvecmath.Transform
 
 /**
  *

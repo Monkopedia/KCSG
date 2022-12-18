@@ -29,7 +29,7 @@
  */
 package eu.mihosoft.jcsg.ext.org.poly2tri
 
-import eu.mihosoft.vvecmath.Vector3d
+import eu.mihosoft.jcsg.ext.vvecmath.Vector3d
 import java.util.*
 
 /* Poly2Tri

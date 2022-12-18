@@ -34,8 +34,8 @@
 package eu.mihosoft.jcsg
 
 import eu.mihosoft.jcsg.ext.org.poly2tri.PolygonUtil
-import eu.mihosoft.vvecmath.Transform
-import eu.mihosoft.vvecmath.Vector3d
+import eu.mihosoft.jcsg.ext.vvecmath.Transform
+import eu.mihosoft.jcsg.ext.vvecmath.Vector3d
 import java.util.*
 import java.util.function.Consumer
 import kotlin.math.abs
@@ -74,7 +74,7 @@ class Polygon {
      *
      * @return plane
      */
-    var plane: eu.mihosoft.vvecmath.Plane
+    var plane: eu.mihosoft.jcsg.ext.vvecmath.Plane
         private set
 
     /**
@@ -107,7 +107,7 @@ class Polygon {
             vertices[1].pos,
             vertices[2].pos
         )
-        plane = eu.mihosoft.vvecmath.Plane.fromPointAndNormal(centroid(), csgPlane.normal)
+        plane = eu.mihosoft.jcsg.ext.vvecmath.Plane.fromPointAndNormal(centroid(), csgPlane.normal)
         validateAndInit(vertices)
     }
 
@@ -151,7 +151,7 @@ class Polygon {
             vertices[1].pos,
             vertices[2].pos
         )
-        plane = eu.mihosoft.vvecmath.Plane.fromPointAndNormal(centroid(), csgPlane.normal)
+        plane = eu.mihosoft.jcsg.ext.vvecmath.Plane.fromPointAndNormal(centroid(), csgPlane.normal)
         validateAndInit(vertices)
     }
 
@@ -278,7 +278,7 @@ class Polygon {
 
         // TODO plane update correct?
         csgPlane.normal = b.minus(a).crossed(c.minus(a))
-        plane = eu.mihosoft.vvecmath.Plane.fromPointAndNormal(centroid(), csgPlane.normal)
+        plane = eu.mihosoft.jcsg.ext.vvecmath.Plane.fromPointAndNormal(centroid(), csgPlane.normal)
         return this
     }
 
@@ -312,7 +312,7 @@ class Polygon {
         val c = vertices[2].pos
         csgPlane.normal = b.minus(a).crossed(c.minus(a)).normalized()
         csgPlane.dist = csgPlane.normal.dot(a)
-        plane = eu.mihosoft.vvecmath.Plane.fromPointAndNormal(centroid(), csgPlane.normal)
+        plane = eu.mihosoft.jcsg.ext.vvecmath.Plane.fromPointAndNormal(centroid(), csgPlane.normal)
         vertices.forEach(Consumer { vertex: Vertex -> vertex.normal = plane.normal })
         if (transform.isMirror) {
             // the transformation includes mirroring. flip polygon
@@ -426,7 +426,7 @@ class Polygon {
         var coordIndex1 = 0
         var coordIndex2 = 1
         val orthogonalToXY: Boolean = abs(
-            eu.mihosoft.vvecmath.Plane.XY_PLANE.normal
+            eu.mihosoft.jcsg.ext.vvecmath.Plane.XY_PLANE.normal
                 .dot(plane.normal)
         ) < Plane.EPSILON
         var foundProjectionPlane = false
@@ -436,7 +436,7 @@ class Polygon {
             foundProjectionPlane = true
         }
         val orthogonalToXZ: Boolean = abs(
-            eu.mihosoft.vvecmath.Plane.XZ_PLANE.normal
+            eu.mihosoft.jcsg.ext.vvecmath.Plane.XZ_PLANE.normal
                 .dot(plane.normal)
         ) < Plane.EPSILON
         if (!orthogonalToXZ && !foundProjectionPlane) {
@@ -445,7 +445,7 @@ class Polygon {
             foundProjectionPlane = true
         }
         val orthogonalToYZ: Boolean = abs(
-            eu.mihosoft.vvecmath.Plane.YZ_PLANE.normal
+            eu.mihosoft.jcsg.ext.vvecmath.Plane.YZ_PLANE.normal
                 .dot(plane.normal)
         ) < Plane.EPSILON
         if (!orthogonalToYZ && !foundProjectionPlane) {

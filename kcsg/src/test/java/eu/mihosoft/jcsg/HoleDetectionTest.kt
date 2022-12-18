@@ -7,7 +7,7 @@ package eu.mihosoft.jcsg
 
 import eu.mihosoft.jcsg.Edge.Companion.boundaryPathsWithHoles
 import eu.mihosoft.jcsg.Polygon.Companion.fromPoints
-import eu.mihosoft.vvecmath.Vector3d
+import eu.mihosoft.jcsg.ext.vvecmath.Vector3d
 import org.junit.Assert
 import org.junit.Test
 

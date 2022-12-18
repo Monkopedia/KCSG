@@ -7,9 +7,9 @@ package eu.mihosoft.jcsg.samples
 
 import eu.mihosoft.jcsg.*
 import eu.mihosoft.jcsg.CSG.OptType
-import eu.mihosoft.vvecmath.Plane
-import eu.mihosoft.vvecmath.Transform
-import eu.mihosoft.vvecmath.Vector3d
+import eu.mihosoft.jcsg.ext.vvecmath.Plane
+import eu.mihosoft.jcsg.ext.vvecmath.Transform
+import eu.mihosoft.jcsg.ext.vvecmath.Vector3d
 import java.io.IOException
 import java.nio.file.Paths
 import kotlin.math.atan

@@ -6,8 +6,8 @@
 package eu.mihosoft.jcsg.samples
 
 import eu.mihosoft.jcsg.*
-import eu.mihosoft.vvecmath.Transform
-import eu.mihosoft.vvecmath.Vector3d
+import eu.mihosoft.jcsg.ext.vvecmath.Transform
+import eu.mihosoft.jcsg.ext.vvecmath.Vector3d
 import java.io.IOException
 import java.nio.file.Paths
 

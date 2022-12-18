@@ -10,9 +10,8 @@ import eu.mihosoft.jcsg.CSG.OptType
 import eu.mihosoft.jcsg.Cube
 import eu.mihosoft.jcsg.FileUtil
 import eu.mihosoft.jcsg.Sphere
-import eu.mihosoft.jcsg.samples.PlaneWithHoles
-import eu.mihosoft.vvecmath.Transform
-import eu.mihosoft.vvecmath.Vector3d
+import eu.mihosoft.jcsg.ext.vvecmath.Transform
+import eu.mihosoft.jcsg.ext.vvecmath.Vector3d
 import java.io.IOException
 import java.nio.file.Paths
 import java.util.logging.Level

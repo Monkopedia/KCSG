@@ -9,8 +9,8 @@ import eu.mihosoft.jcsg.Cylinder
 import eu.mihosoft.jcsg.Primitive
 import eu.mihosoft.jcsg.RoundedCube
 import eu.mihosoft.jcsg.WeightFunction
-import eu.mihosoft.vvecmath.Transform
-import eu.mihosoft.vvecmath.Vector3d
+import eu.mihosoft.jcsg.ext.vvecmath.Transform
+import eu.mihosoft.jcsg.ext.vvecmath.Vector3d
 
 @CsgDsl
 object CSGBuilder {

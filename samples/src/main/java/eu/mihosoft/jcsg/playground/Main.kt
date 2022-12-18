@@ -12,9 +12,9 @@ import eu.mihosoft.jcsg.ObjFile
 import eu.mihosoft.jcsg.Polygon
 import eu.mihosoft.jcsg.STL
 import eu.mihosoft.jcsg.Sphere
-import eu.mihosoft.vvecmath.Plane
-import eu.mihosoft.vvecmath.Transform
-import eu.mihosoft.vvecmath.Vector3d
+import eu.mihosoft.jcsg.ext.vvecmath.Plane
+import eu.mihosoft.jcsg.ext.vvecmath.Transform
+import eu.mihosoft.jcsg.ext.vvecmath.Vector3d
 import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Paths

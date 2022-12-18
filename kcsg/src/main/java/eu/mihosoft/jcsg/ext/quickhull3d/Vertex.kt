@@ -1,6 +1,6 @@
 package eu.mihosoft.jcsg.ext.quickhull3d
 
-import eu.mihosoft.vvecmath.Vector3d
+import eu.mihosoft.jcsg.ext.vvecmath.Vector3d
 
 /**
  * Represents vertices of the hull, as well as the points from
