@@ -17,6 +17,7 @@ fun BuilderContext.xyz(x: Double, y: Double, z: Double): Vector3d = Vector3d.xyz
 inline fun Primitive.weighted(weightFunction: WeightFunction): CSG {
     return toCSG().weighted(weightFunction)
 }
+
 @CsgDsl
 inline fun BuilderContext.roundedCube(size: Double = 1.0, builder: RoundedCube.() -> Unit = {}): RoundedCube {
     return RoundedCube(size).also(builder)
