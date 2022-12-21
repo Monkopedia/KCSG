@@ -10,12 +10,7 @@ import com.github.ajalt.clikt.parameters.types.enum
 import com.github.ajalt.clikt.parameters.types.file
 import com.monkopedia.csgs.OutputType.OBJ
 import com.monkopedia.csgs.OutputType.STL
-import com.monkopedia.kcsg.KcsgScript
-import com.monkopedia.kcsg.KcsgScript.Companion.FOOTER
-import com.monkopedia.kcsg.KcsgScript.Companion.HEADER
 import java.io.File
-import javax.script.ScriptEngineManager
-import javax.script.ScriptException
 
 fun main(vararg args: String) = Csgs().main(args)
 
@@ -33,6 +28,11 @@ class Csgs : CliktCommand() {
         "-c",
         "--clean",
         help = "Remove contents of output directory before executing"
+    ).flag()
+    val disableCaching by option(
+        "-d",
+        "--disable-caching",
+        help = "Disable caching mechanism"
     ).flag()
     val outputType by option("-t", "--output-type", help = "The type of files to generate")
         .enum<OutputType>(ignoreCase = true)
@@ -53,13 +53,16 @@ class Csgs : CliktCommand() {
             require(outputDirectory.deleteRecursively()) {
                 "Failed to clear output directory ${outputDirectory.absolutePath}"
             }
+            if (!disableCaching) {
+                println("Warning: caching enabled, but output directory was cleared")
+            }
         }
         if (!outputDirectory.exists()) {
             require(outputDirectory.mkdirs()) {
                 "Cannot create output directory ${outputDirectory.absolutePath}"
             }
         }
-        val host = FileImportHost(imports)
+        val host = FileImportHost(imports, if (disableCaching) null else outputDirectory)
         val output = host.createScript(File(targetFile))
         for (export in exports) {
             if (export.trim() == "?") {

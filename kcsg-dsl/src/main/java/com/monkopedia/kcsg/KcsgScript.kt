@@ -44,6 +44,17 @@ class KcsgScript(var host: KcsgHost = EmptyHost) : KcsgBuilder() {
         return properties.keys
     }
 
+    override val supportsCaching: Boolean
+        get() = host.supportsCaching
+
+    override fun checkCached(hash: String): CSG? {
+        return host.checkCached(hash)
+    }
+
+    override fun storeCached(hash: String, csg: CSG) {
+        host.storeCached(hash, csg)
+    }
+
     companion object {
 
         val HEADER = """

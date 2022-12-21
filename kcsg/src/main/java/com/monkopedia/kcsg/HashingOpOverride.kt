@@ -133,13 +133,10 @@ class HashingOpOverride : OpOverride {
     }
 
     private fun createCSG(): CSG {
-        try {
-            CSG.setOverride(null)
+        CSG.withOverride(null) {
             return CSG.fromPolygons().also {
                 placeCsg(it)
             }
-        } finally {
-            CSG.setOverride(this)
         }
     }
 

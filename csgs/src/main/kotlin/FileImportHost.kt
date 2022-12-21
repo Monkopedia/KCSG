@@ -1,17 +1,39 @@
 package com.monkopedia.csgs
 
+import com.monkopedia.kcsg.CSG
 import com.monkopedia.kcsg.ImportedKcsgScript
 import com.monkopedia.kcsg.ImportedScript
 import com.monkopedia.kcsg.KcsgHost
 import com.monkopedia.kcsg.KcsgScript
+import com.monkopedia.kcsg.STL
 import java.io.File
 import java.nio.file.Path
 import javax.script.ScriptEngineManager
 import javax.script.ScriptException
 
-class FileImportHost(imports: List<File>) : KcsgHost {
+class FileImportHost(imports: List<File>, outputDir: File?) : KcsgHost {
     private val dirs = imports.filter { it.isDirectory }
     private val files = imports.filter { it.isFile }
+    private val cacheDir = outputDir?.let {
+        File(outputDir, "cache").also(File::mkdirs)
+    }
+
+    override val supportsCaching: Boolean
+        get() = cacheDir != null
+
+    override fun checkCached(hash: String): CSG? {
+        val cachedFile = File(cacheDir, "$hash.stl")
+        return if (cachedFile.exists()) {
+            STL.file(cachedFile.toPath())
+        } else {
+            null
+        }
+    }
+
+    override fun storeCached(hash: String, csg: CSG) {
+        val cachedFile = File(cacheDir, "$hash.stl")
+        cachedFile.writeText(csg.toStlString())
+    }
 
     override fun findStl(stlName: String): Path {
         return resolve(stlName, "stl").toPath()

@@ -31,8 +31,6 @@ import com.monkopedia.kcsg.CSG.OptType.NONE
 import com.monkopedia.kcsg.CSG.OptType.POLYGON_BOUND
 import com.monkopedia.kcsg.ext.quickhull3d.HullUtil
 import javafx.scene.paint.Color
-import javafx.scene.shape.TriangleMesh
-import java.util.*
 import java.util.function.Consumer
 import java.util.stream.Collectors
 import java.util.stream.Stream
@@ -917,11 +915,16 @@ class CSG private constructor(
             defaultOptType = optType
         }
 
-        internal var opOverride: OpOverride? = null
-            private set
+        var opOverride: OpOverride? = null
 
-        fun setOverride(override: OpOverride?) {
-            opOverride = override
+        inline fun <T> withOverride(override: OpOverride?, exec: () -> T): T {
+            val previous = opOverride
+            try {
+                opOverride = override
+                return exec()
+            } finally {
+                opOverride = previous
+            }
         }
     }
 }

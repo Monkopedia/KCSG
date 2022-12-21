@@ -9,20 +9,13 @@ abstract class KcsgBuilder {
     /**
      * Version of [csg] that allows a primitive to be returned from the builder instead.
      */
-    fun primitive(
+    inline fun primitive(
         exported: Boolean = false,
-        lazyBuilder: BuilderContext.() -> Primitive
+        allowCaching: Boolean = true,
+        crossinline lazyBuilder: BuilderContext.() -> Primitive
     ): PropertyDelegateProvider<Nothing?, ReadOnlyProperty<Nothing?, CSG>> {
-        return PropertyDelegateProvider { _, property ->
-            val propertyName = property.name
-            val lazy = lazy { BuilderContextImpl.lazyBuilder().toCSG() }
-            track(propertyName, lazy)
-            if (exported) {
-                export(propertyName)
-            }
-            ReadOnlyProperty { _, _ ->
-                lazy.value
-            }
+        return csg(exported = exported, allowCaching = allowCaching) {
+            lazyBuilder().toCSG()
         }
     }
 
@@ -34,11 +27,20 @@ abstract class KcsgBuilder {
      */
     fun csg(
         exported: Boolean = false,
+        allowCaching: Boolean = true,
         lazyBuilder: BuilderContext.() -> CSG
     ): PropertyDelegateProvider<Nothing?, ReadOnlyProperty<Nothing?, CSG>> {
         return PropertyDelegateProvider { _, property ->
             val propertyName = property.name
-            val lazy = lazy { BuilderContextImpl.lazyBuilder() }
+            val lazy = lazy {
+                if (allowCaching && supportsCaching) {
+                    getCached(lazyBuilder)
+                } else {
+                    BuilderContextImpl.lazyBuilder()
+                }
+            }.wrapGetter {
+                CSG.opOverride?.operation("p:${getHash(lazyBuilder)}")
+            }
             track(propertyName, lazy)
             if (exported) {
                 export(propertyName)
@@ -88,12 +90,42 @@ abstract class KcsgBuilder {
         export(property.name)
     }
 
+    private fun getCached(lazyBuilder: BuilderContext.() -> CSG): CSG {
+        val hash = getHash(lazyBuilder)
+        return checkCached(hash)
+            ?: CSG.withOverride(null) { BuilderContextImpl.lazyBuilder() }.also {
+                storeCached(hash, it)
+            }
+    }
+
+    private fun getHash(lazyBuilder: BuilderContext.() -> CSG): String {
+        return HashingOpOverride().also {
+            CSG.withOverride(it) {
+                BuilderContextImpl.lazyBuilder()
+            }
+        }.hash()
+    }
+
+    protected open val supportsCaching: Boolean
+        get() = false
+
     protected abstract fun exportProperty(propertyName: String)
     protected abstract fun track(propertyName: String, lazy: Lazy<CSG>)
     protected abstract fun findStl(stlName: String): Path
     protected abstract fun findScript(csgsName: String): ImportedScript
+    protected open fun checkCached(hash: String): CSG? = null
+    protected open fun storeCached(hash: String, csg: CSG) {}
 
     sealed class BuilderContext
 
     private object BuilderContextImpl : BuilderContext()
+}
+
+private inline fun <T> Lazy<T>.wrapGetter(crossinline getter: () -> T?): Lazy<T> {
+    return object : Lazy<T> {
+        override val value: T
+            get() = getter() ?: this@wrapGetter.value
+
+        override fun isInitialized(): Boolean = this@wrapGetter.isInitialized()
+    }
 }
