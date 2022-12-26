@@ -36,6 +36,7 @@ package com.monkopedia.kcsg
 
 import com.monkopedia.kcsg.ext.vvecmath.Matrix4d
 import com.monkopedia.kcsg.ext.vvecmath.Plane
+import org.slf4j.LoggerFactory
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -391,7 +392,7 @@ class Transform {
      * @return this transform
      */
     fun mirror(plane: Plane): Transform {
-        System.err.println("WARNING: I'm too dumb to implement the mirror() operation correctly. Please fix me!")
+        logger.warn("WARNING: I'm too dumb to implement the mirror() operation correctly. Please fix me!")
         val nx: Double = plane.normal.x
         val ny: Double = plane.normal.y
         val nz: Double = plane.normal.z
@@ -636,6 +637,8 @@ class Transform {
     }
 
     companion object {
+        private val logger = LoggerFactory.getLogger("KCSG.Transform")
+
         /**
          * Returns a new transform based on the specified matrix values (4x4).
          *

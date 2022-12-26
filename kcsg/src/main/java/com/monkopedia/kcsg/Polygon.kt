@@ -34,6 +34,7 @@
 package com.monkopedia.kcsg
 
 import com.monkopedia.kcsg.ext.org.poly2tri.PolygonUtil
+import org.slf4j.LoggerFactory
 import java.util.*
 import java.util.function.Consumer
 import kotlin.math.abs
@@ -115,7 +116,7 @@ class Polygon {
         }
         if (Vector3d.ZERO == csgPlane.normal) {
             valid = false
-            System.err.println(
+            logger.error(
                 """
                     Normal is zero! Probably, duplicate points have been specified!
                     
@@ -542,10 +543,10 @@ class Polygon {
     //
     //        IntArray indices = clippingTriangulator.computeTriangles(vertexArray);
     //
-    //        System.out.println("indices: " + indices.size + ", vertices: " + vertexArray.length);
+    //        logger.info("indices: " + indices.size + ", vertices: " + vertexArray.length);
     //
     //        for (double i : vertexArray) {
-    //            System.out.println("vertices: " + i);
+    //            logger.info("vertices: " + i);
     //        }
     //
     //        Vertex[] newPolygonVerts = new Vertex[3];
@@ -558,7 +559,7 @@ class Polygon {
     //            Vector3d pos = new Vector3d(x, y);
     //            Vertex v = new Vertex(pos, new Vector3d(0, 0, 0));
     //
-    //            System.out.println("writing vertex: " + (count));
+    //            logger.info("writing vertex: " + (count));
     //            newPolygonVerts[count] = v;
     //
     //            if (count == 2) {
@@ -569,10 +570,10 @@ class Polygon {
     //            }
     //        }
     //
-    //        System.out.println("---");
+    //        logger.info("---");
     //
     //        for (Polygon p : result) {
-    //            System.out.println(p.toStlString());
+    //            logger.info(p.toStlString());
     //        }
     //
     //        return result;
@@ -587,20 +588,17 @@ class Polygon {
     // //        QuickHull3D hull = new QuickHull3D();
     // //        hull.build(points);
     // //
-    // //        System.out.println("Vertices:");
+    // //        logger.info("Vertices:");
     // //        Point3d[] vertices = hull.getVertices();
     // //        for (int i = 0; i < vertices.length; i++) {
     // //            Point3d pnt = vertices[i];
-    // //            System.out.println(pnt.x + " " + pnt.y + " " + pnt.z);
+    // //            logger.info(pnt.x + " " + pnt.y + " " + pnt.z);
     // //        }
     // //
-    // //        System.out.println("Faces:");
+    // //        logger.info("Faces:");
     // //        int[][] faceIndices = hull.getFaces();
     // //        for (int i = 0; i < faceIndices.length; i++) {
-    // //            for (int k = 0; k < faceIndices[i].length; k++) {
-    // //                System.out.print(faceIndices[i][k] + " ");
-    // //            }
-    // //            System.out.println("");
+    // //            logger.info(faces[i].joinToString(" "));
     // //        }
     //
     // //        return result;
@@ -620,6 +618,7 @@ class Polygon {
         }
 
     companion object {
+        private val logger = LoggerFactory.getLogger("KCSG.Polygon")
         /**
          * Decomposes the specified concave polygon into convex polygons.
          *

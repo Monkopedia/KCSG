@@ -31,6 +31,7 @@ import com.monkopedia.kcsg.CSG.OptType.NONE
 import com.monkopedia.kcsg.CSG.OptType.POLYGON_BOUND
 import com.monkopedia.kcsg.ext.quickhull3d.HullUtil
 import javafx.scene.paint.Color
+import org.slf4j.LoggerFactory
 import java.util.function.Consumer
 import java.util.stream.Collectors
 import java.util.stream.Stream
@@ -269,7 +270,7 @@ class CSG private constructor(
     }
 
     private fun unionCSGBoundsOpt(csg: CSG): CSG {
-        System.err.println(
+        logger.warn(
             "WARNING: using " + NONE +
                 " since other optimization types missing for union operation."
         )
@@ -832,7 +833,7 @@ class CSG private constructor(
         } else {
             polygons.stream()
         }
-        println("Mapping ${polygons.size}")
+        logger.info("Mapping ${polygons.size}")
         val triangles = polyStream.flatMap { poly: Polygon -> poly.toTriangles().stream() }
 //            .collect(Collectors.toList())
 
@@ -855,6 +856,7 @@ class CSG private constructor(
     }
 
     companion object {
+        private val logger = LoggerFactory.getLogger("KCSG.CSG")
         private var defaultOptType = NONE
 
         /**

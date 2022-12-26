@@ -91,16 +91,16 @@ class Plane(normal: Vector3d, dist: Double) {
             types.add(type)
         }
         when (polygonType) {
-            COPLANAR -> // System.out.println(" -> coplanar");
+            COPLANAR -> // logger.info(" -> coplanar");
                 (if (normal.dot(polygon.csgPlane.normal) > 0) coplanarFront else coplanarBack).add(
                     polygon
                 )
-            FRONT -> // System.out.println(" -> front");
+            FRONT -> // logger.info(" -> front");
                 front.add(polygon)
-            BACK -> // System.out.println(" -> back");
+            BACK -> // logger.info(" -> back");
                 back.add(polygon)
             SPANNING -> {
-                // System.out.println(" -> spanning");
+                // logger.info(" -> spanning");
                 val f: MutableList<Vertex> = ArrayList()
                 val b: MutableList<Vertex> = ArrayList()
                 var i = 0

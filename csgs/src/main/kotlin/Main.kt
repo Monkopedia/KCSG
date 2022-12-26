@@ -49,6 +49,7 @@ class Csgs : CliktCommand() {
     ).file(mustExist = true, mustBeReadable = true).multiple(listOf(File(".")))
 
     override fun run() {
+        System.setProperty(org.slf4j.simple.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
         if (clear) {
             require(outputDirectory.deleteRecursively()) {
                 "Failed to clear output directory ${outputDirectory.absolutePath}"

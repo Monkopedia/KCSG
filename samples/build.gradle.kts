@@ -33,7 +33,7 @@ dependencies {
 
     testImplementation(group = "junit", name = "junit", version = "4.+")
 
-    implementation("org.slf4j:slf4j-simple:1.6.1")
+    implementation("org.slf4j:slf4j-simple:2.0.6")
     implementation(kotlin("stdlib-jdk8"))
 }
 

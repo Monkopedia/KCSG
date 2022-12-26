@@ -47,10 +47,9 @@ object STL {
     @Throws(IOException::class)
     fun file(path: Path): CSG {
         CSG.opOverride?.file(path)?.let { return it }
-        val loader = STLLoader()
         val polygons: MutableList<Polygon> = ArrayList()
         var vertices: MutableList<Vector3d> = ArrayList()
-        for (p in loader.parse(path.toFile())) {
+        for (p in STLLoader.parse(path.toFile())) {
             vertices.add(p.copy())
             if (vertices.size == 3) {
                 polygons.add(Polygon.fromPoints(vertices))
@@ -67,10 +66,9 @@ object STL {
     @Throws(IOException::class)
     fun from(inputStreamFactory: () -> InputStream, length: () -> Long): CSG {
         CSG.opOverride?.inputStream(inputStreamFactory)?.let { return it }
-        val loader = STLLoader()
         val polygons: MutableList<Polygon> = ArrayList()
         var vertices: MutableList<Vector3d> = ArrayList()
-        for (p in loader.parse(inputStreamFactory, length)) {
+        for (p in STLLoader.parse(inputStreamFactory, length)) {
             vertices.add(p.copy())
             if (vertices.size == 3) {
                 polygons.add(Polygon.fromPoints(vertices))

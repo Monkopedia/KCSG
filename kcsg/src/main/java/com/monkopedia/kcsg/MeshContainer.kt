@@ -161,7 +161,7 @@ class MeshContainer {
     //
     //        double scale = minContDim / (maxDim * 2);
     //
-    //        //System.out.println("scale: " + scale + ", maxDim: " + maxDim + ", " + meshContainer);
+    //        //logger.info("scale: " + scale + ", maxDim: " + maxDim + ", " + meshContainer);
     //        meshView.setScaleX(scale);
     //        meshView.setScaleY(scale);
     //        meshView.setScaleZ(scale);

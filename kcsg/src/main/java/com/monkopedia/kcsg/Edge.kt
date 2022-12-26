@@ -34,6 +34,7 @@
 package com.monkopedia.kcsg
 
 import com.monkopedia.kcsg.ext.org.poly2tri.PolygonUtil
+import org.slf4j.LoggerFactory
 import java.util.*
 import java.util.stream.Collectors
 import java.util.stream.Stream
@@ -169,6 +170,8 @@ data class Edge(val p1: Vertex, val p2: Vertex) {
     }
 
     companion object {
+        private val logger = LoggerFactory.getLogger("KCSG.Edge")
+
         //    /**
         //     * @param p2 the p2 to set
         //     */
@@ -220,16 +223,16 @@ data class Edge(val p1: Vertex, val p2: Vertex) {
                     finalEdge.p2 == e.p1
                 }
                 if (used[nextEdgeIndex]) {
-//                System.out.println("nexIndex: " + nextEdgeIndex);
+//                logger.info("nexIndex: " + nextEdgeIndex);
                     break
                 }
-                //            System.out.print("edge: " + edge.p2.pos);
+                //            logger.infoedge: " + edge.p2.pos);
                 edge = boundaryEdges[nextEdgeIndex]
-                //            System.out.println("-> edge: " + edge.p1.pos);
+                //            logger.info("-> edge: " + edge.p1.pos);
                 used[nextEdgeIndex] = true
             }
             val result: MutableList<Polygon> = ArrayList()
-            println("#bnd-path-length: " + boundaryPath.size)
+            logger.info("#bnd-path-length: " + boundaryPath.size)
             result.add(toPolygon(boundaryPath, plane))
             return result
         }
@@ -309,7 +312,7 @@ data class Edge(val p1: Vertex, val p2: Vertex) {
                     val nextEdgeResult =
                         boundaryEdges.firstOrNull { e: Edge -> finalEdge.p2 == e.p1 }
                     if (nextEdgeResult == null) {
-                        println(
+                        logger.error(
                             "ERROR: unclosed path:" +
                                 " no edge found with " + finalEdge.p2
                         )
@@ -320,7 +323,7 @@ data class Edge(val p1: Vertex, val p2: Vertex) {
                         break
                     }
                     edge = nextEdgeResult
-                    println("-> edge: " + edge.p1.pos)
+                    logger.info("-> edge: " + edge.p1.pos)
                     used[nextEdgeIndex] = true
                 }
                 if (boundaryPath.size < 3) {
@@ -333,7 +336,7 @@ data class Edge(val p1: Vertex, val p2: Vertex) {
                     used[startIndex] = true
                 }
             }
-            println("paths: " + result.size)
+            logger.info("paths: " + result.size)
             return result
         }
 
@@ -362,16 +365,16 @@ data class Edge(val p1: Vertex, val p2: Vertex) {
                 boundaryPath.add(finalEdge.p1.pos)
                 val nextEdgeIndex = boundaryEdges.indexOfFirst { e: Edge -> finalEdge.p2 == e.p1 }
                 if (used[nextEdgeIndex]) {
-//                System.out.println("nexIndex: " + nextEdgeIndex);
+//                logger.info("nexIndex: " + nextEdgeIndex);
                     break
                 }
-                //            System.out.print("edge: " + edge.p2.pos);
+                //            logger.infoedge: " + edge.p2.pos);
                 edge = boundaryEdges[nextEdgeIndex]
-                //            System.out.println("-> edge: " + edge.p1.pos);
+                //            logger.info("-> edge: " + edge.p1.pos);
                 used[nextEdgeIndex] = true
             }
             val result: MutableList<Polygon> = ArrayList()
-            println("#bnd-path-length: " + boundaryPath.size)
+            logger.info("#bnd-path-length: " + boundaryPath.size)
             result.add(toPolygon(boundaryPath, plane))
             return result
         }
@@ -426,7 +429,7 @@ data class Edge(val p1: Vertex, val p2: Vertex) {
             }
 
             //
-//        System.out.println("#bnd-edges: " + realBndEdges.size()
+//        logger.info("#bnd-edges: " + realBndEdges.size()
 //                + ",#edges: " + edges.size()
 //                + ", #del-bnd-edges: " + (boundaryEdges.size() - realBndEdges.size()));
             return bndEdgeStream.filter { be: Edge ->
@@ -466,7 +469,7 @@ data class Edge(val p1: Vertex, val p2: Vertex) {
         private fun searchPlaneGroups(polygons: List<Polygon>): List<List<Polygon>> {
             val planeGroups: MutableList<List<Polygon>> = ArrayList()
             val used = BooleanArray(polygons.size)
-            println("#polys: " + polygons.size)
+            logger.info("#polys: " + polygons.size)
             for (pOuterI in polygons.indices) {
                 if (used[pOuterI]) {
                     continue
@@ -485,11 +488,11 @@ data class Edge(val p1: Vertex, val p2: Vertex) {
                     // TODO do we need radians or degrees?
                     val angle = nOuter.angle(nInner)
 
-//                System.out.println("angle: " + angle + " between " + pOuterI+" -> " + pInnerI);
+//                logger.info("angle: " + angle + " between " + pOuterI+" -> " + pInnerI);
                     if (angle < 0.01 /*&& abs(pOuter.plane.dist - pInner.plane.dist) < 0.1*/) {
                         otherPolysInPlane.add(pInner)
                         used[pInnerI] = true
-                        println("used: $pOuterI -> $pInnerI")
+                        logger.info("used: $pOuterI -> $pInnerI")
                     }
                 }
                 if (otherPolysInPlane.isNotEmpty()) {

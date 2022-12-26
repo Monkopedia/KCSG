@@ -75,7 +75,7 @@ import kotlin.math.atan2
  * Author: Thomas ???, thahlen@gmail.com
  */
 internal object DTSweep {
-    private val logger = LoggerFactory.getLogger(DTSweep::class.java)
+    private val logger = LoggerFactory.getLogger("KCSG.DTSweep")
     private const val PI_div2 = Math.PI / 2
     private const val PI_3div4 = 3 * Math.PI / 4
 
@@ -137,7 +137,9 @@ internal object DTSweep {
         if (n1.triangle.contains(n1.next?.point) && n1.triangle.contains(n1.previous?.point)) {
             val t1 = n1.triangle.neighborAcross(n1.point)!!
             rotateTrianglePair(
-                n1.triangle, n1.point, t1,
+                n1.triangle,
+                n1.point,
+                t1,
                 t1.oppositePoint(n1.triangle, n1.point)
             )
             tcx.mapTriangleToNodes(n1.triangle)
@@ -680,7 +682,7 @@ internal object DTSweep {
                     ep === tcx.edgeEvent.constrainedEdge!!.p
                 ) {
                     if (tcx.isDebugEnabled) {
-                        println("[FLIP] - constrained edge done")
+                        logger.info("[FLIP] - constrained edge done")
                     } // TODO: remove
                     t.markConstrainedEdge(ep, eq)
                     ot.markConstrainedEdge(ep, eq)
@@ -688,13 +690,13 @@ internal object DTSweep {
                     legalize(tcx, ot)
                 } else {
                     if (tcx.isDebugEnabled) {
-                        println("[FLIP] - subedge done")
+                        logger.info("[FLIP] - subedge done")
                     } // TODO: remove
                     // XXX: I think one of the triangles should be legalized here?
                 }
             } else {
                 if (tcx.isDebugEnabled) {
-                    println("[FLIP] - flipping and continuing with triangle still crossing edge")
+                    logger.info("[FLIP] - flipping and continuing with triangle still crossing edge")
                 } // TODO: remove
                 val o = TriangulationUtil.orient2d(eq, op, ep)
                 val t = nextFlipTriangle(tcx, o, t, ot, p, op)
@@ -804,7 +806,7 @@ internal object DTSweep {
             throw RuntimeException("[BUG:FIXME] FLIP failed due to missing triangle")
         val op = ot.oppositePoint(t, p)
         if (tcx.isDebugEnabled) {
-            println("[FLIP:SCAN] - scan next point") // TODO: remove
+            logger.info("[FLIP:SCAN] - scan next point") // TODO: remove
             tcx.debugContext?.primaryTriangle = t
             tcx.debugContext?.secondaryTriangle = ot
         }
@@ -1141,7 +1143,6 @@ internal object DTSweep {
                     op
                 )
                 if (inside) {
-
                     // Lets mark this shared edge as Delaunay
                     t.dEdge[i] = true
                     ot.dEdge[oi] = true

@@ -1,6 +1,7 @@
 package com.monkopedia.kcsg.ext.imagej
 
 import com.monkopedia.kcsg.Vector3d
+import org.slf4j.LoggerFactory
 import java.io.File
 import java.io.FileInputStream
 import java.io.InputStream
@@ -11,7 +12,9 @@ import java.io.InputStream
  *
  * TODO: license unclear
  */
-internal class STLLoader {
+internal object STLLoader {
+
+    private val logger = LoggerFactory.getLogger("KCSG.STLLoader")
 
     fun parse(f: File): List<Vector3d> {
         return parse({ FileInputStream(f) }, { f.length() })
@@ -25,7 +28,7 @@ internal class STLLoader {
         val line = br.readLine()
         val words = line.trim().split(Regex("\\s+"))
         if (line.indexOf('\u0000') < 0 && words[0].equals("solid", ignoreCase = true)) {
-            println("Looks like an ASCII STL")
+            logger.info("Looks like an ASCII STL")
             return parseAscii(inputStreamFactory)
         }
 
@@ -41,10 +44,10 @@ internal class STLLoader {
                 or (buffer[82].toInt() and 0xff shl 16) or (buffer[81].toInt() and 0xff shl 8) or (buffer[80].toInt() and 0xff)
             )
         if ((length() - 84) / 50 == triangles.toLong()) {
-            println("Looks like a binary STL")
+            logger.info("Looks like a binary STL")
             return parseBinary(inputStreamFactory, triangles)
         }
-        System.err.println("File is not a valid STL")
+        logger.error("File is not a valid STL")
         return ArrayList()
     }
 
@@ -67,39 +70,31 @@ internal class STLLoader {
         }
     }
 
-    private fun parseBinary(inputStreamFactory: () -> InputStream, triangles: Int): List<Vector3d> = buildList {
-        inputStreamFactory().use { fis ->
-            for (h in 0..83) {
-                fis.read() // skip the header bytes
-            }
-            for (t in 0 until triangles) {
-                val tri = ByteArray(50)
-                for (tb in 0..49) {
-                    tri[tb] = fis.read().toByte()
+    private fun parseBinary(inputStreamFactory: () -> InputStream, triangles: Int): List<Vector3d> =
+        buildList {
+            inputStreamFactory().use { fis ->
+                for (h in 0..83) {
+                    fis.read() // skip the header bytes
                 }
-                leBytesToFloat(tri[0], tri[1], tri[2], tri[3]).toDouble()
-                leBytesToFloat(tri[4], tri[5], tri[6], tri[7]).toDouble()
-                leBytesToFloat(tri[8], tri[9], tri[10], tri[11]).toDouble()
-                for (i in 0..2) {
-                    val j = i * 12 + 12
-                    val px = leBytesToFloat(
-                        tri[j], tri[j + 1], tri[j + 2],
-                        tri[j + 3]
-                    )
-                    val py = leBytesToFloat(
-                        tri[j + 4], tri[j + 5],
-                        tri[j + 6], tri[j + 7]
-                    )
-                    val pz = leBytesToFloat(
-                        tri[j + 8], tri[j + 9],
-                        tri[j + 10], tri[j + 11]
-                    )
-                    val p = Vector3d.xyz(px.toDouble(), py.toDouble(), pz.toDouble())
-                    add(p)
+                for (t in 0 until triangles) {
+                    val tri = ByteArray(50)
+                    for (tb in 0..49) {
+                        tri[tb] = fis.read().toByte()
+                    }
+                    leBytesToFloat(tri[0], tri[1], tri[2], tri[3]).toDouble()
+                    leBytesToFloat(tri[4], tri[5], tri[6], tri[7]).toDouble()
+                    leBytesToFloat(tri[8], tri[9], tri[10], tri[11]).toDouble()
+                    for (i in 0..2) {
+                        val j = i * 12 + 12
+                        val px = leBytesToFloat(tri[j], tri[j + 1], tri[j + 2], tri[j + 3])
+                        val py = leBytesToFloat(tri[j + 4], tri[j + 5], tri[j + 6], tri[j + 7])
+                        val pz = leBytesToFloat(tri[j + 8], tri[j + 9], tri[j + 10], tri[j + 11])
+                        val p = Vector3d.xyz(px.toDouble(), py.toDouble(), pz.toDouble())
+                        add(p)
+                    }
                 }
             }
         }
-    }
 
     private fun parseFloat(string: String): Float {
         return string.toFloat()

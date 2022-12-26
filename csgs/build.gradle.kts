@@ -40,8 +40,8 @@ tasks.register("fatJar", type = Jar::class) {
 }
 
 dependencies {
-    implementation("com.github.ajalt.clikt:clikt:3.4.0")
-    implementation("org.slf4j:slf4j-simple:1.6.1")
+    implementation("com.github.ajalt.clikt:clikt:3.5.0")
+    implementation("org.slf4j:slf4j-simple:2.0.6")
     implementation(kotlin("stdlib-jdk8"))
     implementation(project(":kcsg-dsl"))
     implementation(project(":kcsg"))
