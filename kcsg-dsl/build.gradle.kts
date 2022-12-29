@@ -2,8 +2,8 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     id("java")
-    id("org.openjfx.javafxplugin") version "0.0.7"
-    kotlin("jvm") version "1.7.20"
+    id("org.openjfx.javafxplugin") version "0.0.13"
+    kotlin("jvm") version "1.8.0"
     `maven-publish`
     `signing`
 }

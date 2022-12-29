@@ -3,8 +3,8 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     id("application")
     id("java")
-    id("org.openjfx.javafxplugin") version "0.0.7"
-    kotlin("jvm") version "1.7.0"
+    id("org.openjfx.javafxplugin") version "0.0.13"
+    kotlin("jvm") version "1.8.0"
 }
 
 application {
