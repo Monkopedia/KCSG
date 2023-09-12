@@ -13,7 +13,7 @@ application {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_11
+    sourceCompatibility = JavaVersion.VERSION_1_8
 }
 
 javafx {
@@ -28,7 +28,7 @@ repositories {
 }
 
 tasks.register("fatJar", type = Jar::class) {
-    baseName = "${project.name}-all"
+    archiveBaseName = "${project.name}-all"
     manifest {
         attributes["Implementation-Title"] = "CSGS Script Executor"
         attributes["Implementation-Version"] = version

@@ -12,7 +12,7 @@ group = "com.monkopedia"
 description = "DSL wrappers and utilities for KCSG"
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_11
+    sourceCompatibility = JavaVersion.VERSION_1_8
     withJavadocJar()
     withSourcesJar()
 }
