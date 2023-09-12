@@ -1,0 +1,14 @@
+[versions]
+kotlin = "1.9.10"
+slf4j = "2.0.6"
+clikt = "3.5.1"
+javafx = "0.0.13"
+
+[libraries]
+slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4j"}
+slf4j-simple = { module = "org.slf4j:slf4j-simple", version.ref = "slf4j"}
+clikt = { module = "com.github.ajalt.clikt:clikt", version.ref = "clikt"}
+
+[plugins]
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+javafx = { id = "org.openjfx.javafxplugin", version.ref = "javafx" }

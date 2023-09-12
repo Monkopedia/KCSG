@@ -3,8 +3,8 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     id("application")
     id("java")
-    id("org.openjfx.javafxplugin") version "0.0.13"
-    kotlin("jvm") version "1.8.0"
+    alias(libs.plugins.javafx)
+    alias(libs.plugins.kotlin.jvm)
 }
 
 application {
@@ -40,8 +40,8 @@ tasks.register("fatJar", type = Jar::class) {
 }
 
 dependencies {
-    implementation("com.github.ajalt.clikt:clikt:3.5.1")
-    implementation("org.slf4j:slf4j-simple:2.0.6")
+    implementation(libs.clikt)
+    implementation(libs.slf4j.simple)
     implementation(kotlin("stdlib-jdk8"))
     implementation(project(":kcsg-dsl"))
     implementation(project(":kcsg"))

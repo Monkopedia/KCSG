@@ -3,8 +3,8 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     id("application")
     id("java")
-    id("org.openjfx.javafxplugin") version "0.0.13"
-    kotlin("jvm") version "1.8.0"
+    alias(libs.plugins.javafx)
+    alias(libs.plugins.kotlin.jvm)
 }
 
 application {
@@ -33,7 +33,7 @@ dependencies {
 
     testImplementation(group = "junit", name = "junit", version = "4.+")
 
-    implementation("org.slf4j:slf4j-simple:2.0.6")
+    implementation(libs.slf4j.api)
     implementation(kotlin("stdlib-jdk8"))
 }
 
