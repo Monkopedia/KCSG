@@ -18,8 +18,8 @@ import java.nio.file.Paths
 class SurfacePro2PenHolder {
     fun toCSG(): CSG {
         val sdCard = MicroSDCard().toCSG()
-        val width = sdCard.bounds.bounds.x()
-        val height = sdCard.bounds.bounds.z()
+        val width = sdCard.bounds.bounds.x
+        val height = sdCard.bounds.bounds.z
         val extensionSize = 11.0
         val extension: CSG = Extrude.points(
             Vector3d.xyz(0.0, 0.0, height * 2),

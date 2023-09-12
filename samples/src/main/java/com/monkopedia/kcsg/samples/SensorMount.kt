@@ -33,6 +33,7 @@ class SensorMount {
                 }
 
                 override fun findStl(stlName: String): Path = error("Not implemented")
+                override fun findScript(csgsName: String): ImportedScript = error("Not implemented")
             }
             scriptInstance.buildSensorMount()
 

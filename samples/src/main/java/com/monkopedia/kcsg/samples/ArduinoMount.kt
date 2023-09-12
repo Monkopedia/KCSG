@@ -6,9 +6,9 @@
 package com.monkopedia.kcsg.samples
 
 import com.monkopedia.kcsg.*
-import com.monkopedia.kcsg.TransformBuilder.translate
 import com.monkopedia.kcsg.CSG
 import com.monkopedia.kcsg.FileUtil
+import com.monkopedia.kcsg.TransformBuilder.unity
 import java.io.IOException
 import java.nio.file.Path
 import java.nio.file.Paths
@@ -33,6 +33,7 @@ class ArduinoMount {
                 }
 
                 override fun findStl(stlName: String): Path = error("Not implemented")
+                override fun findScript(csgsName: String): ImportedScript = error("Not implemented")
             }
             scriptInstance.buildArduinoMount()
 
@@ -80,7 +81,7 @@ fun KcsgBuilder.buildArduinoMount() {
     val pinConnections by csg {
         val first = cube {
             dimensions = xyz(bottomWidth / 2, 3.0, bottomThickness)
-        } * translate(x = -bottomWidth / 4, z = bottomThickness / 2)
+        }.transform { translate(x = -bottomWidth / 4, z = bottomThickness / 2) }
         val second = cube {
             dimensions = xyz(bottomWidth / 2 + 10, 3.0, bottomThickness)
         }.transform {
@@ -97,18 +98,20 @@ fun KcsgBuilder.buildArduinoMount() {
     val servoConnect by csg {
         val firstA = cube {
             dimensions = xyz(bottomWidth, servoConnectThickness, bottomThickness)
-        } * translate(y = -bottomHeight / 2, z = bottomThickness / 2)
+        }.transform { translate(y = -bottomHeight / 2, z = bottomThickness / 2) }
         val firstB = cube {
             dimensions = xyz(
                 3.0,
                 bottomHeight / 2 + servoConnectThickness / 2,
                 bottomThickness
             )
-        } * translate(
-            -bottomWidth / 2,
-            -bottomHeight / 4 - servoConnectThickness / 4,
-            bottomThickness / 2
-        )
+        }.transform {
+            translate(
+                -bottomWidth / 2,
+                -bottomHeight / 4 - servoConnectThickness / 4,
+                bottomThickness / 2
+            )
+        }
         val first = firstA + firstB
         val second = first.transform {
             rotX(180.0).translateZ(-bottomThickness)

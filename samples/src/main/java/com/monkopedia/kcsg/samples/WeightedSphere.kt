@@ -53,8 +53,8 @@ class WeightedSphere {
 //        return result;
         val morphed = prototype.weighted { v: Vector3d?, csg: CSG? ->
             val w = (1 + sin(
-                v!!.z() * 2
-            ) * cos(v.z() * 2)) / 2.0
+                v!!.z * 2
+            ) * cos(v.z * 2)) / 2.0
             w
         }.transformed(
             Transform.unity().scale(0.1)

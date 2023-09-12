@@ -52,8 +52,8 @@ class PolyMailTile {
         val hingeBounds = hinge1.bounds.bounds
         hinge1 = hinge1.intersect(
             Cube(
-                hingeBounds.x(),
-                min(hingeBounds.y(), thickness), hingeBounds.z()
+                hingeBounds.x,
+                min(hingeBounds.y, thickness), hingeBounds.z
             ).toCSG()
         )
         hinge1 = hinge1.transformed(Transform.unity().rotX(90.0))

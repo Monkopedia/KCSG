@@ -87,7 +87,7 @@ class ServoMountPixy {
         pixyBoard = pixyBoard.transformed(
             Transform.unity().translate(
                 camHeight + camHolderHeight + boardMountingThickness + borderThickness * 4,
-                pixyBoard.bounds.bounds.y() * 0.5, boardHolder2Length * 0.5
+                pixyBoard.bounds.bounds.y * 0.5, boardHolder2Length * 0.5
             )
         )
         return pixyMountBase().difference(pixyBoard)
