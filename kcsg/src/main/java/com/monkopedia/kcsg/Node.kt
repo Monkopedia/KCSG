@@ -117,6 +117,9 @@ internal class Node @JvmOverloads constructor(polygons: List<Polygon>? = null) {
      * @return the cliped list of polygons
      */
     private fun clipPolygons(polygons: List<Polygon>): MutableList<Polygon> {
+        if (planeImpl == null) {
+            return polygons.toMutableList()
+        }
         var frontP: MutableList<Polygon> = ArrayList()
         var backP: MutableList<Polygon> = ArrayList()
         for (polygon in polygons) {

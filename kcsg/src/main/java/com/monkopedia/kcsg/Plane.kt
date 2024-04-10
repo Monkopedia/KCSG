@@ -78,27 +78,34 @@ class Plane(normal: Vector3d, dist: Double) {
         coplanarFront: MutableList<Polygon>,
         coplanarBack: MutableList<Polygon>,
         front: MutableList<Polygon>,
-        back: MutableList<Polygon>
+        back: MutableList<Polygon>,
     ) {
         // Classify each point as well as the entire polygon into one of the
         // above four classes.
         var polygonType = 0
         val types: MutableList<Int> = ArrayList(polygon.vertices.size)
+
+        val polygonDist = polygon.csgPlane.dist
+        val diffs = polygon.vertices.map { polygon.csgPlane.normal.dot(it.pos) - polygonDist } + 0.0
+        val posEps = diffs.max() + EPSILON
+        val negEps = diffs.min() - EPSILON
         for (i in polygon.vertices.indices) {
             val t = normal.dot(polygon.vertices[i].pos) - dist
-            val type = if (t < -EPSILON) BACK else if (t > EPSILON) FRONT else COPLANAR
+            val type = if (t < negEps) BACK else if (t > posEps) FRONT else COPLANAR
             polygonType = polygonType or type
             types.add(type)
         }
         when (polygonType) {
             COPLANAR -> // logger.info(" -> coplanar");
-                (if (normal.dot(polygon.csgPlane.normal) > 0) coplanarFront else coplanarBack).add(
-                    polygon
-                )
+                (if (normal.dot(polygon.csgPlane.normal) > 0) coplanarFront else coplanarBack)
+                    .add(polygon)
+
             FRONT -> // logger.info(" -> front");
                 front.add(polygon)
+
             BACK -> // logger.info(" -> back");
                 back.add(polygon)
+
             SPANNING -> {
                 // logger.info(" -> spanning");
                 val f: MutableList<Vertex> = ArrayList()
