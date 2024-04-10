@@ -76,7 +76,7 @@ import kotlin.math.abs
  * ~(~A | ~B)` where `~` is the complement operator.
  */
 class CSG private constructor(
-    private var _polygons: MutableList<Polygon>
+    private var _polygons: MutableList<Polygon>,
 ) {
     private var _optType: OptType? = null
     private var _storage: PropertyStorage = PropertyStorage()
@@ -251,7 +251,7 @@ class CSG private constructor(
         csgsUnion._optType = _optType
         csgs.stream().forEach { csg: CSG ->
             csgsUnion._polygons.addAll(
-                csg.copy()._polygons
+                csg.copy()._polygons,
             )
         }
         csgsUnion._polygons.forEach { p: Polygon -> p.storage = _storage }
@@ -272,7 +272,7 @@ class CSG private constructor(
     private fun unionCSGBoundsOpt(csg: CSG): CSG {
         logger.warn(
             "WARNING: using " + NONE +
-                " since other optimization types missing for union operation."
+                " since other optimization types missing for union operation.",
         )
         return unionIntersectOpt(csg)
     }
@@ -420,10 +420,27 @@ class CSG private constructor(
      */
     fun difference(csg: CSG): CSG {
         opOverride?.operation("diff", this, csg)?.let { return it }
-        return when (getOptType()) {
-            CSG_BOUND -> differenceCSGBoundsOpt(csg)
-            POLYGON_BOUND -> differencePolygonBoundsOpt(csg)
-            else -> differenceNoOpt(csg)
+        return try {
+            simpleDifference(csg)
+        } catch (ex: Exception) {
+            // System.err.println("CSG difference failed, performing workaround");
+            val intersectingParts = csg.intersect(this)
+            simpleDifference(intersectingParts)
+        }
+    }
+
+    private fun simpleDifference(csg: CSG): CSG {
+        // Check to see if a CSG operation is attempting to difference with
+        // no
+        // polygons
+        return if (this.polygons.isNotEmpty() && csg.polygons.isNotEmpty()) {
+            when (getOptType()) {
+                CSG_BOUND -> differenceCSGBoundsOpt(csg)
+                POLYGON_BOUND -> differencePolygonBoundsOpt(csg)
+                else -> differenceNoOpt(csg)
+            }
+        } else {
+            this
         }
     }
 
@@ -439,7 +456,7 @@ class CSG private constructor(
         val bounds = csg.bounds
         _polygons.stream().forEach { p: Polygon ->
             if (bounds.intersects(
-                    p.bounds
+                    p.bounds,
                 )
             ) {
                 inner.add(p)
@@ -604,7 +621,7 @@ class CSG private constructor(
     fun toObj(maxNumberOfVerts: Int = 3): ObjFile {
         if (maxNumberOfVerts != 3) {
             throw UnsupportedOperationException(
-                "maxNumberOfVerts > 3 not supported yet"
+                "maxNumberOfVerts > 3 not supported yet",
             )
         }
         val objSb = StringBuilder()
@@ -614,7 +631,7 @@ class CSG private constructor(
         class PolygonStruct(
             var storage: PropertyStorage,
             var indices: List<Int>,
-            var materialName: String
+            var materialName: String,
         )
 
         val vertices: MutableList<Vertex> = ArrayList()
@@ -642,8 +659,8 @@ class CSG private constructor(
                 PolygonStruct(
                     p.storage,
                     polyIndices,
-                    "material-" + materialNames[p.storage]
-                )
+                    "material-" + materialNames[p.storage],
+                ),
             )
         }
         objSb.append("\n# Faces").append("\n")
@@ -674,7 +691,7 @@ class CSG private constructor(
                         .append("\n")
                     mtlSb.append("Kd ").append(s.getValue<Any>("material:color")).append("\n")
                 }
-            }
+            },
         )
         return ObjFile(objSb.toString(), mtlSb.toString())
     }
@@ -691,7 +708,7 @@ class CSG private constructor(
         class PolygonStruct(
             var storage: PropertyStorage,
             var indices: List<Int>,
-            var materialName: String
+            var materialName: String,
         )
 
         val vertices: MutableList<Vertex> = ArrayList()
@@ -803,7 +820,7 @@ class CSG private constructor(
             } // end for polygon
             return Bounds(
                 Vector3d.xyz(minX, minY, minZ),
-                Vector3d.xyz(maxX, maxY, maxZ)
+                Vector3d.xyz(maxX, maxY, maxZ),
             )
         }
 
