@@ -1,7 +1,7 @@
 [versions]
-kotlin = "1.9.10"
-slf4j = "2.0.6"
-clikt = "3.5.1"
+kotlin = "2.0.0"
+slf4j = "2.1.0-alpha1"
+clikt = "4.4.0"
 javafx = "0.0.13"
 
 [libraries]
