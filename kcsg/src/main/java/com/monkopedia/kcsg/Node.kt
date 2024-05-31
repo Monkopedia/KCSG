@@ -92,6 +92,10 @@ internal class Node @JvmOverloads constructor(polygons: List<Polygon>? = null) {
      * Converts solid space to empty space and vice verca.
      */
     fun invert() {
+        if (planeImpl == null && polygons.isEmpty()) {
+            // Help, nothing useful to do here
+            return
+        }
         val polygonStream: Stream<Polygon> = if (polygons.size > 200) {
             polygons.parallelStream()
         } else {

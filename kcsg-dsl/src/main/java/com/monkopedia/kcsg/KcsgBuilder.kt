@@ -78,6 +78,8 @@ abstract class KcsgBuilder {
                         logger.debug("Importing STL $stlName from $it")
                     }
                 )
+            }.wrapGetter {
+                CSG.opOverride?.operation("stl:$stlName")
             }
             track(propertyName, lazy)
             ReadOnlyProperty { _, _ ->
