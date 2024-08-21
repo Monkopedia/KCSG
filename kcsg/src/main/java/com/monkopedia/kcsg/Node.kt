@@ -78,13 +78,12 @@ internal class Node @JvmOverloads constructor(polygons: List<Polygon>? = null) {
 //        polygons.parallelStream().forEach((Polygon p) -> {
 //            node.polygons.add(p.clone());
 //        });
-        val polygonStream: Stream<Polygon> = if (polygons.size > 200) {
-            polygons.parallelStream()
+        node.polygons = if (polygons.size > 200) {
+            polygons.parallelStream().map { p: Polygon -> p.copy() }
+                .collect(Collectors.toList())
         } else {
-            polygons.stream()
+            polygons.map(Polygon::copy).toMutableList()
         }
-        node.polygons = polygonStream.map { p: Polygon -> p.copy() }
-            .collect(Collectors.toList())
         return node
     }
 
@@ -173,18 +172,15 @@ internal class Node @JvmOverloads constructor(polygons: List<Polygon>? = null) {
      * @param polygons polygons used to build the BSP
      */
     fun build(polygons: List<Polygon>) {
-        var polygons = polygons
         if (polygons.isEmpty()) return
         if (planeImpl == null) {
             planeImpl = polygons.first().csgPlane.copy()
         }
-        polygons = polygons.stream().filter { p: Polygon -> p.isValid }.distinct()
-            .collect(Collectors.toList())
-        val frontP: MutableList<Polygon> = ArrayList()
-        val backP: MutableList<Polygon> = ArrayList()
+        val frontP = mutableListOf<Polygon>()
+        val backP = mutableListOf<Polygon>()
 
-        // parellel version does not work here
-        polygons.forEach { polygon: Polygon ->
+        // parallel version does not work here
+        polygons.filter(Polygon::isValid).forEach { polygon: Polygon ->
             plane.splitPolygon(
                 polygon,
                 this.polygons,

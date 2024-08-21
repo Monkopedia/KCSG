@@ -85,10 +85,14 @@ class Plane(normal: Vector3d, dist: Double) {
         var polygonType = 0
         val types: MutableList<Int> = ArrayList(polygon.vertices.size)
 
-        val polygonDist = polygon.csgPlane.dist
-        val diffs = polygon.vertices.map { polygon.csgPlane.normal.dot(it.pos) - polygonDist } + 0.0
-        val posEps = diffs.max() + EPSILON
-        val negEps = diffs.min() - EPSILON
+        val (posEps, negEps) = if (USE_STACKOVERFLOW_WORKAROUND) {
+            val polygonDist = polygon.csgPlane.dist
+            val diffs =
+                polygon.vertices.map { polygon.csgPlane.normal.dot(it.pos) - polygonDist } + 0.0
+            (diffs.max() + EPSILON) to (diffs.min() - EPSILON)
+        } else {
+            EPSILON to -EPSILON
+        }
         for (i in polygon.vertices.indices) {
             val t = normal.dot(polygon.vertices[i].pos) - dist
             val type = if (t < negEps) BACK else if (t > posEps) FRONT else COPLANAR
@@ -149,6 +153,8 @@ class Plane(normal: Vector3d, dist: Double) {
         const val FRONT = 1
         const val BACK = 2
         const val SPANNING = 3 // == some in the FRONT + some in the BACK
+
+        var USE_STACKOVERFLOW_WORKAROUND = false
 
         /**
          * EPSILON is the tolerance used by [ ][.splitPolygon] to decide if a point is on the plane.
