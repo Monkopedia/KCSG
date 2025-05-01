@@ -617,6 +617,10 @@ class Polygon {
             shared = storage
         }
 
+    override fun toString(): String {
+        return "Poly($vertices)"
+    }
+
     companion object {
         private val logger = LoggerFactory.getLogger("KCSG.Polygon")
         /**
