@@ -189,13 +189,25 @@ internal class Node @JvmOverloads constructor(polygons: List<Polygon>? = null) {
                 backP
             )
         }
-        if (frontP.size > 0) {
-            val front = front ?: Node().also { front = it }
-            front.build(frontP)
+        if (frontP.isNotEmpty()) {
+            if (polygons == frontP) {
+                // Fell into recursive loop, there will be no more splitting done,
+                // add the polygons to this node.
+                this.polygons.addAll(polygons)
+            } else {
+                val front = front ?: Node().also { front = it }
+                front.build(frontP)
+            }
         }
-        if (backP.size > 0) {
-            val back = back ?: Node().also { back = it }
-            back.build(backP)
+        if (backP.isNotEmpty()) {
+            if (polygons == backP) {
+                // Fell into recursive loop, there will be no more splitting done,
+                // add the polygons to this node.
+                this.polygons.addAll(polygons)
+            } else {
+                val back = back ?: Node().also { back = it }
+                back.build(backP)
+            }
         }
     }
     /**
