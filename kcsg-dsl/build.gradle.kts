@@ -1,11 +1,13 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import com.vanniktech.maven.publish.SonatypeHost
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     id("java")
     alias(libs.plugins.javafx)
     alias(libs.plugins.kotlin.jvm)
-    `maven-publish`
-    `signing`
+    alias(libs.plugins.vannik.publish)
+    signing
 }
 
 group = "com.monkopedia"
@@ -13,8 +15,6 @@ description = "DSL wrappers and utilities for KCSG"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
-    withJavadocJar()
-    withSourcesJar()
 }
 
 javafx {
@@ -23,7 +23,6 @@ javafx {
 
 repositories {
     mavenCentral()
-    jcenter()
 
     mavenLocal()
 }
@@ -38,61 +37,44 @@ dependencies {
 }
 
 val compileKotlin: KotlinCompile by tasks
-compileKotlin.kotlinOptions {
-    jvmTarget = "1.8"
+compileKotlin.compilerOptions {
+    jvmTarget.set(JvmTarget.JVM_1_8)
 }
 val compileTestKotlin: KotlinCompile by tasks
-compileTestKotlin.kotlinOptions {
-    jvmTarget = "1.8"
+compileTestKotlin.compilerOptions {
+    jvmTarget.set(JvmTarget.JVM_1_8)
 }
 
-publishing {
-    publications {
-        create<MavenPublication>("kcsg-dsl") {
-            from(components["java"])
+mavenPublishing {
+    pom {
+        name.set("kcsg-dsl")
+        description.set(project.description)
+        url.set("https://www.github.com/Monkopedia/kcsg")
+        licenses {
+            license {
+                name.set("The Apache License, Version 2.0")
+                url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
+            }
+        }
+        developers {
+            developer {
+                id.set("monkopedia")
+                name.set("Jason Monk")
+                email.set("monkopedia@gmail.com")
+            }
+        }
+        scm {
+            connection.set("scm:git:git://github.com/Monkopedia/kcsg.git")
+            developerConnection.set("scm:git:ssh://github.com/Monkopedia/kcsg.git")
+            url.set("https://github.com/Monkopedia/kcsg/")
         }
     }
-    publications.all {
-        if (this !is MavenPublication) return@all
+    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
 
-        afterEvaluate {
-            pom {
-                name.set("kcsg-dsl")
-                description.set(project.description)
-                url.set("http://www.github.com/Monkopedia/kcsg")
-                licenses {
-                    license {
-                        name.set("The Apache License, Version 2.0")
-                        url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
-                    }
-                }
-                developers {
-                    developer {
-                        id.set("monkopedia")
-                        name.set("Jason Monk")
-                        email.set("monkopedia@gmail.com")
-                    }
-                }
-                scm {
-                    connection.set("scm:git:git://github.com/Monkopedia/kcsg.git")
-                    developerConnection.set("scm:git:ssh://github.com/Monkopedia/kcsg.git")
-                    url.set("http://github.com/Monkopedia/kcsg/")
-                }
-            }
-        }
-    }
-    repositories {
-        maven(url = "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-            name = "OSSRH"
-            credentials {
-                username = System.getenv("MAVEN_USERNAME")
-                password = System.getenv("MAVEN_PASSWORD")
-            }
-        }
-    }
+    signAllPublications()
 }
 
 signing {
-    sign(publishing.publications["kcsg-dsl"])
+    sign(publishing.publications)
     useGpgCmd()
 }

@@ -3,6 +3,7 @@ kotlin = "2.1.20"
 slf4j = "2.1.0-alpha1"
 clikt = "5.0.3"
 javafx = "0.1.0"
+vannik = "0.31.0"
 
 [libraries]
 slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4j"}
@@ -12,3 +13,4 @@ clikt = { module = "com.github.ajalt.clikt:clikt", version.ref = "clikt"}
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 javafx = { id = "org.openjfx.javafxplugin", version.ref = "javafx" }
+vannik-publish = { id = "com.vanniktech.maven.publish", version.ref = "vannik" }
