@@ -30,7 +30,7 @@ Goal: 100% test coverage of public API in `kcsg` and `kcsg-dsl`, with determinis
 - [x] Add `PlaneTest` covering `copy`, `flip`, `splitPolygon` classification (`COPLANAR`, `FRONT`, `BACK`, `SPANNING`), `createFromPoints`, and behavior with `USE_STACKOVERFLOW_WORKAROUND` enabled/disabled.
 - [x] Add `VertexTest` covering `flip`, `interpolate`, STL/OBJ formatting overloads, transform overloads, equality/hash semantics, and `toString`.
 - [x] Add `BoundsTest` covering `center`, `bounds`, `toCSG`, `toCube`, `contains` overloads (`Vertex`, `Vector3d`, `Polygon`), `intersects` overloads (`Polygon`, `Bounds`), and string output.
-- [ ] Add `PropertyStorageTest` covering set/get typed lookup, delete, contains, random color initialization behavior.
+- [x] Add `PropertyStorageTest` covering set/get typed lookup, delete, contains, random color initialization behavior.
 
 ## Phase 3 - Primitive and Mesh Construction Coverage
 
