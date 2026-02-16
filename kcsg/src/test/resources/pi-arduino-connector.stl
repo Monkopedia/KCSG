@@ -1,14 +1,14 @@
 solid v3d.csg
   facet normal -0.0 0.0 -1.0
     outer loop
-      vertex 9.3 40.0 0.0
+      vertex 9.300000190734863 40.0 0.0
       vertex 0.0 38.0 0.0
       vertex -2.0 40.0 0.0
     endloop
   endfacet
   facet normal 0.0 0.0 -1.0
     outer loop
-      vertex 9.3 40.0 0.0
+      vertex 9.300000190734863 40.0 0.0
       vertex 8.0 38.0 0.0
       vertex 0.0 38.0 0.0
     endloop
@@ -22,9 +22,9 @@ solid v3d.csg
   endfacet
   facet normal 0.0 0.0 -1.0
     outer loop
-      vertex 8.700000000000001 37.4 0.0
+      vertex 8.699999809265137 37.400001525878906 0.0
       vertex 8.0 38.0 0.0
-      vertex 9.3 40.0 0.0
+      vertex 9.300000190734863 40.0 0.0
     endloop
   endfacet
   facet normal 0.0 0.0 -1.0
@@ -36,8 +36,8 @@ solid v3d.csg
   endfacet
   facet normal 0.0 0.0 -1.0
     outer loop
-      vertex 8.700000000000001 37.4 0.0
-      vertex 8.3 37.4 0.0
+      vertex 8.699999809265137 37.400001525878906 0.0
+      vertex 8.300000190734863 37.400001525878906 0.0
       vertex 8.0 38.0 0.0
     endloop
   endfacet
@@ -99,14 +99,14 @@ solid v3d.csg
   endfacet
   facet normal 0.0 0.0 -1.0
     outer loop
-      vertex 9.3 -2.0 0.0
+      vertex 9.300000190734863 -2.0 0.0
       vertex -2.0 -2.0 0.0
       vertex 0.0 0.0 0.0
     endloop
   endfacet
   facet normal 0.0 0.0 -1.0
     outer loop
-      vertex 9.3 -2.0 0.0
+      vertex 9.300000190734863 -2.0 0.0
       vertex 0.0 0.0 0.0
       vertex 8.0 0.0 0.0
     endloop
@@ -114,71 +114,71 @@ solid v3d.csg
   facet normal 0.0 0.0 -1.0
     outer loop
       vertex 8.0 0.0 0.0
-      vertex 8.700000000000001 0.6 0.0
-      vertex 9.3 -2.0 0.0
+      vertex 8.699999809265137 0.6000000238418579 0.0
+      vertex 9.300000190734863 -2.0 0.0
     endloop
   endfacet
   facet normal 0.0 0.0 -1.0
     outer loop
       vertex 8.0 0.0 0.0
-      vertex 8.3 0.6 0.0
-      vertex 8.700000000000001 0.6 0.0
+      vertex 8.300000190734863 0.6000000238418579 0.0
+      vertex 8.699999809265137 0.6000000238418579 0.0
     endloop
   endfacet
   facet normal 0.0 -1.0 0.0
     outer loop
-      vertex 9.3 -2.0 0.0
-      vertex 9.3 -2.0 8.0
+      vertex 9.300000190734863 -2.0 0.0
+      vertex 9.300000190734863 -2.0 8.0
       vertex -2.0 -2.0 8.0
     endloop
   endfacet
   facet normal 0.0 -1.0 0.0
     outer loop
-      vertex 9.3 -2.0 0.0
+      vertex 9.300000190734863 -2.0 0.0
       vertex -2.0 -2.0 8.0
       vertex -2.0 -2.0 0.0
     endloop
   endfacet
-  facet normal 0.97439119569462 0.22485950669875832 -0.0
+  facet normal 0.9743911648232911 0.22485964047447474 -0.0
     outer loop
-      vertex 8.700000000000001 0.6 0.0
-      vertex 8.700000000000001 0.6 8.0
-      vertex 9.3 -2.0 8.0
+      vertex 8.699999809265137 0.6000000238418579 0.0
+      vertex 8.699999809265137 0.6000000238418579 8.0
+      vertex 9.300000190734863 -2.0 8.0
     endloop
   endfacet
-  facet normal 0.97439119569462 0.22485950669875832 -0.0
+  facet normal 0.9743911648232911 0.22485964047447474 0.0
     outer loop
-      vertex 8.700000000000001 0.6 0.0
-      vertex 9.3 -2.0 8.0
-      vertex 9.3 -2.0 0.0
-    endloop
-  endfacet
-  facet normal 0.0 1.0 0.0
-    outer loop
-      vertex 8.3 0.6 0.0
-      vertex 8.3 0.6 8.0
-      vertex 8.700000000000001 0.6 8.0
+      vertex 8.699999809265137 0.6000000238418579 0.0
+      vertex 9.300000190734863 -2.0 8.0
+      vertex 9.300000190734863 -2.0 0.0
     endloop
   endfacet
   facet normal 0.0 1.0 0.0
     outer loop
-      vertex 8.3 0.6 0.0
-      vertex 8.700000000000001 0.6 8.0
-      vertex 8.700000000000001 0.6 0.0
+      vertex 8.300000190734863 0.6000000238418579 0.0
+      vertex 8.300000190734863 0.6000000238418579 8.0
+      vertex 8.699999809265137 0.6000000238418579 8.0
     endloop
   endfacet
-  facet normal -0.8944271909999155 0.4472135954999588 0.0
+  facet normal 0.0 1.0 0.0
+    outer loop
+      vertex 8.300000190734863 0.6000000238418579 0.0
+      vertex 8.699999809265137 0.6000000238418579 8.0
+      vertex 8.699999809265137 0.6000000238418579 0.0
+    endloop
+  endfacet
+  facet normal -0.8944270843758775 0.44721380874797134 0.0
     outer loop
       vertex 8.0 0.0 0.0
       vertex 8.0 0.0 8.0
-      vertex 8.3 0.6 8.0
+      vertex 8.300000190734863 0.6000000238418579 8.0
     endloop
   endfacet
-  facet normal -0.8944271909999155 0.4472135954999588 0.0
+  facet normal -0.8944270843758775 0.44721380874797134 0.0
     outer loop
       vertex 8.0 0.0 0.0
-      vertex 8.3 0.6 8.0
-      vertex 8.3 0.6 0.0
+      vertex 8.300000190734863 0.6000000238418579 8.0
+      vertex 8.300000190734863 0.6000000238418579 0.0
     endloop
   endfacet
   facet normal 0.0 1.0 0.0
@@ -202,7 +202,7 @@ solid v3d.csg
       vertex 0.0 0.0 8.0
     endloop
   endfacet
-  facet normal 1.0 0.0 -0.0
+  facet normal 1.0 0.0 0.0
     outer loop
       vertex 0.0 2.0 0.0
       vertex 0.0 0.0 8.0
@@ -230,7 +230,7 @@ solid v3d.csg
       vertex 8.0 2.0 8.0
     endloop
   endfacet
-  facet normal 1.0 0.0 -0.0
+  facet normal 1.0 0.0 0.0
     outer loop
       vertex 8.0 4.0 0.0
       vertex 8.0 2.0 8.0
@@ -258,7 +258,7 @@ solid v3d.csg
       vertex 0.0 4.0 8.0
     endloop
   endfacet
-  facet normal 1.0 0.0 -0.0
+  facet normal 1.0 0.0 0.0
     outer loop
       vertex 0.0 34.0 0.0
       vertex 0.0 4.0 8.0
@@ -286,7 +286,7 @@ solid v3d.csg
       vertex 8.0 34.0 8.0
     endloop
   endfacet
-  facet normal 1.0 0.0 -0.0
+  facet normal 1.0 0.0 0.0
     outer loop
       vertex 8.0 36.0 0.0
       vertex 8.0 34.0 8.0
@@ -314,7 +314,7 @@ solid v3d.csg
       vertex 0.0 36.0 8.0
     endloop
   endfacet
-  facet normal 1.0 0.0 -0.0
+  facet normal 1.0 0.0 0.0
     outer loop
       vertex 0.0 38.0 0.0
       vertex 0.0 36.0 8.0
@@ -335,60 +335,60 @@ solid v3d.csg
       vertex 0.0 38.0 0.0
     endloop
   endfacet
-  facet normal -0.894427190999916 -0.447213595499958 0.0
+  facet normal -0.8944266223366149 -0.44721473282475227 0.0
     outer loop
-      vertex 8.3 37.4 0.0
-      vertex 8.3 37.4 8.0
+      vertex 8.300000190734863 37.400001525878906 0.0
+      vertex 8.300000190734863 37.400001525878906 8.0
       vertex 8.0 38.0 8.0
     endloop
   endfacet
-  facet normal -0.894427190999916 -0.447213595499958 0.0
+  facet normal -0.8944266223366149 -0.44721473282475227 0.0
     outer loop
-      vertex 8.3 37.4 0.0
+      vertex 8.300000190734863 37.400001525878906 0.0
       vertex 8.0 38.0 8.0
       vertex 8.0 38.0 0.0
     endloop
   endfacet
   facet normal 0.0 -1.0 0.0
     outer loop
-      vertex 8.700000000000001 37.4 0.0
-      vertex 8.700000000000001 37.4 8.0
-      vertex 8.3 37.4 8.0
+      vertex 8.699999809265137 37.400001525878906 0.0
+      vertex 8.699999809265137 37.400001525878906 8.0
+      vertex 8.300000190734863 37.400001525878906 8.0
     endloop
   endfacet
   facet normal 0.0 -1.0 0.0
     outer loop
-      vertex 8.700000000000001 37.4 0.0
-      vertex 8.3 37.4 8.0
-      vertex 8.3 37.4 0.0
+      vertex 8.699999809265137 37.400001525878906 0.0
+      vertex 8.300000190734863 37.400001525878906 8.0
+      vertex 8.300000190734863 37.400001525878906 0.0
     endloop
   endfacet
-  facet normal 0.97439119569462 -0.2248595066987582 0.0
+  facet normal 0.9743911354578296 -0.22485976772469007 0.0
     outer loop
-      vertex 9.3 40.0 0.0
-      vertex 9.3 40.0 8.0
-      vertex 8.700000000000001 37.4 8.0
+      vertex 9.300000190734863 40.0 0.0
+      vertex 9.300000190734863 40.0 8.0
+      vertex 8.699999809265137 37.400001525878906 8.0
     endloop
   endfacet
-  facet normal 0.97439119569462 -0.2248595066987582 0.0
+  facet normal 0.9743911354578296 -0.22485976772469007 0.0
     outer loop
-      vertex 9.3 40.0 0.0
-      vertex 8.700000000000001 37.4 8.0
-      vertex 8.700000000000001 37.4 0.0
+      vertex 9.300000190734863 40.0 0.0
+      vertex 8.699999809265137 37.400001525878906 8.0
+      vertex 8.699999809265137 37.400001525878906 0.0
     endloop
   endfacet
   facet normal 0.0 1.0 0.0
     outer loop
       vertex -2.0 40.0 0.0
       vertex -2.0 40.0 8.0
-      vertex 9.3 40.0 8.0
+      vertex 9.300000190734863 40.0 8.0
     endloop
   endfacet
   facet normal 0.0 1.0 0.0
     outer loop
       vertex -2.0 40.0 0.0
-      vertex 9.3 40.0 8.0
-      vertex 9.3 40.0 0.0
+      vertex 9.300000190734863 40.0 8.0
+      vertex 9.300000190734863 40.0 0.0
     endloop
   endfacet
   facet normal -1.0 0.0 0.0
@@ -409,14 +409,14 @@ solid v3d.csg
     outer loop
       vertex -2.0 40.0 8.0
       vertex 0.0 38.0 8.0
-      vertex 9.3 40.0 8.0
+      vertex 9.300000190734863 40.0 8.0
     endloop
   endfacet
   facet normal 0.0 0.0 1.0
     outer loop
       vertex 0.0 38.0 8.0
       vertex 8.0 38.0 8.0
-      vertex 9.3 40.0 8.0
+      vertex 9.300000190734863 40.0 8.0
     endloop
   endfacet
   facet normal 0.0 0.0 1.0
@@ -428,9 +428,9 @@ solid v3d.csg
   endfacet
   facet normal 0.0 0.0 1.0
     outer loop
-      vertex 9.3 40.0 8.0
+      vertex 9.300000190734863 40.0 8.0
       vertex 8.0 38.0 8.0
-      vertex 8.700000000000001 37.4 8.0
+      vertex 8.699999809265137 37.400001525878906 8.0
     endloop
   endfacet
   facet normal 0.0 0.0 1.0
@@ -443,8 +443,8 @@ solid v3d.csg
   facet normal 0.0 0.0 1.0
     outer loop
       vertex 8.0 38.0 8.0
-      vertex 8.3 37.4 8.0
-      vertex 8.700000000000001 37.4 8.0
+      vertex 8.300000190734863 37.400001525878906 8.0
+      vertex 8.699999809265137 37.400001525878906 8.0
     endloop
   endfacet
   facet normal 0.0 0.0 1.0
@@ -507,27 +507,27 @@ solid v3d.csg
     outer loop
       vertex 0.0 0.0 8.0
       vertex -2.0 -2.0 8.0
-      vertex 9.3 -2.0 8.0
+      vertex 9.300000190734863 -2.0 8.0
     endloop
   endfacet
   facet normal 0.0 0.0 1.0
     outer loop
       vertex 8.0 0.0 8.0
       vertex 0.0 0.0 8.0
-      vertex 9.3 -2.0 8.0
+      vertex 9.300000190734863 -2.0 8.0
     endloop
   endfacet
   facet normal 0.0 0.0 1.0
     outer loop
-      vertex 9.3 -2.0 8.0
-      vertex 8.700000000000001 0.6 8.0
+      vertex 9.300000190734863 -2.0 8.0
+      vertex 8.699999809265137 0.6000000238418579 8.0
       vertex 8.0 0.0 8.0
     endloop
   endfacet
   facet normal 0.0 0.0 1.0
     outer loop
-      vertex 8.700000000000001 0.6 8.0
-      vertex 8.3 0.6 8.0
+      vertex 8.699999809265137 0.6000000238418579 8.0
+      vertex 8.300000190734863 0.6000000238418579 8.0
       vertex 8.0 0.0 8.0
     endloop
   endfacet
