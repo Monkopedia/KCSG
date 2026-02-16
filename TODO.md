@@ -67,11 +67,11 @@ Goal: 100% test coverage of public API in `kcsg` and `kcsg-dsl`, with determinis
 
 ## Phase 7 - Modifiers, Weight Functions, and Misc Public APIs
 
-- [ ] Add `WeightFunctionAndModifierTest` for `WeightFunction.eval` via `CSG.weighted`.
-- [ ] Add `AxisModifierTest` for `XModifier`, `YModifier`, `ZModifier`, and centered/non-centered behavior.
-- [ ] Add `UnityModifierTest` for constant weight behavior.
-- [ ] Add `MeshContainerTest` for dimensions, bounds, meshes/materials accessors, `getAsMeshViews`, and constructor precondition mismatch.
-- [ ] Add `OpOverrideContractTest` covering custom override dispatch paths from `CSG`, `STL`, `Bounds`, and `Primitive`.
+- [x] Add `WeightFunctionAndModifierTest` for `WeightFunction.eval` via `CSG.weighted`.
+- [x] Add `AxisModifierTest` for `XModifier`, `YModifier`, `ZModifier`, and centered/non-centered behavior.
+- [x] Add `UnityModifierTest` for constant weight behavior.
+- [x] Add `MeshContainerTest` for dimensions, bounds, meshes/materials accessors, `getAsMeshViews`, and constructor precondition mismatch.
+- [x] Add `OpOverrideContractTest` covering custom override dispatch paths from `CSG`, `STL`, `Bounds`, and `Primitive`.
 
 ## Phase 8 - `kcsg-dsl` Full Coverage (Currently 0 Tests)
 
