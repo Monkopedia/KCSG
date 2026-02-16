@@ -20,7 +20,7 @@ Goal: 100% test coverage of public API in `kcsg` and `kcsg-dsl`, with determinis
 
 - [x] Generate and commit a checklist of all public symbols from `kcsg/src/main/java/com/monkopedia/kcsg/*.kt`.
 - [x] Generate and commit a checklist of all public symbols from `kcsg-dsl/src/main/java/com/monkopedia/kcsg/*.kt`.
-- [ ] Mark each symbol in the checklist with test status (`missing`, `partial`, `covered`).
+- [x] Mark each symbol in the checklist with test status (`missing`, `partial`, `covered`).
 - [ ] Add scenario tags in checklist (`math`, `primitive`, `boolean`, `mesh`, `io`, `dsl`, `error-path`).
 
 ## Phase 2 - Core Math and Geometry Unit Coverage
