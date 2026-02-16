@@ -14,7 +14,7 @@ Goal: 100% test coverage of public API in `kcsg` and `kcsg-dsl`, with determinis
 - [x] Add deterministic random/data seed utility for fuzz-style geometry checks.
 - [x] Add fake `OpOverride` fixture to assert override routing behavior.
 - [x] Add fake `KcsgHost` fixture to test DSL builder/export/cache behavior.
-- [ ] Add `docs/public-api-checklist.md` and require updates when API changes.
+- [x] Add `docs/public-api-checklist.md` and require updates when API changes.
 
 ## Phase 1 - Public API Inventory and Mapping
 
