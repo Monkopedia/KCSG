@@ -78,3 +78,13 @@ signing {
     sign(publishing.publications)
     useGpgCmd()
 }
+
+kover {
+    reports {
+        verify {
+            rule("baseline-line-coverage") {
+                minBound(1)
+            }
+        }
+    }
+}
