@@ -9,3 +9,9 @@
 /.vscode/
 local.properties
 **/build
+out/
+kcsg/cyl.stl
+arduino_mount.csgs
+importer_test.csgs
+lib_test.csgs
+test_stl.csgs
