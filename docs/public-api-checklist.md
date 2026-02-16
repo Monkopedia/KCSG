@@ -18,7 +18,33 @@ This checklist tracks public API coverage status for library modules.
 
 | Symbol | Status | Tests |
 | --- | --- | --- |
-| _Populate in Phase 1 inventory task_ | missing | n/a |
+| `Bounds` | missing | n/a |
+| `CSG` | missing | n/a |
+| `Cube` | missing | n/a |
+| `Cylinder` | missing | n/a |
+| `Edge` | missing | n/a |
+| `Extrude` | missing | n/a |
+| `FileUtil` | missing | n/a |
+| `HashingOpOverride` | missing | n/a |
+| `MeshContainer` | missing | n/a |
+| `ObjFile` | missing | n/a |
+| `OpOverride` | missing | n/a |
+| `Plane` | missing | n/a |
+| `Polygon` | missing | n/a |
+| `Polyhedron` | missing | n/a |
+| `Primitive` | missing | n/a |
+| `PropertyStorage` | missing | n/a |
+| `RoundedCube` | missing | n/a |
+| `STL` | missing | n/a |
+| `Sphere` | missing | n/a |
+| `Transform` | missing | n/a |
+| `UnityModifier` | missing | n/a |
+| `Vector3d` | missing | n/a |
+| `Vertex` | missing | n/a |
+| `WeightFunction` | missing | n/a |
+| `XModifier` | missing | n/a |
+| `YModifier` | missing | n/a |
+| `ZModifier` | missing | n/a |
 
 ## Module: kcsg-dsl
 
