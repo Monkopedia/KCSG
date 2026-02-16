@@ -47,7 +47,7 @@ Goal: 100% test coverage of public API in `kcsg` and `kcsg-dsl`, with determinis
 - [x] Add `CSGHullTest` for `hull()` and list/vararg overloads.
 - [x] Add `CSGCoreTest` for `copy`, `polygons`, `optimization`, `dumbUnion`, `bounds`, `computeVolume`, `transformed`, `weighted`.
 - [x] Add `CSGSerializationTest` for `toStlString` overloads, `toObj`, `toObjString`, `color`.
-- [ ] Add `CSGFactoryAndOverrideTest` for all `fromPolygons` overloads, `setDefaultOptType`, `opOverride`, and `withOverride` restoration semantics.
+- [x] Add `CSGFactoryAndOverrideTest` for all `fromPolygons` overloads, `setDefaultOptType`, `opOverride`, and `withOverride` restoration semantics.
 - [ ] Add `CSGOptTypeParityTest` validating result parity across `NONE`, `CSG_BOUND`, and `POLYGON_BOUND` for representative operations.
 
 ## Phase 5 - Polygon, Edge, Extrude, and Topology Coverage
