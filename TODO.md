@@ -11,7 +11,7 @@ Goal: 100% test coverage of public API in `kcsg` and `kcsg-dsl`, with determinis
 - [x] Add a dedicated coverage HTML report artifact task for local inspection.
 - [x] Add shared geometry assertion helpers (`assertVectorClose`, `assertBoundsClose`, `assertFiniteMesh`, `assertVolumeClose`) in `kcsg/src/test/java/com/monkopedia/kcsg/testutil/`.
 - [x] Add reusable temporary file + stream fixture helpers for STL/OBJ I/O tests.
-- [ ] Add deterministic random/data seed utility for fuzz-style geometry checks.
+- [x] Add deterministic random/data seed utility for fuzz-style geometry checks.
 - [ ] Add fake `OpOverride` fixture to assert override routing behavior.
 - [ ] Add fake `KcsgHost` fixture to test DSL builder/export/cache behavior.
 - [ ] Add `docs/public-api-checklist.md` and require updates when API changes.
