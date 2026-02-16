@@ -34,7 +34,7 @@ Goal: 100% test coverage of public API in `kcsg` and `kcsg-dsl`, with determinis
 
 ## Phase 3 - Primitive and Mesh Construction Coverage
 
-- [ ] Add `CubeTest` for all constructors, `toPolygons`, `toCSG`, `noCenter`, and bounds/volume invariants.
+- [x] Add `CubeTest` for all constructors, `toPolygons`, `toCSG`, `noCenter`, and bounds/volume invariants.
 - [ ] Add `SphereTest` for both constructors, `toPolygons`, `toCSG`, resolution effects, and volume convergence tolerance.
 - [ ] Add `CylinderTest` for all constructors, frustum vs cylinder behavior, `toPolygons`, `toCSG`, and slice-count effects.
 - [ ] Add `RoundedCubeTest` for constructor variants, `toPolygons`, `noCenter`, and corner radius/resolution impact.
