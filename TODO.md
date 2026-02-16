@@ -44,7 +44,7 @@ Goal: 100% test coverage of public API in `kcsg` and `kcsg-dsl`, with determinis
 ## Phase 4 - CSG Boolean and Transform API Coverage
 
 - [x] Add `CSGBooleanTest` for `union`, `difference`, `intersect` single/list/vararg overloads.
-- [ ] Add `CSGHullTest` for `hull()` and list/vararg overloads.
+- [x] Add `CSGHullTest` for `hull()` and list/vararg overloads.
 - [ ] Add `CSGCoreTest` for `copy`, `polygons`, `optimization`, `dumbUnion`, `bounds`, `computeVolume`, `transformed`, `weighted`.
 - [ ] Add `CSGSerializationTest` for `toStlString` overloads, `toObj`, `toObjString`, `color`.
 - [ ] Add `CSGFactoryAndOverrideTest` for all `fromPolygons` overloads, `setDefaultOptType`, `opOverride`, and `withOverride` restoration semantics.
