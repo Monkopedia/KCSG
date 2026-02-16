@@ -10,7 +10,7 @@ Goal: 100% test coverage of public API in `kcsg` and `kcsg-dsl`, with determinis
 - [x] Enforce coverage threshold gate for library modules (start at current baseline, ratchet to 100%). [NOTE: baseline gate initialized at 1% line coverage in Kover verify rules.]
 - [x] Add a dedicated coverage HTML report artifact task for local inspection.
 - [x] Add shared geometry assertion helpers (`assertVectorClose`, `assertBoundsClose`, `assertFiniteMesh`, `assertVolumeClose`) in `kcsg/src/test/java/com/monkopedia/kcsg/testutil/`.
-- [ ] Add reusable temporary file + stream fixture helpers for STL/OBJ I/O tests.
+- [x] Add reusable temporary file + stream fixture helpers for STL/OBJ I/O tests.
 - [ ] Add deterministic random/data seed utility for fuzz-style geometry checks.
 - [ ] Add fake `OpOverride` fixture to assert override routing behavior.
 - [ ] Add fake `KcsgHost` fixture to test DSL builder/export/cache behavior.
