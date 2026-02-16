@@ -25,7 +25,7 @@ Goal: 100% test coverage of public API in `kcsg` and `kcsg-dsl`, with determinis
 
 ## Phase 2 - Core Math and Geometry Unit Coverage
 
-- [ ] Add `Vector3dTest` covering `get`, `plus`, `minus`, scalar/vector `times`, `divided`, `dot`, `crossed`, `magnitude`, `magnitudeSq`, `angle`, `distance`, `orthogonal`, `normalized`, `negated`, `lerp`, `project`, `collinear`, transform overloads, STL/OBJ string output, factory methods (`x/y/z/xy/xyz/yz/xz/zero/unity`), constants (`UNITY/X_ONE/Y_ONE/ZERO/Z_ONE`), and invalid index path.
+- [x] Add `Vector3dTest` covering `get`, `plus`, `minus`, scalar/vector `times`, `divided`, `dot`, `crossed`, `magnitude`, `magnitudeSq`, `angle`, `distance`, `orthogonal`, `normalized`, `negated`, `lerp`, `project`, `collinear`, transform overloads, STL/OBJ string output, factory methods (`x/y/z/xy/xyz/yz/xz/zero/unity`), constants (`UNITY/X_ONE/Y_ONE/ZERO/Z_ONE`), and invalid index path.
 - [ ] Add `TransformTest` covering `to`, `rotX/rotY/rotZ`, `rot(x,y,z)`, `rot(vec)`, `rot(from,to)`, axis rotation overload, all translate/scale overloads, `mirror`, both `transform` overloads, `isMirror`, `apply`, `from`, `unity`, and all scale-by-zero `require` failures.
 - [ ] Add `PlaneTest` covering `copy`, `flip`, `splitPolygon` classification (`COPLANAR`, `FRONT`, `BACK`, `SPANNING`), `createFromPoints`, and behavior with `USE_STACKOVERFLOW_WORKAROUND` enabled/disabled.
 - [ ] Add `VertexTest` covering `flip`, `interpolate`, STL/OBJ formatting overloads, transform overloads, equality/hash semantics, and `toString`.
