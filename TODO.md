@@ -75,15 +75,15 @@ Goal: 100% test coverage of public API in `kcsg` and `kcsg-dsl`, with determinis
 
 ## Phase 8 - `kcsg-dsl` Full Coverage (Currently 0 Tests)
 
-- [ ] Add `DslPrimitiveFactoryTest` for `BuilderContext.xyz`, `cube`, `roundedCube`, `cylinder` overloads, and `Primitive.weighted`.
-- [ ] Add `DslOperationsTest` for all `and/or/xor/plus/minus/times` overloads across `CSG` and `Primitive`.
-- [ ] Add `DslTransformExtensionsTest` for `TransformBuilder.unity`, `Transform.translate/scale` extension overloads, `CSG.transform`, `CSG.times(Transform)`, `Primitive.times(Transform)`, `Primitive.transform`, and `CSG.translate/scale/rot`.
-- [ ] Add `DslCollectionExtensionsTest` for collection `transform`, `times`, `translate`, `scale` overloads, `rot`, `flatten`, `merge`, `arrayed`, and `primitives`.
-- [ ] Add `CylinderRadiusPropertyTest` for `Cylinder.radius` extension getter/setter and uneven-cylinder failure path.
-- [ ] Add `KcsgBuilderTest` for `primitive`, `csg`, `import`, `stl`, `export`, and caching/override behavior.
-- [ ] Add `KcsgScriptTest` for `overrideExport`, `generateExports`, `generateTarget`, `exports`, `targets`, and host-backed cache delegation.
-- [ ] Add `ImportedScriptTest` for `ImportedKcsgScript` (`exports`, `targets`, `get`).
-- [ ] Add `KcsgHostTest` for `EmptyHost` default behavior and error paths.
+- [x] Add `DslPrimitiveFactoryTest` for `BuilderContext.xyz`, `cube`, `roundedCube`, `cylinder` overloads, and `Primitive.weighted`.
+- [x] Add `DslOperationsTest` for all `and/or/xor/plus/minus/times` overloads across `CSG` and `Primitive`.
+- [x] Add `DslTransformExtensionsTest` for `TransformBuilder.unity`, `Transform.translate/scale` extension overloads, `CSG.transform`, `CSG.times(Transform)`, `Primitive.times(Transform)`, `Primitive.transform`, and `CSG.translate/scale/rot`.
+- [x] Add `DslCollectionExtensionsTest` for collection `transform`, `times`, `translate`, `scale` overloads, `rot`, `flatten`, `merge`, `arrayed`, and `primitives`.
+- [x] Add `CylinderRadiusPropertyTest` for `Cylinder.radius` extension getter/setter and uneven-cylinder failure path.
+- [x] Add `KcsgBuilderTest` for `primitive`, `csg`, `import`, `stl`, `export`, and caching/override behavior.
+- [x] Add `KcsgScriptTest` for `overrideExport`, `generateExports`, `generateTarget`, `exports`, `targets`, and host-backed cache delegation.
+- [x] Add `ImportedScriptTest` for `ImportedKcsgScript` (`exports`, `targets`, `get`).
+- [x] Add `KcsgHostTest` for `EmptyHost` default behavior and error paths.
 
 ## Phase 9 - Primitive Interaction Matrix (High Detail Regression Set)
 
