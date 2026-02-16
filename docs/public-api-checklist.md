@@ -6,6 +6,7 @@ This checklist tracks public API coverage status for library modules.
 
 - Any change to public API in `kcsg` or `kcsg-dsl` must update this file in the same PR.
 - Mark each symbol with one of: `missing`, `partial`, `covered`.
+- Assign one or more scenario tags: `math`, `primitive`, `boolean`, `mesh`, `io`, `dsl`, `error-path`.
 - Add or update test references for each symbol as coverage is implemented.
 
 ## Status Legend
@@ -16,76 +17,76 @@ This checklist tracks public API coverage status for library modules.
 
 ## Module: kcsg
 
-| Symbol | Status | Tests |
-| --- | --- | --- |
-| `Bounds` | missing | n/a |
-| `CSG` | missing | n/a |
-| `Cube` | missing | n/a |
-| `Cylinder` | missing | n/a |
-| `Edge` | missing | n/a |
-| `Extrude` | missing | n/a |
-| `FileUtil` | missing | n/a |
-| `HashingOpOverride` | missing | n/a |
-| `MeshContainer` | missing | n/a |
-| `ObjFile` | missing | n/a |
-| `OpOverride` | missing | n/a |
-| `Plane` | missing | n/a |
-| `Polygon` | missing | n/a |
-| `Polyhedron` | missing | n/a |
-| `Primitive` | missing | n/a |
-| `PropertyStorage` | missing | n/a |
-| `RoundedCube` | missing | n/a |
-| `STL` | missing | n/a |
-| `Sphere` | missing | n/a |
-| `Transform` | missing | n/a |
-| `UnityModifier` | missing | n/a |
-| `Vector3d` | missing | n/a |
-| `Vertex` | missing | n/a |
-| `WeightFunction` | missing | n/a |
-| `XModifier` | missing | n/a |
-| `YModifier` | missing | n/a |
-| `ZModifier` | missing | n/a |
+| Symbol | Tags | Status | Tests |
+| --- | --- | --- | --- |
+| `Bounds` | `math`, `mesh` | missing | n/a |
+| `CSG` | `boolean`, `mesh`, `io`, `error-path` | missing | n/a |
+| `Cube` | `primitive`, `mesh` | missing | n/a |
+| `Cylinder` | `primitive`, `mesh` | missing | n/a |
+| `Edge` | `math`, `mesh`, `error-path` | missing | n/a |
+| `Extrude` | `primitive`, `mesh`, `error-path` | missing | n/a |
+| `FileUtil` | `io`, `error-path` | missing | n/a |
+| `HashingOpOverride` | `io`, `dsl`, `error-path` | missing | n/a |
+| `MeshContainer` | `mesh`, `error-path` | missing | n/a |
+| `ObjFile` | `io`, `mesh`, `error-path` | missing | n/a |
+| `OpOverride` | `dsl`, `io` | missing | n/a |
+| `Plane` | `math`, `mesh`, `error-path` | missing | n/a |
+| `Polygon` | `math`, `mesh`, `error-path` | missing | n/a |
+| `Polyhedron` | `primitive`, `mesh` | missing | n/a |
+| `Primitive` | `primitive`, `mesh` | missing | n/a |
+| `PropertyStorage` | `mesh`, `dsl` | missing | n/a |
+| `RoundedCube` | `primitive`, `mesh` | missing | n/a |
+| `STL` | `io`, `mesh`, `error-path` | missing | n/a |
+| `Sphere` | `primitive`, `mesh` | missing | n/a |
+| `Transform` | `math`, `mesh`, `error-path` | missing | n/a |
+| `UnityModifier` | `primitive`, `mesh` | missing | n/a |
+| `Vector3d` | `math`, `mesh`, `error-path` | missing | n/a |
+| `Vertex` | `math`, `mesh` | missing | n/a |
+| `WeightFunction` | `primitive`, `mesh` | missing | n/a |
+| `XModifier` | `primitive`, `mesh` | missing | n/a |
+| `YModifier` | `primitive`, `mesh` | missing | n/a |
+| `ZModifier` | `primitive`, `mesh` | missing | n/a |
 
 ## Module: kcsg-dsl
 
-| Symbol | Status | Tests |
-| --- | --- | --- |
-| `CSGBuilder` | missing | n/a |
-| `BuilderContext.xyz` | missing | n/a |
-| `Primitive.weighted` (DSL extension) | missing | n/a |
-| `BuilderContext.roundedCube` | missing | n/a |
-| `BuilderContext.cube` | missing | n/a |
-| `BuilderContext.cylinder` (start/end overload) | missing | n/a |
-| `BuilderContext.cylinder` (radius/height overload) | missing | n/a |
-| `BuilderContext.transform` | missing | n/a |
-| `Collection<CSG>.transform` | missing | n/a |
-| `Collection<CSG>.times(Transform)` | missing | n/a |
-| `Collection<CSG>.translate` | missing | n/a |
-| `Collection<CSG>.scale(Double)` | missing | n/a |
-| `Collection<CSG>.scale(x,y,z)` | missing | n/a |
-| `Collection<CSG>.rot` | missing | n/a |
-| `Collection<CSG>.flatten` | missing | n/a |
-| `Collection<CSG>.merge` | missing | n/a |
-| `BuilderContext.arrayed` | missing | n/a |
-| `BuilderContext.primitives` | missing | n/a |
-| `CsgDsl` | missing | n/a |
-| `ImportedKcsgScript` | missing | n/a |
-| `ImportedScript` | missing | n/a |
-| `KcsgBuilder` | missing | n/a |
-| `KcsgHost` | missing | n/a |
-| `EmptyHost` | missing | n/a |
-| `KcsgScript` | missing | n/a |
-| DSL boolean/set operator extensions (`and`, `or`, `xor`, `plus`, `minus`, `times`) | missing | n/a |
-| `Cylinder.radius` (extension property) | missing | n/a |
-| `TransformBuilder` | missing | n/a |
-| `Transform.translate` (DSL extension) | missing | n/a |
-| `Transform.scale(Double)` (DSL extension) | missing | n/a |
-| `Transform.scale(x,y,z)` (DSL extension) | missing | n/a |
-| `CSG.transform` (DSL extension) | missing | n/a |
-| `CSG.times(Transform)` (DSL extension) | missing | n/a |
-| `Primitive.times(Transform)` (DSL extension) | missing | n/a |
-| `Primitive.transform` (DSL extension) | missing | n/a |
-| `CSG.translate` (DSL extension) | missing | n/a |
-| `CSG.scale(Double)` (DSL extension) | missing | n/a |
-| `CSG.scale(x,y,z)` (DSL extension) | missing | n/a |
-| `CSG.rot` (DSL extension) | missing | n/a |
+| Symbol | Tags | Status | Tests |
+| --- | --- | --- | --- |
+| `CSGBuilder` | `dsl`, `primitive` | missing | n/a |
+| `BuilderContext.xyz` | `dsl`, `math` | missing | n/a |
+| `Primitive.weighted` (DSL extension) | `dsl`, `primitive` | missing | n/a |
+| `BuilderContext.roundedCube` | `dsl`, `primitive` | missing | n/a |
+| `BuilderContext.cube` | `dsl`, `primitive` | missing | n/a |
+| `BuilderContext.cylinder` (start/end overload) | `dsl`, `primitive` | missing | n/a |
+| `BuilderContext.cylinder` (radius/height overload) | `dsl`, `primitive` | missing | n/a |
+| `BuilderContext.transform` | `dsl`, `math` | missing | n/a |
+| `Collection<CSG>.transform` | `dsl`, `math`, `boolean` | missing | n/a |
+| `Collection<CSG>.times(Transform)` | `dsl`, `math` | missing | n/a |
+| `Collection<CSG>.translate` | `dsl`, `math` | missing | n/a |
+| `Collection<CSG>.scale(Double)` | `dsl`, `math`, `error-path` | missing | n/a |
+| `Collection<CSG>.scale(x,y,z)` | `dsl`, `math`, `error-path` | missing | n/a |
+| `Collection<CSG>.rot` | `dsl`, `math` | missing | n/a |
+| `Collection<CSG>.flatten` | `dsl`, `boolean` | missing | n/a |
+| `Collection<CSG>.merge` | `dsl`, `boolean` | missing | n/a |
+| `BuilderContext.arrayed` | `dsl`, `primitive` | missing | n/a |
+| `BuilderContext.primitives` | `dsl`, `primitive` | missing | n/a |
+| `CsgDsl` | `dsl` | missing | n/a |
+| `ImportedKcsgScript` | `dsl`, `io` | missing | n/a |
+| `ImportedScript` | `dsl`, `io` | missing | n/a |
+| `KcsgBuilder` | `dsl`, `io`, `error-path` | missing | n/a |
+| `KcsgHost` | `dsl`, `io` | missing | n/a |
+| `EmptyHost` | `dsl`, `error-path` | missing | n/a |
+| `KcsgScript` | `dsl`, `io`, `error-path` | missing | n/a |
+| DSL boolean/set operator extensions (`and`, `or`, `xor`, `plus`, `minus`, `times`) | `dsl`, `boolean` | missing | n/a |
+| `Cylinder.radius` (extension property) | `dsl`, `primitive`, `error-path` | missing | n/a |
+| `TransformBuilder` | `dsl`, `math` | missing | n/a |
+| `Transform.translate` (DSL extension) | `dsl`, `math` | missing | n/a |
+| `Transform.scale(Double)` (DSL extension) | `dsl`, `math`, `error-path` | missing | n/a |
+| `Transform.scale(x,y,z)` (DSL extension) | `dsl`, `math`, `error-path` | missing | n/a |
+| `CSG.transform` (DSL extension) | `dsl`, `math`, `boolean` | missing | n/a |
+| `CSG.times(Transform)` (DSL extension) | `dsl`, `math` | missing | n/a |
+| `Primitive.times(Transform)` (DSL extension) | `dsl`, `primitive`, `math` | missing | n/a |
+| `Primitive.transform` (DSL extension) | `dsl`, `primitive`, `math` | missing | n/a |
+| `CSG.translate` (DSL extension) | `dsl`, `math` | missing | n/a |
+| `CSG.scale(Double)` (DSL extension) | `dsl`, `math`, `error-path` | missing | n/a |
+| `CSG.scale(x,y,z)` (DSL extension) | `dsl`, `math`, `error-path` | missing | n/a |
+| `CSG.rot` (DSL extension) | `dsl`, `math` | missing | n/a |
