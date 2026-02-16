@@ -40,6 +40,8 @@ tasks.register("fatJar", type = Jar::class) {
 }
 
 dependencies {
+    testImplementation(group = "junit", name = "junit", version = "4.13.2")
+
     implementation(libs.clikt)
     implementation(libs.slf4j.simple)
     implementation(kotlin("stdlib-jdk8"))
@@ -56,4 +58,3 @@ val compileTestKotlin: KotlinCompile by tasks
 compileTestKotlin.compilerOptions {
     jvmTarget.set(JvmTarget.JVM_1_8)
 }
-

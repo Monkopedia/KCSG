@@ -1,5 +1,4 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import com.vanniktech.maven.publish.SonatypeHost
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -30,7 +29,7 @@ repositories {
 dependencies {
     implementation(project(":kcsg"))
 
-    testImplementation(group = "junit", name = "junit", version = "4.+")
+    testImplementation(group = "junit", name = "junit", version = "4.13.2")
 
     implementation(libs.slf4j.api)
     implementation(kotlin("stdlib-jdk8"))
@@ -69,7 +68,7 @@ mavenPublishing {
             url.set("https://github.com/Monkopedia/kcsg/")
         }
     }
-    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+    publishToMavenCentral()
 
     signAllPublications()
 }

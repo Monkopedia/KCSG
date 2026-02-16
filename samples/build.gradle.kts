@@ -23,7 +23,6 @@ javafx {
 
 repositories {
     mavenCentral()
-    jcenter()
 
     mavenLocal()
 }
@@ -32,7 +31,7 @@ dependencies {
     implementation(project(":kcsg"))
     implementation(project(":kcsg-dsl"))
 
-    testImplementation(group = "junit", name = "junit", version = "4.+")
+    testImplementation(group = "junit", name = "junit", version = "4.13.2")
 
     implementation(libs.slf4j.api)
     implementation(kotlin("stdlib-jdk8"))
