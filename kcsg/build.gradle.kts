@@ -1,5 +1,6 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.gradle.api.tasks.testing.Test
 
 plugins {
     id("java")
@@ -43,6 +44,21 @@ compileTestKotlin.compilerOptions {
     jvmTarget.set(JvmTarget.JVM_1_8)
 }
 
+tasks.named<Test>("test") {
+    useJUnit()
+    exclude("com/monkopedia/kcsg/samples/**")
+}
+
+tasks.register<Test>("sampleTest") {
+    description = "Runs sample model integration tests."
+    group = "verification"
+    useJUnit()
+    testClassesDirs = sourceSets.test.get().output.classesDirs
+    classpath = sourceSets.test.get().runtimeClasspath
+    include("com/monkopedia/kcsg/samples/**")
+    shouldRunAfter(tasks.named("test"))
+}
+
 mavenPublishing {
     pom {
         name.set("kcsg")
@@ -78,6 +94,11 @@ signing {
 }
 
 kover {
+    currentProject {
+        instrumentation {
+            disabledForTestTasks.add("sampleTest")
+        }
+    }
     reports {
         verify {
             rule("baseline-line-coverage") {

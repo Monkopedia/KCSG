@@ -19,74 +19,74 @@ This checklist tracks public API coverage status for library modules.
 
 | Symbol | Tags | Status | Tests |
 | --- | --- | --- | --- |
-| `Bounds` | `math`, `mesh` | missing | n/a |
-| `CSG` | `boolean`, `mesh`, `io`, `error-path` | missing | n/a |
-| `Cube` | `primitive`, `mesh` | missing | n/a |
-| `Cylinder` | `primitive`, `mesh` | missing | n/a |
-| `Edge` | `math`, `mesh`, `error-path` | missing | n/a |
-| `Extrude` | `primitive`, `mesh`, `error-path` | missing | n/a |
-| `FileUtil` | `io`, `error-path` | missing | n/a |
-| `HashingOpOverride` | `io`, `dsl`, `error-path` | missing | n/a |
-| `MeshContainer` | `mesh`, `error-path` | missing | n/a |
-| `ObjFile` | `io`, `mesh`, `error-path` | missing | n/a |
-| `OpOverride` | `dsl`, `io` | missing | n/a |
-| `Plane` | `math`, `mesh`, `error-path` | missing | n/a |
-| `Polygon` | `math`, `mesh`, `error-path` | missing | n/a |
-| `Polyhedron` | `primitive`, `mesh` | missing | n/a |
-| `Primitive` | `primitive`, `mesh` | missing | n/a |
-| `PropertyStorage` | `mesh`, `dsl` | missing | n/a |
-| `RoundedCube` | `primitive`, `mesh` | missing | n/a |
-| `STL` | `io`, `mesh`, `error-path` | missing | n/a |
-| `Sphere` | `primitive`, `mesh` | missing | n/a |
-| `Transform` | `math`, `mesh`, `error-path` | missing | n/a |
-| `UnityModifier` | `primitive`, `mesh` | missing | n/a |
-| `Vector3d` | `math`, `mesh`, `error-path` | missing | n/a |
-| `Vertex` | `math`, `mesh` | missing | n/a |
-| `WeightFunction` | `primitive`, `mesh` | missing | n/a |
-| `XModifier` | `primitive`, `mesh` | missing | n/a |
-| `YModifier` | `primitive`, `mesh` | missing | n/a |
-| `ZModifier` | `primitive`, `mesh` | missing | n/a |
+| `Bounds` | `math`, `mesh` | covered | `BoundsTest.centerAndBoundsAreDerivedFromMinAndMax` |
+| `CSG` | `boolean`, `mesh`, `io`, `error-path` | covered | `CSGBooleanTest.singleOverloadsProduceExpectedVolumes`; `PrimitiveInteractionMatrixTest.scenarioS9OptimizationParity` |
+| `Cube` | `primitive`, `mesh` | covered | `CubeTest.constructorsInitializeCenterAndDimensions` |
+| `Cylinder` | `primitive`, `mesh` | covered | `CylinderTest.constructorsPopulateGeometryFields` |
+| `Edge` | `math`, `mesh`, `error-path` | covered | `EdgeApiTest.containsEqualsAndHashCode` |
+| `Extrude` | `primitive`, `mesh`, `error-path` | covered | `ExtrudeTest.pointsOverloadsProduceEquivalentExtrusions` |
+| `FileUtil` | `io`, `error-path` | covered | `FileUtilTest.writeAndReadRoundTrip` |
+| `HashingOpOverride` | `io`, `dsl`, `error-path` | covered | `HashingOpOverrideTest.hashingSequenceIsDeterministicForSameInputs` |
+| `MeshContainer` | `mesh`, `error-path` | covered | `MeshContainerTest.dimensionsBoundsAccessorsAndMeshViews` |
+| `ObjFile` | `io`, `mesh`, `error-path` | covered | `ObjFileTest.objAndMtlAccessorsAndStreams` |
+| `OpOverride` | `dsl`, `io` | covered | `OpOverrideContractTest.overrideDispatchesAcrossCsgStlBoundsAndPrimitiveEntrypoints` |
+| `Plane` | `math`, `mesh`, `error-path` | covered | `PlaneTest.splitPolygonClassifiesAllCases` |
+| `Polygon` | `math`, `mesh`, `error-path` | covered | `PolygonComprehensiveTest.constructorsAndIsValid` |
+| `Polyhedron` | `primitive`, `mesh` | covered | `PolyhedronTest.listAndArrayConstructorsPopulatePointsAndFaces` |
+| `Primitive` | `primitive`, `mesh` | covered | `PrimitiveDefaultBehaviorTest.toCsgUsesToPolygonsResult` |
+| `PropertyStorage` | `mesh`, `dsl` | covered | `PropertyStorageTest.setAndTypedGetLookup` |
+| `RoundedCube` | `primitive`, `mesh` | covered | `RoundedCubeTest.constructorsPopulateFields` |
+| `STL` | `io`, `mesh`, `error-path` | covered | `STLTest.stlFileLoadsCsgFromDisk` |
+| `Sphere` | `primitive`, `mesh` | covered | `SphereTest.constructorsPopulateProperties` |
+| `Transform` | `math`, `mesh`, `error-path` | covered | `TransformTest.unityFromAndToMatrixValues` |
+| `UnityModifier` | `primitive`, `mesh` | covered | `UnityModifierTest.unityModifierAlwaysReturnsOne` |
+| `Vector3d` | `math`, `mesh`, `error-path` | covered | `Vector3dTest.factoryMethodsAndConstants` |
+| `Vertex` | `math`, `mesh` | covered | `VertexTest.flipAndInterpolate` |
+| `WeightFunction` | `primitive`, `mesh` | covered | `WeightFunctionAndModifierTest.weightedInvokesWeightFunctionAndAppliesWeightsToCopy` |
+| `XModifier` | `primitive`, `mesh` | covered | `AxisModifierTest.xModifierSupportsCenteredAndNonCenteredModes` |
+| `YModifier` | `primitive`, `mesh` | covered | `AxisModifierTest.yModifierSupportsCenteredAndNonCenteredModes` |
+| `ZModifier` | `primitive`, `mesh` | covered | `AxisModifierTest.zModifierSupportsCenteredAndNonCenteredModes` |
 
 ## Module: kcsg-dsl
 
 | Symbol | Tags | Status | Tests |
 | --- | --- | --- | --- |
-| `CSGBuilder` | `dsl`, `primitive` | missing | n/a |
-| `BuilderContext.xyz` | `dsl`, `math` | missing | n/a |
-| `Primitive.weighted` (DSL extension) | `dsl`, `primitive` | missing | n/a |
-| `BuilderContext.roundedCube` | `dsl`, `primitive` | missing | n/a |
-| `BuilderContext.cube` | `dsl`, `primitive` | missing | n/a |
-| `BuilderContext.cylinder` (start/end overload) | `dsl`, `primitive` | missing | n/a |
-| `BuilderContext.cylinder` (radius/height overload) | `dsl`, `primitive` | missing | n/a |
-| `BuilderContext.transform` | `dsl`, `math` | missing | n/a |
-| `Collection<CSG>.transform` | `dsl`, `math`, `boolean` | missing | n/a |
-| `Collection<CSG>.times(Transform)` | `dsl`, `math` | missing | n/a |
-| `Collection<CSG>.translate` | `dsl`, `math` | missing | n/a |
-| `Collection<CSG>.scale(Double)` | `dsl`, `math`, `error-path` | missing | n/a |
-| `Collection<CSG>.scale(x,y,z)` | `dsl`, `math`, `error-path` | missing | n/a |
-| `Collection<CSG>.rot` | `dsl`, `math` | missing | n/a |
-| `Collection<CSG>.flatten` | `dsl`, `boolean` | missing | n/a |
-| `Collection<CSG>.merge` | `dsl`, `boolean` | missing | n/a |
-| `BuilderContext.arrayed` | `dsl`, `primitive` | missing | n/a |
-| `BuilderContext.primitives` | `dsl`, `primitive` | missing | n/a |
-| `CsgDsl` | `dsl` | missing | n/a |
-| `ImportedKcsgScript` | `dsl`, `io` | missing | n/a |
-| `ImportedScript` | `dsl`, `io` | missing | n/a |
-| `KcsgBuilder` | `dsl`, `io`, `error-path` | missing | n/a |
-| `KcsgHost` | `dsl`, `io` | missing | n/a |
-| `EmptyHost` | `dsl`, `error-path` | missing | n/a |
-| `KcsgScript` | `dsl`, `io`, `error-path` | missing | n/a |
-| DSL boolean/set operator extensions (`and`, `or`, `xor`, `plus`, `minus`, `times`) | `dsl`, `boolean` | missing | n/a |
-| `Cylinder.radius` (extension property) | `dsl`, `primitive`, `error-path` | missing | n/a |
-| `TransformBuilder` | `dsl`, `math` | missing | n/a |
-| `Transform.translate` (DSL extension) | `dsl`, `math` | missing | n/a |
-| `Transform.scale(Double)` (DSL extension) | `dsl`, `math`, `error-path` | missing | n/a |
-| `Transform.scale(x,y,z)` (DSL extension) | `dsl`, `math`, `error-path` | missing | n/a |
-| `CSG.transform` (DSL extension) | `dsl`, `math`, `boolean` | missing | n/a |
-| `CSG.times(Transform)` (DSL extension) | `dsl`, `math` | missing | n/a |
-| `Primitive.times(Transform)` (DSL extension) | `dsl`, `primitive`, `math` | missing | n/a |
-| `Primitive.transform` (DSL extension) | `dsl`, `primitive`, `math` | missing | n/a |
-| `CSG.translate` (DSL extension) | `dsl`, `math` | missing | n/a |
-| `CSG.scale(Double)` (DSL extension) | `dsl`, `math`, `error-path` | missing | n/a |
-| `CSG.scale(x,y,z)` (DSL extension) | `dsl`, `math`, `error-path` | missing | n/a |
-| `CSG.rot` (DSL extension) | `dsl`, `math` | missing | n/a |
+| `CSGBuilder` | `dsl`, `primitive` | covered | `DslPrimitiveFactoryTest.primitiveFactoriesAndWeightedExtension` |
+| `BuilderContext.xyz` | `dsl`, `math` | covered | `DslPrimitiveFactoryTest.primitiveFactoriesAndWeightedExtension` |
+| `Primitive.weighted` (DSL extension) | `dsl`, `primitive` | covered | `DslPrimitiveFactoryTest.primitiveFactoriesAndWeightedExtension` |
+| `BuilderContext.roundedCube` | `dsl`, `primitive` | covered | `DslPrimitiveFactoryTest.primitiveFactoriesAndWeightedExtension` |
+| `BuilderContext.cube` | `dsl`, `primitive` | covered | `DslPrimitiveFactoryTest.primitiveFactoriesAndWeightedExtension` |
+| `BuilderContext.cylinder` (start/end overload) | `dsl`, `primitive` | covered | `DslPrimitiveFactoryTest.primitiveFactoriesAndWeightedExtension` |
+| `BuilderContext.cylinder` (radius/height overload) | `dsl`, `primitive` | covered | `DslPrimitiveFactoryTest.primitiveFactoriesAndWeightedExtension` |
+| `BuilderContext.transform` | `dsl`, `math` | covered | `DslPrimitiveFactoryTest.primitiveFactoriesAndWeightedExtension` |
+| `Collection<CSG>.transform` | `dsl`, `math`, `boolean` | covered | `DslCollectionExtensionsTest.collectionTransformTimesTranslateScaleAndRot` |
+| `Collection<CSG>.times(Transform)` | `dsl`, `math` | covered | `DslCollectionExtensionsTest.collectionTransformTimesTranslateScaleAndRot` |
+| `Collection<CSG>.translate` | `dsl`, `math` | covered | `DslCollectionExtensionsTest.collectionTransformTimesTranslateScaleAndRot` |
+| `Collection<CSG>.scale(Double)` | `dsl`, `math`, `error-path` | covered | `DslCollectionExtensionsTest.collectionTransformTimesTranslateScaleAndRot` |
+| `Collection<CSG>.scale(x,y,z)` | `dsl`, `math`, `error-path` | covered | `DslCollectionExtensionsTest.collectionTransformTimesTranslateScaleAndRot` |
+| `Collection<CSG>.rot` | `dsl`, `math` | covered | `DslCollectionExtensionsTest.collectionTransformTimesTranslateScaleAndRot` |
+| `Collection<CSG>.flatten` | `dsl`, `boolean` | covered | `DslCollectionExtensionsTest.flattenAndMergeProduceEquivalentResults` |
+| `Collection<CSG>.merge` | `dsl`, `boolean` | covered | `DslCollectionExtensionsTest.flattenAndMergeProduceEquivalentResults` |
+| `BuilderContext.arrayed` | `dsl`, `primitive` | covered | `DslCollectionExtensionsTest.arrayedAndPrimitivesBuilderHelpers` |
+| `BuilderContext.primitives` | `dsl`, `primitive` | covered | `DslCollectionExtensionsTest.arrayedAndPrimitivesBuilderHelpers` |
+| `CsgDsl` | `dsl` | partial | `DslOperationsTest.operationOverloadsAcrossCsgAndPrimitivePairs` |
+| `ImportedKcsgScript` | `dsl`, `io` | covered | `ImportedScriptTest.importedKcsgScriptSurfacesExportsTargetsAndGet` |
+| `ImportedScript` | `dsl`, `io` | covered | `ImportedScriptTest.importedKcsgScriptSurfacesExportsTargetsAndGet` |
+| `KcsgBuilder` | `dsl`, `io`, `error-path` | covered | `KcsgBuilderTest.primitiveCsgImportStlAndExportFlow` |
+| `KcsgHost` | `dsl`, `io` | covered | `KcsgHostTest.emptyHostDefaultsAndErrorPaths` |
+| `EmptyHost` | `dsl`, `error-path` | covered | `KcsgHostTest.emptyHostDefaultsAndErrorPaths` |
+| `KcsgScript` | `dsl`, `io`, `error-path` | covered | `KcsgScriptTest.overrideExportGenerateExportsTargetsAndCacheDelegation` |
+| DSL boolean/set operator extensions (`and`, `or`, `xor`, `plus`, `minus`, `times`) | `dsl`, `boolean` | covered | `DslOperationsTest.operationOverloadsAcrossCsgAndPrimitivePairs` |
+| `Cylinder.radius` (extension property) | `dsl`, `primitive`, `error-path` | covered | `CylinderRadiusPropertyTest.getterAndSetterOnEvenCylinder` |
+| `TransformBuilder` | `dsl`, `math` | covered | `DslTransformExtensionsTest.transformBuilderAndTransformExtensionOverloads` |
+| `Transform.translate` (DSL extension) | `dsl`, `math` | covered | `DslTransformExtensionsTest.transformBuilderAndTransformExtensionOverloads` |
+| `Transform.scale(Double)` (DSL extension) | `dsl`, `math`, `error-path` | covered | `DslTransformExtensionsTest.transformBuilderAndTransformExtensionOverloads` |
+| `Transform.scale(x,y,z)` (DSL extension) | `dsl`, `math`, `error-path` | covered | `DslTransformExtensionsTest.transformBuilderAndTransformExtensionOverloads` |
+| `CSG.transform` (DSL extension) | `dsl`, `math`, `boolean` | covered | `DslTransformExtensionsTest.csgAndPrimitiveTransformExtensions` |
+| `CSG.times(Transform)` (DSL extension) | `dsl`, `math` | covered | `DslTransformExtensionsTest.csgAndPrimitiveTransformExtensions` |
+| `Primitive.times(Transform)` (DSL extension) | `dsl`, `primitive`, `math` | covered | `DslTransformExtensionsTest.csgAndPrimitiveTransformExtensions` |
+| `Primitive.transform` (DSL extension) | `dsl`, `primitive`, `math` | covered | `DslTransformExtensionsTest.csgAndPrimitiveTransformExtensions` |
+| `CSG.translate` (DSL extension) | `dsl`, `math` | covered | `DslTransformExtensionsTest.csgTranslateScaleAndRotExtensions` |
+| `CSG.scale(Double)` (DSL extension) | `dsl`, `math`, `error-path` | covered | `DslTransformExtensionsTest.csgTranslateScaleAndRotExtensions` |
+| `CSG.scale(x,y,z)` (DSL extension) | `dsl`, `math`, `error-path` | covered | `DslTransformExtensionsTest.csgTranslateScaleAndRotExtensions` |
+| `CSG.rot` (DSL extension) | `dsl`, `math` | covered | `DslTransformExtensionsTest.csgTranslateScaleAndRotExtensions` |

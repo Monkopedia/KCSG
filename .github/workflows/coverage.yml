@@ -5,13 +5,12 @@ on:
   workflow_dispatch:
 
 jobs:
-  kover:
+  library-quality:
     runs-on: ubuntu-latest
-    # Existing sample-test failures are pre-existing in this repository.
-    # Keep this non-blocking until test stabilization and coverage gates are complete.
-    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Java
         uses: actions/setup-java@v4
@@ -22,8 +21,27 @@ jobs:
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      - name: Run coverage verification
-        run: ./gradlew :kcsg:koverVerify :kcsg-dsl:koverVerify --stacktrace
+      - name: Require public API checklist update when API changes
+        if: github.event_name == 'pull_request'
+        run: |
+          BASE_SHA="${{ github.event.pull_request.base.sha }}"
+          HEAD_SHA="${{ github.sha }}"
+          API_CHANGES="$(git diff --name-only "$BASE_SHA" "$HEAD_SHA" -- \
+            "kcsg/src/main/java/com/monkopedia/kcsg/*.kt" \
+            "kcsg-dsl/src/main/java/com/monkopedia/kcsg/*.kt")"
+
+          if [ -n "$API_CHANGES" ]; then
+            echo "Detected public API file changes:"
+            echo "$API_CHANGES"
+            CHECKLIST_CHANGE="$(git diff --name-only "$BASE_SHA" "$HEAD_SHA" -- "docs/public-api-checklist.md")"
+            if [ -z "$CHECKLIST_CHANGE" ]; then
+              echo "docs/public-api-checklist.md must be updated with public API changes."
+              exit 1
+            fi
+          fi
+
+      - name: Run library tests and coverage verification
+        run: ./gradlew :kcsg:test :kcsg-dsl:test :kcsg:koverVerify :kcsg-dsl:koverVerify --stacktrace
 
       - name: Upload coverage reports
         if: always()

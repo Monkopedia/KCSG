@@ -87,25 +87,25 @@ Goal: 100% test coverage of public API in `kcsg` and `kcsg-dsl`, with determinis
 
 ## Phase 9 - Primitive Interaction Matrix (High Detail Regression Set)
 
-- [ ] Create a reusable scenario harness (`GeometryScenarioHarness`) that runs each case under all optimization modes.
-- [ ] Add matrix case `S1` disjoint solids: union volume equals sum, intersection is empty, difference unchanged.
-- [ ] Add matrix case `S2` partial overlap: intersection non-empty, union volume less than sum, bounds correctness.
-- [ ] Add matrix case `S3` full containment: subtraction cavity semantics and containment invariants.
-- [ ] Add matrix case `S4` identical solids: idempotence of union/intersection and empty difference.
-- [ ] Add matrix case `S5` face tangency: near-zero intersection volume, no invalid polygons.
-- [ ] Add matrix case `S6` edge tangency: stable topology, finite coordinates, no degenerate blow-ups.
-- [ ] Add matrix case `S7` vertex tangency: same invariants as tangency stress cases.
-- [ ] Add matrix case `S8` transformed overlap: rotation/translation/scale invariance checks.
-- [ ] Add matrix case `S9` optimization parity across `NONE`, `CSG_BOUND`, `POLYGON_BOUND`.
-- [ ] Execute S1-S9 for pairs: `Cube-Cube`, `Cube-Sphere`, `Cube-Cylinder`, `Sphere-Sphere`, `Sphere-Cylinder`, `Cylinder-Cylinder`.
-- [ ] Execute S1-S4 + S8 for `RoundedCube` interactions (`RoundedCube-Cube`, `RoundedCube-Sphere`).
-- [ ] Execute S1-S4 + S8 for `Polyhedron` interactions (`Polyhedron-Cube`, `Polyhedron-Sphere`).
-- [ ] For all matrix outputs, assert manifold sanity checks (finite vertices, no zero-area triangles after triangulation).
+- [x] Create a reusable scenario harness (`GeometryScenarioHarness`) that runs each case under all optimization modes.
+- [x] Add matrix case `S1` disjoint solids: union volume equals sum, intersection is empty, difference unchanged.
+- [x] Add matrix case `S2` partial overlap: intersection non-empty, union volume less than sum, bounds correctness.
+- [x] Add matrix case `S3` full containment: subtraction cavity semantics and containment invariants.
+- [x] Add matrix case `S4` identical solids: idempotence of union/intersection and empty difference.
+- [x] Add matrix case `S5` face tangency: near-zero intersection volume, no invalid polygons.
+- [x] Add matrix case `S6` edge tangency: stable topology, finite coordinates, no degenerate blow-ups.
+- [x] Add matrix case `S7` vertex tangency: same invariants as tangency stress cases.
+- [x] Add matrix case `S8` transformed overlap: rotation/translation/scale invariance checks.
+- [x] Add matrix case `S9` optimization parity across `NONE`, `CSG_BOUND`, `POLYGON_BOUND`.
+- [x] Execute S1-S9 for pairs: `Cube-Cube`, `Cube-Sphere`, `Cube-Cylinder`, `Sphere-Sphere`, `Sphere-Cylinder`, `Cylinder-Cylinder`.
+- [x] Execute S1-S4 + S8 for `RoundedCube` interactions (`RoundedCube-Cube`, `RoundedCube-Sphere`).
+- [x] Execute S1-S4 + S8 for `Polyhedron` interactions (`Polyhedron-Cube`, `Polyhedron-Sphere`).
+- [x] For all matrix outputs, assert manifold sanity checks (finite vertices, no zero-area triangles after triangulation).
 
 ## Phase 10 - CI Ratchet and Long-Term Maintenance
 
-- [ ] Add CI job that runs full library tests and coverage verification on pull requests.
-- [ ] Add CI failure for missing update to `docs/public-api-checklist.md` when public API changes.
-- [ ] Add contributor guidance in `AGENTS.md` referencing the checklist and coverage gate workflow.
-- [ ] Raise module thresholds to 100% once all above tasks are complete and stable.
-- [ ] Add a final audit pass that maps each public symbol to at least one explicit test method name.
+- [x] Add CI job that runs full library tests and coverage verification on pull requests.
+- [x] Add CI failure for missing update to `docs/public-api-checklist.md` when public API changes.
+- [x] Add contributor guidance in `AGENTS.md` referencing the checklist and coverage gate workflow.
+- [ ] Raise module thresholds to 100% once all above tasks are complete and stable. [BLOCKED: Current Kover line coverage is ~81.48% for `kcsg` and ~82.20% for `kcsg-dsl`; enforcing 100% module thresholds would fail until remaining non-public/internal line coverage is addressed or scoped.]
+- [x] Add a final audit pass that maps each public symbol to at least one explicit test method name.

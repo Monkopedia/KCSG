@@ -9,6 +9,7 @@ class DslPrimitiveFactoryTest {
     @Test
     fun primitiveFactoriesAndWeightedExtension() {
         val builder = NoopBuilder()
+        assertEquals(Vector3d.ZERO, CSGBuilder.ZERO)
 
         val cube by builder.primitive { cube(2.0) }
         assertEquals(8.0, cube.computeVolume(), 1e-4)
@@ -47,6 +48,17 @@ class DslPrimitiveFactoryTest {
                 assertEquals(0.25, vertex.weight, 1e-9)
             }
         }
+
+        val transformedByContext by builder.csg {
+            cube(1.0).toCSG().transformed(transform { translate(2.0, 0.0, 0.0) })
+        }
+        assertEquals(
+            Bounds(
+                min = Vector3d.xyz(1.5, -0.5, -0.5),
+                max = Vector3d.xyz(2.5, 0.5, 0.5),
+            ),
+            transformedByContext.bounds,
+        )
     }
 
     private class NoopBuilder : KcsgBuilder() {
