@@ -50,4 +50,42 @@ This checklist tracks public API coverage status for library modules.
 
 | Symbol | Status | Tests |
 | --- | --- | --- |
-| _Populate in Phase 1 inventory task_ | missing | n/a |
+| `CSGBuilder` | missing | n/a |
+| `BuilderContext.xyz` | missing | n/a |
+| `Primitive.weighted` (DSL extension) | missing | n/a |
+| `BuilderContext.roundedCube` | missing | n/a |
+| `BuilderContext.cube` | missing | n/a |
+| `BuilderContext.cylinder` (start/end overload) | missing | n/a |
+| `BuilderContext.cylinder` (radius/height overload) | missing | n/a |
+| `BuilderContext.transform` | missing | n/a |
+| `Collection<CSG>.transform` | missing | n/a |
+| `Collection<CSG>.times(Transform)` | missing | n/a |
+| `Collection<CSG>.translate` | missing | n/a |
+| `Collection<CSG>.scale(Double)` | missing | n/a |
+| `Collection<CSG>.scale(x,y,z)` | missing | n/a |
+| `Collection<CSG>.rot` | missing | n/a |
+| `Collection<CSG>.flatten` | missing | n/a |
+| `Collection<CSG>.merge` | missing | n/a |
+| `BuilderContext.arrayed` | missing | n/a |
+| `BuilderContext.primitives` | missing | n/a |
+| `CsgDsl` | missing | n/a |
+| `ImportedKcsgScript` | missing | n/a |
+| `ImportedScript` | missing | n/a |
+| `KcsgBuilder` | missing | n/a |
+| `KcsgHost` | missing | n/a |
+| `EmptyHost` | missing | n/a |
+| `KcsgScript` | missing | n/a |
+| DSL boolean/set operator extensions (`and`, `or`, `xor`, `plus`, `minus`, `times`) | missing | n/a |
+| `Cylinder.radius` (extension property) | missing | n/a |
+| `TransformBuilder` | missing | n/a |
+| `Transform.translate` (DSL extension) | missing | n/a |
+| `Transform.scale(Double)` (DSL extension) | missing | n/a |
+| `Transform.scale(x,y,z)` (DSL extension) | missing | n/a |
+| `CSG.transform` (DSL extension) | missing | n/a |
+| `CSG.times(Transform)` (DSL extension) | missing | n/a |
+| `Primitive.times(Transform)` (DSL extension) | missing | n/a |
+| `Primitive.transform` (DSL extension) | missing | n/a |
+| `CSG.translate` (DSL extension) | missing | n/a |
+| `CSG.scale(Double)` (DSL extension) | missing | n/a |
+| `CSG.scale(x,y,z)` (DSL extension) | missing | n/a |
+| `CSG.rot` (DSL extension) | missing | n/a |
