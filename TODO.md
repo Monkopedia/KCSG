@@ -59,11 +59,11 @@ Goal: 100% test coverage of public API in `kcsg` and `kcsg-dsl`, with determinis
 
 ## Phase 6 - File and Hashing API Coverage
 
-- [ ] Add `FileUtilTest` for `write`, `read`, `toStlFile`.
-- [ ] Add `STLTest` for `STL.file` and `STL.from` using both file and stream sources.
-- [ ] Add `ObjFileTest` for `toFiles`, `obj`, `mtl`, `objStream`, `mtlStream`, and extension normalization.
-- [ ] Add `HashingOpOverrideTest` for deterministic hash behavior over `CSG`, `Transform`, `Vector3d`, primitives, missing/existing file paths, and input stream hashing.
-- [ ] Add explicit test that `CSG.withOverride` restores previous override after exception.
+- [x] Add `FileUtilTest` for `write`, `read`, `toStlFile`.
+- [x] Add `STLTest` for `STL.file` and `STL.from` using both file and stream sources.
+- [x] Add `ObjFileTest` for `toFiles`, `obj`, `mtl`, `objStream`, `mtlStream`, and extension normalization.
+- [x] Add `HashingOpOverrideTest` for deterministic hash behavior over `CSG`, `Transform`, `Vector3d`, primitives, missing/existing file paths, and input stream hashing.
+- [x] Add explicit test that `CSG.withOverride` restores previous override after exception.
 
 ## Phase 7 - Modifiers, Weight Functions, and Misc Public APIs
 
