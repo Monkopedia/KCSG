@@ -6,7 +6,7 @@ Goal: 100% test coverage of public API in `kcsg` and `kcsg-dsl`, with determinis
 
 - [x] Update dependencies to latest stable versions, prioritizing Kotlin `2.3.x` and aligned Gradle/plugin versions; run full build/tests after upgrade. [NOTE: `:kcsg:test` has 32 pre-existing sample-test failures on both baseline and upgraded builds.]
 - [x] Add coverage plugin and reporting for library modules (`kcsg`, `kcsg-dsl`) in Gradle.
-- [ ] Add CI coverage task (`./gradlew :kcsg:koverVerify :kcsg-dsl:koverVerify` or equivalent).
+- [x] Add CI coverage task (`./gradlew :kcsg:koverVerify :kcsg-dsl:koverVerify` or equivalent).
 - [ ] Enforce coverage threshold gate for library modules (start at current baseline, ratchet to 100%).
 - [ ] Add a dedicated coverage HTML report artifact task for local inspection.
 - [ ] Add shared geometry assertion helpers (`assertVectorClose`, `assertBoundsClose`, `assertFiniteMesh`, `assertVolumeClose`) in `kcsg/src/test/java/com/monkopedia/kcsg/testutil/`.
