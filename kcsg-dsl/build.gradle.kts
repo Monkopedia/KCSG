@@ -5,6 +5,7 @@ plugins {
     id("java")
     alias(libs.plugins.javafx)
     alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.kover)
     alias(libs.plugins.vannik.publish)
     signing
 }
