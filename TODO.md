@@ -107,5 +107,5 @@ Goal: 100% test coverage of public API in `kcsg` and `kcsg-dsl`, with determinis
 - [x] Add CI job that runs full library tests and coverage verification on pull requests.
 - [x] Add CI failure for missing update to `docs/public-api-checklist.md` when public API changes.
 - [x] Add contributor guidance in `AGENTS.md` referencing the checklist and coverage gate workflow.
-- [ ] Raise module thresholds to 100% once all above tasks are complete and stable. [BLOCKED: Current Kover line coverage is ~81.48% for `kcsg` and ~82.20% for `kcsg-dsl`; enforcing 100% module thresholds would fail until remaining non-public/internal line coverage is addressed or scoped.]
+- [ ] Raise module thresholds to 100% once all above tasks are complete and stable. [BLOCKED: Current Kover line coverage is ~81.48% for `kcsg` and ~82.20% for `kcsg-dsl`; enforcing 100% module thresholds would fail until remaining non-public/internal line coverage is addressed or scoped. Temporary module threshold is now set to 80% in both library modules.]
 - [x] Add a final audit pass that maps each public symbol to at least one explicit test method name.

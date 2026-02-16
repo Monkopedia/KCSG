@@ -102,7 +102,7 @@ kover {
     reports {
         verify {
             rule("baseline-line-coverage") {
-                minBound(1)
+                minBound(80)
             }
         }
     }
