@@ -39,7 +39,7 @@ Goal: 100% test coverage of public API in `kcsg` and `kcsg-dsl`, with determinis
 - [x] Add `CylinderTest` for all constructors, frustum vs cylinder behavior, `toPolygons`, `toCSG`, and slice-count effects.
 - [x] Add `RoundedCubeTest` for constructor variants, `toPolygons`, `noCenter`, and corner radius/resolution impact.
 - [x] Add `PolyhedronTest` for list and array constructors, `toPolygons`, and `getProperties`.
-- [ ] Add `PrimitiveDefaultBehaviorTest` for `Primitive.toCSG` and storage propagation.
+- [x] Add `PrimitiveDefaultBehaviorTest` for `Primitive.toCSG` and storage propagation.
 
 ## Phase 4 - CSG Boolean and Transform API Coverage
 
