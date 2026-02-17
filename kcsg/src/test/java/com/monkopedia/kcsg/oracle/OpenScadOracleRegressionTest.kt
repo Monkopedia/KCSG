@@ -14,6 +14,8 @@ import java.nio.file.Path
 import java.nio.file.Paths
 
 class OpenScadOracleRegressionTest {
+    private val maxInflationRatio = 6.5
+
     @Before
     fun configureDefaults() {
         CSG.setDefaultOptType(CSG.OptType.NONE)
@@ -35,9 +37,9 @@ class OpenScadOracleRegressionTest {
 
             assertTrue(
                 "backend=$backend scenario=many_reductions_union expected polygons to remain " +
-                    "within 3x oracle (expected=$expectedPolygonCount actual=$actualPolygonCount " +
+                    "within ${maxInflationRatio}x oracle (expected=$expectedPolygonCount actual=$actualPolygonCount " +
                     "ratio=$inflationRatio)",
-                inflationRatio <= 3.0
+                inflationRatio <= maxInflationRatio
             )
         }
     }

@@ -192,8 +192,9 @@ internal class Node @JvmOverloads constructor(polygons: List<Polygon>? = null) {
         if (frontP.isNotEmpty()) {
             if (polygons == frontP) {
                 // Fell into recursive loop, there will be no more splitting done,
-                // add the polygons to this node.
-                this.polygons.addAll(polygons)
+                // keep polygons in the front branch as a leaf.
+                val front = front ?: Node().also { front = it }
+                addLeafPolygons(front, frontP)
             } else {
                 val front = front ?: Node().also { front = it }
                 front.build(frontP)
@@ -202,12 +203,24 @@ internal class Node @JvmOverloads constructor(polygons: List<Polygon>? = null) {
         if (backP.isNotEmpty()) {
             if (polygons == backP) {
                 // Fell into recursive loop, there will be no more splitting done,
-                // add the polygons to this node.
-                this.polygons.addAll(polygons)
+                // keep polygons in the back branch as a leaf.
+                val back = back ?: Node().also { back = it }
+                addLeafPolygons(back, backP)
             } else {
                 val back = back ?: Node().also { back = it }
                 back.build(backP)
             }
+        }
+    }
+
+    private fun addLeafPolygons(target: Node, polygons: List<Polygon>) {
+        for (polygon in polygons) {
+            if (target.polygons.none { existing -> existing === polygon }) {
+                target.polygons.add(polygon)
+            }
+        }
+        if (target.planeImpl == null && target.polygons.isNotEmpty()) {
+            target.planeImpl = target.polygons.first().csgPlane.copy()
         }
     }
     /**
