@@ -227,7 +227,7 @@ object Extrude {
                 sz += v.pos.z
             }
             val center = Vector3d.xyz(sx / n, sy / n, sz / n)
-            rot = rot.rot(center, axis, angle * Math.PI / 180.0)
+            rot = rot.rot(center, axis, angle)
             for (v in polygon2.vertices) {
                 v.pos = rot.transform(v.pos)
             }
