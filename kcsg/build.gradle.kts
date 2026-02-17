@@ -1,5 +1,6 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.gradle.api.tasks.Exec
 import org.gradle.api.tasks.testing.Test
 
 plugins {
@@ -47,6 +48,31 @@ compileTestKotlin.compilerOptions {
 tasks.named<Test>("test") {
     useJUnit()
     exclude("com/monkopedia/kcsg/samples/**")
+    exclude("com/monkopedia/kcsg/oracle/**")
+}
+
+val oracleGenerateFixtures by tasks.registering(Exec::class) {
+    description = "Generates OpenSCAD oracle fixtures used by oracle agreement tests."
+    group = "verification"
+    workingDir = rootProject.projectDir
+    val outputDir = layout.buildDirectory.dir("oracle-fixtures")
+    commandLine(
+        "bash",
+        "${rootProject.projectDir}/scripts/oracle/generate_openscad_oracles.sh",
+        "--output-dir",
+        outputDir.get().asFile.absolutePath
+    )
+}
+
+tasks.register<Test>("oracleTest") {
+    description = "Runs oracle agreement tests against generated OpenSCAD fixtures."
+    group = "verification"
+    useJUnit()
+    testClassesDirs = sourceSets.test.get().output.classesDirs
+    classpath = sourceSets.test.get().runtimeClasspath
+    include("com/monkopedia/kcsg/oracle/**")
+    dependsOn(oracleGenerateFixtures)
+    shouldRunAfter(tasks.named("test"))
 }
 
 tasks.register<Test>("sampleTest") {
@@ -102,7 +128,22 @@ kover {
     reports {
         verify {
             rule("baseline-line-coverage") {
-                minBound(80)
+                minBound(81)
+            }
+        }
+        variant("jvm") {
+            filters {
+                includes {
+                    packages("com.monkopedia.kcsg")
+                }
+                excludes {
+                    packages("com.monkopedia.kcsg.ext")
+                }
+            }
+            verify {
+                rule("api-package-line-coverage") {
+                    minBound(95)
+                }
             }
         }
     }

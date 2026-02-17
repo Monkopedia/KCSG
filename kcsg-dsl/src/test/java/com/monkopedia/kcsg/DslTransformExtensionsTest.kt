@@ -1,6 +1,7 @@
 package com.monkopedia.kcsg
 
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertThrows
 import org.junit.Test
 
 class DslTransformExtensionsTest {
@@ -53,9 +54,40 @@ class DslTransformExtensionsTest {
         val axisScaled = base.scale(x = 2.0, y = 3.0, z = 4.0)
         assertEquals(base.computeVolume() * 24.0, axisScaled.computeVolume(), 1e-4)
 
-        val rotated = base.rot(z = 90.0)
+        val rotated = base.rot(0.0, 0.0, 90.0)
         assertEquals(4.0, rotated.bounds.bounds.x, 1e-6)
         assertEquals(2.0, rotated.bounds.bounds.y, 1e-6)
         assertEquals(2.0, rotated.bounds.bounds.z, 1e-6)
+    }
+
+    @Test
+    fun topLevelTransformWrappersAndDefaultArguments() {
+        val translated = TransformBuilder.unity.translate(1.0, 2.0, 3.0)
+        val scaledUniform = TransformBuilder.unity.scale(2.0)
+        val scaledAxis = TransformBuilder.unity.scale(2.0, 3.0, 4.0)
+
+        assertEquals(
+            Vector3d.xyz(2.0, 3.0, 4.0),
+            translated.transform(Vector3d.xyz(1.0, 1.0, 1.0))
+        )
+        assertEquals(
+            Vector3d.xyz(2.0, 2.0, 2.0),
+            scaledUniform.transform(Vector3d.xyz(1.0, 1.0, 1.0))
+        )
+        assertEquals(
+            Vector3d.xyz(2.0, 3.0, 4.0),
+            scaledAxis.transform(Vector3d.xyz(1.0, 1.0, 1.0))
+        )
+
+        val baseCsg = Cube(2.0).toCSG()
+        assertEquals(baseCsg.bounds, baseCsg.translate().bounds)
+        assertEquals(baseCsg.bounds.bounds.x, baseCsg.scale(x = 1.0, y = 1.0, z = 1.0).bounds.bounds.x, 1e-9)
+        assertEquals(baseCsg.computeVolume(), baseCsg.scale(1.0).computeVolume(), 1e-9)
+        assertThrows(IllegalArgumentException::class.java) {
+            baseCsg.scale()
+        }
+        assertThrows(IllegalArgumentException::class.java) {
+            baseCsg.scale(x = 0.0, y = 0.0, z = 0.0)
+        }
     }
 }

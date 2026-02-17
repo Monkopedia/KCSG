@@ -25,6 +25,17 @@ class EdgeApiTest {
     }
 
     @Test
+    fun equalsRejectsNullAndDifferentClass() {
+        val edge = Edge(
+            Vertex(Vector3d.xyz(0.0, 0.0, 0.0), Vector3d.Z_ONE),
+            Vertex(Vector3d.xyz(1.0, 0.0, 0.0), Vector3d.Z_ONE),
+        )
+
+        assertFalse(edge.equals(null))
+        assertFalse(edge.equals("not-an-edge"))
+    }
+
+    @Test
     fun closestPointAndIntersection() {
         val e1 = Edge(
             Vertex(Vector3d.xyz(0.0, 0.0, 0.0), Vector3d.Z_ONE),
@@ -42,6 +53,22 @@ class EdgeApiTest {
         val intersection = e1.getIntersection(e2)
         assertTrue(intersection.isPresent)
         assertVectorClose(Vector3d.xyz(1.0, 1.0, 0.0), intersection.get(), 1e-9)
+    }
+
+    @Test
+    fun closestPointFallsBackToNearestEndpoint() {
+        val base = Edge(
+            Vertex(Vector3d.xyz(0.0, 0.0, 0.0), Vector3d.Z_ONE),
+            Vertex(Vector3d.xyz(1.0, 0.0, 0.0), Vector3d.Z_ONE),
+        )
+        val other = Edge(
+            Vertex(Vector3d.xyz(-2.0, 1.0, 0.0), Vector3d.Z_ONE),
+            Vertex(Vector3d.xyz(-2.0, -1.0, 1.0), Vector3d.Z_ONE),
+        )
+
+        val closest = base.getClosestPoint(other)
+        assertTrue(closest.isPresent)
+        assertVectorClose(Vector3d.xyz(0.0, 0.0, 0.0), closest.get(), 1e-9)
     }
 
     @Test
@@ -100,6 +127,47 @@ class EdgeApiTest {
         val boundaryPolygons = Edge.boundaryPolygons(CSG.fromPolygons(listOf(triA, triB)))
         assertTrue(boundaryPolygons.isNotEmpty())
         assertTrue(Vector3d.xyz(1.0, 1.0, 0.0) in boundaryPolygons.first())
+    }
+
+    @Test
+    fun boundaryPolygonsLargeCoplanarSetExercisesParallelStreamPaths() {
+        val triangles = buildList {
+            repeat(205) { index ->
+                val x = index * 10.0
+                add(
+                    Polygon.fromPoints(
+                        Vector3d.xyz(x, 0.0, 0.0),
+                        Vector3d.xyz(x + 1.0, 0.0, 0.0),
+                        Vector3d.xyz(x, 1.0, 0.0),
+                    ),
+                )
+            }
+        }
+        val boundaries = Edge.boundaryPolygons(CSG.fromPolygons(triangles))
+
+        assertTrue(boundaries.isNotEmpty())
+        boundaries.forEach { polygon ->
+            assertEquals(3, polygon.vertices.size)
+        }
+    }
+
+    @Test
+    fun boundaryPolygonsHandlesTjunctionPlaneGroup() {
+        val large = Polygon.fromPoints(
+            Vector3d.xyz(0.0, 0.0, 0.0),
+            Vector3d.xyz(4.0, 0.0, 0.0),
+            Vector3d.xyz(0.0, 4.0, 0.0),
+        )
+        val tJunction = Polygon.fromPoints(
+            Vector3d.xyz(1.0, 0.0, 0.0),
+            Vector3d.xyz(2.0, 0.0, 0.0),
+            Vector3d.xyz(1.0, 1.0, 0.0),
+        )
+
+        val result = Edge.boundaryPolygons(CSG.fromPolygons(listOf(large, tJunction)))
+        result.forEach { polygon ->
+            assertTrue(polygon.vertices.size >= 3)
+        }
     }
 
     private fun squareBoundaryEdges(): List<Edge> {

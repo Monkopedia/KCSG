@@ -88,6 +88,22 @@ class HashingOpOverrideTest {
         }
     }
 
+    @Test
+    fun hashingFallbackTypeBranchIsDeterministic() {
+        val hashA = HashingOpOverride().apply {
+            operation("fallback", UnknownType(123))
+        }.hash()
+        val hashB = HashingOpOverride().apply {
+            operation("fallback", UnknownType(123))
+        }.hash()
+        val hashC = HashingOpOverride().apply {
+            operation("fallback", UnknownType(456))
+        }.hash()
+
+        assertEquals(hashA, hashB)
+        assertNotEquals(hashA, hashC)
+    }
+
     private fun runSequence(override: HashingOpOverride, inputs: FixedHashInputs): String {
         override.operation(
             "operation",
@@ -120,5 +136,9 @@ class HashingOpOverrideTest {
         val existingFile: java.nio.file.Path,
         val missingFile: java.nio.file.Path,
         val streamBytes: ByteArray,
+    )
+
+    private data class UnknownType(
+        val value: Int,
     )
 }

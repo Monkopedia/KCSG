@@ -15,6 +15,13 @@ This checklist tracks public API coverage status for library modules.
 - `partial`: tested indirectly or only in subset scenarios.
 - `covered`: direct tests cover nominal and relevant error/edge behavior.
 
+## Coverage Gate Scope
+
+- `kcsg` has two coverage views:
+- Full-module trend report: `./gradlew :kcsg:koverXmlReport` (includes vendored `com.monkopedia.kcsg.ext.*` packages).
+- API gate: `./gradlew :kcsg:koverVerifyJvm` scoped to `com.monkopedia.kcsg` and excluding `com.monkopedia.kcsg.ext.*`.
+- `kcsg-dsl` gate remains module-scoped via `./gradlew :kcsg-dsl:koverVerify`.
+
 ## Module: kcsg
 
 | Symbol | Tags | Status | Tests |
@@ -69,7 +76,7 @@ This checklist tracks public API coverage status for library modules.
 | `Collection<CSG>.merge` | `dsl`, `boolean` | covered | `DslCollectionExtensionsTest.flattenAndMergeProduceEquivalentResults` |
 | `BuilderContext.arrayed` | `dsl`, `primitive` | covered | `DslCollectionExtensionsTest.arrayedAndPrimitivesBuilderHelpers` |
 | `BuilderContext.primitives` | `dsl`, `primitive` | covered | `DslCollectionExtensionsTest.arrayedAndPrimitivesBuilderHelpers` |
-| `CsgDsl` | `dsl` | partial | `DslOperationsTest.operationOverloadsAcrossCsgAndPrimitivePairs` |
+| `CsgDsl` | `dsl` | covered | `DslOperationsTest.operationOverloadsAcrossCsgAndPrimitivePairs`; `DslJvmStaticCoverageTest.transformAndCsgWrapperStaticsAreInvocableFromJvm` |
 | `ImportedKcsgScript` | `dsl`, `io` | covered | `ImportedScriptTest.importedKcsgScriptSurfacesExportsTargetsAndGet` |
 | `ImportedScript` | `dsl`, `io` | covered | `ImportedScriptTest.importedKcsgScriptSurfacesExportsTargetsAndGet` |
 | `KcsgBuilder` | `dsl`, `io`, `error-path` | covered | `KcsgBuilderTest.primitiveCsgImportStlAndExportFlow` |

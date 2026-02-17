@@ -41,7 +41,7 @@ jobs:
           fi
 
       - name: Run library tests and coverage verification
-        run: ./gradlew :kcsg:test :kcsg-dsl:test :kcsg:koverVerify :kcsg-dsl:koverVerify --stacktrace
+        run: ./gradlew :kcsg:test :kcsg-dsl:test :kcsg:oracleTest :kcsg:koverXmlReport :kcsg:koverVerifyJvm :kcsg-dsl:koverXmlReport :kcsg-dsl:koverVerify --stacktrace
 
       - name: Upload coverage reports
         if: always()

@@ -61,6 +61,21 @@ class DslPrimitiveFactoryTest {
         )
     }
 
+    @Test
+    fun primitiveFactoryDefaultsWithoutExplicitBuilders() {
+        val builder = NoopBuilder()
+
+        val roundedDefault by builder.primitive {
+            roundedCube()
+        }
+        assertTrue(roundedDefault.computeVolume() > 0.0)
+
+        val cylinderDefault by builder.primitive {
+            cylinder()
+        }
+        assertTrue(cylinderDefault.computeVolume() > 0.0)
+    }
+
     private class NoopBuilder : KcsgBuilder() {
         override fun exportProperty(propertyName: String) = Unit
         override fun track(propertyName: String, lazy: Lazy<CSG>) = Unit

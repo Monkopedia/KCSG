@@ -1,6 +1,7 @@
 package com.monkopedia.kcsg
 
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertSame
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -97,6 +98,34 @@ class KcsgBuilderTest {
         }
     }
 
+    @Test
+    fun exportByPropertyReferenceAndDefaultCacheImplementations() {
+        withTempDir("kcsg-builder-default-cache") { tempDir ->
+            val stlPath = tempDir.resolve("mesh.stl")
+            FileUtil.toStlFile(stlPath, Cube(1.0).toCSG())
+            val imported = object : ImportedScript {
+                override val exports: Collection<String> = emptyList()
+                override val targets: Collection<String> = emptyList()
+                override fun get(name: String): CSG = error("unused")
+            }
+
+            val referenceBuilder = TestBuilder(
+                stlPath = stlPath,
+                importedScript = imported,
+                cachingEnabled = false,
+            )
+            referenceBuilder.export(ExportPropertyHolder::piece)
+            assertTrue(referenceBuilder.exported.contains("piece"))
+
+            val defaultCacheBuilder = DefaultCacheBuilder(stlPath, imported)
+            val cached by defaultCacheBuilder.csg(allowCaching = true) { cube(1.0).toCSG() }
+            val trackedLazy = defaultCacheBuilder.trackedLazies.getValue("cached")
+            assertFalse(trackedLazy.isInitialized())
+            assertTrue(cached.computeVolume() > 0.0)
+            assertTrue(trackedLazy.isInitialized())
+        }
+    }
+
     private class TestBuilder(
         private val stlPath: Path,
         private val importedScript: ImportedScript,
@@ -140,6 +169,30 @@ class KcsgBuilderTest {
             cacheStores.add(hash)
             cache[hash] = csg
         }
+    }
+
+    private class DefaultCacheBuilder(
+        private val stlPath: Path,
+        private val importedScript: ImportedScript,
+    ) : KcsgBuilder() {
+        val trackedLazies = mutableMapOf<String, Lazy<CSG>>()
+
+        override val supportsCaching: Boolean
+            get() = true
+
+        override fun exportProperty(propertyName: String) = Unit
+
+        override fun track(propertyName: String, lazy: Lazy<CSG>) {
+            trackedLazies[propertyName] = lazy
+        }
+
+        override fun findStl(stlName: String): Path = stlPath
+
+        override fun findScript(csgsName: String): ImportedScript = importedScript
+    }
+
+    private class ExportPropertyHolder {
+        val piece: CSG = Cube(1.0).toCSG()
     }
 
     private fun withTempDir(prefix: String, block: (Path) -> Unit) {

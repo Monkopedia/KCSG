@@ -3,9 +3,13 @@ package com.monkopedia.kcsg
 import com.monkopedia.kcsg.testutil.FakeKcsgHost
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertSame
 import org.junit.Assert.assertThrows
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import java.nio.file.Files
+import java.nio.file.Path
 
 class KcsgScriptTest {
     @Test
@@ -49,5 +53,32 @@ class KcsgScriptTest {
         alpha
         assertEquals(checksAfterFirstRead, host.cacheChecks.size)
         assertEquals(storesAfterFirstRead, host.cacheStores.size)
+    }
+
+    @Test
+    fun hostDelegationAndScriptEnvelopeConstants() {
+        val host = FakeKcsgHost(supportsCaching = false)
+        val fixturePath = Files.createTempFile("kcsg-script-host-delegation", ".stl")
+        FileUtil.toStlFile(fixturePath, Cube(1.0).toCSG())
+        host.registerStl("fixture", fixturePath.toString())
+        val importedScript = object : ImportedScript {
+            override val exports: Collection<String> = listOf("x")
+            override val targets: Collection<String> = listOf("x")
+            override fun get(name: String): CSG = Cube(1.0).toCSG()
+        }
+        host.registerScript("dep", importedScript)
+
+        val script = KcsgScript(host)
+        val stl by script.stl("fixture")
+        assertTrue(stl.polygons.isNotEmpty())
+        assertSame(importedScript, script.import("dep").value)
+        assertEquals(listOf("fixture"), host.stlRequests)
+        assertEquals(listOf("dep"), host.scriptRequests)
+
+        assertTrue(KcsgScript.HEADER.contains("KcsgScript().apply"))
+        assertNotNull(KcsgScript.FOOTER)
+        assertTrue(KcsgScript.FOOTER.trim().endsWith("}"))
+
+        fixturePath.toFile().delete()
     }
 }

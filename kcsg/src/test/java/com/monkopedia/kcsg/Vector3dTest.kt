@@ -91,6 +91,20 @@ class Vector3dTest {
     }
 
     @Test
+    fun collinearHandlesEqualLengthBranch() {
+        val p = Vector3d.ZERO
+        assertTrue(p.collinear(Vector3d.ZERO, Vector3d.ZERO))
+
+        val sqrt3Over2 = kotlin.math.sqrt(3.0) / 2.0
+        assertFalse(
+            p.collinear(
+                Vector3d.xyz(1.0, 0.0, 0.0),
+                Vector3d.xyz(0.5, sqrt3Over2, 0.0),
+            ),
+        )
+    }
+
+    @Test
     fun stlObjAndObjectMethods() {
         val v = Vector3d.xyz(1.25, -2.5, 3.75)
         val stlString = v.toStlString()

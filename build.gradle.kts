@@ -9,3 +9,15 @@ tasks.register("coverageHtml") {
         println(" - kcsg-dsl: ${project.rootDir}/kcsg-dsl/build/reports/kover/html/index.html")
     }
 }
+
+tasks.register("oracleFixtures") {
+    group = "verification"
+    description = "Downloads OpenSCAD and generates oracle fixtures for kcsg."
+    dependsOn(":kcsg:oracleGenerateFixtures")
+}
+
+tasks.register("oracleTest") {
+    group = "verification"
+    description = "Runs oracle agreement tests against OpenSCAD-generated fixtures."
+    dependsOn(":kcsg:oracleTest")
+}

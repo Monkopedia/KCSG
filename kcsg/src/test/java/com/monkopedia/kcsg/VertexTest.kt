@@ -2,6 +2,7 @@ package com.monkopedia.kcsg
 
 import com.monkopedia.kcsg.testutil.GeometryAssertions.assertVectorClose
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotEquals
 import org.junit.Assert.assertSame
 import org.junit.Test
@@ -89,6 +90,17 @@ class VertexTest {
         assertEquals(base.hashCode(), samePosDifferentOtherFields.hashCode())
         assertNotEquals(base, differentPos)
         assertEquals(base.pos.toString(), base.toString())
+    }
+
+    @Test
+    fun equalsRejectsNullAndDifferentType() {
+        val base = Vertex(
+            pos = Vector3d.xyz(1.0, 2.0, 3.0),
+            normal = Vector3d.X_ONE,
+        )
+
+        assertFalse(base.equals(null))
+        assertFalse(base.equals("vertex"))
     }
 
     companion object {

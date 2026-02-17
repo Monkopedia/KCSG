@@ -5,6 +5,7 @@ import com.monkopedia.kcsg.testutil.GeometryAssertions.assertVectorClose
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotSame
 import org.junit.Assert.assertSame
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -102,6 +103,44 @@ class PolygonComprehensiveTest {
         val customStorage = PropertyStorage()
         polygon.storage = customStorage
         assertSame(customStorage, polygon.storage)
+    }
+
+    @Test
+    fun containsUsesVertexAndEdgeShortcuts() {
+        val polygon = square()
+
+        assertTrue(Vector3d.xyz(0.0, 0.0, 0.0) in polygon)
+        assertTrue(Vector3d.xyz(1.0, 0.0, 0.0) in polygon)
+    }
+
+    @Test
+    fun containsSupportsProjectionAcrossPrimaryPlanes() {
+        val xy = Polygon.fromPoints(
+            Vector3d.xyz(0.0, 0.0, 0.0),
+            Vector3d.xyz(2.0, 0.0, 0.0),
+            Vector3d.xyz(2.0, 2.0, 0.0),
+            Vector3d.xyz(0.0, 2.0, 0.0),
+        )
+        val xz = Polygon.fromPoints(
+            Vector3d.xyz(0.0, 0.0, 0.0),
+            Vector3d.xyz(2.0, 0.0, 0.0),
+            Vector3d.xyz(2.0, 0.0, 2.0),
+            Vector3d.xyz(0.0, 0.0, 2.0),
+        )
+        val yz = Polygon.fromPoints(
+            Vector3d.xyz(0.0, 0.0, 0.0),
+            Vector3d.xyz(0.0, 2.0, 0.0),
+            Vector3d.xyz(0.0, 2.0, 2.0),
+            Vector3d.xyz(0.0, 0.0, 2.0),
+        )
+
+        assertTrue(Vector3d.xyz(1.0, 1.0, 0.0) in xy)
+        assertTrue(Vector3d.xyz(1.0, 0.0, 1.0) in xz)
+        assertTrue(Vector3d.xyz(0.0, 1.0, 1.0) in yz)
+
+        assertFalse(Vector3d.xyz(3.0, 1.0, 0.0) in xy)
+        assertFalse(Vector3d.xyz(3.0, 0.0, 1.0) in xz)
+        assertFalse(Vector3d.xyz(0.0, 3.0, 1.0) in yz)
     }
 
     @Test

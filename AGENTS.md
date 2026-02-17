@@ -11,6 +11,8 @@ This repository is a multi-module Gradle project:
 - `./gradlew build`: compile all modules and run tests.
 - `./gradlew test` or `./gradlew :kcsg:test`: run library unit/regression tests (excludes sample integration suite).
 - `./gradlew :kcsg:sampleTest`: run sample model integration tests under `com.monkopedia.kcsg.samples`.
+- `./gradlew :kcsg:oracleGenerateFixtures`: bootstrap pinned OpenSCAD and generate external oracle STL fixtures.
+- `./gradlew :kcsg:oracleTest` or `./gradlew oracleTest`: validate `kcsg` boolean outputs against OpenSCAD (`cgal`/`manifold`) oracle fixtures.
 - `./gradlew :csgs:run --args "<path/to/script.csgs>"`: execute a script with the CLI.
 - `./gradlew :csgs:fatJar`: produce a distributable `csgs-all-*.jar`.
 - `./gradlew :samples:run`: launch sample app entry points.
@@ -34,7 +36,8 @@ This repository is a multi-module Gradle project:
 - Avoid broad `catch (Throwable)` without explicit rationale and recovery behavior.
 
 ## Coverage & API Checklist Gate
-- Before opening a PR, run `./gradlew :kcsg:test :kcsg-dsl:test :kcsg:koverVerify :kcsg-dsl:koverVerify`.
+- Before opening a PR, run `./gradlew :kcsg:test :kcsg-dsl:test :kcsg:koverXmlReport :kcsg:koverVerifyJvm :kcsg-dsl:koverVerify`.
+- `:kcsg:koverVerifyJvm` enforces API-package coverage for `com.monkopedia.kcsg` (excluding vendored `com.monkopedia.kcsg.ext.*`), while `:kcsg:koverXmlReport` preserves full-module trend visibility.
 - If any public API files change under `kcsg/src/main/java/com/monkopedia/kcsg/*.kt` or `kcsg-dsl/src/main/java/com/monkopedia/kcsg/*.kt`, update `docs/public-api-checklist.md` in the same change.
 - PR CI enforces both the library coverage gate and the public API checklist update requirement.
 

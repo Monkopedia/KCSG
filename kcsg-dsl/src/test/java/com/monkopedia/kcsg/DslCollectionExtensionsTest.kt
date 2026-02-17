@@ -1,6 +1,7 @@
 package com.monkopedia.kcsg
 
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertThrows
 import org.junit.Test
 import java.nio.file.Path
 
@@ -19,7 +20,7 @@ class DslCollectionExtensionsTest {
         assertEquals(2, base.translate(1.0, 2.0, 3.0).size)
         assertEquals(2, base.scale(2.0).size)
         assertEquals(2, base.scale(2.0, 3.0, 4.0).size)
-        assertEquals(2, base.rot(z = 90.0).size)
+        assertEquals(2, base.rot(0.0, 0.0, 90.0).size)
     }
 
     @Test
@@ -55,6 +56,27 @@ class DslCollectionExtensionsTest {
         }
         assertEquals(3.0, arrayed.computeVolume(), 1e-4)
         assertEquals(arrayed.computeVolume(), primitives.computeVolume(), 1e-4)
+    }
+
+    @Test
+    fun topLevelCollectionWrappersAndDefaultArguments() {
+        val base = listOf(
+            Cube(center = Vector3d.ZERO, dimensions = Vector3d.xyz(2.0, 2.0, 2.0)).toCSG(),
+        )
+
+        val translated = base.translate()
+        assertEquals(base.map { it.bounds }, translated.map { it.bounds })
+        assertEquals(1, base.translate(0.0, 0.0, 2.0).size)
+
+        assertThrows(IllegalArgumentException::class.java) {
+            base.scale()
+        }
+
+        assertEquals(1, base.scale(1.0).size)
+
+        assertThrows(IllegalArgumentException::class.java) {
+            base.scale(x = 0.0, y = 0.0, z = 0.0)
+        }
     }
 
     private class NoopBuilder : KcsgBuilder() {

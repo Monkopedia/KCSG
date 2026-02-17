@@ -4,9 +4,9 @@ import com.monkopedia.kcsg.ext.vvecmath.Plane
 import com.monkopedia.kcsg.testutil.GeometryAssertions.assertVectorClose
 import org.junit.Assert.assertArrayEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Assert.assertSame
 import org.junit.Assert.assertThrows
-import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class TransformTest {
@@ -130,6 +130,13 @@ class TransformTest {
             .apply(Transform.unity().scale(2.0))
         val viaChain = Transform.unity().translate(2.0, 3.0, 4.0).scale(2.0)
         assertVectorClose(viaChain.transform(base), viaApply.transform(base), EPS)
+    }
+
+    @Test
+    fun toStringContainsMatrixContent() {
+        val asString = Transform.unity().translate(1.0, 2.0, 3.0).toString()
+        assertTrue(asString.isNotBlank())
+        assertTrue(asString.contains("1.0"))
     }
 
     @Test

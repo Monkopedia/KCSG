@@ -4,6 +4,8 @@ import com.monkopedia.kcsg.testutil.TestIoFixtures.withTempDirectory
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import java.nio.file.Files
+import java.nio.file.Paths
 
 class ObjFileTest {
     @Test
@@ -45,6 +47,23 @@ class ObjFileTest {
             assertTrue(mtlExtensionObjPath.toFile().exists())
             assertTrue(mtlExtensionMtlPath.toFile().exists())
             assertTrue(FileUtil.read(mtlExtensionObjPath).contains("mtllib mesh3.mtl"))
+        }
+    }
+
+    @Test
+    fun toFilesSupportsPathsWithoutParentDirectory() {
+        val baseName = "kcsg-obj-no-parent-${System.nanoTime()}"
+        val objPath = Paths.get("$baseName.obj")
+        val mtlPath = Paths.get("$baseName.mtl")
+
+        try {
+            Cube(1.0).toCSG().toObj().toFiles(objPath)
+            assertTrue(Files.exists(objPath))
+            assertTrue(Files.exists(mtlPath))
+            assertTrue(FileUtil.read(objPath).contains("mtllib $baseName.mtl"))
+        } finally {
+            Files.deleteIfExists(objPath)
+            Files.deleteIfExists(mtlPath)
         }
     }
 }
