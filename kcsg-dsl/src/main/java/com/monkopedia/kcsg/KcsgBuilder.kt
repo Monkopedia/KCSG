@@ -15,9 +15,10 @@ abstract class KcsgBuilder {
     inline fun primitive(
         exported: Boolean = false,
         allowCaching: Boolean = true,
+        remesh: Boolean = true,
         crossinline lazyBuilder: BuilderContext.() -> Primitive
     ): PropertyDelegateProvider<Nothing?, ReadOnlyProperty<Nothing?, CSG>> {
-        return csg(exported = exported, allowCaching = allowCaching) {
+        return csg(exported = exported, allowCaching = allowCaching, remesh = remesh) {
             lazyBuilder().toCSG()
         }
     }
@@ -31,18 +32,19 @@ abstract class KcsgBuilder {
     fun csg(
         exported: Boolean = false,
         allowCaching: Boolean = true,
+        remesh: Boolean = true,
         lazyBuilder: BuilderContext.() -> CSG
     ): PropertyDelegateProvider<Nothing?, ReadOnlyProperty<Nothing?, CSG>> {
         return PropertyDelegateProvider { _, property ->
             val propertyName = property.name
             val lazy = lazy {
                 if (allowCaching && supportsCaching) {
-                    getCached(propertyName, lazyBuilder)
+                    getCached(propertyName, remesh, lazyBuilder)
                 } else {
-                    executeBuilder(propertyName, lazyBuilder)
+                    executeBuilder(propertyName, remesh, lazyBuilder)
                 }
             }.wrapGetter {
-                CSG.opOverride?.operation("p:${getHash(propertyName, lazyBuilder)}")
+                CSG.opOverride?.operation("p:${getHash(propertyName, remesh, lazyBuilder)}")
             }
             track(propertyName, lazy)
             if (exported) {
@@ -105,31 +107,51 @@ abstract class KcsgBuilder {
         export(property.name)
     }
 
-    private fun getCached(propertyName: String, lazyBuilder: BuilderContext.() -> CSG): CSG {
-        val hash = getHash(propertyName, lazyBuilder)
+    private fun getCached(
+        propertyName: String,
+        remesh: Boolean,
+        lazyBuilder: BuilderContext.() -> CSG
+    ): CSG {
+        val hash = getHash(propertyName, remesh, lazyBuilder)
         return checkCached(hash)?.also { logger.info("Using cached STL for $propertyName/$hash") }
-            ?: CSG.withOverride(null) { executeBuilder(propertyName, lazyBuilder) }.also {
+            ?: CSG.withOverride(null) { executeBuilder(propertyName, remesh, lazyBuilder) }.also {
                 logger.info("Storing cache as STL for $propertyName/$hash")
                 storeCached(hash, it)
             }
     }
 
     @OptIn(ExperimentalTime::class)
-    private fun executeBuilder(propertyName: String, lazyBuilder: BuilderContext.() -> CSG): CSG {
+    private fun executeBuilder(
+        propertyName: String,
+        remesh: Boolean,
+        lazyBuilder: BuilderContext.() -> CSG
+    ): CSG {
         val built: CSG
         val time = measureTime {
-            built = BuilderContextImpl.lazyBuilder()
+            built = if (remesh) {
+                BuilderContextImpl.lazyBuilder().remesh()
+            } else {
+                BuilderContextImpl.lazyBuilder()
+            }
         }
         logger.info("Generating CSG for $propertyName took ${time.inWholeMilliseconds} ms")
         return built
     }
 
     @OptIn(ExperimentalTime::class)
-    private fun getHash(propertyName: String, lazyBuilder: BuilderContext.() -> CSG): String {
+    private fun getHash(
+        propertyName: String,
+        remesh: Boolean,
+        lazyBuilder: BuilderContext.() -> CSG
+    ): String {
         return HashingOpOverride().also {
             CSG.withOverride(it) {
+                CSG.opOverride?.operation("dsl-csg-remesh", remesh)
                 val time = measureTime {
-                    BuilderContextImpl.lazyBuilder()
+                    val csg = BuilderContextImpl.lazyBuilder()
+                    if (remesh) {
+                        csg.remesh()
+                    }
                 }
                 logger.info(
                     "Generating hash for $propertyName took ${time.inWholeMilliseconds} ms"

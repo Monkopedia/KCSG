@@ -79,7 +79,7 @@ This checklist tracks public API coverage status for library modules.
 | `CsgDsl` | `dsl` | covered | `DslOperationsTest.operationOverloadsAcrossCsgAndPrimitivePairs`; `DslJvmStaticCoverageTest.transformAndCsgWrapperStaticsAreInvocableFromJvm` |
 | `ImportedKcsgScript` | `dsl`, `io` | covered | `ImportedScriptTest.importedKcsgScriptSurfacesExportsTargetsAndGet` |
 | `ImportedScript` | `dsl`, `io` | covered | `ImportedScriptTest.importedKcsgScriptSurfacesExportsTargetsAndGet` |
-| `KcsgBuilder` | `dsl`, `io`, `error-path` | covered | `KcsgBuilderTest.primitiveCsgImportStlAndExportFlow` |
+| `KcsgBuilder` | `dsl`, `io`, `error-path` | covered | `KcsgBuilderTest.primitiveCsgImportStlAndExportFlow`; `KcsgBuilderTest.csgRemeshDefaultsToTrueAndCanBeDisabled` |
 | `KcsgHost` | `dsl`, `io` | covered | `KcsgHostTest.emptyHostDefaultsAndErrorPaths` |
 | `EmptyHost` | `dsl`, `error-path` | covered | `KcsgHostTest.emptyHostDefaultsAndErrorPaths` |
 | `KcsgScript` | `dsl`, `io`, `error-path` | covered | `KcsgScriptTest.overrideExportGenerateExportsTargetsAndCacheDelegation` |

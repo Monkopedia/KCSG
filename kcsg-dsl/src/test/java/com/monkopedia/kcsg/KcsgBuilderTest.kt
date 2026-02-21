@@ -46,6 +46,32 @@ class KcsgBuilderTest {
     }
 
     @Test
+    fun csgRemeshDefaultsToTrueAndCanBeDisabled() {
+        withTempDir("kcsg-builder-remesh") { tempDir ->
+            val stlPath = tempDir.resolve("mesh.stl")
+            FileUtil.toStlFile(stlPath, Cube(1.0).toCSG())
+            val imported = object : ImportedScript {
+                override val exports: Collection<String> = emptyList()
+                override val targets: Collection<String> = emptyList()
+                override fun get(name: String): CSG = error("unused")
+            }
+
+            val builder = TestBuilder(
+                stlPath = stlPath,
+                importedScript = imported,
+                cachingEnabled = true
+            )
+            val defaultRemeshed by builder.csg(allowCaching = true) { cube(2.0).toCSG() }
+            val noRemesh by builder.csg(allowCaching = true, remesh = false) { cube(2.0).toCSG() }
+
+            assertTrue(defaultRemeshed.polygons.all { it.vertices.size == 3 })
+            assertTrue(noRemesh.polygons.any { it.vertices.size > 3 })
+            assertEquals(2, builder.cacheStores.size)
+            assertEquals(2, builder.cacheStores.toSet().size)
+        }
+    }
+
+    @Test
     fun cachingAndOverrideShortCircuit() {
         withTempDir("kcsg-builder-cache") { tempDir ->
             val stlPath = tempDir.resolve("mesh.stl")

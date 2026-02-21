@@ -51,6 +51,19 @@ class CSGRemeshTest {
     }
 
     @Test
+    fun remeshPreservesVertexWeights() {
+        val weighted = Cube(2.0).toCSG().weighted { _, _ -> 0.25 }
+
+        val remeshed = weighted.remesh()
+
+        remeshed.polygons.forEach { polygon ->
+            polygon.vertices.forEach { vertex ->
+                assertEquals(0.25, vertex.weight, 1e-9)
+            }
+        }
+    }
+
+    @Test
     fun remeshHandlesEmptyCsg() {
         val remeshed = CSG.fromPolygons().remesh()
         assertTrue(remeshed.polygons.isEmpty())

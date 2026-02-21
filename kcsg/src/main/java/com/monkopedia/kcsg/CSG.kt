@@ -798,10 +798,18 @@ class CSG private constructor(
                 continue
             }
 
-            val sharedStorage = polygon.storage
-            for (triangle in polygon.toTriangles()) {
-                triangle.storage = sharedStorage
-                remeshedPolygons.add(triangle)
+            val vertices = polygon.vertices
+            for (i in 1 until vertices.size - 1) {
+                remeshedPolygons.add(
+                    Polygon(
+                        listOf(
+                            vertices[0].copy(),
+                            vertices[i].copy(),
+                            vertices[i + 1].copy()
+                        ),
+                        polygon.storage
+                    )
+                )
             }
         }
 
