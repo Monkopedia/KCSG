@@ -5,8 +5,6 @@
  */
 package com.monkopedia.kcsg
 
-import java.util.*
-
 /**
  * Polyhedron.
  */
@@ -17,9 +15,9 @@ data class Polyhedron
  *
  * @param points points ([Vector3d] list)
  * @param faces list of faces (list of point index lists)
- */(
-    val points: List<Vector3d> = ArrayList(),
-    val faces: List<List<Int>> = ArrayList()
+*/(
+    val points: List<Vector3d> = emptyList(),
+    val faces: List<List<Int>> = emptyList()
 ) : Primitive {
     private val properties = PropertyStorage()
 

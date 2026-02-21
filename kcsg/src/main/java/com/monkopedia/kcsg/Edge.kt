@@ -35,7 +35,7 @@ package com.monkopedia.kcsg
 
 import com.monkopedia.kcsg.ext.org.poly2tri.PolygonUtil
 import org.slf4j.LoggerFactory
-import java.util.*
+import java.util.Optional
 import kotlin.math.abs
 import kotlin.math.sqrt
 
@@ -78,8 +78,8 @@ data class Edge(val p1: Vertex, val p2: Vertex) {
 
     override fun hashCode(): Int {
         var hash = 7
-        hash = 71 * hash + Objects.hashCode(p1)
-        hash = 71 * hash + Objects.hashCode(p2)
+        hash = 71 * hash + p1.hashCode()
+        hash = 71 * hash + p2.hashCode()
         return hash
     }
 
@@ -397,7 +397,7 @@ data class Edge(val p1: Vertex, val p2: Vertex) {
             val potentialBoundaryEdges: MutableList<Edge> =
                 ArrayList()
             edges.forEach { e: Edge ->
-                val count = Collections.frequency(edges, e)
+                val count = edges.count { it == e }
                 if (count == 1) {
                     potentialBoundaryEdges.add(e)
                 }

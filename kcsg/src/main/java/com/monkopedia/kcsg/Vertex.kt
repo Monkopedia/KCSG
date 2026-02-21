@@ -33,9 +33,6 @@
  */
 package com.monkopedia.kcsg
 
-import java.lang.StringBuilder
-import java.util.Objects
-
 /**
  * Represents a vertex of a polygon. This class provides [.normal] so
  * primitives like [Cube] can return a smooth vertex normal, but
@@ -139,7 +136,7 @@ data class Vertex(
 
     override fun hashCode(): Int {
         var hash = 7
-        hash = 53 * hash + Objects.hashCode(pos)
+        hash = 53 * hash + pos.hashCode()
         return hash
     }
 

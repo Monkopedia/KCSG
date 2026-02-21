@@ -34,7 +34,6 @@
 package com.monkopedia.kcsg
 
 import com.monkopedia.kcsg.ext.org.poly2tri.PolygonUtil
-import java.util.*
 
 /**
  * Extrudes concave and convex polygons.

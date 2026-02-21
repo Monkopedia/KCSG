@@ -33,14 +33,13 @@
  */
 package com.monkopedia.kcsg
 
-import javafx.scene.paint.Color
-import java.util.*
+import kotlin.random.Random
 
 /**
  * A simple property storage.
  */
 class PropertyStorage {
-    private val map: MutableMap<String, Any> = HashMap()
+    private val map: MutableMap<String, Any> = mutableMapOf()
 
     /**
      * Sets a property. Existing properties are overwritten.
@@ -57,8 +56,8 @@ class PropertyStorage {
      *
      * @param <T> property type
      * @param key key
-     * @return the property; an empty [java.util.Optional] will be
-     * returned if the property does not exist or the type does not match
+     * @return the property; null will be returned if the property does not exist or the type does
+     * not match
     </T> */
     fun <T> getValue(key: String): T? {
         val value = map[key]
@@ -87,15 +86,15 @@ class PropertyStorage {
 
     companion object {
         private val colors = arrayOf(
-            Color.RED, Color.YELLOW, Color.GREEN, Color.BLUE, Color.MAGENTA,
-            Color.WHITE, Color.BLACK, Color.GRAY, Color.ORANGE
+            KcsgColor.RED, KcsgColor.YELLOW, KcsgColor.GREEN, KcsgColor.BLUE, KcsgColor.MAGENTA,
+            KcsgColor.WHITE, KcsgColor.BLACK, KcsgColor.GRAY, KcsgColor.ORANGE,
         )
 
         fun randomColor(storage: PropertyStorage) {
-            val c = colors[(Math.random() * colors.size).toInt()]
-            storage["material:color"] = ("" + c.red
-                + " " + c.green
-                + " " + c.blue)
+            val c = colors[Random.nextInt(colors.size)]
+            storage["material:color"] = listOf(c.red, c.green, c.blue).joinToString(" ") {
+                it.toJvmString()
+            }
         }
     }
 

@@ -6,7 +6,6 @@
 package com.monkopedia.kcsg
 
 import kotlin.Throws
-import java.util.Locale
 import java.io.IOException
 import kotlinx.io.Buffer
 import kotlinx.io.Source
@@ -20,8 +19,8 @@ class ObjFile internal constructor(private var _obj: String, private val _mtl: S
     fun toFiles(p: Path) {
         val parent = p.parent
         var fileName = p.name
-        if (fileName.lowercase(Locale.getDefault()).endsWith(".obj")
-            || fileName.lowercase(Locale.getDefault()).endsWith(".mtl")
+        if (fileName.lowercase().endsWith(".obj")
+            || fileName.lowercase().endsWith(".mtl")
         ) {
             fileName = fileName.substring(0, fileName.length - 4)
         }

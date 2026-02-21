@@ -30,20 +30,20 @@
 package com.monkopedia.kcsg
 
 import java.io.IOException
-import java.util.logging.Level
-import java.util.logging.Logger
 import kotlinx.io.buffered
 import kotlinx.io.files.FileSystem
 import kotlinx.io.files.Path
 import kotlinx.io.files.SystemFileSystem
 import kotlinx.io.readString
 import kotlinx.io.writeString
+import org.slf4j.LoggerFactory
 
 /**
  * File util class.
  */
 object FileUtil {
     private val fileSystem: FileSystem = SystemFileSystem
+    private val logger = LoggerFactory.getLogger("KCSG.FileUtil")
 
     /**
      * Writes the specified string to a file.
@@ -89,8 +89,8 @@ object FileUtil {
             csg.polygons.forEach { p: Polygon ->
                 try {
                     out.writeString(p.toStlString())
-                } catch (ex: IOException) {
-                    Logger.getLogger(CSG::class.java.name).log(Level.SEVERE, null, ex)
+                } catch (ex: Exception) {
+                    logger.error("Error writing polygon to STL", ex)
                     throw RuntimeException(ex)
                 }
             }

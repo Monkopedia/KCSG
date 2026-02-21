@@ -35,7 +35,6 @@ package com.monkopedia.kcsg
 
 import com.monkopedia.kcsg.ext.org.poly2tri.PolygonUtil
 import org.slf4j.LoggerFactory
-import java.util.*
 import kotlin.math.abs
 
 /**
