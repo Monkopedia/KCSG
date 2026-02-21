@@ -36,14 +36,13 @@ import kotlinx.io.files.Path
 import kotlinx.io.files.SystemFileSystem
 import kotlinx.io.readString
 import kotlinx.io.writeString
-import org.slf4j.LoggerFactory
 
 /**
  * File util class.
  */
 object FileUtil {
     private val fileSystem: FileSystem = SystemFileSystem
-    private val logger = LoggerFactory.getLogger("KCSG.FileUtil")
+    private val logger = Logger.tagged("KCSG.FileUtil")
 
     /**
      * Writes the specified string to a file.

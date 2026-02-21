@@ -1,5 +1,6 @@
 package com.monkopedia.kcsg.ext.imagej
 
+import com.monkopedia.kcsg.Logger
 import com.monkopedia.kcsg.Vector3d
 import kotlinx.io.buffered
 import kotlinx.io.files.FileSystem
@@ -7,7 +8,6 @@ import kotlinx.io.files.Path
 import kotlinx.io.files.SystemFileSystem
 import kotlinx.io.readLine
 import kotlinx.io.Source
-import org.slf4j.LoggerFactory
 
 /**
  * Fork of
@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory
  */
 internal object STLLoader {
 
-    private val logger = LoggerFactory.getLogger("KCSG.STLLoader")
+    private val logger = Logger.tagged("KCSG.STLLoader")
 
     fun parse(path: Path, fileSystem: FileSystem = SystemFileSystem): List<Vector3d> {
         return parse(

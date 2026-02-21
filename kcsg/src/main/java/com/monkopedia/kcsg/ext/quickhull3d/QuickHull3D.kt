@@ -14,9 +14,9 @@
 
 package com.monkopedia.kcsg.ext.quickhull3d
 
+import com.monkopedia.kcsg.Logger
 import com.monkopedia.kcsg.Vector3d
 import com.monkopedia.kcsg.ext.quickhull3d.Face.Companion.createTriangle
-import org.slf4j.LoggerFactory
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.sqrt
@@ -1023,7 +1023,7 @@ internal class QuickHull3D {
     }
 
     companion object {
-        private val logger = LoggerFactory.getLogger("KCSG.QuickHull3D")
+        private val logger = Logger.tagged("KCSG.QuickHull3D")
 
         /**
          * Specifies that (on output) vertex indices for a face should be

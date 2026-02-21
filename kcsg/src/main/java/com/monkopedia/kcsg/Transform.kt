@@ -36,7 +36,6 @@ package com.monkopedia.kcsg
 
 import com.monkopedia.kcsg.ext.vvecmath.Matrix4d
 import com.monkopedia.kcsg.ext.vvecmath.Plane
-import org.slf4j.LoggerFactory
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -637,7 +636,7 @@ class Transform {
     }
 
     companion object {
-        private val logger = LoggerFactory.getLogger("KCSG.Transform")
+        private val logger = Logger.tagged("KCSG.Transform")
 
         /**
          * Returns a new transform based on the specified matrix values (4x4).

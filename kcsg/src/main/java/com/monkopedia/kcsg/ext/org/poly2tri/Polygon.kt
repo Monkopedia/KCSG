@@ -29,7 +29,7 @@
  */
 package com.monkopedia.kcsg.ext.org.poly2tri
 
-import org.slf4j.LoggerFactory
+import com.monkopedia.kcsg.Logger
 import kotlin.collections.ArrayList
 
 /* Poly2Tri
@@ -172,6 +172,6 @@ internal class Polygon : Triangulatable {
     }
 
     companion object {
-        private val logger = LoggerFactory.getLogger(Polygon::class.java)
+        private val logger = Logger.tagged("KCSG.Poly2TriPolygon")
     }
 }

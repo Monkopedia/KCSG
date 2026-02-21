@@ -27,6 +27,9 @@ This checklist tracks public API coverage status for library modules.
 - `io`-surface APIs now use `kotlinx.io.files.Path` as the primary path abstraction across `kcsg` and `kcsg-dsl`.
 - `io` stream-surface APIs now use `kotlinx.io.Source` (for example `OpOverride.source`, `STL.from`, and `ObjFile.objSource`/`mtlSource`).
 - JVM compatibility extensions are provided for renamed/retargeted APIs (legacy `InputStream`/`java.nio.file.Path` call patterns and `ObjFile.objStream`/`mtlStream`).
+- `Edge` closest-point/intersection APIs now use nullable returns (`getClosestPointOrNull`/`getIntersectionOrNull`) and keep JVM-only legacy `Optional` wrappers in `JvmIoCompat`.
+- `Logger`/`TaggedLogger` delegate logging APIs are now part of `kcsg` public API and are backend-agnostic (no direct SLF4J dependency required in `kcsg`/`kcsg-dsl`).
+- `kcsg` and `kcsg-dsl` are now built as Kotlin Multiplatform libraries (JVM/JS/Wasm/native families), with portable API tests moved to `commonTest`; JVM-only test coverage remains for legacy JVM wrappers and filesystem-specific paths.
 
 ## Module: kcsg
 
@@ -40,7 +43,9 @@ This checklist tracks public API coverage status for library modules.
 | `Extrude` | `primitive`, `mesh`, `error-path` | covered | `ExtrudeTest.pointsOverloadsProduceEquivalentExtrusions` |
 | `FileUtil` | `io`, `error-path` | covered | `FileUtilTest.writeAndReadRoundTrip` |
 | `HashingOpOverride` | `io`, `dsl`, `error-path` | covered | `HashingOpOverrideTest.hashingSequenceIsDeterministicForSameInputs` |
-| `MeshContainer` | `mesh`, `error-path` | covered | `MeshContainerTest.dimensionsBoundsAccessorsAndMeshViews` |
+| `Logger` | `io`, `dsl`, `error-path` | covered | `LoggerDelegateTest.companionDispatchesAllLevelsWithTagAndThrowable` |
+| `TaggedLogger` | `io`, `dsl` | covered | `LoggerDelegateTest.taggedLoggerUsesConfiguredTag` |
+| `KcsgColor` | `mesh` | covered | `CSGSerializationTest.colorInfluencesMaterialOutputAndUnsupportedObjArgThrows` |
 | `ObjFile` | `io`, `mesh`, `error-path` | covered | `ObjFileTest.objAndMtlAccessorsAndStreams` |
 | `OpOverride` | `dsl`, `io` | covered | `OpOverrideContractTest.overrideDispatchesAcrossCsgStlBoundsAndPrimitiveEntrypoints` |
 | `Plane` | `math`, `mesh`, `error-path` | covered | `PlaneTest.splitPolygonClassifiesAllCases` |

@@ -29,7 +29,7 @@
  */
 package com.monkopedia.kcsg.ext.org.poly2tri
 
-import org.slf4j.LoggerFactory
+import com.monkopedia.kcsg.Logger
 
 /* Poly2Tri
  * Copyright (c) 2009-2010, Poly2Tri Contributors
@@ -66,7 +66,7 @@ internal class DTSweepConstraint(p1: TriangulationPoint, p2: TriangulationPoint)
     TriangulationConstraint() {
 
     companion object {
-        private val logger = LoggerFactory.getLogger(DTSweepConstraint::class.java)
+        private val logger = Logger.tagged("KCSG.DTSweepConstraint")
     }
 
     /**
@@ -87,7 +87,7 @@ internal class DTSweepConstraint(p1: TriangulationPoint, p2: TriangulationPoint)
                 q = p1
                 p = p2
             } else if (p1.x == p2.x) {
-                logger.info("Failed to create constraint {}={}", p1, p2)
+                logger.info("Failed to create constraint $p1=$p2")
             }
         }
         q.addEdge(this)

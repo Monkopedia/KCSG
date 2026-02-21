@@ -29,11 +29,11 @@
  */
 package com.monkopedia.kcsg.ext.org.poly2tri
 
+import com.monkopedia.kcsg.Logger
 import com.monkopedia.kcsg.ext.org.poly2tri.TriangulationUtil.Orientation
 import com.monkopedia.kcsg.ext.org.poly2tri.TriangulationUtil.Orientation.CCW
 import com.monkopedia.kcsg.ext.org.poly2tri.TriangulationUtil.Orientation.CW
 import com.monkopedia.kcsg.ext.org.poly2tri.TriangulationUtil.Orientation.Collinear
-import org.slf4j.LoggerFactory
 import kotlin.math.PI
 import kotlin.math.atan2
 
@@ -76,7 +76,7 @@ import kotlin.math.atan2
  * Author: Thomas ???, thahlen@gmail.com
  */
 internal object DTSweep {
-    private val logger = LoggerFactory.getLogger("KCSG.DTSweep")
+    private val logger = Logger.tagged("KCSG.DTSweep")
     private const val PI_div2 = PI / 2
     private const val PI_3div4 = 3 * PI / 4
 
@@ -335,7 +335,7 @@ internal object DTSweep {
             fillEdgeEvent(tcx, edge, node)
             edgeEvent(tcx, edge.p, edge.q, node.triangle, edge.q)
         } catch (e: PointOnEdgeException) {
-            logger.warn("Skipping edge: {}", e.message)
+            logger.warn("Skipping edge: ${e.message}")
         }
     }
 

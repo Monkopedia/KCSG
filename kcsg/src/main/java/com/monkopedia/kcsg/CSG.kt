@@ -30,8 +30,6 @@ import com.monkopedia.kcsg.CSG.OptType.CSG_BOUND
 import com.monkopedia.kcsg.CSG.OptType.NONE
 import com.monkopedia.kcsg.CSG.OptType.POLYGON_BOUND
 import com.monkopedia.kcsg.ext.quickhull3d.HullUtil
-import javafx.scene.paint.Color
-import org.slf4j.LoggerFactory
 import kotlin.math.abs
 
 /**
@@ -599,17 +597,16 @@ class CSG private constructor(
         return sb
     }
 
-    fun color(c: Color): CSG {
+    fun color(color: KcsgColor): CSG {
+        return color(color.red, color.green, color.blue)
+    }
+
+    fun color(red: Double, green: Double, blue: Double): CSG {
         val result = copy()
-        _storage["material:color"] = (
-            "" + c.red +
-                " " + c.green +
-                " " + c.blue
-            )
+        _storage["material:color"] = listOf(red, green, blue).joinToString(" ") { it.toJvmString() }
         return result
     }
 
-    @JvmOverloads
     fun toObj(maxNumberOfVerts: Int = 3): ObjFile {
         if (maxNumberOfVerts != 3) {
             throw UnsupportedOperationException(
@@ -897,7 +894,7 @@ class CSG private constructor(
     }
 
     companion object {
-        private val logger = LoggerFactory.getLogger("KCSG.CSG")
+        private val logger = Logger.tagged("KCSG.CSG")
         private var defaultOptType = NONE
 
         /**

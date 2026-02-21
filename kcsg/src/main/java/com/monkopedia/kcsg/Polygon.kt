@@ -34,7 +34,6 @@
 package com.monkopedia.kcsg
 
 import com.monkopedia.kcsg.ext.org.poly2tri.PolygonUtil
-import org.slf4j.LoggerFactory
 import kotlin.math.abs
 
 /**
@@ -616,7 +615,7 @@ class Polygon {
     }
 
     companion object {
-        private val logger = LoggerFactory.getLogger("KCSG.Polygon")
+        private val logger = Logger.tagged("KCSG.Polygon")
         /**
          * Decomposes the specified concave polygon into convex polygons.
          *

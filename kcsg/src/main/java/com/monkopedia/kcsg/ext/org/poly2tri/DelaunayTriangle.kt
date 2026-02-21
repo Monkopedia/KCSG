@@ -29,7 +29,7 @@
  */
 package com.monkopedia.kcsg.ext.org.poly2tri
 
-import org.slf4j.LoggerFactory
+import com.monkopedia.kcsg.Logger
 
 /* Poly2Tri
  * Copyright (c) 2009-2010, Poly2Tri Contributors
@@ -391,6 +391,6 @@ internal class DelaunayTriangle(
     }
 
     companion object {
-        private val logger = LoggerFactory.getLogger(DelaunayTriangle::class.java)
+        private val logger = Logger.tagged("KCSG.DelaunayTriangle")
     }
 }

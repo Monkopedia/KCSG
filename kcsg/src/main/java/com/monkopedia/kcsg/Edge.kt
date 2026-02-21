@@ -34,7 +34,6 @@
 package com.monkopedia.kcsg
 
 import com.monkopedia.kcsg.ext.org.poly2tri.PolygonUtil
-import org.slf4j.LoggerFactory
 import java.util.Optional
 import kotlin.math.abs
 import kotlin.math.sqrt
@@ -168,7 +167,7 @@ data class Edge(val p1: Vertex, val p2: Vertex) {
     }
 
     companion object {
-        private val logger = LoggerFactory.getLogger("KCSG.Edge")
+        private val logger = Logger.tagged("KCSG.Edge")
 
         //    /**
         //     * @param p2 the p2 to set

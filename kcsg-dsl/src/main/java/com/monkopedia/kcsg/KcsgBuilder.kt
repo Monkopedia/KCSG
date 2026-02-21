@@ -1,7 +1,6 @@
 package com.monkopedia.kcsg
 
 import kotlinx.io.files.Path
-import org.slf4j.LoggerFactory
 import kotlin.properties.PropertyDelegateProvider
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
@@ -175,7 +174,7 @@ abstract class KcsgBuilder {
     private object BuilderContextImpl : BuilderContext()
 
     companion object {
-        private val logger = LoggerFactory.getLogger("KCSG.Builder")
+        private val logger = Logger.tagged("KCSG.Builder")
     }
 }
 
