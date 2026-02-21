@@ -68,6 +68,8 @@ tasks.register<Test>("oracleTest") {
     description = "Runs oracle agreement tests against generated OpenSCAD fixtures."
     group = "verification"
     useJUnit()
+    val oracleQuick = providers.gradleProperty("kcsg.oracle.quick").getOrElse("false")
+    systemProperty("kcsg.oracle.quick", oracleQuick)
     testClassesDirs = sourceSets.test.get().output.classesDirs
     classpath = sourceSets.test.get().runtimeClasspath
     include("com/monkopedia/kcsg/oracle/**")

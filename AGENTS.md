@@ -13,6 +13,7 @@ This repository is a multi-module Gradle project:
 - `./gradlew :kcsg:sampleTest`: run sample model integration tests under `com.monkopedia.kcsg.samples`.
 - `./gradlew :kcsg:oracleGenerateFixtures`: bootstrap pinned OpenSCAD and generate external oracle STL fixtures.
 - `./gradlew :kcsg:oracleTest` or `./gradlew oracleTest`: validate `kcsg` boolean outputs against OpenSCAD (`cgal`/`manifold`) oracle fixtures.
+- `./gradlew :kcsg:oracleTest -Pkcsg.oracle.quick=true`: local quick mode for remesh oracle checks (full mode remains default).
 - `./gradlew :csgs:run --args "<path/to/script.csgs>"`: execute a script with the CLI.
 - `./gradlew :csgs:fatJar`: produce a distributable `csgs-all-*.jar`.
 - `./gradlew :samples:run`: launch sample app entry points.

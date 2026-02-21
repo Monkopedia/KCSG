@@ -26,6 +26,7 @@ class OpOverrideContractTest {
         }
 
         val unionSentinel = emptyCsg()
+        val remeshSentinel = emptyCsg()
         val boundsToCsgSentinel = emptyCsg()
         val primitiveToCsgSentinel = emptyCsg()
         val stlFileSentinel = emptyCsg()
@@ -40,6 +41,7 @@ class OpOverrideContractTest {
             operationResult = { name, _ ->
                 when (name) {
                     "union" -> unionSentinel
+                    "remesh" -> remeshSentinel
                     "boundsToCSG" -> boundsToCsgSentinel
                     "toCSG" -> primitiveToCsgSentinel
                     else -> null
@@ -60,6 +62,7 @@ class OpOverrideContractTest {
             CSG.opOverride = override
 
             assertSame(unionSentinel, base.union(other))
+            assertSame(remeshSentinel, base.remesh())
             assertEquals(expectedBounds, base.bounds)
             assertEquals(expectedVolume, base.computeVolume(), 0.0)
             assertSame(boundsToCsgSentinel, Bounds(Vector3d.ZERO, Vector3d.UNITY).toCSG())
@@ -74,6 +77,7 @@ class OpOverrideContractTest {
             )
 
             assertTrue(override.operationCalls.any { it.first == "union" })
+            assertTrue(override.operationCalls.any { it.first == "remesh" })
             assertTrue(override.operationCalls.any { it.first == "boundsToCSG" })
             assertTrue(override.operationCalls.any { it.first == "toCSG" })
             assertTrue(override.boundsCalls.any { it.first == "bounds" })

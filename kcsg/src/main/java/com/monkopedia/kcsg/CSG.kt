@@ -778,6 +778,39 @@ class CSG private constructor(
     }
 
     /**
+     * Returns a remeshed copy of this CSG where all polygons have at most three vertices.
+     *
+     * The current implementation triangulates polygons deterministically using the polygon's existing
+     * vertex order. This preserves overall geometry while normalizing mesh topology to triangles.
+     *
+     * @return a remeshed copy of this CSG
+     */
+    fun remesh(): CSG {
+        opOverride?.operation("remesh", this)?.let { return it }
+        if (_polygons.isEmpty()) {
+            return copy()
+        }
+
+        val remeshedPolygons = ArrayList<Polygon>()
+        for (polygon in _polygons) {
+            if (polygon.vertices.size <= 3) {
+                remeshedPolygons.add(polygon.copy())
+                continue
+            }
+
+            val sharedStorage = polygon.storage
+            for (triangle in polygon.toTriangles()) {
+                triangle.storage = sharedStorage
+                remeshedPolygons.add(triangle)
+            }
+        }
+
+        val result = fromPolygons(remeshedPolygons).optimization(getOptType())
+        result._storage = _storage
+        return result
+    }
+
+    /**
      * Returns the bounds of this csg.
      *
      * @return bouds of this csg

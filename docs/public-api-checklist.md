@@ -27,7 +27,7 @@ This checklist tracks public API coverage status for library modules.
 | Symbol | Tags | Status | Tests |
 | --- | --- | --- | --- |
 | `Bounds` | `math`, `mesh` | covered | `BoundsTest.centerAndBoundsAreDerivedFromMinAndMax` |
-| `CSG` | `boolean`, `mesh`, `io`, `error-path` | covered | `CSGBooleanTest.singleOverloadsProduceExpectedVolumes`; `PrimitiveInteractionMatrixTest.scenarioS9OptimizationParity` |
+| `CSG` | `boolean`, `mesh`, `io`, `error-path` | covered | `CSGBooleanTest.singleOverloadsProduceExpectedVolumes`; `PrimitiveInteractionMatrixTest.scenarioS9OptimizationParity`; `CSGRemeshTest.remeshTriangulatesPolygonsAndPreservesVolumeAndBounds` |
 | `Cube` | `primitive`, `mesh` | covered | `CubeTest.constructorsInitializeCenterAndDimensions` |
 | `Cylinder` | `primitive`, `mesh` | covered | `CylinderTest.constructorsPopulateGeometryFields` |
 | `Edge` | `math`, `mesh`, `error-path` | covered | `EdgeApiTest.containsEqualsAndHashCode` |
