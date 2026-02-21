@@ -1,138 +1,94 @@
 package com.monkopedia.kcsg
 
-import java.io.ByteArrayOutputStream
-import java.security.MessageDigest
+import kotlinx.io.Source
 import kotlinx.io.buffered
 import kotlinx.io.files.FileSystem
 import kotlinx.io.files.Path
 import kotlinx.io.files.SystemFileSystem
 import kotlinx.io.readByteArray
-import kotlinx.io.Source
 
 class HashingOpOverride : OpOverride {
-    private val md = MessageDigest.getInstance("SHA-256")
+    private val sha256 = Sha256()
     private val csgLookup = mutableListOf<Pair<CSG, Int>>()
     private var count = 0
     private val fileSystem: FileSystem = SystemFileSystem
 
     fun hash(): String {
-        return md.digest().fold("") { str, it -> str + "%02x".format(it) }
+        return sha256.digest().toHexString()
     }
 
     private fun updateHash(bytes: ByteArray) {
-        md.update(bytes)
+        sha256.update(bytes)
+    }
+
+    private inline fun bytes(write: HashBytesBuilder.() -> Unit): ByteArray {
+        return HashBytesBuilder().apply(write).toByteArray()
     }
 
     private fun hash(any: Any?) {
         val bytes = when (any) {
             null -> byteArrayOf(0)
             is String -> {
-                any.toByteArray()
+                any.encodeToByteArray()
             }
-            is CSG -> ByteArrayOutputStream().use {
-                it.writeBytes("csg".toByteArray())
-                it.write(csgLookup.find { it.first === any }?.second ?: placeCsg(any))
-                it.toByteArray()
+            is CSG -> bytes {
+                writeTag("csg")
+                write(csgLookup.find { it.first === any }?.second ?: placeCsg(any))
             }
-            is Transform -> ByteArrayOutputStream().use {
-                it.writeBytes("tr".toByteArray())
-                it.write(any)
-                it.toByteArray()
+            is Transform -> bytes {
+                writeTag("tr")
+                write(any, transformBuffer)
             }
-            is Vector3d -> ByteArrayOutputStream().use {
-                it.writeBytes("v3d".toByteArray())
-                it.write(any.x)
-                it.write(any.y)
-                it.write(any.z)
-                it.toByteArray()
+            is Vector3d -> bytes {
+                writeTag("v3d")
+                write(any)
             }
-            is Cube -> ByteArrayOutputStream().use {
-                it.writeBytes("cub".toByteArray())
-                it.write(any.center)
-                it.write(any.dimensions)
-                it.toByteArray()
+            is Cube -> bytes {
+                writeTag("cub")
+                write(any.center)
+                write(any.dimensions)
             }
-            is Cylinder -> ByteArrayOutputStream().use {
-                it.writeBytes("cyl".toByteArray())
-                it.write(any.start)
-                it.write(any.end)
-                it.write(any.startRadius)
-                it.write(any.endRadius)
-                it.write(any.numSlices)
-                it.toByteArray()
+            is Cylinder -> bytes {
+                writeTag("cyl")
+                write(any.start)
+                write(any.end)
+                write(any.startRadius)
+                write(any.endRadius)
+                write(any.numSlices)
             }
-            is Polyhedron -> ByteArrayOutputStream().use { os ->
-                os.writeBytes("plh".toByteArray())
-                any.points.forEach { os.write(it) }
-                any.faces.forEach { list -> list.forEach { os.write(it) } }
-                os.toByteArray()
+            is Polyhedron -> bytes {
+                writeTag("plh")
+                any.points.forEach { write(it) }
+                any.faces.forEach { list -> list.forEach(::write) }
             }
-            is RoundedCube -> ByteArrayOutputStream().use {
-                it.writeBytes("rcb".toByteArray())
-                it.write(any.center)
-                it.write(any.dimensions)
-                it.write(any.cornerRadius)
-                it.write(any.resolution)
-                it.write(if (any.centered) 1 else 0)
-                it.toByteArray()
+            is RoundedCube -> bytes {
+                writeTag("rcb")
+                write(any.center)
+                write(any.dimensions)
+                write(any.cornerRadius)
+                write(any.resolution)
+                write(if (any.centered) 1 else 0)
             }
-            is Sphere -> ByteArrayOutputStream().use {
-                it.writeBytes("sph".toByteArray())
-                it.write(any.center)
-                it.write(any.radius)
-                it.write(any.numSlices)
-                it.write(any.numStacks)
-                it.toByteArray()
+            is Sphere -> bytes {
+                writeTag("sph")
+                write(any.center)
+                write(any.radius)
+                write(any.numSlices)
+                write(any.numStacks)
             }
-            is Source -> ByteArrayOutputStream().use {
-                it.writeBytes("is".toByteArray())
-                it.write(any.readByteArray())
-                it.toByteArray()
+            is Source -> bytes {
+                writeTag("is")
+                writeBytes(any.readByteArray())
             }
-            else -> ByteArrayOutputStream().use {
-                it.writeBytes("else".toByteArray())
-                it.write(any.hashCode())
-                it.toByteArray()
+            else -> bytes {
+                writeTag("else")
+                write(any.hashCode())
             }
         }
         updateHash(bytes)
     }
 
     private val transformBuffer = DoubleArray(16)
-
-    private fun ByteArrayOutputStream.write(transform: Transform) {
-        transform.to(transformBuffer).forEach {
-            write(it)
-        }
-    }
-
-    private fun ByteArrayOutputStream.write(value: Vector3d) {
-        write(value.x)
-        write(value.y)
-        write(value.z)
-    }
-
-    private fun ByteArrayOutputStream.write(value: Double) {
-        write(java.lang.Double.doubleToRawLongBits(value))
-    }
-
-    private fun ByteArrayOutputStream.write(value: Long) {
-        write((value and 0xff).toByte().toInt())
-        write(((value shr 8) and 0xff).toByte().toInt())
-        write(((value shr 16) and 0xff).toByte().toInt())
-        write(((value shr 24) and 0xff).toByte().toInt())
-        write(((value shr 32) and 0xff).toByte().toInt())
-        write(((value shr 40) and 0xff).toByte().toInt())
-        write(((value shr 48) and 0xff).toByte().toInt())
-        write(((value shr 56) and 0xff).toByte().toInt())
-    }
-
-    private fun ByteArrayOutputStream.write(value: Int) {
-        write((value and 0xff).toByte().toInt())
-        write(((value shr 8) and 0xff).toByte().toInt())
-        write(((value shr 16) and 0xff).toByte().toInt())
-        write(((value shr 24) and 0xff).toByte().toInt())
-    }
 
     private fun createCSG(): CSG {
         CSG.withOverride(null) {
@@ -190,5 +146,85 @@ class HashingOpOverride : OpOverride {
             hash(it)
         }
         return createCSG()
+    }
+}
+
+private fun ByteArray.toHexString(): String {
+    val digits = "0123456789abcdef"
+    val builder = StringBuilder(size * 2)
+    for (byte in this) {
+        val value = byte.toInt() and 0xFF
+        builder.append(digits[value ushr 4])
+        builder.append(digits[value and 0x0F])
+    }
+    return builder.toString()
+}
+
+private class HashBytesBuilder {
+    private var data = ByteArray(64)
+    private var size = 0
+
+    fun writeTag(tag: String) {
+        writeBytes(tag.encodeToByteArray())
+    }
+
+    fun writeBytes(bytes: ByteArray) {
+        ensureCapacity(bytes.size)
+        bytes.copyInto(
+            destination = data,
+            destinationOffset = size,
+            startIndex = 0,
+            endIndex = bytes.size,
+        )
+        size += bytes.size
+    }
+
+    fun write(value: Transform, transformBuffer: DoubleArray) {
+        value.to(transformBuffer).forEach {
+            write(it)
+        }
+    }
+
+    fun write(value: Vector3d) {
+        write(value.x)
+        write(value.y)
+        write(value.z)
+    }
+
+    fun write(value: Double) {
+        write(value.toRawBits())
+    }
+
+    fun write(value: Long) {
+        ensureCapacity(8)
+        data[size++] = (value and 0xFF).toByte()
+        data[size++] = ((value shr 8) and 0xFF).toByte()
+        data[size++] = ((value shr 16) and 0xFF).toByte()
+        data[size++] = ((value shr 24) and 0xFF).toByte()
+        data[size++] = ((value shr 32) and 0xFF).toByte()
+        data[size++] = ((value shr 40) and 0xFF).toByte()
+        data[size++] = ((value shr 48) and 0xFF).toByte()
+        data[size++] = ((value shr 56) and 0xFF).toByte()
+    }
+
+    fun write(value: Int) {
+        ensureCapacity(1)
+        data[size++] = (value and 0xFF).toByte()
+    }
+
+    fun toByteArray(): ByteArray {
+        return data.copyOf(size)
+    }
+
+    private fun ensureCapacity(additional: Int) {
+        val required = size + additional
+        if (required <= data.size) {
+            return
+        }
+        var newSize = data.size
+        while (newSize < required) {
+            newSize *= 2
+        }
+        data = data.copyOf(newSize)
     }
 }
