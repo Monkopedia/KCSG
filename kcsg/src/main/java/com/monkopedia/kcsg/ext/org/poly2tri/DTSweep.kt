@@ -34,6 +34,7 @@ import com.monkopedia.kcsg.ext.org.poly2tri.TriangulationUtil.Orientation.CCW
 import com.monkopedia.kcsg.ext.org.poly2tri.TriangulationUtil.Orientation.CW
 import com.monkopedia.kcsg.ext.org.poly2tri.TriangulationUtil.Orientation.Collinear
 import org.slf4j.LoggerFactory
+import kotlin.math.PI
 import kotlin.math.atan2
 
 /* Poly2Tri
@@ -76,8 +77,8 @@ import kotlin.math.atan2
  */
 internal object DTSweep {
     private val logger = LoggerFactory.getLogger("KCSG.DTSweep")
-    private const val PI_div2 = Math.PI / 2
-    private const val PI_3div4 = 3 * Math.PI / 4
+    private const val PI_div2 = PI / 2
+    private const val PI_3div4 = 3 * PI / 4
 
     /**
      * Triangulate simple polygon with holes *

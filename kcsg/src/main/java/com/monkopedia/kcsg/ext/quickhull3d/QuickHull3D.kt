@@ -17,8 +17,6 @@ package com.monkopedia.kcsg.ext.quickhull3d
 import com.monkopedia.kcsg.Vector3d
 import com.monkopedia.kcsg.ext.quickhull3d.Face.Companion.createTriangle
 import org.slf4j.LoggerFactory
-import java.io.*
-import java.util.*
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.sqrt
@@ -124,8 +122,8 @@ internal class QuickHull3D {
     private val discardedFaces = arrayOfNulls<Face>(3)
     private val maxVtxs = arrayOfNulls<Vertex>(3)
     private val minVtxs = arrayOfNulls<Vertex>(3)
-    private var faces: Vector<Face> = Vector<Face>(16)
-    private var horizon: Vector<HalfEdge> = Vector<HalfEdge>(16)
+    private val faces = mutableListOf<Face>()
+    private val horizon = mutableListOf<HalfEdge>()
     private val newFaces = FaceList()
     private val unclaimed = VertexList()
     private val claimed = VertexList()
@@ -277,9 +275,7 @@ internal class QuickHull3D {
     fun triangulate() {
         val minArea = 1000 * charLength * DOUBLE_PREC
         newFaces.clear()
-        val it: Iterator<*> = faces.iterator()
-        while (it.hasNext()) {
-            val face = it.next() as Face
+        for (face in faces) {
             if (face.mark == Face.VISIBLE) {
                 face.triangulate(newFaces, minArea)
                 // splitFace (face);
@@ -464,7 +460,7 @@ internal class QuickHull3D {
             }
         }
         for (i in 0..3) {
-            faces.add(tris[i])
+            faces.add(tris[i]!!)
         }
         for (i in 0 until numPoints) {
             val v = pointBuffer[i]
@@ -586,9 +582,7 @@ internal class QuickHull3D {
     private fun getFaces(indexFlags: Int): Array<IntArray?> {
         val allFaces = arrayOfNulls<IntArray>(faces.size)
         var k = 0
-        val it: Iterator<*> = faces.iterator()
-        while (it.hasNext()) {
-            val face = it.next() as Face
+        for (face in faces) {
             allFaces[k] = IntArray(face.numVertices())
             getFaceIndices(allFaces[k], face, indexFlags)
             k++
@@ -737,7 +731,7 @@ internal class QuickHull3D {
         eyePnt: Point3d?,
         edge0: HalfEdge?,
         face: Face?,
-        horizon: Vector<HalfEdge>
+        horizon: MutableList<HalfEdge>
     ) {
 // 	   oldFaces.add (face);
         var edge0 = edge0
@@ -790,14 +784,12 @@ internal class QuickHull3D {
     private fun addNewFaces(
         newFaces: FaceList,
         eyeVtx: Vertex,
-        horizon: Vector<*>
+        horizon: List<HalfEdge>
     ) {
         newFaces.clear()
         var hedgeSidePrev: HalfEdge? = null
         var hedgeSideBegin: HalfEdge? = null
-        val it: Iterator<*> = horizon.iterator()
-        while (it.hasNext()) {
-            val horizonHe = it.next() as HalfEdge
+        for (horizonHe in horizon) {
             val hedgeSide = addAdjoiningFace(eyeVtx, horizonHe)
             logger.info(
                 "new face: " + hedgeSide!!.face.vertexString
@@ -901,7 +893,7 @@ internal class QuickHull3D {
         numFaces = 0
         val it = faces.iterator()
         while (it.hasNext()) {
-            val face = it.next() as Face
+            val face = it.next()
             if (face.mark != Face.VISIBLE) {
                 it.remove()
             } else {
@@ -961,9 +953,7 @@ internal class QuickHull3D {
     private fun checkFaces(tol: Double): Boolean {
         // check edge convexity
         var convex = true
-        val it: Iterator<*> = faces.iterator()
-        while (it.hasNext()) {
-            val face = it.next() as Face
+        for (face in faces) {
             if (face.mark == Face.VISIBLE) {
                 if (!checkFaceConvexity(face, tol)) {
                     convex = false
@@ -1016,9 +1006,7 @@ internal class QuickHull3D {
         // check point inclusion
         for (i in 0 until numPoints) {
             val pnt = pointBuffer[i].pnt
-            val it: Iterator<*> = faces.iterator()
-            while (it.hasNext()) {
-                val face = it.next() as Face
+            for (face in faces) {
                 if (face.mark == Face.VISIBLE) {
                     dist = face.distanceToPlane(pnt)
                     if (dist > pointTol) {

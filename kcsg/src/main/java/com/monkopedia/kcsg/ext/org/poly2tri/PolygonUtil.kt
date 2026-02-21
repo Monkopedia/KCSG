@@ -37,7 +37,6 @@ import com.monkopedia.kcsg.Edge
 import com.monkopedia.kcsg.Extrude
 import com.monkopedia.kcsg.Vertex
 import com.monkopedia.kcsg.Vector3d
-import java.util.*
 
 /**
  */

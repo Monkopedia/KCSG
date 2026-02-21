@@ -36,7 +36,6 @@ package com.monkopedia.kcsg
 import com.monkopedia.kcsg.ext.org.poly2tri.PolygonUtil
 import org.slf4j.LoggerFactory
 import java.util.*
-import java.util.function.Consumer
 import kotlin.math.abs
 
 /**
@@ -167,13 +166,9 @@ class Polygon {
 
     fun copy(): Polygon {
         val newVertices: MutableList<Vertex> = ArrayList()
-        vertices.forEach(
-            Consumer { vertex: Vertex ->
-                newVertices.add(
-                    vertex.copy()
-                )
-            }
-        )
+        vertices.forEach { vertex: Vertex ->
+            newVertices.add(vertex.copy())
+        }
         return Polygon(newVertices, storage)
     }
 
@@ -305,14 +300,14 @@ class Polygon {
      * @return this polygon
      */
     fun transform(transform: Transform): Polygon {
-        vertices.stream().forEach { v: Vertex -> v.transform(transform) }
+        vertices.forEach { v: Vertex -> v.transform(transform) }
         val a = vertices[0].pos
         val b = vertices[1].pos
         val c = vertices[2].pos
         csgPlane.normal = b.minus(a).crossed(c.minus(a)).normalized()
         csgPlane.dist = csgPlane.normal.dot(a)
         plane = com.monkopedia.kcsg.ext.vvecmath.Plane.fromPointAndNormal(centroid(), csgPlane.normal)
-        vertices.forEach(Consumer { vertex: Vertex -> vertex.normal = plane.normal })
+        vertices.forEach { vertex: Vertex -> vertex.normal = plane.normal }
         if (transform.isMirror) {
             // the transformation includes mirroring. flip polygon
             flip()

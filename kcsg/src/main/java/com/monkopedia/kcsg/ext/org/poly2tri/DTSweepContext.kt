@@ -30,7 +30,6 @@
 package com.monkopedia.kcsg.ext.org.poly2tri
 
 import com.monkopedia.kcsg.Vector3d
-import java.util.*
 
 /* Poly2Tri
  * Copyright (c) 2009-2010, Poly2Tri Contributors

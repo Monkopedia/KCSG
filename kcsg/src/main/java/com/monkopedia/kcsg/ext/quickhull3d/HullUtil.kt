@@ -10,7 +10,6 @@ import com.monkopedia.kcsg.Polygon
 import com.monkopedia.kcsg.PropertyStorage
 import com.monkopedia.kcsg.Vertex
 import com.monkopedia.kcsg.Vector3d
-import java.util.function.Consumer
 
 /**
  */
@@ -44,12 +43,9 @@ internal class HullUtil private constructor() {
             )
             csg.polygons
                 .forEach { p: Polygon ->
-                    p.vertices.forEach(
-                        Consumer { v: Vertex ->
-                            points.add(
-                                v.pos
-                            )
-                        })
+                    p.vertices.forEach { v: Vertex ->
+                        points.add(v.pos)
+                    }
                 }
             return hull(points, storage)
         }

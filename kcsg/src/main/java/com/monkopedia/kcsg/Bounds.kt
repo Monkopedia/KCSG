@@ -131,7 +131,7 @@ data class Bounds(
      * box; `false` otherwise
      */
     operator fun contains(p: Polygon): Boolean {
-        return p.vertices.stream().allMatch { v: Vertex -> contains(v) }
+        return p.vertices.all { v: Vertex -> contains(v) }
     }
 
     /**
@@ -143,7 +143,7 @@ data class Bounds(
      * `false` otherwise
      */
     fun intersects(p: Polygon): Boolean {
-        return p.vertices.stream().filter { v: Vertex -> this.contains(v) }.count() > 0
+        return p.vertices.any { v: Vertex -> this.contains(v) }
     }
 
     /**

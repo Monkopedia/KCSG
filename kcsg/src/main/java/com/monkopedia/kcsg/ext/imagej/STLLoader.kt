@@ -101,9 +101,10 @@ internal object STLLoader {
     }
 
     private fun leBytesToFloat(b0: Byte, b1: Byte, b2: Byte, b3: Byte): Float {
-        return java.lang.Float.intBitsToFloat(
-            b3.toInt() and 0xff shl 24 or (b2.toInt() and 0xff shl 16)
-                or (b1.toInt() and 0xff shl 8) or (b0.toInt() and 0xff)
-        )
+        val bits = ((b3.toInt() and 0xff) shl 24) or
+            ((b2.toInt() and 0xff) shl 16) or
+            ((b1.toInt() and 0xff) shl 8) or
+            (b0.toInt() and 0xff)
+        return Float.fromBits(bits)
     }
 }

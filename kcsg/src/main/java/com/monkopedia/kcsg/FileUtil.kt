@@ -88,7 +88,7 @@ object FileUtil {
             StandardOpenOption.TRUNCATE_EXISTING
         ).use { out ->
             out.append("solid v3d.csg\n")
-            csg.polygons.stream().forEach { p: Polygon ->
+            csg.polygons.forEach { p: Polygon ->
                 try {
                     out.append(p.toStlString())
                 } catch (ex: IOException) {

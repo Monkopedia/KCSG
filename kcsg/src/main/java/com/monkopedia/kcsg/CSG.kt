@@ -32,9 +32,6 @@ import com.monkopedia.kcsg.CSG.OptType.POLYGON_BOUND
 import com.monkopedia.kcsg.ext.quickhull3d.HullUtil
 import javafx.scene.paint.Color
 import org.slf4j.LoggerFactory
-import java.util.function.Consumer
-import java.util.stream.Collectors
-import java.util.stream.Stream
 import kotlin.math.abs
 
 /**
@@ -83,12 +80,7 @@ class CSG private constructor(
 
     fun copy(): CSG {
         opOverride?.operation("copy", this)?.let { return it }
-        val polygonStream: Stream<Polygon> = if (_polygons.size > 200) {
-            _polygons.parallelStream()
-        } else {
-            _polygons.stream()
-        }
-        val csg = CSG(polygonStream.map { p: Polygon -> p.copy() }.collect(Collectors.toList()))
+        val csg = CSG(_polygons.map { p: Polygon -> p.copy() }.toMutableList())
         csg._optType = getOptType()
         return csg
     }
@@ -249,7 +241,7 @@ class CSG private constructor(
         val csgsUnion = CSG(copy()._polygons)
         csgsUnion._storage = _storage
         csgsUnion._optType = _optType
-        csgs.stream().forEach { csg: CSG ->
+        csgs.forEach { csg: CSG ->
             csgsUnion._polygons.addAll(
                 csg.copy()._polygons,
             )
@@ -281,7 +273,7 @@ class CSG private constructor(
         val inner: MutableList<Polygon> = ArrayList()
         val outer: MutableList<Polygon> = ArrayList()
         val bounds = csg.bounds
-        _polygons.stream().forEach { p: Polygon ->
+        _polygons.forEach { p: Polygon ->
             if (bounds.intersects(p.bounds)) {
                 inner.add(p)
             } else {
@@ -454,7 +446,7 @@ class CSG private constructor(
         val inner: MutableList<Polygon> = ArrayList()
         val outer: MutableList<Polygon> = ArrayList()
         val bounds = csg.bounds
-        _polygons.stream().forEach { p: Polygon ->
+        _polygons.forEach { p: Polygon ->
             if (bounds.intersects(
                     p.bounds,
                 )
@@ -602,7 +594,7 @@ class CSG private constructor(
      */
     fun toStlString(sb: StringBuilder): StringBuilder {
         sb.append("solid v3d.csg\n")
-        _polygons.stream().forEach { p: Polygon -> p.toStlString(sb) }
+        _polygons.forEach { p: Polygon -> p.toStlString(sb) }
         sb.append("endsolid v3d.csg\n")
         return sb
     }
@@ -641,7 +633,7 @@ class CSG private constructor(
         var materialIndex = 0
         for (p in _polygons) {
             val polyIndices: MutableList<Int> = ArrayList()
-            p.vertices.stream().forEach { v: Vertex ->
+            p.vertices.forEach { v: Vertex ->
                 if (!vertices.contains(v)) {
                     vertices.add(v)
                     v.toObjString(objSb)
@@ -684,15 +676,13 @@ class CSG private constructor(
         }
         objSb.append("\n# End Group v3d.csg").append("\n")
         val mtlSb = StringBuilder()
-        materialNames.keys.forEach(
-            Consumer { s: PropertyStorage? ->
-                if (s!!.contains("material:color")) {
-                    mtlSb.append("newmtl material-").append(s.getValue<Any>("material:name"))
-                        .append("\n")
-                    mtlSb.append("Kd ").append(s.getValue<Any>("material:color")).append("\n")
-                }
-            },
-        )
+        materialNames.keys.forEach { s: PropertyStorage ->
+            if (s.contains("material:color")) {
+                mtlSb.append("newmtl material-").append(s.getValue<Any>("material:name"))
+                    .append("\n")
+                mtlSb.append("Kd ").append(s.getValue<Any>("material:color")).append("\n")
+            }
+        }
         return ObjFile(objSb.toString(), mtlSb.toString())
     }
 
@@ -716,7 +706,7 @@ class CSG private constructor(
         sb.append("\n# Vertices\n")
         for (p in _polygons) {
             val polyIndices: MutableList<Int> = ArrayList()
-            p.vertices.stream().forEach { v: Vertex ->
+            p.vertices.forEach { v: Vertex ->
                 if (!vertices.contains(v)) {
                     vertices.add(v)
                     v.toObjString(sb)
@@ -770,8 +760,7 @@ class CSG private constructor(
         if (_polygons.isEmpty()) {
             return copy()
         }
-        val newpolygons = _polygons.stream().map { p: Polygon -> p.transformed(transform) }
-            .collect(Collectors.toList())
+        val newpolygons = _polygons.map { p: Polygon -> p.transformed(transform) }
         val result = fromPolygons(newpolygons).optimization(getOptType())
         result._storage = _storage
         return result
@@ -885,30 +874,24 @@ class CSG private constructor(
         opOverride?.double("volume", this)?.let { return it }
         if (polygons.isEmpty()) return 0.0
 
-        // triangulate polygons (parallel for larger meshes)
-        val polyStream: Stream<Polygon> = if (polygons.size > 200) {
-            polygons.parallelStream()
-        } else {
-            polygons.stream()
-        }
         logger.info("Mapping ${polygons.size}")
-        val triangles = polyStream.flatMap { poly: Polygon -> poly.toTriangles().stream() }
-//            .collect(Collectors.toList())
-
-        // compute sum over signed volumes of triangles
-        // we use parallel streams for larger meshes
-        // see http://chenlab.ece.cornell.edu/Publication/Cha/icip01_Cha.pdf
-        val triangleStream: Stream<Polygon> = triangles // if (triangles.size > 200) {
-//            triangles.parallelStream()
-//        } else {
-//            triangles.stream()
-//        }
-        var volume = triangleStream.mapToDouble { tri: Polygon ->
-            val p1 = tri.vertices[0].pos
-            val p2 = tri.vertices[1].pos
-            val p3 = tri.vertices[2].pos
-            p1.dot(p2.crossed(p3)) / 6.0
-        }.sum()
+        // Compute sum over signed volumes of triangles.
+        // See http://chenlab.ece.cornell.edu/Publication/Cha/icip01_Cha.pdf
+        var sum = 0.0
+        var compensation = 0.0
+        for (poly in polygons) {
+            for (tri in poly.toTriangles()) {
+                val p1 = tri.vertices[0].pos
+                val p2 = tri.vertices[1].pos
+                val p3 = tri.vertices[2].pos
+                val signed = p1.dot(p2.crossed(p3)) / 6.0
+                val y = signed - compensation
+                val t = sum + y
+                compensation = (t - sum) - y
+                sum = t
+            }
+        }
+        var volume = sum
         volume = abs(volume)
         return volume
     }

@@ -36,8 +36,6 @@ package com.monkopedia.kcsg
 import com.monkopedia.kcsg.ext.org.poly2tri.PolygonUtil
 import org.slf4j.LoggerFactory
 import java.util.*
-import java.util.stream.Collectors
-import java.util.stream.Stream
 import kotlin.math.abs
 import kotlin.math.sqrt
 
@@ -391,27 +389,14 @@ data class Edge(val p1: Vertex, val p2: Vertex) {
             val edges: MutableList<Edge> =
                 ArrayList()
 
-            val pStream: Stream<Polygon> = if (planeGroup.size > 200) {
-                planeGroup.parallelStream()
-            } else {
-                planeGroup.stream()
-            }
-            pStream.map { p: Polygon ->
-                fromPolygon(p)
-            }.forEach { pEdges: List<Edge> ->
-                edges.addAll(pEdges)
-            }
-
-            val edgeStream: Stream<Edge> = if (edges.size > 200) {
-                edges.parallelStream()
-            } else {
-                edges.stream()
+            planeGroup.forEach { p: Polygon ->
+                edges.addAll(fromPolygon(p))
             }
 
             // find potential boundary edges, i.e., edges that occur once (freq=1)
             val potentialBoundaryEdges: MutableList<Edge> =
                 ArrayList()
-            edgeStream.forEachOrdered { e: Edge ->
+            edges.forEach { e: Edge ->
                 val count = Collections.frequency(edges, e)
                 if (count == 1) {
                     potentialBoundaryEdges.add(e)
@@ -422,19 +407,12 @@ data class Edge(val p1: Vertex, val p2: Vertex) {
             // boundary-edge-list
             //
             // thanks to Susanne Höllbacher for the idea :)
-            val bndEdgeStream: Stream<Edge> = if (potentialBoundaryEdges.size > 200) {
-                potentialBoundaryEdges.parallelStream()
-            } else {
-                potentialBoundaryEdges.stream()
-            }
-
-            //
 //        logger.info("#bnd-edges: " + realBndEdges.size()
 //                + ",#edges: " + edges.size()
 //                + ", #del-bnd-edges: " + (boundaryEdges.size() - realBndEdges.size()));
-            return bndEdgeStream.filter { be: Edge ->
+            return potentialBoundaryEdges.filter { be: Edge ->
                 !edges.any { e: Edge -> falseBoundaryEdgeSharedWithOtherEdge(be, e) }
-            }.collect(Collectors.toList())
+            }
         }
 
         private fun boundaryPolygonsOfPlaneGroup(

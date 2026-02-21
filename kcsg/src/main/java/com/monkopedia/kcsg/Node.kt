@@ -33,9 +33,6 @@
  */
 package com.monkopedia.kcsg
 
-import java.util.stream.Collectors
-import java.util.stream.Stream
-
 /**
  * Holds a node in a BSP tree. A BSP tree is built from a collection of polygons
  * by picking a polygon to split along. That polygon (and all other coplanar
@@ -78,12 +75,7 @@ internal class Node @JvmOverloads constructor(polygons: List<Polygon>? = null) {
 //        polygons.parallelStream().forEach((Polygon p) -> {
 //            node.polygons.add(p.clone());
 //        });
-        node.polygons = if (polygons.size > 200) {
-            polygons.parallelStream().map { p: Polygon -> p.copy() }
-                .collect(Collectors.toList())
-        } else {
-            polygons.map(Polygon::copy).toMutableList()
-        }
+        node.polygons = polygons.map(Polygon::copy).toMutableList()
         return node
     }
 
@@ -95,12 +87,7 @@ internal class Node @JvmOverloads constructor(polygons: List<Polygon>? = null) {
             // Help, nothing useful to do here
             return
         }
-        val polygonStream: Stream<Polygon> = if (polygons.size > 200) {
-            polygons.parallelStream()
-        } else {
-            polygons.stream()
-        }
-        polygonStream.forEach { polygon: Polygon -> polygon.flip() }
+        polygons.forEach { polygon: Polygon -> polygon.flip() }
         plane.flip()
         front?.invert()
         back?.invert()
