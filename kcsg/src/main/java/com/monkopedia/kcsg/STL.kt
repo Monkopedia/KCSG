@@ -30,7 +30,6 @@
 package com.monkopedia.kcsg
 
 import com.monkopedia.kcsg.ext.imagej.STLLoader
-import java.io.IOException
 import kotlinx.io.Source
 import kotlinx.io.files.Path
 
@@ -40,11 +39,11 @@ import kotlinx.io.files.Path
 object STL {
     /**
      * Loads a CSG from stl.
+     *
      * @param path file path
      * @return CSG
-     * @throws IOException if loading failed
-    */
-    @Throws(IOException::class)
+     * Throws when loading fails.
+     */
     fun file(path: Path): CSG {
         CSG.opOverride?.file(path)?.let { return it }
         val polygons: MutableList<Polygon> = ArrayList()
@@ -60,10 +59,10 @@ object STL {
     }
     /**
      * Loads a CSG from stl.
+     *
      * @return CSG
-     * @throws IOException if loading failed
+     * Throws when loading fails.
      */
-    @Throws(IOException::class)
     fun from(sourceFactory: () -> Source, length: () -> Long): CSG {
         CSG.opOverride?.source(sourceFactory)?.let { return it }
         val polygons: MutableList<Polygon> = ArrayList()

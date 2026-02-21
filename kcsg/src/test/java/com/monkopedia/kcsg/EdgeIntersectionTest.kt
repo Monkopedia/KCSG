@@ -114,21 +114,20 @@ class EdgeIntersectionTest {
                     e2p2, Vector3d.Z_ONE
                 )
             )
-            val closestPointResult = e1.getIntersection(e2)
+            val closestPointResult = e1.getIntersectionOrNull(e2)
             if (expectedPoint != null) {
                 Assert.assertTrue(
                     "Intersection point must exist",
-                    closestPointResult.isPresent
+                    closestPointResult != null
                 )
-                val closestPoint = closestPointResult.get()
                 Assert.assertTrue(
                     "Intersection point " + expectedPoint + ", got "
-                        + closestPoint, expectedPoint == closestPoint
+                        + closestPointResult, expectedPoint == closestPointResult
                 )
             } else {
                 Assert.assertFalse(
                     "Intersection point must not exist : "
-                        + closestPointResult, closestPointResult.isPresent
+                        + closestPointResult, closestPointResult != null
                 )
             }
         }
@@ -154,21 +153,20 @@ class EdgeIntersectionTest {
                     e2p2, Vector3d.Z_ONE
                 )
             )
-            val closestPointResult = e1.getClosestPoint(e2)
+            val closestPointResult = e1.getClosestPointOrNull(e2)
             if (expectedPoint != null) {
                 Assert.assertTrue(
                     "Closest point must exist",
-                    closestPointResult.isPresent
+                    closestPointResult != null
                 )
-                val closestPoint = closestPointResult.get()
                 Assert.assertTrue(
                     "Expected point " + expectedPoint + ", got "
-                        + closestPoint, expectedPoint == closestPoint
+                        + closestPointResult, expectedPoint == closestPointResult
                 )
             } else {
                 Assert.assertFalse(
                     "Closest point must not exist : "
-                        + closestPointResult, closestPointResult.isPresent
+                        + closestPointResult, closestPointResult != null
                 )
             }
         }

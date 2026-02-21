@@ -5,8 +5,6 @@
  */
 package com.monkopedia.kcsg
 
-import kotlin.Throws
-import java.io.IOException
 import kotlinx.io.Buffer
 import kotlinx.io.Source
 import kotlinx.io.files.Path
@@ -15,7 +13,6 @@ import kotlinx.io.writeString
 /**
  */
 class ObjFile internal constructor(private var _obj: String, private val _mtl: String) {
-    @Throws(IOException::class)
     fun toFiles(p: Path) {
         val parent = p.parent
         var fileName = p.name

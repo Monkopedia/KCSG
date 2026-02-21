@@ -46,13 +46,13 @@ class EdgeApiTest {
             Vertex(Vector3d.xyz(2.0, 0.0, 0.0), Vector3d.Z_ONE),
         )
 
-        val closest = e1.getClosestPoint(e2)
-        assertTrue(closest.isPresent)
-        assertVectorClose(Vector3d.xyz(1.0, 1.0, 0.0), closest.get(), 1e-9)
+        val closest = e1.getClosestPointOrNull(e2)
+        assertNotNull(closest)
+        assertVectorClose(Vector3d.xyz(1.0, 1.0, 0.0), closest!!, 1e-9)
 
-        val intersection = e1.getIntersection(e2)
-        assertTrue(intersection.isPresent)
-        assertVectorClose(Vector3d.xyz(1.0, 1.0, 0.0), intersection.get(), 1e-9)
+        val intersection = e1.getIntersectionOrNull(e2)
+        assertNotNull(intersection)
+        assertVectorClose(Vector3d.xyz(1.0, 1.0, 0.0), intersection!!, 1e-9)
     }
 
     @Test
@@ -66,9 +66,30 @@ class EdgeApiTest {
             Vertex(Vector3d.xyz(-2.0, -1.0, 1.0), Vector3d.Z_ONE),
         )
 
-        val closest = base.getClosestPoint(other)
+        val closest = base.getClosestPointOrNull(other)
+        assertNotNull(closest)
+        assertVectorClose(Vector3d.xyz(0.0, 0.0, 0.0), closest!!, 1e-9)
+    }
+
+    @Test
+    @Suppress("DEPRECATION")
+    fun legacyJvmOptionalAccessorsRemainAvailable() {
+        val e1 = Edge(
+            Vertex(Vector3d.xyz(0.0, 0.0, 0.0), Vector3d.Z_ONE),
+            Vertex(Vector3d.xyz(2.0, 2.0, 0.0), Vector3d.Z_ONE),
+        )
+        val e2 = Edge(
+            Vertex(Vector3d.xyz(0.0, 2.0, 0.0), Vector3d.Z_ONE),
+            Vertex(Vector3d.xyz(2.0, 0.0, 0.0), Vector3d.Z_ONE),
+        )
+
+        val closest: java.util.Optional<Vector3d> = e1.getClosestPoint(e2)
         assertTrue(closest.isPresent)
-        assertVectorClose(Vector3d.xyz(0.0, 0.0, 0.0), closest.get(), 1e-9)
+        assertVectorClose(Vector3d.xyz(1.0, 1.0, 0.0), closest.get(), 1e-9)
+
+        val intersection: java.util.Optional<Vector3d> = e1.getIntersection(e2)
+        assertTrue(intersection.isPresent)
+        assertVectorClose(Vector3d.xyz(1.0, 1.0, 0.0), intersection.get(), 1e-9)
     }
 
     @Test

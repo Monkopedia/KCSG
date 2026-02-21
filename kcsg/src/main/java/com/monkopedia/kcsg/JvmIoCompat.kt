@@ -3,6 +3,7 @@
 package com.monkopedia.kcsg
 
 import java.io.InputStream
+import java.util.Optional
 import kotlinx.io.asInputStream
 import kotlinx.io.asSource
 import kotlinx.io.buffered
@@ -85,3 +86,19 @@ val ObjFile.objStream: InputStream
 )
 val ObjFile.mtlStream: InputStream
     get() = mtlSource.asInputStream()
+
+@Deprecated(
+    message = "Use getClosestPointOrNull",
+    replaceWith = ReplaceWith("getClosestPointOrNull(e)")
+)
+fun Edge.getClosestPoint(e: Edge): Optional<Vector3d> {
+    return Optional.ofNullable(getClosestPointOrNull(e))
+}
+
+@Deprecated(
+    message = "Use getIntersectionOrNull",
+    replaceWith = ReplaceWith("getIntersectionOrNull(e)")
+)
+fun Edge.getIntersection(e: Edge): Optional<Vector3d> {
+    return Optional.ofNullable(getIntersectionOrNull(e))
+}

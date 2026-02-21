@@ -29,7 +29,6 @@
  */
 package com.monkopedia.kcsg
 
-import java.io.IOException
 import kotlinx.io.buffered
 import kotlinx.io.files.FileSystem
 import kotlinx.io.files.Path
@@ -50,9 +49,8 @@ object FileUtil {
      * @param p file destination (existing files will be overwritten)
      * @param s string to save
      *
-    * @throws IOException if writing to file fails
+     * Throws when writing to file fails.
      */
-    @Throws(IOException::class)
     fun write(p: Path, s: String) {
         fileSystem.sink(p).buffered().use { sink ->
             sink.writeString(s)
@@ -65,9 +63,8 @@ object FileUtil {
      * @param p file to read
      * @return the content of the file
      *
-    * @throws IOException if reading from file failed
+     * Throws when reading from file fails.
      */
-    @Throws(IOException::class)
     fun read(p: Path): String {
         return fileSystem.source(p).buffered().use { source ->
             source.readString()
@@ -79,9 +76,8 @@ object FileUtil {
      *
      * @param path destination path
      * @param csg csg to save
-     * @throws java.io.IOException
+     * Throws when writing fails.
      */
-    @Throws(IOException::class)
     fun toStlFile(path: Path, csg: CSG) {
         fileSystem.sink(path).buffered().use { out ->
             out.writeString("solid v3d.csg\n")

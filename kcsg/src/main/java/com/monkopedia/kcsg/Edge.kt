@@ -34,7 +34,6 @@
 package com.monkopedia.kcsg
 
 import com.monkopedia.kcsg.ext.org.poly2tri.PolygonUtil
-import java.util.Optional
 import kotlin.math.abs
 import kotlin.math.sqrt
 
@@ -103,12 +102,12 @@ data class Edge(val p1: Vertex, val p2: Vertex) {
     /**
      * Returns the the point of this edge that is closest to the specified edge.
      *
-     * **NOTE:** returns an empty optional if the edges are parallel
+     * **NOTE:** returns `null` if the edges are parallel
      *
      * @param e the edge to check
      * @return the the point of this edge that is closest to the specified edge
      */
-    fun getClosestPoint(e: Edge): Optional<Vector3d> {
+    fun getClosestPointOrNull(e: Edge): Vector3d? {
 
         // algorithm from:
         // org.apache.commons.math3.geometry.euclidean.threed/Line.java.html
@@ -117,7 +116,7 @@ data class Edge(val p1: Vertex, val p2: Vertex) {
         val n = 1 - cos * cos
         if (n < Plane.EPSILON) {
             // the lines are parallel
-            return Optional.empty()
+            return null
         }
         val thisDelta = p2.pos.minus(p1.pos)
         val norm2This = thisDelta.magnitudeSq()
@@ -135,34 +134,32 @@ data class Edge(val p1: Vertex, val p2: Vertex) {
             if (closestP.minus(p1.pos).magnitudeSq()
                 < closestP.minus(p2.pos).magnitudeSq()
             ) {
-                Optional.of(p1.pos)
+                p1.pos
             } else {
-                Optional.of(p2.pos)
+                p2.pos
             }
-        } else Optional.of(closestP)
+        } else closestP
     }
 
     /**
      * Returns the intersection point between this edge and the specified edge.
      *
-     * **NOTE:** returns an empty optional if the edges are parallel or if
+     * **NOTE:** returns `null` if the edges are parallel or if
      * the intersection point is not inside the specified edge segment
      *
      * @param e edge to intersect
      * @return the intersection point between this edge and the specified edge
      */
-    fun getIntersection(e: Edge): Optional<Vector3d> {
-        val closestPOpt = getClosestPoint(e)
-        if (!closestPOpt.isPresent) {
+    fun getIntersectionOrNull(e: Edge): Vector3d? {
+        val closestP = getClosestPointOrNull(e) ?: run {
             // edges are parallel
-            return Optional.empty()
+            return null
         }
-        val closestP = closestPOpt.get()
         return if (e.contains(closestP)) {
-            closestPOpt
+            closestP
         } else {
             // intersection point outside of segment
-            Optional.empty()
+            null
         }
     }
 
