@@ -40,7 +40,7 @@ package com.monkopedia.kcsg
  * the front and/or back subtrees. This is not a leafy BSP tree since there is
  * no distinction between internal and leaf nodes.
  */
-internal class Node @JvmOverloads constructor(polygons: List<Polygon>? = null) {
+internal class Node constructor(polygons: List<Polygon>? = null) {
     /**
      * Polygons.
      */

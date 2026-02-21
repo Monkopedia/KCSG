@@ -34,10 +34,11 @@
  */
 package com.monkopedia.kcsg.ext.vvecmath
 
+import com.monkopedia.kcsg.toJvmString
+
 /**
  */
-@JvmInline
-internal value class Matrix4d(
+internal class Matrix4d(
     private val marr: DoubleArray = DoubleArray(16)
 ) {
     internal inline var m00: Double
@@ -124,7 +125,7 @@ internal value class Matrix4d(
     operator fun get(values: DoubleArray? = null): DoubleArray {
         return values?.also {
             marr.copyInto(values)
-        } ?: marr.clone()
+        } ?: marr.copyOf()
     }
 
     /**
@@ -199,5 +200,9 @@ internal value class Matrix4d(
         det += m02 * (m10 * m21 * m33 + m11 * m23 * m30 + m13 * m20 * m31 - m13 * m21 * m30 - m10 * m23 * m31 - m11 * m20 * m33)
         det -= m03 * (m10 * m21 * m32 + m11 * m22 * m30 + m12 * m20 * m31 - m12 * m21 * m30 - m10 * m22 * m31 - m11 * m20 * m32)
         return det
+    }
+
+    override fun toString(): String {
+        return marr.joinToString(prefix = "[", postfix = "]") { it.toJvmString() }
     }
 }

@@ -51,13 +51,10 @@ internal object VectorUtilInternal {
     }
 
     fun equals(thisV: Vector3d, obj: Any?): Boolean {
-        if (obj == null) {
+        if (obj !is Vector3d) {
             return false
         }
-        if (thisV.javaClass !== obj.javaClass) {
-            return false
-        }
-        val other: Vector3d = obj as Vector3d
+        val other: Vector3d = obj
         if (abs(thisV.x - other.x) > Plane.TOL) {
             return false
         }
@@ -71,26 +68,20 @@ internal object VectorUtilInternal {
         var hash = 7
         hash =
             67 * hash + (
-            java.lang.Double.doubleToLongBits(v.x) xor (
-                java.lang.Double.doubleToLongBits(
-                    v.x
-                ) ushr 32
+            v.x.toBits() xor (
+                v.x.toBits() ushr 32
                 )
             ).toInt()
         hash =
             67 * hash + (
-            java.lang.Double.doubleToLongBits(v.y) xor (
-                java.lang.Double.doubleToLongBits(
-                    v.y
-                ) ushr 32
+            v.y.toBits() xor (
+                v.y.toBits() ushr 32
                 )
             ).toInt()
         hash =
             67 * hash + (
-            java.lang.Double.doubleToLongBits(v.z) xor (
-                java.lang.Double.doubleToLongBits(
-                    v.z
-                ) ushr 32
+            v.z.toBits() xor (
+                v.z.toBits() ushr 32
                 )
             ).toInt()
         return hash

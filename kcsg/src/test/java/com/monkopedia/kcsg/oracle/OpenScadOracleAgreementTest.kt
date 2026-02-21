@@ -3,10 +3,12 @@ package com.monkopedia.kcsg.oracle
 import com.monkopedia.kcsg.CSG
 import com.monkopedia.kcsg.Cube
 import com.monkopedia.kcsg.Cylinder
+import com.monkopedia.kcsg.Extrude
 import com.monkopedia.kcsg.Sphere
 import com.monkopedia.kcsg.STL
 import com.monkopedia.kcsg.Transform
 import com.monkopedia.kcsg.Vector3d
+import com.monkopedia.kcsg.ext.vvecmath.Plane
 import com.monkopedia.kcsg.testutil.GeometryAssertions.assertBoundsClose
 import com.monkopedia.kcsg.testutil.GeometryAssertions.assertFiniteMesh
 import com.monkopedia.kcsg.testutil.GeometryAssertions.assertVolumeClose
@@ -34,7 +36,11 @@ class OpenScadOracleAgreementTest {
         OracleScenario("edge_tangent_union", 0.01, 0.01, ::edgeTangentUnion),
         OracleScenario("vertex_tangent_union", 0.01, 0.01, ::vertexTangentUnion),
         OracleScenario("offset_cylinder_union", 0.08, 0.03, ::offsetCylinderUnion),
-        OracleScenario("many_reductions_union", 0.10, 0.05, ::manyReductionsUnion)
+        OracleScenario("many_reductions_union", 0.10, 0.05, ::manyReductionsUnion),
+        OracleScenario("transformed_union_chain", 0.08, 0.03, ::transformedUnionChain),
+        OracleScenario("hull_tripod", 0.08, 0.03, ::hullTripod),
+        OracleScenario("extrude_profile_difference", 0.08, 0.03, ::extrudeProfileDifference),
+        OracleScenario("mirrored_intersection", 0.08, 0.03, ::mirroredIntersection)
     )
 
     @Before
@@ -153,6 +159,58 @@ class OpenScadOracleAgreementTest {
         }
 
         return parts.reduce { acc, csg -> acc.union(csg) }
+    }
+
+    private fun transformedUnionChain(): CSG {
+        val transformedCube = Cube(
+            center = Vector3d.ZERO,
+            dimensions = Vector3d.xyz(1.8, 1.2, 0.9)
+        ).toCSG()
+            .transformed(Transform.unity().scale(1.2, 0.8, 1.1))
+            .transformed(Transform.unity().rotZ(32.0))
+            .transformed(Transform.unity().translate(0.45, -0.3, 0.2))
+
+        val rotatedCylinder = centeredCylinder(0.0, 0.0, 0.0, 2.2, 0.35)
+            .transformed(Transform.unity().rotY(90.0))
+            .transformed(Transform.unity().translate(-0.35, 0.45, -0.25))
+
+        return transformedCube.union(rotatedCylinder)
+    }
+
+    private fun hullTripod(): CSG {
+        return centeredCylinder(-1.1, 0.0, 0.0, 1.2, 0.35).hull(
+            centeredCylinder(1.1, 0.0, 0.0, 1.2, 0.35),
+            centeredCylinder(0.0, 1.2, 0.2, 1.2, 0.35)
+        )
+    }
+
+    private fun extrudeProfileDifference(): CSG {
+        val body = Extrude.points(
+            dir = Vector3d.xyz(0.0, 0.0, 1.6),
+            points = listOf(
+                Vector3d.xyz(-1.2, -0.4, 0.0),
+                Vector3d.xyz(1.0, -0.7, 0.0),
+                Vector3d.xyz(1.3, 0.3, 0.0),
+                Vector3d.xyz(0.1, 1.0, 0.0),
+                Vector3d.xyz(-1.0, 0.7, 0.0)
+            )
+        )
+        val cutout = Cylinder(0.35, 1.8, 32).toCSG().transformed(
+            Transform.unity().translate(0.2, 0.1, -0.1)
+        )
+        return body.difference(cutout)
+    }
+
+    private fun mirroredIntersection(): CSG {
+        val base = Cube(
+            center = Vector3d.ZERO,
+            dimensions = Vector3d.xyz(1.2, 1.6, 1.0)
+        ).toCSG()
+        val left = base.transformed(Transform.unity().translate(0.6, 0.0, 0.0))
+        val right = base.transformed(Transform.unity().translate(0.6, 0.35, 0.0))
+            .transformed(Transform.unity().mirror(Plane.XZ_PLANE))
+        val union = left.union(right)
+        return union.intersect(sphere(0.15, 0.0, 0.0, 1.1))
     }
 
     private fun cube(x: Double, y: Double, z: Double, size: Double): CSG {

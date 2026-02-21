@@ -171,7 +171,7 @@ internal class DelaunayTriangle(
      * @return
      */
     fun oppositePoint(t: DelaunayTriangle, p: TriangulationPoint): TriangulationPoint {
-        assert(t !== this) { "self-pointer error" }
+        check(t !== this) { "self-pointer error" }
         return pointCW(t.pointCW(p))
     }
 

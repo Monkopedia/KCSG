@@ -96,6 +96,7 @@ class Polygon {
      * @param shared shared property
      */
     constructor(vertices: List<Vertex>, shared: PropertyStorage?) {
+        requireMinimumVertexCount(vertices)
         this._vertices = vertices.toMutableList()
         this.shared = shared
         csgPlane = Plane.createFromPoints(
@@ -120,14 +121,8 @@ class Polygon {
                     ${toStlString()}
                 """.trimIndent()
             )
-            //            throw new RuntimeException(
+//            throw new RuntimeException(
 //                    "Normal is zero! Probably, duplicate points have been specified!\n\n"+toStlString());
-        }
-        if (vertices.size < 3) {
-            throw RuntimeException(
-                "Invalid polygon: at least 3 vertices expected, got: " +
-                    vertices.size
-            )
         }
     }
 
@@ -141,6 +136,7 @@ class Polygon {
      * @param vertices polygon vertices
      */
     constructor(vertices: List<Vertex>) {
+        requireMinimumVertexCount(vertices)
         this._vertices = vertices.toMutableList()
         csgPlane = Plane.createFromPoints(
             vertices[0].pos,
@@ -161,6 +157,15 @@ class Polygon {
      * @param vertices polygon vertices
      */
     constructor(vararg vertices: Vertex) : this(listOf<Vertex>(*vertices))
+
+    private fun requireMinimumVertexCount(vertices: List<Vertex>) {
+        if (vertices.size < 3) {
+            throw RuntimeException(
+                "Invalid polygon: at least 3 vertices expected, got: " +
+                    vertices.size
+            )
+        }
+    }
 
     fun copy(): Polygon {
         val newVertices: MutableList<Vertex> = ArrayList()
@@ -670,6 +675,7 @@ class Polygon {
             points: List<Vector3d>,
             shared: PropertyStorage?
         ): Polygon {
+            requireMinimumPointCount(points)
             var normal = Plane.createFromPoints(
                 points[0],
                 points[1],
@@ -682,6 +688,15 @@ class Polygon {
                 vertices.add(vertex)
             }
             return Polygon(vertices, shared)
+        }
+
+        private fun requireMinimumPointCount(points: List<Vector3d>) {
+            if (points.size < 3) {
+                throw RuntimeException(
+                    "Invalid polygon: at least 3 vertices expected, got: " +
+                        points.size
+                )
+            }
         }
     }
 }

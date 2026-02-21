@@ -141,13 +141,9 @@ data class Vertex(
     }
 
     override fun equals(other: Any?): Boolean {
-        if (other == null) {
+        if (other !is Vertex) {
             return false
         }
-        if (javaClass != other.javaClass) {
-            return false
-        }
-        val other = other as Vertex
         return pos == other.pos
     }
 

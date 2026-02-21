@@ -59,6 +59,10 @@ declare -a SCENARIOS=(
     "vertex_tangent_union"
     "offset_cylinder_union"
     "many_reductions_union"
+    "transformed_union_chain"
+    "hull_tripod"
+    "extrude_profile_difference"
+    "mirrored_intersection"
 )
 
 rm -rf "$OUTPUT_DIR"

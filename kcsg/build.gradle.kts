@@ -1,12 +1,11 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.gradle.api.tasks.Exec
 import org.gradle.api.tasks.testing.Test
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
+import org.jetbrains.kotlin.gradle.targets.jvm.KotlinJvmTarget
 
 plugins {
-    id("java")
-    alias(libs.plugins.javafx)
-    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.kover)
     alias(libs.plugins.vannik.publish)
     signing
@@ -15,40 +14,82 @@ plugins {
 group = "com.monkopedia"
 description = "Kotlin port of the JCSG library"
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-}
-
-javafx {
-    modules = listOf("javafx.graphics", "javafx.fxml")
-}
-
 repositories {
     mavenCentral()
 
     mavenLocal()
 }
 
-dependencies {
-    testImplementation(group = "junit", name = "junit", version = "4.13.2")
+@OptIn(ExperimentalWasmDsl::class)
+kotlin {
+    jvmToolchain(8)
 
-    implementation(libs.kotlinx.io.core)
-    implementation(kotlin("stdlib-jdk8"))
-}
+    jvm {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_1_8)
+        }
+        testRuns.named("test") {
+            executionTask.configure {
+                useJUnit()
+                exclude("com/monkopedia/kcsg/oracle/**")
+            }
+        }
+    }
 
-val compileKotlin: KotlinCompile by tasks
-compileKotlin.compilerOptions {
-    jvmTarget.set(JvmTarget.JVM_1_8)
-}
-val compileTestKotlin: KotlinCompile by tasks
-compileTestKotlin.compilerOptions {
-    jvmTarget.set(JvmTarget.JVM_1_8)
-}
+    js(IR) {
+        browser()
+        nodejs()
+    }
+    wasmJs {
+        browser()
+        nodejs()
+    }
+    wasmWasi {
+        nodejs()
+    }
 
-tasks.named<Test>("test") {
-    useJUnit()
-    exclude("com/monkopedia/kcsg/samples/**")
-    exclude("com/monkopedia/kcsg/oracle/**")
+    linuxX64()
+    linuxArm64()
+    mingwX64()
+    macosX64()
+    macosArm64()
+    iosX64()
+    iosArm64()
+    iosSimulatorArm64()
+    tvosX64()
+    tvosArm64()
+    tvosSimulatorArm64()
+    watchosX64()
+    watchosArm32()
+    watchosArm64()
+    watchosSimulatorArm64()
+
+    sourceSets {
+        val commonMain by getting {
+            kotlin.srcDir("src/main/java")
+            dependencies {
+                implementation(libs.kotlinx.io.core)
+            }
+        }
+        val commonTest by getting {
+            dependencies {
+                implementation(kotlin("test"))
+            }
+        }
+        val jvmMain by getting {
+            kotlin.srcDir("src/jvmMain/kotlin")
+            dependencies {
+                implementation(kotlin("stdlib-jdk8"))
+            }
+        }
+        val jvmTest by getting {
+            kotlin.srcDir("src/test/java")
+            dependencies {
+                implementation(kotlin("test-junit"))
+                implementation("junit:junit:4.13.2")
+            }
+        }
+    }
 }
 
 val oracleGenerateFixtures by tasks.registering(Exec::class) {
@@ -64,27 +105,29 @@ val oracleGenerateFixtures by tasks.registering(Exec::class) {
     )
 }
 
-tasks.register<Test>("oracleTest") {
+val jvmTarget = kotlin.targets.getByName("jvm") as KotlinJvmTarget
+
+val jvmOracleTest = jvmTarget.testRuns.create("oracle") {
+    executionTask.configure {
+        useJUnit()
+        val oracleQuick = providers.gradleProperty("kcsg.oracle.quick").getOrElse("false")
+        systemProperty("kcsg.oracle.quick", oracleQuick)
+        include("com/monkopedia/kcsg/oracle/**")
+        dependsOn(oracleGenerateFixtures)
+        shouldRunAfter(tasks.named("jvmTest"))
+    }
+}.executionTask
+
+tasks.register("oracleTest") {
     description = "Runs oracle agreement tests against generated OpenSCAD fixtures."
     group = "verification"
-    useJUnit()
-    val oracleQuick = providers.gradleProperty("kcsg.oracle.quick").getOrElse("false")
-    systemProperty("kcsg.oracle.quick", oracleQuick)
-    testClassesDirs = sourceSets.test.get().output.classesDirs
-    classpath = sourceSets.test.get().runtimeClasspath
-    include("com/monkopedia/kcsg/oracle/**")
-    dependsOn(oracleGenerateFixtures)
-    shouldRunAfter(tasks.named("test"))
+    dependsOn(jvmOracleTest)
 }
 
-tasks.register<Test>("sampleTest") {
-    description = "Runs sample model integration tests."
+tasks.register("test") {
+    description = "Runs JVM unit/regression tests (excluding oracle suite)."
     group = "verification"
-    useJUnit()
-    testClassesDirs = sourceSets.test.get().output.classesDirs
-    classpath = sourceSets.test.get().runtimeClasspath
-    include("com/monkopedia/kcsg/samples/**")
-    shouldRunAfter(tasks.named("test"))
+    dependsOn(tasks.named("jvmTest"))
 }
 
 mavenPublishing {
@@ -122,11 +165,6 @@ signing {
 }
 
 kover {
-    currentProject {
-        instrumentation {
-            disabledForTestTasks.add("sampleTest")
-        }
-    }
     reports {
         verify {
             rule("baseline-line-coverage") {

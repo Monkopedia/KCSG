@@ -33,6 +33,7 @@
  */
 package com.monkopedia.kcsg
 
+import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.sin
@@ -168,7 +169,7 @@ data class Cylinder(
         slice: Double,
         normalBlend: Double
     ): Vertex {
-        val angle = slice * Math.PI * 2
+        val angle = slice * PI * 2
         val out = axisX.times(cos(angle)).plus(axisY.times(sin(angle)))
         val pos = s.plus(ray.times(stack)).plus(out.times(r))
         val normal = out.times(1.0 - abs(normalBlend)).plus(axisZ.times(normalBlend))

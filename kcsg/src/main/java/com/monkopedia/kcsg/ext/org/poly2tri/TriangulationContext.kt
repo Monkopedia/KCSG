@@ -59,7 +59,7 @@ package com.monkopedia.kcsg.ext.org.poly2tri
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-internal abstract class TriangulationContext<A : TriangulationDebugContext?> : Object() {
+internal abstract class TriangulationContext<A : TriangulationDebugContext?> {
     var debugContext: A? = null
         protected set
     var isDebugEnabled = false
@@ -97,27 +97,10 @@ internal abstract class TriangulationContext<A : TriangulationDebugContext?> : O
     val points: List<TriangulationPoint>
         get() = mutablePoints
 
-    @Synchronized
     fun update(message: String?) {
         if (isDebugEnabled) {
-            try {
-                synchronized(this) {
-                    stepCount++
-                    if (_stepTime > 0) {
-                        wait(_stepTime.toLong())
-                        /** Can we resume execution or are we expected to wait?  */
-                        if (_waitUntilNotified) {
-                            wait()
-                        }
-                    } else {
-                        wait()
-                    }
-                    // We have been notified
-                    _waitUntilNotified = false
-                }
-            } catch (e: InterruptedException) {
-                update("Triangulation was interrupted")
-            }
+            stepCount++
+            _waitUntilNotified = false
         }
         if (_terminated) {
             throw RuntimeException("Triangulation process terminated before completion")
@@ -133,7 +116,6 @@ internal abstract class TriangulationContext<A : TriangulationDebugContext?> : O
         stepCount = 0
     }
 
-    @Synchronized
     fun waitUntilNotified(b: Boolean) {
         _waitUntilNotified = b
     }

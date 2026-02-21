@@ -70,6 +70,9 @@ internal object PolygonUtil {
     fun concaveToConvex(
         concave: com.monkopedia.kcsg.Polygon
     ): List<com.monkopedia.kcsg.Polygon> {
+        require(concave.vertices.size >= 3) {
+            "Polygon requires at least 3 vertices, got ${concave.vertices.size}"
+        }
         val result: MutableList<com.monkopedia.kcsg.Polygon> = ArrayList()
         val normal = concave.vertices[0].normal.copy()
         val cw: Boolean = !Extrude.isCCW(concave)

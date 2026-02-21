@@ -97,11 +97,17 @@ internal class Polygon : Triangulatable {
      * No duplicates are allowed
      */
     constructor(points: MutableList<PolygonPoint>) {
+        require(points.size >= 3) {
+            "Polygon requires at least 3 points, got ${points.size}"
+        }
         // Lets do one sanity check that first and last point hasn't got same position
         // Its something that often happen when importing polygon data from other formats
         if (points[0] == points[points.size - 1]) {
             logger.warn("Removed duplicate point")
             points.removeAt(points.size - 1)
+        }
+        require(points.size >= 3) {
+            "Polygon requires at least 3 points, got ${points.size}"
         }
         _points.addAll(points)
     }

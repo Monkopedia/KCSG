@@ -33,6 +33,10 @@
  */
 package com.monkopedia.kcsg
 
+import kotlin.math.PI
+import kotlin.math.cos
+import kotlin.math.sin
+
 /**
  * A solid sphere.
  *
@@ -66,12 +70,12 @@ data class Sphere(
     private fun sphereVertex(c: Vector3d, r: Double, theta: Double, phi: Double): Vertex {
         var theta = theta
         var phi = phi
-        theta *= Math.PI * 2
-        phi *= Math.PI
+        theta *= PI * 2
+        phi *= PI
         val dir = Vector3d.xyz(
-            kotlin.math.cos(theta) * kotlin.math.sin(phi),
-            kotlin.math.cos(phi),
-            kotlin.math.sin(theta) * kotlin.math.sin(phi)
+            cos(theta) * sin(phi),
+            cos(phi),
+            sin(theta) * sin(phi)
         )
         return Vertex(c.plus(dir.times(r)), dir)
     }

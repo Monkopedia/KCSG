@@ -103,8 +103,8 @@ internal open class TriangulationPoint(val vec: Vector3d) {
     }
 
     override fun hashCode(): Int {
-        var bits = java.lang.Double.doubleToLongBits(vec.x)
-        bits = bits xor java.lang.Double.doubleToLongBits(vec.y) * 31
+        var bits = vec.x.toBits()
+        bits = bits xor vec.y.toBits() * 31
         return bits.toInt() xor (bits shr 32).toInt()
     }
 }

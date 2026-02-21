@@ -1,10 +1,8 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 
 plugins {
-    id("java")
-    alias(libs.plugins.javafx)
-    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.kover)
     alias(libs.plugins.vannik.publish)
     signing
@@ -13,36 +11,87 @@ plugins {
 group = "com.monkopedia"
 description = "DSL wrappers and utilities for KCSG"
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-}
-
-javafx {
-    modules = listOf("javafx.graphics", "javafx.fxml")
-}
-
 repositories {
     mavenCentral()
 
     mavenLocal()
 }
 
-dependencies {
-    implementation(project(":kcsg"))
+@OptIn(ExperimentalWasmDsl::class)
+kotlin {
+    jvmToolchain(8)
 
-    testImplementation(group = "junit", name = "junit", version = "4.13.2")
+    jvm {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_1_8)
+        }
+        testRuns.named("test") {
+            executionTask.configure {
+                useJUnit()
+            }
+        }
+    }
 
-    implementation(libs.kotlinx.io.core)
-    implementation(kotlin("stdlib-jdk8"))
+    js(IR) {
+        browser()
+        nodejs()
+    }
+    wasmJs {
+        browser()
+        nodejs()
+    }
+    wasmWasi {
+        nodejs()
+    }
+
+    linuxX64()
+    linuxArm64()
+    mingwX64()
+    macosX64()
+    macosArm64()
+    iosX64()
+    iosArm64()
+    iosSimulatorArm64()
+    tvosX64()
+    tvosArm64()
+    tvosSimulatorArm64()
+    watchosX64()
+    watchosArm32()
+    watchosArm64()
+    watchosSimulatorArm64()
+
+    sourceSets {
+        val commonMain by getting {
+            kotlin.srcDir("src/main/java")
+            dependencies {
+                implementation(project(":kcsg"))
+                implementation(libs.kotlinx.io.core)
+            }
+        }
+        val commonTest by getting {
+            dependencies {
+                implementation(kotlin("test"))
+            }
+        }
+        val jvmMain by getting {
+            dependencies {
+                implementation(kotlin("stdlib-jdk8"))
+            }
+        }
+        val jvmTest by getting {
+            kotlin.srcDir("src/test/java")
+            dependencies {
+                implementation(kotlin("test-junit"))
+                implementation("junit:junit:4.13.2")
+            }
+        }
+    }
 }
 
-val compileKotlin: KotlinCompile by tasks
-compileKotlin.compilerOptions {
-    jvmTarget.set(JvmTarget.JVM_1_8)
-}
-val compileTestKotlin: KotlinCompile by tasks
-compileTestKotlin.compilerOptions {
-    jvmTarget.set(JvmTarget.JVM_1_8)
+tasks.register("test") {
+    description = "Runs JVM tests for kcsg-dsl."
+    group = "verification"
+    dependsOn(tasks.named("jvmTest"))
 }
 
 mavenPublishing {

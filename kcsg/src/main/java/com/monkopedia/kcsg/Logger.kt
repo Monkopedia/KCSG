@@ -37,7 +37,6 @@ interface Logger {
     }
 
     companion object : Logger {
-        @Volatile
         private var delegate: Logger? = null
 
         fun setLogger(logger: Logger?) {

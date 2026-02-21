@@ -57,7 +57,6 @@ data class Edge(val p1: Vertex, val p2: Vertex) {
      * @return `true` if the specified point lies on this line
      * segment; `false` otherwise
      */
-    @JvmOverloads
     fun contains(p: Vector3d, TOL: Double = Plane.EPSILON): Boolean {
         val x = p.x
         val x1 = p1.pos.x
@@ -82,13 +81,10 @@ data class Edge(val p1: Vertex, val p2: Vertex) {
     }
 
     override fun equals(obj: Any?): Boolean {
-        if (obj == null) {
+        if (obj !is Edge) {
             return false
         }
-        if (javaClass != obj.javaClass) {
-            return false
-        }
-        val other = obj as Edge
+        val other = obj
         if (!(p1 == other.p1 || p2 == other.p1)) {
             return false
         }
@@ -206,6 +202,7 @@ data class Edge(val p1: Vertex, val p2: Vertex) {
         }
 
         fun toPolygons(boundaryEdges: List<Edge>, plane: Plane): List<Polygon> {
+            require(boundaryEdges.isNotEmpty()) { "boundaryEdges must not be empty" }
             val boundaryPath: MutableList<Vector3d> = ArrayList()
             val used = BooleanArray(boundaryEdges.size)
             var edge = boundaryEdges[0]
@@ -215,6 +212,9 @@ data class Edge(val p1: Vertex, val p2: Vertex) {
                 boundaryPath.add(finalEdge.p1.pos)
                 val nextEdgeIndex = boundaryEdges.indexOfFirst { e: Edge ->
                     finalEdge.p2 == e.p1
+                }
+                require(nextEdgeIndex >= 0) {
+                    "Boundary edges do not form a closed path."
                 }
                 if (used[nextEdgeIndex]) {
 //                logger.info("nexIndex: " + nextEdgeIndex);
@@ -233,7 +233,6 @@ data class Edge(val p1: Vertex, val p2: Vertex) {
 
         const val KEY_POLYGON_HOLES = "jcsg:edge:polygon-holes"
 
-        @kotlin.jvm.JvmStatic
         fun boundaryPathsWithHoles(boundaryPaths: List<Polygon>): List<Polygon> {
             val result = boundaryPaths.map { p: Polygon -> p.copy() }
             val parents: MutableList<List<Int>> = ArrayList()
@@ -350,6 +349,7 @@ data class Edge(val p1: Vertex, val p2: Vertex) {
         }
 
         fun polygons(boundaryEdges: List<Edge>, plane: Plane): List<Polygon> {
+            require(boundaryEdges.isNotEmpty()) { "boundaryEdges must not be empty" }
             val boundaryPath: MutableList<Vector3d> = ArrayList()
             val used = BooleanArray(boundaryEdges.size)
             var edge = boundaryEdges[0]
@@ -358,6 +358,9 @@ data class Edge(val p1: Vertex, val p2: Vertex) {
                 val finalEdge = edge
                 boundaryPath.add(finalEdge.p1.pos)
                 val nextEdgeIndex = boundaryEdges.indexOfFirst { e: Edge -> finalEdge.p2 == e.p1 }
+                require(nextEdgeIndex >= 0) {
+                    "Boundary edges do not form a closed path."
+                }
                 if (used[nextEdgeIndex]) {
 //                logger.info("nexIndex: " + nextEdgeIndex);
                     break

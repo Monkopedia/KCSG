@@ -1,0 +1,95 @@
+package com.monkopedia.kcsg
+
+import com.monkopedia.kcsg.testutil.RecordingOpOverride
+import kotlin.test.assertEquals
+import kotlin.test.assertSame
+import kotlin.test.assertTrue
+import kotlin.test.Test
+import kotlinx.io.Buffer
+import kotlinx.io.writeString
+
+class OpOverrideContractTest {
+    @Test
+    fun overrideDispatchesAcrossCsgStlBoundsAndPrimitiveEntrypoints() {
+        val base = Cube(1.0).toCSG()
+        val other = Cube(center = Vector3d.xyz(2.0, 0.0, 0.0), dimensions = Vector3d.xyz(1.0, 1.0, 1.0)).toCSG()
+        val primitive = object : Primitive {
+            override fun toPolygons(): List<Polygon> = listOf(
+                Polygon.fromPoints(
+                    Vector3d.xyz(0.0, 0.0, 0.0),
+                    Vector3d.xyz(1.0, 0.0, 0.0),
+                    Vector3d.xyz(0.0, 1.0, 0.0),
+                ),
+            )
+
+            override fun getProperties(): PropertyStorage = PropertyStorage()
+        }
+
+        val unionSentinel = emptyCsg()
+        val remeshSentinel = emptyCsg()
+        val boundsToCsgSentinel = emptyCsg()
+        val primitiveToCsgSentinel = emptyCsg()
+        val stlStreamSentinel = emptyCsg()
+        val expectedBounds = Bounds(
+            min = Vector3d.xyz(-10.0, -10.0, -10.0),
+            max = Vector3d.xyz(10.0, 10.0, 10.0),
+        )
+        val expectedVolume = 123.0
+
+        val override = RecordingOpOverride(
+            operationResult = { name, _ ->
+                when (name) {
+                    "union" -> unionSentinel
+                    "remesh" -> remeshSentinel
+                    "boundsToCSG" -> boundsToCsgSentinel
+                    "toCSG" -> primitiveToCsgSentinel
+                    else -> null
+                }
+            },
+            boundsResult = { name, _ ->
+                if (name == "bounds") expectedBounds else null
+            },
+            doubleResult = { name, _ ->
+                if (name == "volume") expectedVolume else null
+            },
+            sourceResult = { stlStreamSentinel },
+        )
+
+        val previous = CSG.opOverride
+        try {
+            CSG.opOverride = override
+
+            assertSame(unionSentinel, base.union(other))
+            assertSame(remeshSentinel, base.remesh())
+            assertEquals(expectedBounds, base.bounds)
+            assertEquals(expectedVolume, base.computeVolume(), 0.0)
+            assertSame(boundsToCsgSentinel, Bounds(Vector3d.ZERO, Vector3d.UNITY).toCSG())
+            assertSame(primitiveToCsgSentinel, primitive.toCSG())
+            assertSame(
+                stlStreamSentinel,
+                STL.from(
+                    sourceFactory = {
+                        Buffer().apply {
+                            writeString("abc")
+                        }
+                    },
+                    length = { 3L },
+                ),
+            )
+
+            assertTrue(override.operationCalls.any { it.first == "union" })
+            assertTrue(override.operationCalls.any { it.first == "remesh" })
+            assertTrue(override.operationCalls.any { it.first == "boundsToCSG" })
+            assertTrue(override.operationCalls.any { it.first == "toCSG" })
+            assertTrue(override.boundsCalls.any { it.first == "bounds" })
+            assertTrue(override.doubleCalls.any { it.first == "volume" })
+            assertEquals(1, override.sourceCalls.size)
+        } finally {
+            CSG.opOverride = previous
+        }
+    }
+
+    private fun emptyCsg(): CSG {
+        return CSG.withOverride(null) { CSG.fromPolygons() }
+    }
+}

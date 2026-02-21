@@ -12,12 +12,10 @@
   * software.
   */
 package com.monkopedia.kcsg.ext.quickhull3d
-
 import com.monkopedia.kcsg.Vector3d
 import com.monkopedia.kcsg.Vector3d.Companion.ZERO
 import kotlin.math.abs
 import kotlin.math.sqrt
-
 /**
  * Basic triangular face used to form the hull.
  *
@@ -39,7 +37,6 @@ internal class Face {
     var next: Face? = null
     var mark = VISIBLE
     var outside: Vertex? = null
-
     private fun computeCentroid(): Point3d {
         var centroid = Vector3d.ZERO
         var he = he0
@@ -49,7 +46,6 @@ internal class Face {
         } while (he !== he0)
         return centroid * (1 / numVerts.toDouble())
     }
-
     private fun computeNormal(minArea: Double): Vector3d {
         var normal = computeNormal()
         if (area < minArea) {
@@ -81,7 +77,6 @@ internal class Face {
         }
         return normal
     }
-
     private fun computeNormal(): Vector3d {
         var he1 = he0!!.next
         var he2 = he1!!.next
@@ -112,7 +107,6 @@ internal class Face {
         area = normal.magnitude()
         return normal * (1 / area)
     }
-
     private fun computeNormalAndCentroid() {
         normal = computeNormal()
         centroid = computeCentroid()
@@ -129,13 +123,11 @@ internal class Face {
             )
         }
     }
-
     private fun computeNormalAndCentroid(minArea: Double) {
         normal = computeNormal(minArea)
         centroid = computeCentroid()
         planeOffset = normal.dot(centroid)
     }
-
     /**
      * Gets the i-th half-edge associated with the face.
      *
@@ -155,12 +147,10 @@ internal class Face {
         }
         return he
     }
-
     val firstEdge: HalfEdge?
         get() {
             return he0
         }
-
     /**
      * Finds the half-edge within this face which has
      * tail `vt` and head `vh`.
@@ -179,7 +169,6 @@ internal class Face {
         } while (he !== he0)
         return null
     }
-
     /**
      * Computes the distance from a point p to the plane of
      * this face.
@@ -190,11 +179,9 @@ internal class Face {
     fun distanceToPlane(p: Point3d?): Double {
         return normal.x * p!!.x + normal.y * p.y + normal.z * p.z - planeOffset
     }
-
     fun numVertices(): Int {
         return numVerts
     }
-
     val vertexString: String?
         get() {
             var s: String? = null
@@ -209,7 +196,6 @@ internal class Face {
             } while (he !== he0)
             return s
         }
-
     fun getVertexIndices(idxs: IntArray) {
         var he = he0
         var i = 0
@@ -218,7 +204,6 @@ internal class Face {
             he = he.next
         } while (he !== he0)
     }
-
     private fun connectHalfEdges(
         hedgePrev: HalfEdge?,
         hedge: HalfEdge?
@@ -246,7 +231,6 @@ internal class Face {
             hedge.prev!!.next = hedge
             hedge.opposite = hedgeOpp
             hedgeOpp!!.opposite = hedge
-
             // oppFace was modified, so need to recompute
             oppFace.computeNormalAndCentroid()
         } else {
@@ -255,7 +239,6 @@ internal class Face {
         }
         return discardedFace
     }
-
     fun checkConsistency() {
         // do a sanity check on the face
         var hedge = he0
@@ -316,7 +299,6 @@ internal class Face {
             )
         }
     }
-
     fun mergeAdjacentFace(
         hedgeAdj: HalfEdge,
         discarded: Array<Face?>
@@ -347,13 +329,11 @@ internal class Face {
         if (hedgeAdj === he0) {
             he0 = hedgeAdjNext
         }
-
         // handle the half edges at the head
         var discardedFace: Face? = connectHalfEdges(hedgeOppPrev, hedgeAdjNext)
         if (discardedFace != null) {
             discarded[numDiscarded++] = discardedFace
         }
-
         // handle the half edges at the tail
         discardedFace = connectHalfEdges(hedgeAdjPrev, hedgeOppNext)
         if (discardedFace != null) {
@@ -363,7 +343,6 @@ internal class Face {
         checkConsistency()
         return numDiscarded
     }
-
     private fun areaSquared(hedge0: HalfEdge, hedge1: HalfEdge): Double {
         // return the squared area of the triangle defined
         // by the half edge hedge0 and the point at the
@@ -382,7 +361,6 @@ internal class Face {
         val z = dx1 * dy2 - dy1 * dx2
         return x * x + y * y + z * z
     }
-
     fun triangulate(newFaces: FaceList, minArea: Double) {
         var hedge: HalfEdge?
         if (numVertices() < 4) {
@@ -419,12 +397,10 @@ internal class Face {
             face = face.next
         }
     }
-
     companion object {
         const val VISIBLE = 1
         const val NON_CONVEX = 2
         const val DELETED = 3
-
         /**
          * Constructs a triangule Face from vertices v0, v1, and v2.
          *
@@ -432,7 +408,6 @@ internal class Face {
          * @param v1 second vertex
          * @param v2 third vertex
          */
-        @JvmOverloads
         fun createTriangle(
             v0: Vertex,
             v1: Vertex,
@@ -450,12 +425,10 @@ internal class Face {
             he2.prev = he1
             he2.next = he0
             face.he0 = he0
-
             // compute the normal and offset
             face.computeNormalAndCentroid(minArea)
             return face
         }
-
         fun create(vtxArray: Array<Vertex>, indices: IntArray): Face {
             val face = Face()
             var hePrev: HalfEdge? = null
@@ -471,13 +444,11 @@ internal class Face {
             }
             face.he0!!.prev = (hePrev)
             hePrev!!.next = (face.he0)
-
             // compute the normal and offset
             face.computeNormalAndCentroid()
             return face
         }
     }
-
     init {
         mark = VISIBLE
     }

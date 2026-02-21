@@ -40,6 +40,7 @@ import kotlin.math.abs
 import kotlin.math.acos
 import kotlin.math.max
 import kotlin.math.min
+import kotlin.math.PI
 import kotlin.math.sqrt
 
 /**
@@ -258,7 +259,7 @@ data class Vector3d
                 min(`val`, 1.0),
                 -1.0
             )
-        ) * 180.0 / Math.PI // compensate rounding errors
+        ) * 180.0 / PI // compensate rounding errors
     }
 
     /**

@@ -11,16 +11,13 @@
  * software.
  */
 @file:Suppress("ControlFlowWithEmptyBody")
-
 package com.monkopedia.kcsg.ext.quickhull3d
-
 import com.monkopedia.kcsg.Logger
 import com.monkopedia.kcsg.Vector3d
 import com.monkopedia.kcsg.ext.quickhull3d.Face.Companion.createTriangle
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.sqrt
-
 /**
  * Computes the convex hull of a set of three dimensional points.
  *
@@ -114,11 +111,10 @@ import kotlin.math.sqrt
  */
 internal class QuickHull3D {
     private var findIndex = -1
-
     // estimated size of the point set
     private var charLength = 0.0
     private var pointBuffer = emptyArray<Vertex>()
-    private var vertexPointIndices = IntArray(0)
+    private var vertexPointIndexBuffer = IntArray(0)
     private val discardedFaces = arrayOfNulls<Face>(3)
     private val maxVtxs = arrayOfNulls<Vertex>(3)
     private val minVtxs = arrayOfNulls<Vertex>(3)
@@ -128,11 +124,10 @@ internal class QuickHull3D {
     private val unclaimed = VertexList()
     private val claimed = VertexList()
     private var numVertices = 0
-    private var numFaces = 0
+    private var faceCountInternal = 0
     private var numPoints = 0
     private var explicitTolerance = AUTOMATIC_TOLERANCE
     private var tolerance = 0.0
-
     /**
      * Returns the distance tolerance that was used for the most recently
      * computed hull. The distance tolerance is used to determine when
@@ -149,7 +144,6 @@ internal class QuickHull3D {
         get() {
             return tolerance
         }
-
     /**
      * Sets an explicit distance tolerance for convexity tests.
      * If [AUTOMATIC_TOLERANCE][.AUTOMATIC_TOLERANCE]
@@ -162,7 +156,6 @@ internal class QuickHull3D {
     private fun setExplicitDistanceTolerance(tol: Double) {
         explicitTolerance = tol
     }
-
     private fun addPointToFace(vtx: Vertex, face: Face) {
         vtx.face = face
         if (face.outside == null) {
@@ -172,7 +165,6 @@ internal class QuickHull3D {
         }
         face.outside = vtx
     }
-
     private fun removePointFromFace(vtx: Vertex, face: Face?) {
         if (vtx === face!!.outside) {
             if (vtx.next != null && vtx.next!!.face === face) {
@@ -183,7 +175,6 @@ internal class QuickHull3D {
         }
         claimed.delete(vtx)
     }
-
     private fun removeAllPointsFromFace(face: Face?): Vertex? {
         return if (face!!.outside != null) {
             var end = face.outside
@@ -197,13 +188,10 @@ internal class QuickHull3D {
             null
         }
     }
-
     /**
      * Creates an empty convex hull object.
      */
     constructor()
-
-
     /**
      * Constructs the convex hull of a set of points whose
      * coordinates are given by an array of doubles.
@@ -228,7 +216,6 @@ internal class QuickHull3D {
      * than four, or the points appear to be coincident, colinear, or
      * coplanar.
      */
-    @JvmOverloads
     @Throws(IllegalArgumentException::class)
     fun build(coords: DoubleArray, nump: Int = coords.size / 3) {
         require(nump >= 4) { "Less than four input points specified" }
@@ -237,8 +224,6 @@ internal class QuickHull3D {
         setPoints(coords, nump)
         buildHull()
     }
-
-
     /**
      * Constructs the convex hull of a set of points.
      *
@@ -256,7 +241,6 @@ internal class QuickHull3D {
      * than four, or the points appear to be coincident, colinear, or
      * coplanar.
      */
-    @JvmOverloads
     @Throws(IllegalArgumentException::class)
     fun build(points: Array<Point3d>, nump: Int = points.size) {
         require(nump >= 4) { "Less than four input points specified" }
@@ -265,7 +249,6 @@ internal class QuickHull3D {
         setPoints(points, nump)
         buildHull()
     }
-
     /**
      * Triangulates any non-triangular hull faces. In some cases, due to
      * precision issues, the resulting triangles may be very thin or small,
@@ -287,7 +270,6 @@ internal class QuickHull3D {
             face = face.next
         }
     }
-
     // 	private void splitFace (Face face)
     // 	 {
     //  	   Face newFace = face.split();
@@ -299,7 +281,7 @@ internal class QuickHull3D {
     // 	 }
     private fun initBuffers(nump: Int) {
         if (pointBuffer.size < nump) {
-            vertexPointIndices = IntArray(nump)
+            vertexPointIndexBuffer = IntArray(nump)
             val newBuffer = Array(nump) { i ->
                 pointBuffer.getOrNull(i) ?: Vertex()
             }
@@ -307,10 +289,9 @@ internal class QuickHull3D {
         }
         faces.clear()
         claimed.clear()
-        numFaces = 0
+        faceCountInternal = 0
         numPoints = nump
     }
-
     private fun setPoints(coords: DoubleArray, nump: Int) {
         for (i in 0 until nump) {
             val vtx = pointBuffer[i]
@@ -318,7 +299,6 @@ internal class QuickHull3D {
             vtx.index = i
         }
     }
-
     private fun setPoints(pnts: Array<Point3d>, nump: Int) {
         for (i in 0 until nump) {
             val vtx = pointBuffer[i]
@@ -326,7 +306,6 @@ internal class QuickHull3D {
             vtx.index = i
         }
     }
-
     private fun computeMaxAndMin() {
         for (i in 0..2) {
             minVtxs[i] = pointBuffer[0]
@@ -358,7 +337,6 @@ internal class QuickHull3D {
                 minVtxs[2] = pointBuffer[i]
             }
         }
-
         // this epsilon formula comes from QuickHull, and I'm
         // not about to quibble.
         charLength = max(max.x - min.x, max.y - min.y)
@@ -376,7 +354,6 @@ internal class QuickHull3D {
             explicitTolerance
         }
     }
-
     /**
      * Creates the initial simplex from which the hull will be built.
      */
@@ -397,7 +374,6 @@ internal class QuickHull3D {
         // one dimensional separation
         vtxInit[0] = maxVtxs[imax]
         vtxInit[1] = minVtxs[imax]
-
         // set third vertex to be the vertex farthest from
         // the line between vtx0 and vtx1
         val u01 = (vtxInit[1]!!.pnt - vtxInit[0]!!.pnt).normalized()
@@ -479,7 +455,6 @@ internal class QuickHull3D {
             maxFace?.let { addPointToFace(v, it) }
         }
     }
-
     /**
      * Returns the vertex points in this hull.
      *
@@ -491,11 +466,10 @@ internal class QuickHull3D {
         get() {
             val vtxs = arrayOfNulls<Point3d>(numVertices)
             for (i in 0 until numVertices) {
-                vtxs[i] = pointBuffer[vertexPointIndices[i]].pnt
+                vtxs[i] = pointBuffer[vertexPointIndexBuffer[i]].pnt
             }
             return vtxs.requireNoNulls()
         }
-
     /**
      * Returns the coordinates of the vertex points of this hull.
      *
@@ -508,39 +482,34 @@ internal class QuickHull3D {
      */
     private fun getVertices(coords: DoubleArray): Int {
         for (i in 0 until numVertices) {
-            val pnt = pointBuffer[vertexPointIndices[i]].pnt
+            val pnt = pointBuffer[vertexPointIndexBuffer[i]].pnt
             coords[i * 3 + 0] = pnt.x
             coords[i * 3 + 1] = pnt.y
             coords[i * 3 + 2] = pnt.z
         }
         return numVertices
     }
-
     /**
      * Returns an array specifing the index of each hull vertex
      * with respect to the original input points.
      *
      * @return vertex indices with respect to the original points
      */
-    @JvmName("getVertexPointIndices1")
     fun getVertexPointIndices(): IntArray {
         val indices = IntArray(numVertices)
         for (i in 0 until numVertices) {
-            indices[i] = vertexPointIndices[i]
+            indices[i] = vertexPointIndexBuffer[i]
         }
         return indices
     }
-
     /**
      * Returns the number of faces in this hull.
      *
      * @return number of faces
      */
-    @JvmName("getNumFaces1")
     fun getNumFaces(): Int {
         return faces.size
     }
-
     /**
      * Returns the faces associated with this hull.
      *
@@ -561,7 +530,6 @@ internal class QuickHull3D {
     fun getFaces(): Array<IntArray?> {
         return getFaces(0)
     }
-
     /**
      * Returns the faces associated with this hull.
      *
@@ -589,7 +557,6 @@ internal class QuickHull3D {
         }
         return allFaces
     }
-
     private fun getFaceIndices(indices: IntArray?, face: Face, flags: Int) {
         val ccw = flags and CLOCKWISE == 0
         val indexedFromOne = flags and INDEXED_FROM_ONE != 0
@@ -599,7 +566,7 @@ internal class QuickHull3D {
         do {
             var idx = hedge!!.head().index
             if (pointRelative) {
-                idx = vertexPointIndices[idx]
+                idx = vertexPointIndexBuffer[idx]
             }
             if (indexedFromOne) {
                 idx++
@@ -608,7 +575,6 @@ internal class QuickHull3D {
             hedge = if (ccw) hedge.next else hedge.prev
         } while (hedge !== face.he0)
     }
-
     private fun resolveUnclaimedPoints(newFaces: FaceList) {
         var vtxNext = unclaimed.first()
         var vtx = vtxNext
@@ -646,7 +612,6 @@ internal class QuickHull3D {
             vtx = vtxNext
         }
     }
-
     private fun deleteFacePoints(face: Face?, absorbingFace: Face?) {
         val faceVtxs = removeAllPointsFromFace(face)
         if (faceVtxs != null) {
@@ -668,11 +633,9 @@ internal class QuickHull3D {
             }
         }
     }
-
     private fun oppFaceDistance(he: HalfEdge?): Double {
         return he!!.face.distanceToPlane(he.opposite!!.face.centroid)
     }
-
     private fun doAdjacentMerge(face: Face, mergeType: Int): Boolean {
         var hedge = face.he0
         var convex = true
@@ -726,7 +689,6 @@ internal class QuickHull3D {
         }
         return false
     }
-
     private fun calculateHorizon(
         eyePnt: Point3d?,
         edge0: HalfEdge?,
@@ -766,7 +728,6 @@ internal class QuickHull3D {
             edge = edge.next
         } while (edge !== edge0)
     }
-
     private fun addAdjoiningFace(
         eyeVtx: Vertex,
         he: HalfEdge
@@ -780,7 +741,6 @@ internal class QuickHull3D {
         face.getEdge(-1)!!.opposite = (he.opposite)
         return face.getEdge(0)
     }
-
     private fun addNewFaces(
         newFaces: FaceList,
         eyeVtx: Vertex,
@@ -804,7 +764,6 @@ internal class QuickHull3D {
         }
         hedgeSideBegin!!.next!!.opposite = (hedgeSidePrev)
     }
-
     private fun nextPointToAdd(): Vertex? {
         return if (!claimed.isEmpty) {
             val eyeFace = claimed.first()!!.face
@@ -824,7 +783,6 @@ internal class QuickHull3D {
             null
         }
     }
-
     private fun addPointToHull(eyeVtx: Vertex) {
         horizon.clear()
         unclaimed.clear()
@@ -837,7 +795,6 @@ internal class QuickHull3D {
         calculateHorizon(eyeVtx.pnt, null, eyeVtx.face, horizon)
         newFaces.clear()
         addNewFaces(newFaces, eyeVtx, horizon)
-
         // first merge pass ... merge faces which are non-convex
         // as determined by the larger face
         run {
@@ -861,7 +818,6 @@ internal class QuickHull3D {
         }
         resolveUnclaimedPoints(newFaces)
     }
-
     private fun buildHull() {
         var cnt = 0
         var eyeVtx: Vertex?
@@ -875,7 +831,6 @@ internal class QuickHull3D {
         reindexFacesAndVertices()
         logger.info("hull done")
     }
-
     private fun markFaceVertices(face: Face, mark: Int) {
         val he0 = face.firstEdge
         var he = he0
@@ -884,13 +839,12 @@ internal class QuickHull3D {
             he = he.next
         } while (he !== he0)
     }
-
     private fun reindexFacesAndVertices() {
         for (i in 0 until numPoints) {
             pointBuffer[i].index = -1
         }
         // remove inactive faces and mark active vertices
-        numFaces = 0
+        faceCountInternal = 0
         val it = faces.iterator()
         while (it.hasNext()) {
             val face = it.next()
@@ -898,7 +852,7 @@ internal class QuickHull3D {
                 it.remove()
             } else {
                 markFaceVertices(face, 0)
-                numFaces++
+                faceCountInternal++
             }
         }
         // reindex vertices
@@ -906,12 +860,11 @@ internal class QuickHull3D {
         for (i in 0 until numPoints) {
             val vtx = pointBuffer[i]
             if (vtx.index == 0) {
-                vertexPointIndices[numVertices] = i
+                vertexPointIndexBuffer[numVertices] = i
                 vtx.index = numVertices++
             }
         }
     }
-
     private fun checkFaceConvexity(
         face: Face,
         tol: Double
@@ -949,7 +902,6 @@ internal class QuickHull3D {
         } while (he !== face.he0)
         return true
     }
-
     private fun checkFaces(tol: Double): Boolean {
         // check edge convexity
         var convex = true
@@ -962,8 +914,6 @@ internal class QuickHull3D {
         }
         return convex
     }
-
-
     /**
      * Checks the correctness of the hull. This is done by making sure that
      * no faces are non-convex and that no points are outside any face.
@@ -993,7 +943,6 @@ internal class QuickHull3D {
      * @return true if the hull is valid
      * @see QuickHull3D.check
      */
-    @JvmOverloads
     fun check(tol: Double = distanceTolerance): Boolean {
         // check to make sure all edges are fully connected
         // and that the edges are convex
@@ -1002,7 +951,6 @@ internal class QuickHull3D {
         if (!checkFaces(tolerance)) {
             return false
         }
-
         // check point inclusion
         for (i in 0 until numPoints) {
             val pnt = pointBuffer[i].pnt
@@ -1021,40 +969,33 @@ internal class QuickHull3D {
         }
         return true
     }
-
     companion object {
         private val logger = Logger.tagged("KCSG.QuickHull3D")
-
         /**
          * Specifies that (on output) vertex indices for a face should be
          * listed in clockwise order.
          */
         const val CLOCKWISE = 0x1
-
         /**
          * Specifies that (on output) the vertex indices for a face should be
          * numbered starting from 1.
          */
         const val INDEXED_FROM_ONE = 0x2
-
         /**
          * Specifies that (on output) the vertex indices for a face should be
          * numbered starting from 0.
          */
         const val INDEXED_FROM_ZERO = 0x4
-
         /**
          * Specifies that (on output) the vertex indices for a face should be
          * numbered with respect to the original input points.
          */
         const val POINT_RELATIVE = 0x8
-
         /**
          * Specifies that the distance tolerance should be
          * computed automatically from the input point data.
          */
         const val AUTOMATIC_TOLERANCE = -1.0
-
         /**
          * Precision of a double.
          */

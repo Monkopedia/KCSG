@@ -4,7 +4,6 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     id("application")
     id("java")
-    alias(libs.plugins.javafx)
     alias(libs.plugins.kotlin.jvm)
 }
 
@@ -15,10 +14,6 @@ application {
 
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
-}
-
-javafx {
-    modules = listOf("javafx.graphics", "javafx.fxml")
 }
 
 repositories {

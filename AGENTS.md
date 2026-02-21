@@ -2,15 +2,14 @@
 
 ## Project Structure & Module Organization
 This repository is a multi-module Gradle project:
-- `kcsg/`: core CSG geometry library (`src/main/java`), with most tests in `src/test/java` and STL fixtures in `src/test/resources`.
+- `kcsg/`: core CSG geometry library (`src/main/java`), with multiplatform tests in `src/commonTest` and JVM-specific tests/resources in `src/test/java` and `src/jvmTest/resources`.
 - `kcsg-dsl/`: Kotlin DSL wrappers and scripting helpers built on top of `kcsg`.
 - `csgs/`: command-line/script runner (`com.monkopedia.csgs.MainKt`) plus packaging tasks.
 - `samples/`: runnable sample models and playground entry points.
 
 ## Build, Test, and Development Commands
 - `./gradlew build`: compile all modules and run tests.
-- `./gradlew test` or `./gradlew :kcsg:test`: run library unit/regression tests (excludes sample integration suite).
-- `./gradlew :kcsg:sampleTest`: run sample model integration tests under `com.monkopedia.kcsg.samples`.
+- `./gradlew test` or `./gradlew :kcsg:test`: run library unit/regression tests (excludes oracle suite).
 - `./gradlew :kcsg:oracleGenerateFixtures`: bootstrap pinned OpenSCAD and generate external oracle STL fixtures.
 - `./gradlew :kcsg:oracleTest` or `./gradlew oracleTest`: validate `kcsg` boolean outputs against OpenSCAD (`cgal`/`manifold`) oracle fixtures.
 - `./gradlew :kcsg:oracleTest -Pkcsg.oracle.quick=true`: local quick mode for remesh oracle checks (full mode remains default).
@@ -28,7 +27,7 @@ This repository is a multi-module Gradle project:
 - Framework: JUnit 4 (`org.junit.Test`, `org.junit.Assert`).
 - Test file naming: `*Test.kt` (for example, `VolumeTest.kt`, `EdgeIntersectionTest.kt`).
 - Prefer regression tests for boolean operations, extrusions, and mesh edge cases.
-- When outputs are mesh artifacts, store expected fixtures in `kcsg/src/test/resources`.
+- When outputs are mesh artifacts, store expected JVM fixtures in `kcsg/src/jvmTest/resources`.
 - For bug fixes, add at least one assertion-based regression test in the same change.
 
 ## Quality Gates

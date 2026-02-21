@@ -1,0 +1,183 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.monkopedia.kcsg
+
+import com.monkopedia.kcsg.Edge
+import com.monkopedia.kcsg.Vertex
+import com.monkopedia.kcsg.Vector3d
+import kotlin.test.Test
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
+
+/**
+ */
+class EdgeIntersectionTest {
+    @Test
+    fun closestPointTest() {
+
+        // closest point is e1p2
+        com.monkopedia.kcsg.EdgeIntersectionTest.Companion.createClosestPointTest(
+            Vector3d.xyz(1.0, 2.0, 3.0),  /*e1p2*/Vector3d.xyz(4.0, 5.0, 6.0),
+            Vector3d.xyz(4.0, 5.0, 7.0), Vector3d.xyz(0.0, 1.0, 7.0),
+            Vector3d.xyz(4.0, 5.0, 6.0)
+        )
+
+        // parallel edges (result=null)
+        com.monkopedia.kcsg.EdgeIntersectionTest.Companion.createClosestPointTest(
+            Vector3d.xyz(1.0, 1.0, -1.0), Vector3d.xyz(1.0, 1.0, 1.0),
+            Vector3d.xyz(2.0, 2.0, -3.0), Vector3d.xyz(2.0, 2.0, 4.0),
+            null
+        )
+        com.monkopedia.kcsg.EdgeIntersectionTest.Companion.createClosestPointTest(
+            Vector3d.xyz(1.0, 3.0, -1.0),
+            Vector3d.xyz(1.0, 4.0, 2.0),
+            Vector3d.xyz((1 + 10).toDouble(), 3.0, -1.0),
+            Vector3d.xyz((1 + 10).toDouble(), 4.0, 2.0),
+            null
+        )
+        com.monkopedia.kcsg.EdgeIntersectionTest.Companion.createClosestPointTest(
+            Vector3d.xyz(3.0, 6.0, -1.0),
+            Vector3d.xyz(10.0, 7.0, 1.0),
+            Vector3d.xyz(3.0, 6.0, (-1 + 3).toDouble()),
+            Vector3d.xyz(10.0, 7.0, (1 + 3).toDouble()),
+            null
+        )
+
+        // result is exactly in the middle of e1 and e2
+        com.monkopedia.kcsg.EdgeIntersectionTest.Companion.createClosestPointTest(
+            Vector3d.xyz(5.0, 4.0, 2.0),  /*e1p2*/Vector3d.xyz(3.0, 2.0, 11.0),
+            Vector3d.xyz(5.0, 2.0, 11.0),  /*e1p2*/Vector3d.xyz(3.0, 4.0, 2.0),
+            Vector3d.xyz(4.0, 3.0, 6.5)
+        )
+    }
+
+    @Test
+    fun intersectionTest() {
+        // closest point is e1p2 which does not exist on e2. thus, the expected
+        // result is null
+        com.monkopedia.kcsg.EdgeIntersectionTest.Companion.createIntersectionTest(
+            Vector3d.xyz(1.0, 2.0, 3.0),  /*e1p2*/Vector3d.xyz(4.0, 5.0, 6.0),
+            Vector3d.xyz(4.0, 5.0, 7.0), Vector3d.xyz(0.0, 1.0, 7.0),
+            null
+        )
+
+        // parallel edges (result=null)
+        com.monkopedia.kcsg.EdgeIntersectionTest.Companion.createIntersectionTest(
+            Vector3d.xyz(1.0, 1.0, -1.0), Vector3d.xyz(1.0, 1.0, 1.0),
+            Vector3d.xyz(2.0, 2.0, -3.0), Vector3d.xyz(2.0, 2.0, 4.0),
+            null
+        )
+        com.monkopedia.kcsg.EdgeIntersectionTest.Companion.createIntersectionTest(
+            Vector3d.xyz(1.0, 3.0, -1.0),
+            Vector3d.xyz(1.0, 4.0, 2.0),
+            Vector3d.xyz((1 + 10).toDouble(), 3.0, -1.0),
+            Vector3d.xyz((1 + 10).toDouble(), 4.0, 2.0),
+            null
+        )
+        com.monkopedia.kcsg.EdgeIntersectionTest.Companion.createIntersectionTest(
+            Vector3d.xyz(3.0, 6.0, -1.0),
+            Vector3d.xyz(10.0, 7.0, 1.0),
+            Vector3d.xyz(3.0, 6.0, (-1 + 3).toDouble()),
+            Vector3d.xyz(10.0, 7.0, (1 + 3).toDouble()),
+            null
+        )
+
+        // result is exactly in the middle of e1 and e2
+        com.monkopedia.kcsg.EdgeIntersectionTest.Companion.createIntersectionTest(
+            Vector3d.xyz(5.0, 4.0, 2.0),  /*e1p2*/Vector3d.xyz(3.0, 2.0, 11.0),
+            Vector3d.xyz(5.0, 2.0, 11.0),  /*e1p2*/Vector3d.xyz(3.0, 4.0, 2.0),
+            Vector3d.xyz(4.0, 3.0, 6.5)
+        )
+    }
+
+    companion object {
+        private fun assertTrue(message: String, actual: Boolean) {
+            kotlin.test.assertTrue(actual, message)
+        }
+
+        private fun assertFalse(message: String, actual: Boolean) {
+            kotlin.test.assertFalse(actual, message)
+        }
+
+        private fun createIntersectionTest(
+            e1p1: Vector3d, e1p2: Vector3d,
+            e2p1: Vector3d, e2p2: Vector3d,
+            expectedPoint: Vector3d?
+        ) {
+            val e1 = Edge(
+                Vertex(
+                    e1p1, Vector3d.Z_ONE
+                ),
+                Vertex(
+                    e1p2, Vector3d.Z_ONE
+                )
+            )
+            val e2 = Edge(
+                Vertex(
+                    e2p1, Vector3d.Z_ONE
+                ),
+                Vertex(
+                    e2p2, Vector3d.Z_ONE
+                )
+            )
+            val closestPointResult = e1.getIntersectionOrNull(e2)
+            if (expectedPoint != null) {
+                assertTrue(
+                    "Intersection point must exist",
+                    closestPointResult != null
+                )
+                assertTrue(
+                    "Intersection point " + expectedPoint + ", got "
+                        + closestPointResult, expectedPoint == closestPointResult
+                )
+            } else {
+                assertFalse(
+                    "Intersection point must not exist : "
+                        + closestPointResult, closestPointResult != null
+                )
+            }
+        }
+
+        private fun createClosestPointTest(
+            e1p1: Vector3d, e1p2: Vector3d,
+            e2p1: Vector3d, e2p2: Vector3d,
+            expectedPoint: Vector3d?
+        ) {
+            val e1 = Edge(
+                Vertex(
+                    e1p1, Vector3d.Z_ONE
+                ),
+                Vertex(
+                    e1p2, Vector3d.Z_ONE
+                )
+            )
+            val e2 = Edge(
+                Vertex(
+                    e2p1, Vector3d.Z_ONE
+                ),
+                Vertex(
+                    e2p2, Vector3d.Z_ONE
+                )
+            )
+            val closestPointResult = e1.getClosestPointOrNull(e2)
+            if (expectedPoint != null) {
+                assertTrue(
+                    "Closest point must exist",
+                    closestPointResult != null
+                )
+                assertTrue(
+                    "Expected point " + expectedPoint + ", got "
+                        + closestPointResult, expectedPoint == closestPointResult
+                )
+            } else {
+                assertFalse(
+                    "Closest point must not exist : "
+                        + closestPointResult, closestPointResult != null
+                )
+            }
+        }
+    }
+}

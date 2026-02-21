@@ -36,6 +36,7 @@ package com.monkopedia.kcsg
 
 import com.monkopedia.kcsg.ext.vvecmath.Matrix4d
 import com.monkopedia.kcsg.ext.vvecmath.Plane
+import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -101,7 +102,7 @@ class Transform {
      * @return this transform
      */
     fun rotX(degrees: Double): Transform {
-        val radians = degrees * Math.PI * (1.0 / 180.0)
+        val radians = degrees * PI * (1.0 / 180.0)
         val cos = cos(radians)
         val sin = sin(radians)
         val elemenents = doubleArrayOf(
@@ -134,7 +135,7 @@ class Transform {
      * @return this transform
      */
     fun rotY(degrees: Double): Transform {
-        val radians = degrees * Math.PI * (1.0 / 180.0)
+        val radians = degrees * PI * (1.0 / 180.0)
         val cos = cos(radians)
         val sin = sin(radians)
         val elemenents = doubleArrayOf(
@@ -152,7 +153,7 @@ class Transform {
      * @return this transform
      */
     fun rotZ(degrees: Double): Transform {
-        val radians = degrees * Math.PI * (1.0 / 180.0)
+        val radians = degrees * PI * (1.0 / 180.0)
         val cos = cos(radians)
         val sin = sin(radians)
         val elemenents = doubleArrayOf(
@@ -228,7 +229,7 @@ class Transform {
         val dirxSquare: Double = dir2.x
         val dirySquare: Double = dir2.y
         val dirzSquare: Double = dir2.z
-        val radians = degrees * Math.PI * (1.0 / 180.0)
+        val radians = degrees * PI * (1.0 / 180.0)
         val cosOfAngle = cos(radians)
         val oneMinusCosOfangle = 1 - cosOfAngle
         val sinOfangle = sin(radians)
