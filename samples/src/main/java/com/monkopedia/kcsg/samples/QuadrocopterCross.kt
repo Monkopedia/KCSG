@@ -5,6 +5,8 @@
  */
 package com.monkopedia.kcsg.samples
 
+import kotlinx.io.files.Path
+
 import com.monkopedia.kcsg.CSG
 import com.monkopedia.kcsg.Cylinder
 import com.monkopedia.kcsg.CSG.OptType
@@ -13,14 +15,13 @@ import com.monkopedia.kcsg.FileUtil
 import com.monkopedia.kcsg.RoundedCube
 import com.monkopedia.kcsg.Transform
 import java.io.IOException
-import java.nio.file.Paths
 
 /**
  */
 class QuadrocopterCross {
     fun print3d(csg: CSG, n: Int) {
         try {
-            FileUtil.write(Paths.get("quadrocopter-cross-$n.stl"), csg.toStlString())
+            FileUtil.write(Path("quadrocopter-cross-$n.stl"), csg.toStlString())
         } catch (e: IOException) {
             e.printStackTrace()
         }
@@ -110,8 +111,8 @@ class QuadrocopterCross {
         fun main(args: Array<String>) {
             CSG.setDefaultOptType(OptType.NONE)
             val result = QuadrocopterCross().toCSG2()
-            FileUtil.write(Paths.get("quadrocopter-cross.stl"), result.toStlString())
-            result.toObj().toFiles(Paths.get("quadrocopter-cross.obj"))
+            FileUtil.write(Path("quadrocopter-cross.stl"), result.toStlString())
+            result.toObj().toFiles(Path("quadrocopter-cross.obj"))
         }
     }
 }

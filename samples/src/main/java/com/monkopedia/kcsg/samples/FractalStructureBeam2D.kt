@@ -5,6 +5,8 @@
  */
 package com.monkopedia.kcsg.samples
 
+import kotlinx.io.files.Path
+
 import com.monkopedia.kcsg.CSG
 import com.monkopedia.kcsg.Cylinder
 import com.monkopedia.kcsg.FileUtil
@@ -12,7 +14,6 @@ import com.monkopedia.kcsg.Sphere
 import com.monkopedia.kcsg.Transform
 import com.monkopedia.kcsg.Vector3d
 import java.io.IOException
-import java.nio.file.Paths
 import kotlin.math.asin
 
 /**
@@ -90,10 +91,10 @@ class FractalStructureBeam2D {
             var result = FractalStructureBeam2D().toCSG()
             result = result.union(Sphere(Vector3d.ZERO, 1.0, 4, 4).toCSG())
             FileUtil.write(
-                Paths.get("fractal-structure-beam-2d.stl"),
+                Path("fractal-structure-beam-2d.stl"),
                 result.toStlString()
             )
-            result.toObj().toFiles(Paths.get("fractal-structure-beam-2d.stl"))
+            result.toObj().toFiles(Path("fractal-structure-beam-2d.stl"))
         }
     }
 }

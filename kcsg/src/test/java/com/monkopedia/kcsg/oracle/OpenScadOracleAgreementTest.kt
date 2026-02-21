@@ -63,7 +63,7 @@ class OpenScadOracleAgreementTest {
             val referencePath = oracleDir.resolve("${scenario.name}.stl")
             assertTrue("Missing oracle fixture: $referencePath", Files.isRegularFile(referencePath))
 
-            val expected = STL.file(referencePath)
+            val expected = STL.file(kotlinx.io.files.Path(referencePath.toString()))
             val actual = scenario.builder()
             val expectedVolume = abs(expected.computeVolume())
             val actualVolume = abs(actual.computeVolume())

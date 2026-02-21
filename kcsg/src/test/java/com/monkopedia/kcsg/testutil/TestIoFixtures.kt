@@ -1,21 +1,19 @@
 package com.monkopedia.kcsg.testutil
 
-import java.io.ByteArrayInputStream
-import java.io.InputStream
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
-import java.nio.file.Path
-import kotlin.io.path.readText
-import kotlin.io.path.writeText
+import kotlinx.io.Buffer
+import kotlinx.io.Source
+import kotlinx.io.files.Path
 
 object TestIoFixtures {
     @JvmStatic
     fun withTempDirectory(prefix: String = "kcsg-test", block: (Path) -> Unit) {
-        val tempDir = Files.createTempDirectory(prefix)
+        val tempDir = Files.createTempDirectory(prefix).toString()
         try {
-            block(tempDir)
+            block(Path(tempDir))
         } finally {
-            tempDir.toFile().deleteRecursively()
+            java.io.File(tempDir).deleteRecursively()
         }
     }
 
@@ -25,20 +23,24 @@ object TestIoFixtures {
         fileName: String,
         content: String,
     ): Path {
-        val file = directory.resolve(fileName)
-        file.writeText(content)
+        val file = Path(directory, fileName)
+        com.monkopedia.kcsg.FileUtil.write(file, content)
         return file
     }
 
     @JvmStatic
     fun readTextFile(path: Path): String {
-        return path.readText()
+        return com.monkopedia.kcsg.FileUtil.read(path)
     }
 
     @JvmStatic
-    fun streamFactory(content: String): () -> InputStream {
+    fun sourceFactory(content: String): () -> Source {
         val bytes = content.toByteArray(StandardCharsets.UTF_8)
-        return { ByteArrayInputStream(bytes) }
+        return {
+            Buffer().apply {
+                write(bytes, 0, bytes.size)
+            }
+        }
     }
 
     @JvmStatic

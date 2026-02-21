@@ -5,13 +5,14 @@
  */
 package com.monkopedia.kcsg.samples
 
+import kotlinx.io.files.Path
+
 import com.monkopedia.kcsg.CSG
 import com.monkopedia.kcsg.Cube
 import com.monkopedia.kcsg.Cylinder
 import com.monkopedia.kcsg.FileUtil
 import com.monkopedia.kcsg.Transform
 import java.io.IOException
-import java.nio.file.Paths
 import kotlin.math.cos
 import kotlin.math.min
 import kotlin.math.sin
@@ -231,7 +232,7 @@ class PolyMailTile {
         @JvmStatic
         fun main(args: Array<String>) {
             FileUtil.write(
-                Paths.get("triangularmail.stl"),
+                Path("triangularmail.stl"),
                 PolyMailTile().setNumEdges(6).setCombined().toCSG()
                     .toStlString()
             )

@@ -5,12 +5,13 @@
  */
 package com.monkopedia.kcsg.samples
 
+import kotlinx.io.files.Path
+
 import com.monkopedia.kcsg.CSG
 import com.monkopedia.kcsg.Cube
 import com.monkopedia.kcsg.FileUtil
 import com.monkopedia.kcsg.Transform
 import java.io.IOException
-import java.nio.file.Paths
 import kotlin.math.min
 
 /**
@@ -89,7 +90,7 @@ class SquareMail {
         @JvmStatic
         fun main(args: Array<String>) {
             FileUtil.write(
-                Paths.get("squaremail-test.stl"),
+                Path("squaremail-test.stl"),
                 SquareMail().toCSG(12, 4)!!.toStlString()
             )
         }

@@ -5,6 +5,8 @@
  */
 package com.monkopedia.kcsg.samples
 
+import kotlinx.io.files.Path
+
 import com.monkopedia.kcsg.CSG
 import com.monkopedia.kcsg.Cube
 import com.monkopedia.kcsg.Cylinder
@@ -13,7 +15,6 @@ import com.monkopedia.kcsg.UnityModifier
 import com.monkopedia.kcsg.ZModifier
 import com.monkopedia.kcsg.Transform
 import java.io.IOException
-import java.nio.file.Paths
 
 /**
  * Average Chicken Egg.
@@ -65,7 +66,7 @@ class Sabine {
         @Throws(IOException::class)
         @JvmStatic
         fun main(args: Array<String>) {
-            FileUtil.write(Paths.get("sabine.stl"), Sabine().toCSG().toStlString())
+            FileUtil.write(Path("sabine.stl"), Sabine().toCSG().toStlString())
         }
     }
 }

@@ -5,13 +5,14 @@
  */
 package com.monkopedia.kcsg.samples
 
+import kotlinx.io.files.Path
+
 import com.monkopedia.kcsg.CSG
 import com.monkopedia.kcsg.Cube
 import com.monkopedia.kcsg.Cylinder
 import com.monkopedia.kcsg.FileUtil
 import com.monkopedia.kcsg.Transform
 import java.io.IOException
-import java.nio.file.Paths
 
 /**
  */
@@ -128,7 +129,7 @@ class Hinge {
         @Throws(IOException::class)
         @JvmStatic
         fun main(args: Array<String>) {
-            FileUtil.write(Paths.get("hinge.stl"), Hinge().toCSG().toStlString())
+            FileUtil.write(Path("hinge.stl"), Hinge().toCSG().toStlString())
         }
     }
 }

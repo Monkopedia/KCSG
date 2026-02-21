@@ -22,6 +22,7 @@ import java.util.*
 import java.util.function.Predicate
 import java.util.logging.Level
 import java.util.logging.Logger
+import kotlinx.io.files.Path
 import kotlin.math.abs
 
 /**
@@ -39,8 +40,8 @@ object Main {
 
 //        Files.write(Paths.get("c1.stl"), c1.toStlString().getBytes());
 //        Files.write(Paths.get("c2.stl"), c2.toStlString().getBytes());
-//        c1 = STL.file(Paths.get("c1.stl"));
-//        c2 = STL.file(Paths.get("c2.stl"));
+//        c1 = STL.file(Path("c1.stl"));
+//        c2 = STL.file(Path("c2.stl"));
 //        c1 = new Sphere(Vector3d.x(0.), 0.5, 16, 16).toCSG();
 //        c2 = new Sphere(Vector3d.x(0.6), 0.5, 16, 16).toCSG();
         c2 = Sphere(Vector3d.x(0.0), 0.65, 16, 16).toCSG()
@@ -60,7 +61,7 @@ object Main {
         splitted.addAll(result1)
         splitted.addAll(result2)
 
-//        CSG.fromPolygons(splitted).toObj(100).toFiles(Paths.get("test-split1.obj"));
+//        CSG.fromPolygons(splitted).toObj(100).toFiles(Path("test-split1.obj"));
 //
         Files.write(
             Paths.get("test-split1.stl"),
@@ -164,7 +165,7 @@ object Main {
 
             // try {
             //    ObjFile objF = CSG.fromPolygons(ri.polygon).toObj(3);
-            //    objF.toFiles(Paths.get("test-intersection-" + i + ".obj"));
+            //    objF.toFiles(Path("test-intersection-" + i + ".obj"));
             // } catch (IOException ex) {
             //    Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
             // }
@@ -187,7 +188,7 @@ object Main {
 
         // try {
         //    ObjFile objF = CSG.fromPolygons(min.polygon).toObj();
-        //    objF.toFiles(Paths.get("test-intersection-min.obj"));
+        //    objF.toFiles(Path("test-intersection-min.obj"));
         // } catch (IOException ex) {
         //    Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         // }
@@ -429,7 +430,7 @@ object Main {
             Vector3d.xyz(0.0, 0.0, 1.0)
         )
         try {
-            val pCSG = STL.file(Paths.get("sphere-test-01.stl"))
+            val pCSG = STL.file(Path("sphere-test-01.stl"))
             p = pCSG.polygons[0]
         } catch (ex: Exception) {
             ex.printStackTrace()
@@ -466,7 +467,7 @@ object Main {
         cutsWithCube.addAll(cube.polygons /*.subList(cubePolyFrom, cubePolyTo)*/)
         try {
             val objF: ObjFile = CSG.fromPolygons(cutsWithCube).toObj(3)
-            objF.toFiles(Paths.get("test-split1.obj"))
+            objF.toFiles(Path("test-split1.obj"))
             //            Files.write(Paths.get("test-split1.stl"),
 //                    CSG.fromPolygons(cutsWithP1).toStlString().getBytes());
         } catch (ex: IOException) {

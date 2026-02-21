@@ -1,5 +1,7 @@
 package com.monkopedia.kcsg
 
+import kotlinx.io.files.Path
+
 import com.monkopedia.kcsg.testutil.FakeKcsgHost
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -9,7 +11,6 @@ import org.junit.Assert.assertThrows
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.nio.file.Files
-import java.nio.file.Path
 
 class KcsgScriptTest {
     @Test
@@ -59,7 +60,7 @@ class KcsgScriptTest {
     fun hostDelegationAndScriptEnvelopeConstants() {
         val host = FakeKcsgHost(supportsCaching = false)
         val fixturePath = Files.createTempFile("kcsg-script-host-delegation", ".stl")
-        FileUtil.toStlFile(fixturePath, Cube(1.0).toCSG())
+        FileUtil.toStlFile(Path(fixturePath.toString()), Cube(1.0).toCSG())
         host.registerStl("fixture", fixturePath.toString())
         val importedScript = object : ImportedScript {
             override val exports: Collection<String> = listOf("x")

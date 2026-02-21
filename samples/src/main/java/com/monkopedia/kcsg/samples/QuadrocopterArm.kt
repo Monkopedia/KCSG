@@ -5,6 +5,8 @@
  */
 package com.monkopedia.kcsg.samples
 
+import kotlinx.io.files.Path
+
 import com.monkopedia.kcsg.CSG
 import com.monkopedia.kcsg.Cylinder
 import com.monkopedia.kcsg.CSG.OptType
@@ -17,7 +19,6 @@ import com.monkopedia.kcsg.ext.vvecmath.Plane
 import com.monkopedia.kcsg.Transform
 import com.monkopedia.kcsg.Vector3d
 import java.io.IOException
-import java.nio.file.Paths
 import kotlin.math.atan
 import kotlin.math.max
 import kotlin.math.sqrt
@@ -458,13 +459,13 @@ class QuadrocopterArm {
         @JvmStatic
         fun main(args: Array<String>) {
             val result = QuadrocopterArm().toCSG()
-            FileUtil.write(Paths.get("quadrocopter-arm.stl"), result.toStlString())
-            result.toObj().toFiles(Paths.get("quadrocopter-arm.obj"))
+            FileUtil.write(Path("quadrocopter-arm.stl"), result.toStlString())
+            result.toObj().toFiles(Path("quadrocopter-arm.obj"))
 
 //        CSG resultNoStructure = new QuadrocopterArm().toCSG();
 //
-//        FileUtil.write(Paths.get("quadrocopter-arm-no-structure.stl"), resultNoStructure.toStlString());
-//        resultNoStructure.toObj().toFiles(Paths.get("quadrocopter-arm-no-structure.obj"));
+//        FileUtil.write(Path("quadrocopter-arm-no-structure.stl"), resultNoStructure.toStlString());
+//        resultNoStructure.toObj().toFiles(Path("quadrocopter-arm-no-structure.obj"));
         }
     }
 }

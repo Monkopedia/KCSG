@@ -5,12 +5,13 @@
  */
 package com.monkopedia.kcsg.samples
 
+import kotlinx.io.files.Path
+
 import com.monkopedia.kcsg.CSG
 import com.monkopedia.kcsg.Cube
 import com.monkopedia.kcsg.FileUtil
 import com.monkopedia.kcsg.Transform
 import java.io.IOException
-import java.nio.file.Paths
 
 /**
  */
@@ -94,8 +95,8 @@ class MoebiusStairs {
         fun main(args: Array<String>) {
             val moebiusStairs = MoebiusStairs()
             val csg = moebiusStairs.toCSG()
-            FileUtil.write(Paths.get("moebius-stairs.stl"), csg.toStlString())
-            csg.toObj().toFiles(Paths.get("moebius-stairs.obj"))
+            FileUtil.write(Path("moebius-stairs.stl"), csg.toStlString())
+            csg.toObj().toFiles(Path("moebius-stairs.obj"))
         }
     }
 }

@@ -5,6 +5,8 @@
  */
 package com.monkopedia.kcsg.samples
 
+import kotlinx.io.files.Path
+
 import com.monkopedia.kcsg.CSG
 import com.monkopedia.kcsg.CSG.OptType
 import com.monkopedia.kcsg.Cube
@@ -13,7 +15,6 @@ import com.monkopedia.kcsg.Sphere
 import com.monkopedia.kcsg.Transform
 import com.monkopedia.kcsg.Vector3d
 import java.io.IOException
-import java.nio.file.Paths
 import java.util.logging.Level
 import java.util.logging.Logger
 
@@ -25,7 +26,7 @@ class PlaneWithHoles {
 
 //        CSG result = null;
 //        try {
-//            result = STL.file(Paths.get("box_refined-01.stl")).transformed(Transform.unity().scale(30, 30, 0.5)).optimization(CSG.OptType.POLYGON_BOUND);
+//            result = STL.file(Path("box_refined-01.stl")).transformed(Transform.unity().scale(30, 30, 0.5)).optimization(CSG.OptType.POLYGON_BOUND);
 //        } catch (IOException ex) {
 //            Logger.getLogger(PlaneWithHoles.class.getName()).log(Level.SEVERE, null, ex);
 //        }
@@ -52,7 +53,7 @@ class PlaneWithHoles {
             }
         }
         try {
-            FileUtil.write(Paths.get("cyl.stl"), spheres!!.toStlString())
+            FileUtil.write(Path("cyl.stl"), spheres!!.toStlString())
         } catch (ex: IOException) {
             Logger.getLogger(PlaneWithHoles::class.java.name).log(Level.SEVERE, null, ex)
         }

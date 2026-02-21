@@ -10,8 +10,7 @@ import com.monkopedia.kcsg.CSG
 import com.monkopedia.kcsg.FileUtil
 import com.monkopedia.kcsg.TransformBuilder.unity
 import java.io.IOException
-import java.nio.file.Path
-import java.nio.file.Paths
+import kotlinx.io.files.Path
 
 /**
  */
@@ -38,7 +37,7 @@ class ArduinoMount {
             scriptInstance.buildArduinoMount()
 
             for (property in exportedProperties) {
-                FileUtil.write(Paths.get("$property.stl"), properties[property]!!.value.toStlString())
+                FileUtil.write(Path("$property.stl"), properties[property]!!.value.toStlString())
             }
         }
     }

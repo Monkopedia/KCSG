@@ -60,7 +60,7 @@ class OpenScadTiltedExtrudeRegressionTest {
             val stlPath = workDir.resolve("tilted_extrude.stl")
             Files.writeString(scadPath, scadProgram(points, topPoints), StandardCharsets.UTF_8)
             runOpenScad(scadPath, stlPath, backend)
-            return STL.file(stlPath)
+            return STL.file(kotlinx.io.files.Path(stlPath.toString()))
         } finally {
             workDir.toFile().deleteRecursively()
         }

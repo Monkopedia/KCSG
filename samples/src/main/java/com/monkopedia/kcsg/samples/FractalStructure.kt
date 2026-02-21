@@ -1,11 +1,12 @@
 package com.monkopedia.kcsg.samples
 
+import kotlinx.io.files.Path
+
 import com.monkopedia.kcsg.CSG
 import com.monkopedia.kcsg.FileUtil
 import com.monkopedia.kcsg.Polygon
 import com.monkopedia.kcsg.Vector3d
 import java.io.IOException
-import java.nio.file.Paths
 import kotlin.math.abs
 import kotlin.math.acos
 import kotlin.math.cos
@@ -75,8 +76,8 @@ class FractalStructure(
             ).toCSG()
             //        CSG csg = new FractalStructure(Vector3d.ZERO, Vector3d.Z_ONE, 7, 2, 1).toCSG();
 //        CSG csg = new FractalStructure(Vector3d.xyz(-1, -1, -1), Vector3d.xyz(1, 1, 1), 7, 4, 3).toCSG();
-            FileUtil.write(Paths.get("fractal-structure.stl"), csg.toStlString())
-            csg.toObj().toFiles(Paths.get("fractal-structure.obj"))
+            FileUtil.write(Path("fractal-structure.stl"), csg.toStlString())
+            csg.toObj().toFiles(Path("fractal-structure.obj"))
         }
 
         init {

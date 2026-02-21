@@ -22,6 +22,12 @@ This checklist tracks public API coverage status for library modules.
 - API gate: `./gradlew :kcsg:koverVerifyJvm` scoped to `com.monkopedia.kcsg` and excluding `com.monkopedia.kcsg.ext.*`.
 - `kcsg-dsl` gate remains module-scoped via `./gradlew :kcsg-dsl:koverVerify`.
 
+## Recent API Notes
+
+- `io`-surface APIs now use `kotlinx.io.files.Path` as the primary path abstraction across `kcsg` and `kcsg-dsl`.
+- `io` stream-surface APIs now use `kotlinx.io.Source` (for example `OpOverride.source`, `STL.from`, and `ObjFile.objSource`/`mtlSource`).
+- JVM compatibility extensions are provided for renamed/retargeted APIs (legacy `InputStream`/`java.nio.file.Path` call patterns and `ObjFile.objStream`/`mtlStream`).
+
 ## Module: kcsg
 
 | Symbol | Tags | Status | Tests |

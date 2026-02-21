@@ -29,6 +29,8 @@
  */
 package com.monkopedia.kcsg.samples
 
+import kotlinx.io.files.Path
+
 import com.monkopedia.kcsg.CSG
 import com.monkopedia.kcsg.Extrude
 import com.monkopedia.kcsg.FileUtil
@@ -36,7 +38,6 @@ import com.monkopedia.kcsg.Polygon
 import com.monkopedia.kcsg.Transform
 import com.monkopedia.kcsg.Vector3d
 import java.io.IOException
-import java.nio.file.Paths
 
 /**
  */
@@ -172,9 +173,9 @@ object RaspberryPiMount {
     fun main(args: Array<String>) {
 
         // save union as stl
-//        FileUtil.write(Paths.get("sample.stl"), new ServoHead().servoHeadFemale().transformed(Transform.unity().scale(1.0)).toStlString());
+//        FileUtil.write(Path("sample.stl"), new ServoHead().servoHeadFemale().transformed(Transform.unity().scale(1.0)).toStlString());
         val board = boardAndPegs()
             .transformed(Transform.unity().rotX(180.0))
-        FileUtil.write(Paths.get("sample.stl"), board.toStlString())
+        FileUtil.write(Path("sample.stl"), board.toStlString())
     }
 }

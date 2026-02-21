@@ -4,12 +4,13 @@ import com.monkopedia.kcsg.testutil.TestIoFixtures.withTempDirectory
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import kotlinx.io.files.Path
 
 class FileUtilTest {
     @Test
     fun writeAndReadRoundTrip() {
         withTempDirectory("kcsg-fileutil-readwrite") { tempDir ->
-            val target = tempDir.resolve("sample.txt")
+            val target = Path(tempDir, "sample.txt")
             val content = "hello\nkcsg\n"
 
             FileUtil.write(target, content)
@@ -22,7 +23,7 @@ class FileUtilTest {
     @Test
     fun toStlFileWritesAsciiStl() {
         withTempDirectory("kcsg-fileutil-stl") { tempDir ->
-            val target = tempDir.resolve("shape.stl")
+            val target = Path(tempDir, "shape.stl")
             val csg = Cube(1.0).toCSG()
 
             FileUtil.toStlFile(target, csg)

@@ -5,12 +5,13 @@
  */
 package com.monkopedia.kcsg.samples
 
+import kotlinx.io.files.Path
+
 import com.monkopedia.kcsg.CSG
 import com.monkopedia.kcsg.Cylinder
 import com.monkopedia.kcsg.FileUtil
 import com.monkopedia.kcsg.Transform
 import java.io.IOException
-import java.nio.file.Paths
 
 /**
  */
@@ -72,10 +73,10 @@ class Naze32Holder {
         @JvmStatic
         fun main(args: Array<String>) {
             FileUtil.write(
-                Paths.get("naze32-mount.stl"),
+                Path("naze32-mount.stl"),
                 Naze32Holder().toCSG().toStlString()
             )
-            Naze32Holder().toCSG().toObj().toFiles(Paths.get("naze32-mount.obj"))
+            Naze32Holder().toCSG().toObj().toFiles(Path("naze32-mount.obj"))
         }
     }
 }

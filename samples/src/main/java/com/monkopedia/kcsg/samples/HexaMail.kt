@@ -5,11 +5,12 @@
  */
 package com.monkopedia.kcsg.samples
 
+import kotlinx.io.files.Path
+
 import com.monkopedia.kcsg.CSG
 import com.monkopedia.kcsg.FileUtil
 import com.monkopedia.kcsg.Transform
 import java.io.IOException
-import java.nio.file.Paths
 
 /**
  */
@@ -60,7 +61,7 @@ class HexaMail {
         @JvmStatic
         fun main(args: Array<String>) {
             FileUtil.write(
-                Paths.get("hexamail.stl"),
+                Path("hexamail.stl"),
                 HexaMail().toCSG(6, 3, 3)!!.toStlString()
             )
         }

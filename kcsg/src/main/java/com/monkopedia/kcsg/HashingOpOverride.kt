@@ -1,17 +1,19 @@
 package com.monkopedia.kcsg
 
 import java.io.ByteArrayOutputStream
-import java.io.InputStream
-import java.nio.file.Path
 import java.security.MessageDigest
-import kotlin.io.path.absolutePathString
-import kotlin.io.path.exists
-import kotlin.io.path.inputStream
+import kotlinx.io.buffered
+import kotlinx.io.files.FileSystem
+import kotlinx.io.files.Path
+import kotlinx.io.files.SystemFileSystem
+import kotlinx.io.readByteArray
+import kotlinx.io.Source
 
 class HashingOpOverride : OpOverride {
     private val md = MessageDigest.getInstance("SHA-256")
     private val csgLookup = mutableListOf<Pair<CSG, Int>>()
     private var count = 0
+    private val fileSystem: FileSystem = SystemFileSystem
 
     fun hash(): String {
         return md.digest().fold("") { str, it -> str + "%02x".format(it) }
@@ -82,9 +84,9 @@ class HashingOpOverride : OpOverride {
                 it.write(any.numStacks)
                 it.toByteArray()
             }
-            is InputStream -> ByteArrayOutputStream().use {
+            is Source -> ByteArrayOutputStream().use {
                 it.writeBytes("is".toByteArray())
-                any.copyTo(it)
+                it.write(any.readByteArray())
                 it.toByteArray()
             }
             else -> ByteArrayOutputStream().use {
@@ -169,18 +171,24 @@ class HashingOpOverride : OpOverride {
     }
 
     override fun file(path: Path): CSG {
-        if (path.exists()) {
-            hash(path.absolutePathString())
-            hash(path.inputStream())
+        val resolvedPath = runCatching { fileSystem.resolve(path).toString() }
+            .getOrElse { path.toString() }
+        if (fileSystem.metadataOrNull(path) != null) {
+            hash(resolvedPath)
+            fileSystem.source(path).buffered().use {
+                hash(it)
+            }
         } else {
-            hash(path.absolutePathString())
+            hash(resolvedPath)
             hash(null)
         }
         return createCSG()
     }
 
-    override fun inputStream(inputStreamFactory: () -> InputStream): CSG {
-        hash(inputStreamFactory())
+    override fun source(sourceFactory: () -> Source): CSG {
+        sourceFactory().use {
+            hash(it)
+        }
         return createCSG()
     }
 }

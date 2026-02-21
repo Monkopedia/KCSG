@@ -5,6 +5,8 @@
  */
 package com.monkopedia.kcsg.samples
 
+import kotlinx.io.files.Path
+
 import com.monkopedia.kcsg.CSG
 import com.monkopedia.kcsg.Cube
 import com.monkopedia.kcsg.Cylinder
@@ -13,7 +15,6 @@ import com.monkopedia.kcsg.Sphere
 import com.monkopedia.kcsg.Transform
 import com.monkopedia.kcsg.Vector3d
 import java.io.IOException
-import java.nio.file.Paths
 
 /**
  */
@@ -49,6 +50,6 @@ object BraceletGenerator {
     @Throws(IOException::class)
     @JvmStatic
     fun main(args: Array<String>) {
-        FileUtil.write(Paths.get("sample.stl"), toCSG().toStlString())
+        FileUtil.write(Path("sample.stl"), toCSG().toStlString())
     }
 }

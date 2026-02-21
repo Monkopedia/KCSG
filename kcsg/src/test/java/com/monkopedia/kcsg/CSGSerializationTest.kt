@@ -6,6 +6,7 @@ import org.junit.Assert.assertNotSame
 import org.junit.Assert.assertThrows
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import kotlinx.io.readString
 
 class CSGSerializationTest {
     @Test
@@ -32,8 +33,8 @@ class CSGSerializationTest {
 
         assertTrue(objFile.mtl.contains("newmtl"))
         assertTrue(objFile.mtl.contains("Kd "))
-        assertEquals(objFile.obj, objFile.objStream.reader().readText())
-        assertEquals(objFile.mtl, objFile.mtlStream.reader().readText())
+        assertEquals(objFile.obj, objFile.objSource.readString())
+        assertEquals(objFile.mtl, objFile.mtlSource.readString())
     }
 
     @Test

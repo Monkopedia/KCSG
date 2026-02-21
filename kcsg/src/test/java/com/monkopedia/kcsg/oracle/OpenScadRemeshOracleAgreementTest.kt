@@ -75,7 +75,7 @@ class OpenScadRemeshOracleAgreementTest {
             val referencePath = oracleDir.resolve("${scenario.name}.stl")
             assertTrue("Missing oracle fixture: $referencePath", Files.isRegularFile(referencePath))
 
-            val oracle = STL.file(referencePath)
+            val oracle = STL.file(kotlinx.io.files.Path(referencePath.toString()))
             val baseline = scenario.builder()
             val remeshed = applyRemesh(baseline)
 

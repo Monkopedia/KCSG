@@ -5,11 +5,12 @@
  */
 package com.monkopedia.kcsg.samples
 
+import kotlinx.io.files.Path
+
 import com.monkopedia.kcsg.CSG
 import com.monkopedia.kcsg.FileUtil
 import com.monkopedia.kcsg.RoundedCube
 import java.io.IOException
-import java.nio.file.Paths
 
 /**
  */
@@ -26,10 +27,10 @@ class RoundedCubeSample {
         @JvmStatic
         fun main(args: Array<String>) {
             FileUtil.write(
-                Paths.get("rounded-cube.stl"),
+                Path("rounded-cube.stl"),
                 RoundedCubeSample().toCSG().toStlString()
             )
-            RoundedCubeSample().toCSG().toObj().toFiles(Paths.get("rounded-cube.obj"))
+            RoundedCubeSample().toCSG().toObj().toFiles(Path("rounded-cube.obj"))
         }
     }
 }

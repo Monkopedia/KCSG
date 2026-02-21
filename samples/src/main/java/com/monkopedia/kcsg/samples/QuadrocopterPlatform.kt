@@ -5,13 +5,14 @@
  */
 package com.monkopedia.kcsg.samples
 
+import kotlinx.io.files.Path
+
 import com.monkopedia.kcsg.CSG
 import com.monkopedia.kcsg.Cube
 import com.monkopedia.kcsg.Cylinder
 import com.monkopedia.kcsg.FileUtil
 import com.monkopedia.kcsg.Transform
 import java.io.IOException
-import java.nio.file.Paths
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -111,13 +112,13 @@ class QuadrocopterPlatform {
         @JvmStatic
         fun main(args: Array<String>) {
             val result = QuadrocopterPlatform().toCSG()
-            FileUtil.write(Paths.get("quadrocopter-platform.stl"), result.toStlString())
-            result.toObj().toFiles(Paths.get("quadrocopter-platform.obj"))
+            FileUtil.write(Path("quadrocopter-platform.stl"), result.toStlString())
+            result.toObj().toFiles(Path("quadrocopter-platform.obj"))
 
 //        CSG resultNoStructure = new QuadrocopterArm().toCSG();
 //
-//        FileUtil.write(Paths.get("quadrocopter-arm-no-structure.stl"), resultNoStructure.toStlString());
-//        resultNoStructure.toObj().toFiles(Paths.get("quadrocopter-arm-no-structure.obj"));
+//        FileUtil.write(Path("quadrocopter-arm-no-structure.stl"), resultNoStructure.toStlString());
+//        resultNoStructure.toObj().toFiles(Path("quadrocopter-arm-no-structure.obj"));
         }
     }
 }

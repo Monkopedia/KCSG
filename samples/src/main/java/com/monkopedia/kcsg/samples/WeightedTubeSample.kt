@@ -5,6 +5,8 @@
  */
 package com.monkopedia.kcsg.samples
 
+import kotlinx.io.files.Path
+
 import com.monkopedia.kcsg.CSG
 import com.monkopedia.kcsg.Cylinder
 import com.monkopedia.kcsg.FileUtil
@@ -13,7 +15,6 @@ import com.monkopedia.kcsg.UnityModifier
 import com.monkopedia.kcsg.Vector3d
 import com.monkopedia.kcsg.WeightFunction
 import java.io.IOException
-import java.nio.file.Paths
 import kotlin.math.max
 
 /**
@@ -45,11 +46,11 @@ class WeightedTubeSample {
         @JvmStatic
         fun main(args: Array<String>) {
             FileUtil.write(
-                Paths.get("weighted-tube.stl"),
+                Path("weighted-tube.stl"),
                 WeightedTubeSample().toCSG().toStlString()
             )
 
-//        new WeightedTubeSample().toCSG().toObj().toFiles(Paths.get("weighted-tube.obj"));
+//        new WeightedTubeSample().toCSG().toObj().toFiles(Path("weighted-tube.obj"));
         }
     }
 }

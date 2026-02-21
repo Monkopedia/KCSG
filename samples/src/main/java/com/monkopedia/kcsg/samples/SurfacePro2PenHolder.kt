@@ -5,13 +5,14 @@
  */
 package com.monkopedia.kcsg.samples
 
+import kotlinx.io.files.Path
+
 import com.monkopedia.kcsg.CSG
 import com.monkopedia.kcsg.Extrude
 import com.monkopedia.kcsg.FileUtil
 import com.monkopedia.kcsg.Transform
 import com.monkopedia.kcsg.Vector3d
 import java.io.IOException
-import java.nio.file.Paths
 
 /**
  */
@@ -45,7 +46,7 @@ class SurfacePro2PenHolder {
         @JvmStatic
         fun main(args: Array<String>) {
             FileUtil.write(
-                Paths.get("surfac2penholder.stl"), SurfacePro2PenHolder().toCSG()
+                Path("surfac2penholder.stl"), SurfacePro2PenHolder().toCSG()
                     .toStlString()
             )
         }

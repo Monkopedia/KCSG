@@ -31,8 +31,8 @@ package com.monkopedia.kcsg
 
 import com.monkopedia.kcsg.ext.imagej.STLLoader
 import java.io.IOException
-import java.io.InputStream
-import java.nio.file.Path
+import kotlinx.io.Source
+import kotlinx.io.files.Path
 
 /**
  * Loads a CSG from stl.
@@ -43,13 +43,13 @@ object STL {
      * @param path file path
      * @return CSG
      * @throws IOException if loading failed
-     */
+    */
     @Throws(IOException::class)
     fun file(path: Path): CSG {
         CSG.opOverride?.file(path)?.let { return it }
         val polygons: MutableList<Polygon> = ArrayList()
         var vertices: MutableList<Vector3d> = ArrayList()
-        for (p in STLLoader.parse(path.toFile())) {
+        for (p in STLLoader.parse(path)) {
             vertices.add(p.copy())
             if (vertices.size == 3) {
                 polygons.add(Polygon.fromPoints(vertices))
@@ -64,11 +64,11 @@ object STL {
      * @throws IOException if loading failed
      */
     @Throws(IOException::class)
-    fun from(inputStreamFactory: () -> InputStream, length: () -> Long): CSG {
-        CSG.opOverride?.inputStream(inputStreamFactory)?.let { return it }
+    fun from(sourceFactory: () -> Source, length: () -> Long): CSG {
+        CSG.opOverride?.source(sourceFactory)?.let { return it }
         val polygons: MutableList<Polygon> = ArrayList()
         var vertices: MutableList<Vector3d> = ArrayList()
-        for (p in STLLoader.parse(inputStreamFactory, length)) {
+        for (p in STLLoader.parse(sourceFactory, length)) {
             vertices.add(p.copy())
             if (vertices.size == 3) {
                 polygons.add(Polygon.fromPoints(vertices))

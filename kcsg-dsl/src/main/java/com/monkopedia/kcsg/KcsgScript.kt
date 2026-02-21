@@ -1,6 +1,6 @@
 package com.monkopedia.kcsg
 
-import java.nio.file.Path
+import kotlinx.io.files.Path
 
 class KcsgScript(var host: KcsgHost = EmptyHost) : KcsgBuilder() {
     private val properties = mutableMapOf<String, Lazy<CSG>>()

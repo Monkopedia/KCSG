@@ -7,7 +7,7 @@ import com.monkopedia.kcsg.KcsgHost
 import com.monkopedia.kcsg.KcsgScript
 import com.monkopedia.kcsg.STL
 import java.io.File
-import java.nio.file.Path
+import kotlinx.io.files.Path
 import javax.script.ScriptEngineManager
 import javax.script.ScriptException
 
@@ -24,7 +24,7 @@ class FileImportHost(imports: List<File>, outputDir: File?) : KcsgHost {
     override fun checkCached(hash: String): CSG? {
         val cachedFile = File(cacheDir, "$hash.stl")
         return if (cachedFile.exists()) {
-            STL.file(cachedFile.toPath())
+            STL.file(Path(cachedFile.path))
         } else {
             null
         }
@@ -36,7 +36,7 @@ class FileImportHost(imports: List<File>, outputDir: File?) : KcsgHost {
     }
 
     override fun findStl(stlName: String): Path {
-        return resolve(stlName, "stl").toPath()
+        return Path(resolve(stlName, "stl").path)
     }
 
     override fun findScript(csgsName: String): ImportedScript {

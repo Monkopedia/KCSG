@@ -5,13 +5,14 @@
  */
 package com.monkopedia.kcsg.samples
 
+import kotlinx.io.files.Path
+
 import com.monkopedia.kcsg.CSG
 import com.monkopedia.kcsg.Extrude
 import com.monkopedia.kcsg.FileUtil
 import com.monkopedia.kcsg.Transform
 import com.monkopedia.kcsg.Vector3d
 import java.io.IOException
-import java.nio.file.Paths
 import java.util.*
 
 /**
@@ -56,7 +57,7 @@ class Moebiusband {
         fun main(args: Array<String>) {
             println("RUNNING")
             FileUtil.write(
-                Paths.get("möbiusband.stl"),
+                Path("möbiusband.stl"),
                 Moebiusband().toCSG().toStlString()
             )
         }

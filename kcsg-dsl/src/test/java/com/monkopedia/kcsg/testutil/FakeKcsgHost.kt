@@ -3,8 +3,7 @@ package com.monkopedia.kcsg.testutil
 import com.monkopedia.kcsg.CSG
 import com.monkopedia.kcsg.ImportedScript
 import com.monkopedia.kcsg.KcsgHost
-import java.nio.file.Path
-import kotlin.io.path.Path
+import kotlinx.io.files.Path
 
 class FakeKcsgHost(
     override val supportsCaching: Boolean = true,

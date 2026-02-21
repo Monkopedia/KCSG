@@ -5,6 +5,8 @@
  */
 package com.monkopedia.kcsg.samples
 
+import kotlinx.io.files.Path
+
 import com.monkopedia.kcsg.CSG
 import com.monkopedia.kcsg.Cube
 import com.monkopedia.kcsg.FileUtil
@@ -13,7 +15,6 @@ import com.monkopedia.kcsg.WeightFunction
 import com.monkopedia.kcsg.Transform
 import com.monkopedia.kcsg.Vector3d
 import java.io.IOException
-import java.nio.file.Paths
 
 /**
  */
@@ -71,8 +72,8 @@ class QuadrocopterLadingGears {
         fun main(args: Array<String>) {
             val moebiusStairs = QuadrocopterLadingGears()
             val csg = moebiusStairs.toCSG()
-            FileUtil.write(Paths.get("quadcopter-landing-gear.stl"), csg.toStlString())
-            csg.toObj().toFiles(Paths.get("quadcopter-landing-gear.obj"))
+            FileUtil.write(Path("quadcopter-landing-gear.stl"), csg.toStlString())
+            csg.toObj().toFiles(Path("quadcopter-landing-gear.obj"))
         }
     }
 }

@@ -3,7 +3,7 @@ package com.monkopedia.kcsg
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows
 import org.junit.Test
-import java.nio.file.Path
+import kotlinx.io.files.Path
 
 class DslCollectionExtensionsTest {
     @Test

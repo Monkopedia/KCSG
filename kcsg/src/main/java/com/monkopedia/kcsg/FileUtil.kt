@@ -30,33 +30,34 @@
 package com.monkopedia.kcsg
 
 import java.io.IOException
-import java.nio.charset.Charset
-import java.nio.file.Files
-import java.nio.file.Path
-import java.nio.file.StandardOpenOption
 import java.util.logging.Level
 import java.util.logging.Logger
+import kotlinx.io.buffered
+import kotlinx.io.files.FileSystem
+import kotlinx.io.files.Path
+import kotlinx.io.files.SystemFileSystem
+import kotlinx.io.readString
+import kotlinx.io.writeString
 
 /**
  * File util class.
  */
 object FileUtil {
+    private val fileSystem: FileSystem = SystemFileSystem
+
     /**
      * Writes the specified string to a file.
      *
      * @param p file destination (existing files will be overwritten)
      * @param s string to save
      *
-     * @throws IOException if writing to file fails
+    * @throws IOException if writing to file fails
      */
     @Throws(IOException::class)
     fun write(p: Path, s: String) {
-        Files.newBufferedWriter(
-            p,
-            Charset.forName("UTF-8"),
-            StandardOpenOption.CREATE,
-            StandardOpenOption.TRUNCATE_EXISTING
-        ).use { writer -> writer.write(s, 0, s.length) }
+        fileSystem.sink(p).buffered().use { sink ->
+            sink.writeString(s)
+        }
     }
 
     /**
@@ -65,11 +66,13 @@ object FileUtil {
      * @param p file to read
      * @return the content of the file
      *
-     * @throws IOException if reading from file failed
+    * @throws IOException if reading from file failed
      */
     @Throws(IOException::class)
     fun read(p: Path): String {
-        return String(Files.readAllBytes(p), Charset.forName("UTF-8"))
+        return fileSystem.source(p).buffered().use { source ->
+            source.readString()
+        }
     }
 
     /**
@@ -81,22 +84,17 @@ object FileUtil {
      */
     @Throws(IOException::class)
     fun toStlFile(path: Path, csg: CSG) {
-        Files.newBufferedWriter(
-            path,
-            Charset.forName("UTF-8"),
-            StandardOpenOption.CREATE,
-            StandardOpenOption.TRUNCATE_EXISTING
-        ).use { out ->
-            out.append("solid v3d.csg\n")
+        fileSystem.sink(path).buffered().use { out ->
+            out.writeString("solid v3d.csg\n")
             csg.polygons.forEach { p: Polygon ->
                 try {
-                    out.append(p.toStlString())
+                    out.writeString(p.toStlString())
                 } catch (ex: IOException) {
                     Logger.getLogger(CSG::class.java.name).log(Level.SEVERE, null, ex)
                     throw RuntimeException(ex)
                 }
             }
-            out.append("endsolid v3d.csg\n")
+            out.writeString("endsolid v3d.csg\n")
         }
     }
 }

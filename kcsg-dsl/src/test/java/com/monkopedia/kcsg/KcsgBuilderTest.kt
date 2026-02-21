@@ -5,15 +5,15 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertSame
 import org.junit.Assert.assertTrue
 import org.junit.Test
-import java.io.InputStream
 import java.nio.file.Files
-import java.nio.file.Path
+import kotlinx.io.Source
+import kotlinx.io.files.Path
 
 class KcsgBuilderTest {
     @Test
     fun primitiveCsgImportStlAndExportFlow() {
         withTempDir("kcsg-builder-flow") { tempDir ->
-            val stlPath = tempDir.resolve("mesh.stl")
+            val stlPath = childPath(tempDir, "mesh.stl")
             FileUtil.toStlFile(stlPath, Cube(1.0).toCSG())
 
             val importedCsg = Cube(2.0).toCSG()
@@ -48,7 +48,7 @@ class KcsgBuilderTest {
     @Test
     fun csgRemeshDefaultsToTrueAndCanBeDisabled() {
         withTempDir("kcsg-builder-remesh") { tempDir ->
-            val stlPath = tempDir.resolve("mesh.stl")
+            val stlPath = childPath(tempDir, "mesh.stl")
             FileUtil.toStlFile(stlPath, Cube(1.0).toCSG())
             val imported = object : ImportedScript {
                 override val exports: Collection<String> = emptyList()
@@ -74,7 +74,7 @@ class KcsgBuilderTest {
     @Test
     fun cachingAndOverrideShortCircuit() {
         withTempDir("kcsg-builder-cache") { tempDir ->
-            val stlPath = tempDir.resolve("mesh.stl")
+            val stlPath = childPath(tempDir, "mesh.stl")
             FileUtil.toStlFile(stlPath, Cube(1.0).toCSG())
             val imported = object : ImportedScript {
                 override val exports: Collection<String> = emptyList()
@@ -109,7 +109,7 @@ class KcsgBuilderTest {
                     override fun bounds(s: String, vararg csg: Any?): Bounds? = null
                     override fun double(s: String, vararg csg: Any?): Double? = null
                     override fun file(path: Path): CSG? = null
-                    override fun inputStream(inputStreamFactory: () -> InputStream): CSG? = null
+                    override fun source(sourceFactory: () -> Source): CSG? = null
                 }
                 val overrideBuilder = TestBuilder(
                     stlPath = stlPath,
@@ -127,7 +127,7 @@ class KcsgBuilderTest {
     @Test
     fun exportByPropertyReferenceAndDefaultCacheImplementations() {
         withTempDir("kcsg-builder-default-cache") { tempDir ->
-            val stlPath = tempDir.resolve("mesh.stl")
+            val stlPath = childPath(tempDir, "mesh.stl")
             FileUtil.toStlFile(stlPath, Cube(1.0).toCSG())
             val imported = object : ImportedScript {
                 override val exports: Collection<String> = emptyList()
@@ -224,9 +224,13 @@ class KcsgBuilderTest {
     private fun withTempDir(prefix: String, block: (Path) -> Unit) {
         val dir = Files.createTempDirectory(prefix)
         try {
-            block(dir)
+            block(Path(dir.toString()))
         } finally {
             dir.toFile().deleteRecursively()
         }
+    }
+
+    private fun childPath(parent: Path, child: String): Path {
+        return Path(parent, child)
     }
 }

@@ -5,13 +5,14 @@
  */
 package com.monkopedia.kcsg.samples
 
+import kotlinx.io.files.Path
+
 import com.monkopedia.kcsg.CSG
 import com.monkopedia.kcsg.CSG.OptType
 import com.monkopedia.kcsg.Cylinder
 import com.monkopedia.kcsg.FileUtil
 import com.monkopedia.kcsg.Transform
 import java.io.IOException
-import java.nio.file.Paths
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -20,7 +21,7 @@ import kotlin.math.sin
 class QuadrocopterBottom {
     fun print3d(csg: CSG, n: Int) {
         try {
-            FileUtil.write(Paths.get("quadrocopter-bottom-$n.stl"), csg.toStlString())
+            FileUtil.write(Path("quadrocopter-bottom-$n.stl"), csg.toStlString())
         } catch (e: IOException) {
             e.printStackTrace()
         }
@@ -100,8 +101,8 @@ class QuadrocopterBottom {
         fun main(args: Array<String>) {
             CSG.setDefaultOptType(OptType.POLYGON_BOUND)
             val result = QuadrocopterBottom().toCSG()
-            FileUtil.write(Paths.get("quadrocopter-bottom.stl"), result.toStlString())
-            result.toObj().toFiles(Paths.get("quadrocopter-bottom.obj"))
+            FileUtil.write(Path("quadrocopter-bottom.stl"), result.toStlString())
+            result.toObj().toFiles(Path("quadrocopter-bottom.obj"))
         }
     }
 }

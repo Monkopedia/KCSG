@@ -5,6 +5,8 @@
  */
 package com.monkopedia.kcsg.samples
 
+import kotlinx.io.files.Path
+
 import com.monkopedia.kcsg.CSG
 import com.monkopedia.kcsg.Cube
 import com.monkopedia.kcsg.Extrude
@@ -12,7 +14,6 @@ import com.monkopedia.kcsg.FileUtil
 import com.monkopedia.kcsg.Transform
 import com.monkopedia.kcsg.Vector3d
 import java.io.IOException
-import java.nio.file.Paths
 
 /**
  */
@@ -198,9 +199,9 @@ class ServoMountPixy {
             val sMount = ServoMountPixy()
 
             // save union as stl
-//        FileUtil.write(Paths.get("sample.stl"), new ServoHead().servoHeadFemale().transformed(Transform.unity().scale(1.0)).toStlString());
+//        FileUtil.write(Path("sample.stl"), new ServoHead().servoHeadFemale().transformed(Transform.unity().scale(1.0)).toStlString());
             FileUtil.write(
-                Paths.get("servo-mount-pixy.stl"),
+                Path("servo-mount-pixy.stl"),
                 sMount.toCSG().toStlString()
             )
         }

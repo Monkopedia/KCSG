@@ -5,13 +5,14 @@
  */
 package com.monkopedia.kcsg.samples
 
+import kotlinx.io.files.Path
+
 import com.monkopedia.kcsg.CSG
 import com.monkopedia.kcsg.Cube
 import com.monkopedia.kcsg.Cylinder
 import com.monkopedia.kcsg.FileUtil
 import com.monkopedia.kcsg.Transform
 import java.io.IOException
-import java.nio.file.Paths
 
 /**
  */
@@ -88,10 +89,10 @@ class QuadrocopterArmHolder {
         fun main(args: Array<String>) {
             val result = QuadrocopterArmHolder().toCSG(18.0, 0.5, 18.0, 4.0, 20.0, 3.0)
             FileUtil.write(
-                Paths.get("quadrocopter-arm-holder.stl"),
+                Path("quadrocopter-arm-holder.stl"),
                 result.toStlString()
             )
-            result.toObj().toFiles(Paths.get("quadrocopter-arm-holder.obj"))
+            result.toObj().toFiles(Path("quadrocopter-arm-holder.obj"))
         }
     }
 }

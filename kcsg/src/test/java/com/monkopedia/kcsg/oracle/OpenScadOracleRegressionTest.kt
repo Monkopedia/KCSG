@@ -30,7 +30,7 @@ class OpenScadOracleRegressionTest {
             val referencePath = fixtureRoot.resolve(backend).resolve("many_reductions_union.stl")
             assertTrue("Missing oracle fixture: $referencePath", Files.isRegularFile(referencePath))
 
-            val expected = STL.file(referencePath)
+            val expected = STL.file(kotlinx.io.files.Path(referencePath.toString()))
             val expectedPolygonCount = expected.polygons.size
             val actualPolygonCount = actual.polygons.size
             val inflationRatio = actualPolygonCount.toDouble() / expectedPolygonCount.toDouble()

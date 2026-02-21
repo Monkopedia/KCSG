@@ -1,7 +1,7 @@
 package com.monkopedia.kcsg
 
+import kotlinx.io.files.Path
 import org.slf4j.LoggerFactory
-import java.nio.file.Path
 import kotlin.properties.PropertyDelegateProvider
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty

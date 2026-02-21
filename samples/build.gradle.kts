@@ -33,6 +33,7 @@ dependencies {
 
     testImplementation(group = "junit", name = "junit", version = "4.13.2")
 
+    implementation(libs.kotlinx.io.core)
     implementation(libs.slf4j.api)
     implementation(kotlin("stdlib-jdk8"))
 }

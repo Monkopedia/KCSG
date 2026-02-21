@@ -5,12 +5,13 @@
  */
 package com.monkopedia.kcsg.samples
 
+import kotlinx.io.files.Path
+
 import com.monkopedia.kcsg.CSG
 import com.monkopedia.kcsg.Extrude
 import com.monkopedia.kcsg.FileUtil
 import com.monkopedia.kcsg.Vector3d
 import java.io.IOException
-import java.nio.file.Paths
 import kotlin.math.max
 
 /**
@@ -67,9 +68,9 @@ class BatteryHolder {
             val arConnect = BatteryHolder()
 
             // save union as stl
-//        FileUtil.write(Paths.get("sample.stl"), new ServoHead().servoHeadFemale().transformed(Transform.unity().scale(1.0)).toStlString());
+//        FileUtil.write(Path("sample.stl"), new ServoHead().servoHeadFemale().transformed(Transform.unity().scale(1.0)).toStlString());
             FileUtil.write(
-                Paths.get("battery-holder.stl"),
+                Path("battery-holder.stl"),
                 arConnect.toCSG().toStlString()
             )
         }

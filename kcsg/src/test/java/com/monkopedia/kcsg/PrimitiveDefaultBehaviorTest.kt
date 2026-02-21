@@ -5,8 +5,8 @@ import org.junit.Assert.assertNotSame
 import org.junit.Assert.assertSame
 import org.junit.Assert.assertTrue
 import org.junit.Test
-import java.io.InputStream
-import java.nio.file.Path
+import kotlinx.io.Source
+import kotlinx.io.files.Path
 
 class PrimitiveDefaultBehaviorTest {
     @Test
@@ -87,7 +87,7 @@ class PrimitiveDefaultBehaviorTest {
 
             override fun file(path: Path): CSG? = null
 
-            override fun inputStream(inputStreamFactory: () -> InputStream): CSG? = null
+            override fun source(sourceFactory: () -> Source): CSG? = null
         }
 
         val csg = CSG.withOverride(override) { primitive.toCSG() }

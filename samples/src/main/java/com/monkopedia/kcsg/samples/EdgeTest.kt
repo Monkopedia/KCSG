@@ -5,6 +5,8 @@
  */
 package com.monkopedia.kcsg.samples
 
+import kotlinx.io.files.Path
+
 import com.monkopedia.kcsg.CSG
 import com.monkopedia.kcsg.Cylinder
 import com.monkopedia.kcsg.Edge
@@ -13,7 +15,6 @@ import com.monkopedia.kcsg.Polygon
 import com.monkopedia.kcsg.Sphere
 import com.monkopedia.kcsg.Transform
 import java.io.IOException
-import java.nio.file.Paths
 
 /**
  * Average Chicken Egg.
@@ -50,11 +51,11 @@ class EdgeTest {
         @JvmStatic
         fun main(args: Array<String>) {
             FileUtil.write(
-                Paths.get("edge-test.stl"),
+                Path("edge-test.stl"),
                 EdgeTest().toCSG(true).toStlString()
             )
             FileUtil.write(
-                Paths.get("edge-test-orig.stl"),
+                Path("edge-test-orig.stl"),
                 EdgeTest().toCSG(false).toStlString()
             )
         }

@@ -1,6 +1,6 @@
 package com.monkopedia.kcsg
 
-import java.nio.file.Path
+import kotlinx.io.files.Path
 
 interface KcsgHost {
     fun findStl(stlName: String): Path

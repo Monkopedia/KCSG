@@ -5,12 +5,13 @@
  */
 package com.monkopedia.kcsg.samples
 
+import kotlinx.io.files.Path
+
 import com.monkopedia.kcsg.CSG
 import com.monkopedia.kcsg.Extrude
 import com.monkopedia.kcsg.FileUtil
 import com.monkopedia.kcsg.Vector3d
 import java.io.IOException
-import java.nio.file.Paths
 
 /**
  */
@@ -58,7 +59,7 @@ class MicroSDCard {
         @Throws(IOException::class)
         @JvmStatic
         fun main(args: Array<String>) {
-            FileUtil.write(Paths.get("mircosd.stl"), MicroSDCard().toCSG().toStlString())
+            FileUtil.write(Path("mircosd.stl"), MicroSDCard().toCSG().toStlString())
         }
     }
 }

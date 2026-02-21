@@ -5,11 +5,12 @@
  */
 package com.monkopedia.kcsg.samples
 
+import kotlinx.io.files.Path
+
 import com.monkopedia.kcsg.CSG
 import com.monkopedia.kcsg.FileUtil
 import com.monkopedia.kcsg.Transform
 import java.io.IOException
-import java.nio.file.Paths
 
 /**
  */
@@ -63,7 +64,7 @@ class TriMail {
         @JvmStatic
         fun main(args: Array<String>) {
             FileUtil.write(
-                Paths.get("trimail-test.stl"),
+                Path("trimail-test.stl"),
                 TriMail().toCSG(3, 3, 3)!!.toStlString()
             )
         }

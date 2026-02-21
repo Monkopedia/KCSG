@@ -5,6 +5,8 @@
  */
 package com.monkopedia.kcsg.samples
 
+import kotlinx.io.files.Path
+
 import com.monkopedia.kcsg.CSG
 import com.monkopedia.kcsg.CSG.OptType
 import com.monkopedia.kcsg.FileUtil
@@ -12,7 +14,6 @@ import com.monkopedia.kcsg.Sphere
 import com.monkopedia.kcsg.Transform
 import com.monkopedia.kcsg.Vector3d
 import java.io.IOException
-import java.nio.file.Paths
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -70,10 +71,10 @@ class WeightedSphere {
         @JvmStatic
         fun main(args: Array<String>) {
             FileUtil.write(
-                Paths.get("rounded-cube-mod.stl"),
+                Path("rounded-cube-mod.stl"),
                 WeightedSphere().toCSG().toStlString()
             )
-            WeightedSphere().toCSG().toObj().toFiles(Paths.get("rounded-cube-mod.obj"))
+            WeightedSphere().toCSG().toObj().toFiles(Path("rounded-cube-mod.obj"))
         }
     }
 }

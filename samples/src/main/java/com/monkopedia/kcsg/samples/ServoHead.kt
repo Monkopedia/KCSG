@@ -5,6 +5,8 @@
  */
 package com.monkopedia.kcsg.samples
 
+import kotlinx.io.files.Path
+
 import com.monkopedia.kcsg.CSG
 import com.monkopedia.kcsg.Cylinder
 import com.monkopedia.kcsg.Extrude
@@ -12,7 +14,6 @@ import com.monkopedia.kcsg.FileUtil
 import com.monkopedia.kcsg.Transform
 import com.monkopedia.kcsg.Vector3d
 import java.io.IOException
-import java.nio.file.Paths
 
 /**
  */
@@ -104,11 +105,11 @@ class ServoHead {
         fun main(args: Array<String>) {
             println("RUNNING")
             FileUtil.write(
-                Paths.get("servo-head-female.stl"), ServoHead().servoHeadFemale()
+                Path("servo-head-female.stl"), ServoHead().servoHeadFemale()
                     .toStlString()
             )
             FileUtil.write(
-                Paths.get("servo-head-male.stl"), ServoHead().servoHeadMale()!!
+                Path("servo-head-male.stl"), ServoHead().servoHeadMale()!!
                     .toStlString()
             )
         }

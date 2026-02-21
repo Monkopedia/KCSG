@@ -5,13 +5,14 @@
  */
 package com.monkopedia.kcsg.samples
 
+import kotlinx.io.files.Path
+
 import com.monkopedia.kcsg.CSG
 import com.monkopedia.kcsg.CSG.OptType
 import com.monkopedia.kcsg.FileUtil
 import com.monkopedia.kcsg.Sphere
 import com.monkopedia.kcsg.Transform
 import java.io.IOException
-import java.nio.file.Paths
 import java.util.logging.Level
 import java.util.logging.Logger
 
@@ -31,7 +32,7 @@ class EggCup {
             egg.transformed(Transform.unity().translateZ(-eggBounds.z * 0.50))
         println("egg-size: " + upperNegativeEgg.bounds)
         try {
-            FileUtil.write(Paths.get("eggcup-neg.stl"), upperNegativeEgg.toStlString())
+            FileUtil.write(Path("eggcup-neg.stl"), upperNegativeEgg.toStlString())
         } catch (ex: IOException) {
             Logger.getLogger(EggCup::class.java.name).log(Level.SEVERE, null, ex)
         }
@@ -61,7 +62,7 @@ class EggCup {
         @Throws(IOException::class)
         @JvmStatic
         fun main(args: Array<String>) {
-            FileUtil.write(Paths.get("eggcup.stl"), EggCup().toCSG().toStlString())
+            FileUtil.write(Path("eggcup.stl"), EggCup().toCSG().toStlString())
         }
     }
 }

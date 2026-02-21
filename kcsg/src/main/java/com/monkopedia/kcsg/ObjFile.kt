@@ -7,20 +7,19 @@ package com.monkopedia.kcsg
 
 import kotlin.Throws
 import java.util.Locale
-import java.nio.file.Paths
-import java.io.*
-import java.nio.charset.StandardCharsets
-import java.nio.file.Path
+import java.io.IOException
+import kotlinx.io.Buffer
+import kotlinx.io.Source
+import kotlinx.io.files.Path
+import kotlinx.io.writeString
 
 /**
  */
 class ObjFile internal constructor(private var _obj: String, private val _mtl: String) {
-    private var _objStream: InputStream? = null
-    private var _mtlStream: InputStream? = null
     @Throws(IOException::class)
     fun toFiles(p: Path) {
         val parent = p.parent
-        var fileName = p.fileName.toString()
+        var fileName = p.name
         if (fileName.lowercase(Locale.getDefault()).endsWith(".obj")
             || fileName.lowercase(Locale.getDefault()).endsWith(".mtl")
         ) {
@@ -29,13 +28,12 @@ class ObjFile internal constructor(private var _obj: String, private val _mtl: S
         val objName = "$fileName.obj"
         val mtlName = "$fileName.mtl"
         _obj = _obj.replace(MTL_NAME, mtlName)
-        _objStream = null
         if (parent == null) {
-            FileUtil.write(Paths.get(objName), _obj)
-            FileUtil.write(Paths.get(mtlName), _mtl)
+            FileUtil.write(Path(objName), _obj)
+            FileUtil.write(Path(mtlName), _mtl)
         } else {
-            FileUtil.write(Paths.get(parent.toString(), objName), _obj)
-            FileUtil.write(Paths.get(parent.toString(), mtlName), _mtl)
+            FileUtil.write(Path(parent, objName), _obj)
+            FileUtil.write(Path(parent, mtlName), _mtl)
         }
     }
 
@@ -49,20 +47,18 @@ class ObjFile internal constructor(private var _obj: String, private val _mtl: S
             return _mtl
         }
 
-    val objStream: InputStream
+    val objSource: Source
         get() {
-            if (_objStream == null) {
-                _objStream = ByteArrayInputStream(_obj.toByteArray(StandardCharsets.UTF_8))
+            return Buffer().apply {
+                writeString(_obj)
             }
-            return _objStream!!
         }
 
-    val mtlStream: InputStream
+    val mtlSource: Source
         get() {
-            if (_mtlStream == null) {
-                _mtlStream = ByteArrayInputStream(_mtl.toByteArray(StandardCharsets.UTF_8))
+            return Buffer().apply {
+                writeString(_mtl)
             }
-            return _mtlStream!!
         }
 
     companion object {

@@ -5,8 +5,9 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertSame
 import org.junit.Assert.assertTrue
 import org.junit.Test
-import java.io.ByteArrayInputStream
-import java.nio.file.Paths
+import kotlinx.io.Buffer
+import kotlinx.io.files.Path
+import kotlinx.io.writeString
 
 class OpOverrideContractTest {
     @Test
@@ -54,7 +55,7 @@ class OpOverrideContractTest {
                 if (name == "volume") expectedVolume else null
             },
             fileResult = { stlFileSentinel },
-            streamResult = { stlStreamSentinel },
+            sourceResult = { stlStreamSentinel },
         )
 
         val previous = CSG.opOverride
@@ -67,11 +68,15 @@ class OpOverrideContractTest {
             assertEquals(expectedVolume, base.computeVolume(), 0.0)
             assertSame(boundsToCsgSentinel, Bounds(Vector3d.ZERO, Vector3d.UNITY).toCSG())
             assertSame(primitiveToCsgSentinel, primitive.toCSG())
-            assertSame(stlFileSentinel, STL.file(Paths.get("unused.stl")))
+            assertSame(stlFileSentinel, STL.file(Path("unused.stl")))
             assertSame(
                 stlStreamSentinel,
                 STL.from(
-                    inputStreamFactory = { ByteArrayInputStream("abc".toByteArray()) },
+                    sourceFactory = {
+                        Buffer().apply {
+                            writeString("abc")
+                        }
+                    },
                     length = { 3L },
                 ),
             )
@@ -83,7 +88,7 @@ class OpOverrideContractTest {
             assertTrue(override.boundsCalls.any { it.first == "bounds" })
             assertTrue(override.doubleCalls.any { it.first == "volume" })
             assertEquals(1, override.fileCalls.size)
-            assertEquals(1, override.inputStreamCalls.size)
+            assertEquals(1, override.sourceCalls.size)
         } finally {
             CSG.opOverride = previous
         }

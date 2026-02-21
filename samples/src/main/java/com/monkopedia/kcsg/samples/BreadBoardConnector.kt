@@ -5,6 +5,8 @@
  */
 package com.monkopedia.kcsg.samples
 
+import kotlinx.io.files.Path
+
 import com.monkopedia.kcsg.CSG
 import com.monkopedia.kcsg.Extrude
 import com.monkopedia.kcsg.FileUtil
@@ -12,7 +14,6 @@ import com.monkopedia.kcsg.ext.vvecmath.Plane
 import com.monkopedia.kcsg.Transform
 import com.monkopedia.kcsg.Vector3d
 import java.io.IOException
-import java.nio.file.Paths
 import kotlin.math.max
 
 /**
@@ -69,7 +70,7 @@ class BreadBoardConnector {
 
             // save union as stl
             FileUtil.write(
-                Paths.get("bread-board-connector-tmp.stl"), arConnect.toCSG().transformed(
+                Path("bread-board-connector-tmp.stl"), arConnect.toCSG().transformed(
                     Transform.unity().mirror(Plane.XY_PLANE).rotY(180.0)
                 ).toStlString()
             )

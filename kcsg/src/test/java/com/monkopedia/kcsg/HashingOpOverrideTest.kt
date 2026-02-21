@@ -4,16 +4,17 @@ import com.monkopedia.kcsg.testutil.TestIoFixtures.withTempDirectory
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotEquals
 import org.junit.Test
-import java.io.ByteArrayInputStream
 import java.nio.charset.StandardCharsets
+import kotlinx.io.Buffer
+import kotlinx.io.files.Path
 
 class HashingOpOverrideTest {
     @Test
     fun hashingSequenceIsDeterministicForSameInputs() {
         withTempDirectory("kcsg-hash-det") { tempDir ->
-            val existingPath = tempDir.resolve("existing.bin")
+            val existingPath = Path(tempDir, "existing.bin")
             FileUtil.write(existingPath, "content-a")
-            val missingPath = tempDir.resolve("missing.bin")
+            val missingPath = Path(tempDir, "missing.bin")
 
             val fixedInputs = FixedHashInputs(
                 csg = Cube(1.0).toCSG(),
@@ -51,8 +52,8 @@ class HashingOpOverrideTest {
     @Test
     fun hashingChangesWhenInputsChangeIncludingFileAndStream() {
         withTempDirectory("kcsg-hash-diff") { tempDir ->
-            val existingPath = tempDir.resolve("existing.bin")
-            val missingPath = tempDir.resolve("missing.bin")
+            val existingPath = Path(tempDir, "existing.bin")
+            val missingPath = Path(tempDir, "missing.bin")
 
             FileUtil.write(existingPath, "content-a")
             val baseInputs = FixedHashInputs(
@@ -120,7 +121,11 @@ class HashingOpOverrideTest {
         override.double("double", inputs.transform, inputs.vector)
         override.file(inputs.existingFile)
         override.file(inputs.missingFile)
-        override.inputStream { ByteArrayInputStream(inputs.streamBytes) }
+        override.source {
+            Buffer().apply {
+                write(inputs.streamBytes, 0, inputs.streamBytes.size)
+            }
+        }
         return override.hash()
     }
 
@@ -133,8 +138,8 @@ class HashingOpOverrideTest {
         val polyhedron: Polyhedron,
         val roundedCube: RoundedCube,
         val sphere: Sphere,
-        val existingFile: java.nio.file.Path,
-        val missingFile: java.nio.file.Path,
+        val existingFile: Path,
+        val missingFile: Path,
         val streamBytes: ByteArray,
     )
 

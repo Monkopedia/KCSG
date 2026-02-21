@@ -5,6 +5,8 @@
  */
 package com.monkopedia.kcsg.samples
 
+import kotlinx.io.files.Path
+
 import com.monkopedia.kcsg.CSG
 import com.monkopedia.kcsg.Cube
 import com.monkopedia.kcsg.Cylinder
@@ -106,9 +108,9 @@ class BreadBoardMount {
             val aMount = ArduinoMount()
 
             // save union as stl
-//        FileUtil.write(Paths.get("sample.stl"), new ServoHead().servoHeadFemale().transformed(Transform.unity().scale(1.0)).toStlString());
+//        FileUtil.write(Path("sample.stl"), new ServoHead().servoHeadFemale().transformed(Transform.unity().scale(1.0)).toStlString());
 //            FileUtil.write(
-//                Paths.get("bread-board-mount.stl"),
+//                Path("bread-board-mount.stl"),
 //                aMount.toCSG().toStlString()
 //            )
         }

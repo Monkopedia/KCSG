@@ -43,6 +43,7 @@ dependencies {
     testImplementation(group = "junit", name = "junit", version = "4.13.2")
 
     implementation(libs.clikt)
+    implementation(libs.kotlinx.io.core)
     implementation(libs.slf4j.simple)
     implementation(kotlin("stdlib-jdk8"))
     implementation(project(":kcsg-dsl"))

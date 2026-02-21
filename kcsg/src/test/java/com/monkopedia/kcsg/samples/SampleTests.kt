@@ -9,6 +9,10 @@ import com.monkopedia.kcsg.Vector3d
 import com.monkopedia.kcsg.ext.vvecmath.Plane
 import org.junit.Before
 import org.junit.Test
+import kotlinx.io.Buffer
+import kotlinx.io.asSource
+import kotlinx.io.buffered
+import kotlinx.io.write
 import kotlin.math.abs
 import kotlin.math.max
 
@@ -21,8 +25,9 @@ class SampleTests {
 
     private fun getResource(name: String): CSG {
         return STL.from({
-            SampleTests::class.java.getResourceAsStream(name)
+            (SampleTests::class.java.getResourceAsStream(name)
                 ?: error("Missing resource $name")
+                ).asSource().buffered()
         }, { SampleTests::class.java.getResource(name)?.openConnection()?.contentLengthLong ?: 0L })
     }
 
@@ -50,7 +55,12 @@ class SampleTests {
     private fun toStlAndBack(actual: CSG): CSG {
         val stlString = actual.toStlString()
         val length = stlString.encodeToByteArray().size.toLong()
-        return STL.from({ stlString.byteInputStream() }, { length })
+        return STL.from({
+            val bytes = stlString.encodeToByteArray()
+            Buffer().apply {
+                write(bytes, 0, bytes.size)
+            }
+        }, { length })
     }
 
     private fun assertPolygonEquals(expectedPoly: Polygon, actualPoly: Polygon) {
