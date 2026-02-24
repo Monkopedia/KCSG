@@ -21,6 +21,11 @@ jobs:
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
 
+      - name: Install OpenSCAD runtime dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libegl1 libopengl0 libgl1 libglu1-mesa
+
       - name: Require public API checklist update when API changes
         if: github.event_name == 'pull_request'
         run: |
