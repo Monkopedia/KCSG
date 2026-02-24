@@ -51,3 +51,30 @@ jobs:
           path: |
             kcsg/build/reports/kover/
             kcsg-dsl/build/reports/kover/
+
+  multiplatform-compile-smoke:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        target:
+          - name: js
+            tasks: ":kcsg:compileKotlinJs :kcsg-dsl:compileKotlinJs"
+          - name: wasm
+            tasks: ":kcsg:compileKotlinWasmJs :kcsg:compileKotlinWasmWasi :kcsg-dsl:compileKotlinWasmJs :kcsg-dsl:compileKotlinWasmWasi"
+          - name: native-linux
+            tasks: ":kcsg:compileKotlinLinuxX64 :kcsg-dsl:compileKotlinLinuxX64"
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Compile ${{ matrix.target.name }} targets
+        run: ./gradlew ${{ matrix.target.tasks }} --stacktrace

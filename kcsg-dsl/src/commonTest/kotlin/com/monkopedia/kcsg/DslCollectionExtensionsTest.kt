@@ -77,6 +77,11 @@ class DslCollectionExtensionsTest {
         assertFailsWith<IllegalArgumentException> {
             base.scale(x = 0.0, y = 0.0, z = 0.0)
         }
+
+        assertFailsWith<IllegalArgumentException> {
+            base.scale(y = 1.0)
+        }
+        assertEquals(1, base.rot().size)
     }
 
     private class NoopBuilder : KcsgBuilder() {
