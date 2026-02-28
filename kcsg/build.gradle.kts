@@ -154,7 +154,7 @@ mavenPublishing {
             url.set("https://github.com/Monkopedia/kcsg/")
         }
     }
-    publishToMavenCentral()
+    publishToMavenCentral(automaticRelease = true)
 
     signAllPublications()
 }
