@@ -8,7 +8,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Java
+      - name: Set up JDK 8
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 8
+      - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -32,7 +37,12 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Java
+      - name: Set up JDK 8
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 8
+      - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -45,9 +55,6 @@ jobs:
         run: |
           cat <(echo -e "${{ secrets.OSSRH_GPG_SECRET_KEY }}") | base64 -d | gpg --batch --import
           gpg --list-secret-keys --keyid-format LONG
-
-      - name: Pre-build
-        run: ./gradlew publishToMavenLocal -Psigning.gnupg.passphrase='${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}'
 
       - name: Publish Apple targets
         run: >-
@@ -87,7 +94,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Java
+      - name: Set up JDK 8
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 8
+      - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
           distribution: temurin
