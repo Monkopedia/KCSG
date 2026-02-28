@@ -22,8 +22,28 @@ jobs:
           cat <(echo -e "${{ secrets.OSSRH_GPG_SECRET_KEY }}") | base64 -d | gpg --batch --import
           gpg --list-secret-keys --keyid-format LONG
 
-      - name: Publish package
-        run: ./gradlew publish -PmavenCentralUsername=${{ secrets.OSSRH_USERNAME }} -PmavenCentralPassword=${{ secrets.OSSRH_TOKEN }} -Psigning.gnupg.passphrase='${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}'
+      - name: Publish Linux targets
+        run: >-
+          ./gradlew
+          -PmavenCentralUsername=${{ secrets.OSSRH_USERNAME }}
+          -PmavenCentralPassword=${{ secrets.OSSRH_TOKEN }}
+          -Psigning.gnupg.passphrase='${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}'
+          :kcsg:publishKotlinMultiplatformPublicationToMavenCentralRepository
+          :kcsg:publishJvmPublicationToMavenCentralRepository
+          :kcsg:publishJsPublicationToMavenCentralRepository
+          :kcsg:publishWasmJsPublicationToMavenCentralRepository
+          :kcsg:publishWasmWasiPublicationToMavenCentralRepository
+          :kcsg:publishLinuxX64PublicationToMavenCentralRepository
+          :kcsg:publishLinuxArm64PublicationToMavenCentralRepository
+          :kcsg:publishMingwX64PublicationToMavenCentralRepository
+          :kcsg-dsl:publishKotlinMultiplatformPublicationToMavenCentralRepository
+          :kcsg-dsl:publishJvmPublicationToMavenCentralRepository
+          :kcsg-dsl:publishJsPublicationToMavenCentralRepository
+          :kcsg-dsl:publishWasmJsPublicationToMavenCentralRepository
+          :kcsg-dsl:publishWasmWasiPublicationToMavenCentralRepository
+          :kcsg-dsl:publishLinuxX64PublicationToMavenCentralRepository
+          :kcsg-dsl:publishLinuxArm64PublicationToMavenCentralRepository
+          :kcsg-dsl:publishMingwX64PublicationToMavenCentralRepository
         env:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
