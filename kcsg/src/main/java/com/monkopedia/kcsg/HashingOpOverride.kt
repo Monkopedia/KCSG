@@ -208,8 +208,11 @@ private class HashBytesBuilder {
     }
 
     fun write(value: Int) {
-        ensureCapacity(1)
+        ensureCapacity(4)
         data[size++] = (value and 0xFF).toByte()
+        data[size++] = ((value shr 8) and 0xFF).toByte()
+        data[size++] = ((value shr 16) and 0xFF).toByte()
+        data[size++] = ((value shr 24) and 0xFF).toByte()
     }
 
     fun toByteArray(): ByteArray {

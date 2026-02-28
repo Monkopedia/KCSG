@@ -4,7 +4,7 @@ on:
     types: [created]
   workflow_dispatch:
 jobs:
-  publish:
+  publish-linux:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -13,6 +13,9 @@ jobs:
         with:
           distribution: temurin
           java-version: 21
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
       - id: install-secret-key
         name: Install gpg secret key
         run: |
@@ -21,6 +24,61 @@ jobs:
 
       - name: Publish package
         run: ./gradlew publish -PmavenCentralUsername=${{ secrets.OSSRH_USERNAME }} -PmavenCentralPassword=${{ secrets.OSSRH_TOKEN }} -Psigning.gnupg.passphrase='${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}'
+        env:
+          MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+          MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
+
+  publish-macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - id: install-secret-key
+        name: Install gpg secret key
+        run: |
+          cat <(echo -e "${{ secrets.OSSRH_GPG_SECRET_KEY }}") | base64 -d | gpg --batch --import
+          gpg --list-secret-keys --keyid-format LONG
+
+      - name: Pre-build
+        run: ./gradlew publishToMavenLocal -Psigning.gnupg.passphrase='${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}'
+
+      - name: Publish Apple targets
+        run: >-
+          ./gradlew
+          -PmavenCentralUsername=${{ secrets.OSSRH_USERNAME }}
+          -PmavenCentralPassword=${{ secrets.OSSRH_TOKEN }}
+          -Psigning.gnupg.passphrase='${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}'
+          :kcsg:publishIosArm64PublicationToMavenCentralRepository
+          :kcsg:publishIosSimulatorArm64PublicationToMavenCentralRepository
+          :kcsg:publishIosX64PublicationToMavenCentralRepository
+          :kcsg:publishMacosArm64PublicationToMavenCentralRepository
+          :kcsg:publishMacosX64PublicationToMavenCentralRepository
+          :kcsg:publishTvosArm64PublicationToMavenCentralRepository
+          :kcsg:publishTvosSimulatorArm64PublicationToMavenCentralRepository
+          :kcsg:publishTvosX64PublicationToMavenCentralRepository
+          :kcsg:publishWatchosArm32PublicationToMavenCentralRepository
+          :kcsg:publishWatchosArm64PublicationToMavenCentralRepository
+          :kcsg:publishWatchosSimulatorArm64PublicationToMavenCentralRepository
+          :kcsg:publishWatchosX64PublicationToMavenCentralRepository
+          :kcsg-dsl:publishIosArm64PublicationToMavenCentralRepository
+          :kcsg-dsl:publishIosSimulatorArm64PublicationToMavenCentralRepository
+          :kcsg-dsl:publishIosX64PublicationToMavenCentralRepository
+          :kcsg-dsl:publishMacosArm64PublicationToMavenCentralRepository
+          :kcsg-dsl:publishMacosX64PublicationToMavenCentralRepository
+          :kcsg-dsl:publishTvosArm64PublicationToMavenCentralRepository
+          :kcsg-dsl:publishTvosSimulatorArm64PublicationToMavenCentralRepository
+          :kcsg-dsl:publishTvosX64PublicationToMavenCentralRepository
+          :kcsg-dsl:publishWatchosArm32PublicationToMavenCentralRepository
+          :kcsg-dsl:publishWatchosArm64PublicationToMavenCentralRepository
+          :kcsg-dsl:publishWatchosSimulatorArm64PublicationToMavenCentralRepository
+          :kcsg-dsl:publishWatchosX64PublicationToMavenCentralRepository
         env:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}

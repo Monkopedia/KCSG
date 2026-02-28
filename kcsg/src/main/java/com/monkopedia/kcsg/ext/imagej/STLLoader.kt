@@ -44,7 +44,10 @@ internal object STLLoader {
         sourceFactory().use { fs ->
             // bytes 80, 81, 82 and 83 form a little-endian int
             // that contains the number of triangles
-            if (!fs.readFully(buffer)) return ArrayList()
+            if (!fs.readFully(buffer)) {
+                logger.error("Binary STL header truncated: expected 84 bytes")
+                return ArrayList()
+            }
         }
         val triangles = (
             buffer[83].toInt() and 0xff shl 24
@@ -88,6 +91,9 @@ internal object STLLoader {
                 for (t in 0 until triangles) {
                     val tri = ByteArray(50)
                     if (!fis.readFully(tri)) {
+                        logger.error(
+                            "Binary STL truncated at triangle $t of $triangles"
+                        )
                         return@use
                     }
                     leBytesToFloat(tri[0], tri[1], tri[2], tri[3]).toDouble()

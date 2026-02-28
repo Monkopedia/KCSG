@@ -3,7 +3,20 @@ package com.monkopedia.kcsg
 /**
  * Logging abstraction for KCSG that supports delegate installation.
  *
- * By default no logger is installed and all log calls are dropped.
+ * By default no logger is installed and all log calls are silently dropped.
+ * To receive log output (including STL parse errors and CSG warnings), install
+ * a delegate early in application startup:
+ *
+ * ```kotlin
+ * Logger.setLogger(object : Logger {
+ *     override fun log(level: Logger.Level, tag: String, message: String, throwable: Throwable?) {
+ *         println("[$level] $tag: $message")
+ *         throwable?.printStackTrace()
+ *     }
+ * })
+ * ```
+ *
+ * This replaces the SLF4J dependency used in versions prior to v0.3.0.
  */
 interface Logger {
     enum class Level {
