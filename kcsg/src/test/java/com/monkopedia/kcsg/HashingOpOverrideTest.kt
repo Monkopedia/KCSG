@@ -105,6 +105,16 @@ class HashingOpOverrideTest {
         assertNotEquals(hashA, hashC)
     }
 
+    @Test
+    fun cubeCenteredFlagChangesHash() {
+        fun hashOf(cube: Cube): String =
+            HashingOpOverride().apply { operation("test", cube) }.hash()
+
+        val centered = hashOf(Cube(9.5, 7.5, 3.5))
+        val notCentered = hashOf(Cube(9.5, 7.5, 3.5).also { it.centered = false })
+        assertNotEquals(centered, notCentered)
+    }
+
     private fun runSequence(override: HashingOpOverride, inputs: FixedHashInputs): String {
         override.operation(
             "operation",
@@ -152,7 +162,7 @@ class HashingOpOverrideTest {
         }
 
         assertEquals(
-            "a8db8d9b8b04337a54f91ea09768e06679eee60fd540002492b5c96d777989c3",
+            "12729f41cefedeff2c6f3d1bcb546dba9387a8485d07099316c89f4eaf9235fa",
             hashOf(Cube(2.0)),
         )
         assertEquals(

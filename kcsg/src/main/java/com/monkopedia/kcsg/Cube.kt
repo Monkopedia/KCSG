@@ -50,7 +50,11 @@ data class Cube(
      */
     var dimensions: Vector3d = Vector3d.xyz(1.0, 1.0, 1.0)
 ) : Primitive {
-    private var centered = true
+    /**
+     * Whether this cube is centered on [center]. When false, the cube is shifted so its
+     * corner sits at [center] (see [noCenter]). Affects generated geometry.
+     */
+    var centered: Boolean = true
     private val properties = PropertyStorage()
 
     /**
