@@ -3,6 +3,7 @@ package com.monkopedia.kcsg
 import com.monkopedia.kcsg.testutil.TestIoFixtures.withTempDirectory
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotEquals
+import org.junit.Assert.assertThrows
 import org.junit.Test
 import java.nio.charset.StandardCharsets
 import kotlinx.io.Buffer
@@ -90,19 +91,73 @@ class HashingOpOverrideTest {
     }
 
     @Test
-    fun hashingFallbackTypeBranchIsDeterministic() {
-        val hashA = HashingOpOverride().apply {
-            operation("fallback", UnknownType(123))
-        }.hash()
-        val hashB = HashingOpOverride().apply {
-            operation("fallback", UnknownType(123))
-        }.hash()
-        val hashC = HashingOpOverride().apply {
-            operation("fallback", UnknownType(456))
-        }.hash()
+    fun unhashableTypeFailsLoud() {
+        assertThrows(IllegalStateException::class.java) {
+            HashingOpOverride().operation("fallback", UnknownType(123))
+        }
+    }
 
-        assertEquals(hashA, hashB)
-        assertNotEquals(hashA, hashC)
+    @Test
+    fun builtInWeightFunctionsAreHashedDistinctly() {
+        fun hashOf(f: WeightFunction): String =
+            HashingOpOverride().apply { operation("weighted", f) }.hash()
+
+        // centered flag must change the hash
+        assertNotEquals(hashOf(XModifier(false)), hashOf(XModifier(true)))
+        // axis must change the hash
+        assertNotEquals(hashOf(XModifier(false)), hashOf(YModifier(false)))
+        assertNotEquals(hashOf(YModifier(false)), hashOf(ZModifier(false)))
+        // type must change the hash
+        assertNotEquals(hashOf(UnityModifier()), hashOf(XModifier(false)))
+        // and the same modifier configuration hashes identically (content, not identity)
+        assertEquals(hashOf(XModifier(true)), hashOf(XModifier(true)))
+    }
+
+    @Test
+    fun customWeightFunctionFailsLoud() {
+        val custom = WeightFunction { _, _ -> 1.0 }
+        assertThrows(IllegalStateException::class.java) {
+            HashingOpOverride().operation("weighted", custom)
+        }
+    }
+
+    @Test
+    fun polygonIsHashedByContentNotIdentity() {
+        val points = listOf(
+            Vector3d.xyz(0.0, 0.0, 0.0),
+            Vector3d.xyz(1.0, 0.0, 0.0),
+            Vector3d.xyz(0.0, 1.0, 0.0),
+        )
+        fun hashOf(p: Polygon): String =
+            HashingOpOverride().apply { operation("combine", p) }.hash()
+
+        // two distinct Polygon objects with identical geometry must hash equal
+        assertEquals(hashOf(Polygon.fromPoints(points)), hashOf(Polygon.fromPoints(points)))
+        // different geometry must hash differently
+        val moved = listOf(
+            Vector3d.xyz(0.0, 0.0, 0.0),
+            Vector3d.xyz(2.0, 0.0, 0.0),
+            Vector3d.xyz(0.0, 1.0, 0.0),
+        )
+        assertNotEquals(hashOf(Polygon.fromPoints(points)), hashOf(Polygon.fromPoints(moved)))
+    }
+
+    @Test
+    fun polyhedronFaceGroupingAffectsHash() {
+        val points = listOf(
+            Vector3d.xyz(0.0, 0.0, 0.0),
+            Vector3d.xyz(1.0, 0.0, 0.0),
+            Vector3d.xyz(0.0, 1.0, 0.0),
+            Vector3d.xyz(0.0, 0.0, 1.0),
+            Vector3d.xyz(1.0, 1.0, 0.0),
+            Vector3d.xyz(0.0, 1.0, 1.0),
+        )
+        fun hashOf(p: Polyhedron): String =
+            HashingOpOverride().apply { operation("plh", p) }.hash()
+
+        val twoFaces = Polyhedron(points = points, faces = listOf(listOf(0, 1, 2), listOf(3, 4, 5)))
+        val oneFace = Polyhedron(points = points, faces = listOf(listOf(0, 1, 2, 3, 4, 5)))
+        assertNotEquals(hashOf(twoFaces), hashOf(oneFace))
     }
 
     @Test
@@ -178,7 +233,7 @@ class HashingOpOverrideTest {
             hashOf(RoundedCube(cornerRadius = 0.3, resolution = 4)),
         )
         assertEquals(
-            "461ea95b34d5e7e1359201dfa6de5fe31246318558fb39b9971e0f6044902cf6",
+            "508708a67aaa38ffec1bd18785b9b3be3d22234fcc9ad8764f48464d5778bc9a",
             hashOf(
                 Polyhedron(
                     points = listOf(
