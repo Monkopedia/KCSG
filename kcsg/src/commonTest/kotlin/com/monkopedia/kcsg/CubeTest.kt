@@ -72,6 +72,16 @@ class CubeTest {
     }
 
     @Test
+    fun centeredFlagDefaultsTrueAndTogglesWithNoCenter() {
+        val cube = Cube(2.0)
+        assertEquals(true, cube.centered)
+        assertEquals(cube, cube.noCenter())
+        assertEquals(false, cube.centered)
+        cube.centered = true
+        assertEquals(true, cube.centered)
+    }
+
+    @Test
     fun noCenterShiftsCubeToPositiveOctantFromOrigin() {
         val centered = Cube(
             center = Vector3d.ZERO,

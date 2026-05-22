@@ -47,6 +47,7 @@ class HashingOpOverride : OpOverride {
                 writeTag("cub")
                 write(any.center)
                 write(any.dimensions)
+                write(if (any.centered) 1 else 0)
             }
             is Cylinder -> bytes {
                 writeTag("cyl")

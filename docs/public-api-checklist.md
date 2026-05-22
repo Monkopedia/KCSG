@@ -24,6 +24,7 @@ This checklist tracks public API coverage status for library modules.
 
 ## Recent API Notes
 
+- `Cube.centered` is now a public `var` (previously private), mirroring `RoundedCube.centered`. The `HashingOpOverride` cache key for `Cube` now incorporates this flag, so a `Cube` and its `noCenter()` variant no longer collide to the same content hash. Existing cache entries for `Cube`-containing models are invalidated (hashes change once).
 - `io`-surface APIs now use `kotlinx.io.files.Path` as the primary path abstraction across `kcsg` and `kcsg-dsl`.
 - `io` stream-surface APIs now use `kotlinx.io.Source` (for example `OpOverride.source`, `STL.from`, and `ObjFile.objSource`/`mtlSource`).
 - JVM compatibility extensions are provided for renamed/retargeted APIs (legacy `InputStream`/`java.nio.file.Path` call patterns and `ObjFile.objStream`/`mtlStream`).
@@ -37,7 +38,7 @@ This checklist tracks public API coverage status for library modules.
 | --- | --- | --- | --- |
 | `Bounds` | `math`, `mesh` | covered | `BoundsTest.centerAndBoundsAreDerivedFromMinAndMax` |
 | `CSG` | `boolean`, `mesh`, `io`, `error-path` | covered | `CSGBooleanTest.singleOverloadsProduceExpectedVolumes`; `PrimitiveInteractionMatrixTest.scenarioS9OptimizationParity`; `CSGRemeshTest.remeshTriangulatesPolygonsAndPreservesVolumeAndBounds` |
-| `Cube` | `primitive`, `mesh` | covered | `CubeTest.constructorsInitializeCenterAndDimensions` |
+| `Cube` | `primitive`, `mesh` | covered | `CubeTest.constructorsInitializeCenterAndDimensions`; `CubeTest.centeredFlagDefaultsTrueAndTogglesWithNoCenter`; `CubeTest.noCenterShiftsCubeToPositiveOctantFromOrigin` |
 | `Cylinder` | `primitive`, `mesh` | covered | `CylinderTest.constructorsPopulateGeometryFields` |
 | `Edge` | `math`, `mesh`, `error-path` | covered | `EdgeApiTest.containsEqualsAndHashCode` |
 | `Extrude` | `primitive`, `mesh`, `error-path` | covered | `ExtrudeTest.pointsOverloadsProduceEquivalentExtrusions` |
