@@ -24,6 +24,31 @@ class STLTest {
     }
 
     @Test
+    fun asciiStlRoundTripPreservesDoublePrecision() {
+        // A cached intermediate CSG is reloaded via STL.file; if the loader truncates coordinates
+        // to float32, the ~1e-7 error flips BSP plane-classification on the next boolean op and the
+        // cache stops being transparent. The ASCII STL stores full double precision, so the
+        // round-trip must preserve it.
+        withTempDirectory("kcsg-stl-precision") { tempDir ->
+            val stlPath = Path(tempDir, "tri.stl")
+            val preciseX = 19.017248553744356 // not representable exactly as float32
+            val tri = Polygon.fromPoints(
+                listOf(
+                    Vector3d.xyz(preciseX, 0.0, 0.0),
+                    Vector3d.xyz(0.0, 1.0, 0.0),
+                    Vector3d.xyz(0.0, 0.0, 1.0),
+                )
+            )
+            FileUtil.toStlFile(stlPath, CSG.fromPolygons(listOf(tri)))
+
+            val loaded = STL.file(stlPath)
+            val loadedX = loaded.polygons.flatMap { it.vertices }.maxOf { it.pos.x }
+            // float32 truncation would miss by ~4e-7; double parsing is exact.
+            assertEquals(preciseX, loadedX, 1e-9)
+        }
+    }
+
+    @Test
     fun stlFromLoadsCsgFromStreamFactory() {
         withTempDirectory("kcsg-stl-stream") { tempDir ->
             val stlPath = Path(tempDir, "cube.stl")

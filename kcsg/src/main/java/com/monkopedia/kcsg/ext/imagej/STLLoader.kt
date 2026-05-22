@@ -68,15 +68,16 @@ internal object STLLoader {
                 val numbers = line.trim().split(Regex("\\s+"))
                 if (numbers.isEmpty()) continue
                 if (numbers[0] == "vertex" && numbers.size >= 4) {
-                    val x = parseFloat(numbers[1])
-                    val y = parseFloat(numbers[2])
-                    val z = parseFloat(numbers[3])
-                    val vertex = Vector3d.xyz(x.toDouble(), y.toDouble(), z.toDouble())
+                    // Parse as Double, not Float: ASCII STL is written with full double precision
+                    // (Vector3d.toStlString), so truncating to float32 here loses ~10 significant
+                    // digits per coordinate. That error flips BSP plane-classification on any
+                    // subsequent boolean op, so a cached intermediate reloaded via this path is not
+                    // geometrically equivalent to the freshly-computed CSG.
+                    val x = numbers[1].toDouble()
+                    val y = numbers[2].toDouble()
+                    val z = numbers[3].toDouble()
+                    val vertex = Vector3d.xyz(x, y, z)
                     add(vertex)
-                } else if (numbers[0] == "facet" && numbers.getOrNull(1) == "normal" && numbers.size >= 5) {
-                    parseFloat(numbers[2]).toDouble()
-                    parseFloat(numbers[3]).toDouble()
-                    parseFloat(numbers[4]).toDouble()
                 }
             }
         }
@@ -110,10 +111,6 @@ internal object STLLoader {
                 }
             }
         }
-
-    private fun parseFloat(string: String): Float {
-        return string.toFloat()
-    }
 
     private fun leBytesToFloat(b0: Byte, b1: Byte, b2: Byte, b3: Byte): Float {
         val bits = ((b3.toInt() and 0xff) shl 24) or

@@ -24,6 +24,7 @@ This checklist tracks public API coverage status for library modules.
 
 ## Recent API Notes
 
+- `STL.file` / `STL.from` now parse ASCII STL coordinates as `Double` instead of `Float`. ASCII STL is written with full double precision, so the prior float32 parse truncated each coordinate to ~7 significant digits; that error flipped BSP plane-classification on subsequent boolean ops, so a cached intermediate CSG reloaded from STL was not equivalent to the freshly-computed one (the disk cache was not transparent). Binary STL remains float32 (inherent to the format).
 - `XModifier`/`YModifier`/`ZModifier` now expose a public read-only `centered` property (previously private). `HashingOpOverride` now incorporates the `WeightFunction` passed to `CSG.weighted` into the cache key (built-in modifiers are hashed by type + `centered`; a custom `WeightFunction` throws during hashing — disable caching via `csg(allowCaching = false)` for such builds). The hasher also now content-hashes `Polygon` (was identity `hashCode`), length-frames `Polyhedron` points/faces, and its fallback branch fails loud instead of silently using `hashCode()`. These change content hashes for affected models (cache cold-starts once).
 - `Cube.centered` is now a public `var` (previously private), mirroring `RoundedCube.centered`. The `HashingOpOverride` cache key for `Cube` now incorporates this flag, so a `Cube` and its `noCenter()` variant no longer collide to the same content hash. Existing cache entries for `Cube`-containing models are invalidated (hashes change once).
 - `io`-surface APIs now use `kotlinx.io.files.Path` as the primary path abstraction across `kcsg` and `kcsg-dsl`.
@@ -56,7 +57,7 @@ This checklist tracks public API coverage status for library modules.
 | `Primitive` | `primitive`, `mesh` | covered | `PrimitiveDefaultBehaviorTest.toCsgUsesToPolygonsResult` |
 | `PropertyStorage` | `mesh`, `dsl` | covered | `PropertyStorageTest.setAndTypedGetLookup` |
 | `RoundedCube` | `primitive`, `mesh` | covered | `RoundedCubeTest.constructorsPopulateFields` |
-| `STL` | `io`, `mesh`, `error-path` | covered | `STLTest.stlFileLoadsCsgFromDisk` |
+| `STL` | `io`, `mesh`, `error-path` | covered | `STLTest.stlFileLoadsCsgFromDisk`; `STLTest.asciiStlRoundTripPreservesDoublePrecision` |
 | `Sphere` | `primitive`, `mesh` | covered | `SphereTest.constructorsPopulateProperties` |
 | `Transform` | `math`, `mesh`, `error-path` | covered | `TransformTest.unityFromAndToMatrixValues` |
 | `UnityModifier` | `primitive`, `mesh` | covered | `UnityModifierTest.unityModifierAlwaysReturnsOne` |
