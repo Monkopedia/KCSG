@@ -15,7 +15,12 @@ class ZModifier : WeightFunction {
     private val min = 0.0
     private val max = 1.0
     private var sPerUnit = 0.0
-    private var centered = false
+
+    /**
+     * Whether the origin is centered at the CSG location. Affects produced weights.
+     */
+    var centered = false
+        private set
 
     /**
      * Constructor.

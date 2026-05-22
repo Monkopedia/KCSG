@@ -59,8 +59,13 @@ class HashingOpOverride : OpOverride {
             }
             is Polyhedron -> bytes {
                 writeTag("plh")
+                write(any.points.size)
                 any.points.forEach { write(it) }
-                any.faces.forEach { list -> list.forEach(::write) }
+                write(any.faces.size)
+                any.faces.forEach { face ->
+                    write(face.size)
+                    face.forEach { write(it) }
+                }
             }
             is RoundedCube -> bytes {
                 writeTag("rcb")
@@ -81,10 +86,50 @@ class HashingOpOverride : OpOverride {
                 writeTag("is")
                 writeBytes(any.readByteArray())
             }
-            else -> bytes {
-                writeTag("else")
-                write(any.hashCode())
+            is Bounds -> bytes {
+                writeTag("bnd")
+                write(any.min)
+                write(any.max)
             }
+            is Boolean -> bytes {
+                writeTag("bool")
+                write(if (any) 1 else 0)
+            }
+            is Polygon -> bytes {
+                writeTag("poly")
+                write(any.vertices.size)
+                any.vertices.forEach {
+                    write(it.pos)
+                    write(it.normal)
+                    write(it.weight)
+                }
+            }
+            is UnityModifier -> bytes {
+                writeTag("wf:unity")
+            }
+            is XModifier -> bytes {
+                writeTag("wf:x")
+                write(if (any.centered) 1 else 0)
+            }
+            is YModifier -> bytes {
+                writeTag("wf:y")
+                write(if (any.centered) 1 else 0)
+            }
+            is ZModifier -> bytes {
+                writeTag("wf:z")
+                write(if (any.centered) 1 else 0)
+            }
+            is WeightFunction -> error(
+                "Cannot compute a cache hash for custom WeightFunction " +
+                    "${any::class.simpleName ?: "<anonymous>"}; only the built-in modifiers " +
+                    "(XModifier/YModifier/ZModifier/UnityModifier) are hashable. For builds using a " +
+                    "custom weighted() function, disable caching via csg(allowCaching = false)."
+            )
+            else -> error(
+                "HashingOpOverride has no hash encoding for type " +
+                    "${any::class.simpleName ?: any::class}. Add an explicit case — a silent " +
+                    "hashCode() fallback previously caused stale-cache collisions (see Cube.centered, Polygon)."
+            )
         }
         updateHash(bytes)
     }

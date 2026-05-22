@@ -9,6 +9,8 @@ class AxisModifierTest {
         val csg = Cube(2.0).toCSG()
 
         val nonCentered = XModifier()
+        assertEquals(false, nonCentered.centered)
+        assertEquals(true, XModifier(true).centered)
         assertEquals(0.0, nonCentered.eval(Vector3d.xyz(-1.0, 0.0, 0.0), csg), 1e-9)
         assertEquals(0.5, nonCentered.eval(Vector3d.xyz(0.0, 0.0, 0.0), csg), 1e-9)
         assertEquals(1.0, nonCentered.eval(Vector3d.xyz(1.0, 0.0, 0.0), csg), 1e-9)
@@ -24,6 +26,8 @@ class AxisModifierTest {
         val csg = Cube(2.0).toCSG()
 
         val nonCentered = YModifier()
+        assertEquals(false, nonCentered.centered)
+        assertEquals(true, YModifier(true).centered)
         assertEquals(0.0, nonCentered.eval(Vector3d.xyz(0.0, -1.0, 0.0), csg), 1e-9)
         assertEquals(0.5, nonCentered.eval(Vector3d.xyz(0.0, 0.0, 0.0), csg), 1e-9)
         assertEquals(1.0, nonCentered.eval(Vector3d.xyz(0.0, 1.0, 0.0), csg), 1e-9)
@@ -39,6 +43,8 @@ class AxisModifierTest {
         val csg = Cube(2.0).toCSG()
 
         val nonCentered = ZModifier()
+        assertEquals(false, nonCentered.centered)
+        assertEquals(true, ZModifier(true).centered)
         assertEquals(0.0, nonCentered.eval(Vector3d.xyz(0.0, 0.0, -1.0), csg), 1e-9)
         assertEquals(0.5, nonCentered.eval(Vector3d.xyz(0.0, 0.0, 0.0), csg), 1e-9)
         assertEquals(1.0, nonCentered.eval(Vector3d.xyz(0.0, 0.0, 1.0), csg), 1e-9)

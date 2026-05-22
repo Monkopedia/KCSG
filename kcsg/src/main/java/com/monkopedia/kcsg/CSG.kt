@@ -741,7 +741,7 @@ class CSG private constructor(
     }
 
     fun weighted(f: WeightFunction): CSG {
-        opOverride?.operation("weighted", this)?.let { return it }
+        opOverride?.operation("weighted", this, f)?.let { return it }
         return Modifier(f).modified(this)
     }
 

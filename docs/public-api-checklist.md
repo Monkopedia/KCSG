@@ -24,6 +24,7 @@ This checklist tracks public API coverage status for library modules.
 
 ## Recent API Notes
 
+- `XModifier`/`YModifier`/`ZModifier` now expose a public read-only `centered` property (previously private). `HashingOpOverride` now incorporates the `WeightFunction` passed to `CSG.weighted` into the cache key (built-in modifiers are hashed by type + `centered`; a custom `WeightFunction` throws during hashing — disable caching via `csg(allowCaching = false)` for such builds). The hasher also now content-hashes `Polygon` (was identity `hashCode`), length-frames `Polyhedron` points/faces, and its fallback branch fails loud instead of silently using `hashCode()`. These change content hashes for affected models (cache cold-starts once).
 - `Cube.centered` is now a public `var` (previously private), mirroring `RoundedCube.centered`. The `HashingOpOverride` cache key for `Cube` now incorporates this flag, so a `Cube` and its `noCenter()` variant no longer collide to the same content hash. Existing cache entries for `Cube`-containing models are invalidated (hashes change once).
 - `io`-surface APIs now use `kotlinx.io.files.Path` as the primary path abstraction across `kcsg` and `kcsg-dsl`.
 - `io` stream-surface APIs now use `kotlinx.io.Source` (for example `OpOverride.source`, `STL.from`, and `ObjFile.objSource`/`mtlSource`).
@@ -43,7 +44,7 @@ This checklist tracks public API coverage status for library modules.
 | `Edge` | `math`, `mesh`, `error-path` | covered | `EdgeApiTest.containsEqualsAndHashCode` |
 | `Extrude` | `primitive`, `mesh`, `error-path` | covered | `ExtrudeTest.pointsOverloadsProduceEquivalentExtrusions` |
 | `FileUtil` | `io`, `error-path` | covered | `FileUtilTest.writeAndReadRoundTrip` |
-| `HashingOpOverride` | `io`, `dsl`, `error-path` | covered | `HashingOpOverrideTest.hashingSequenceIsDeterministicForSameInputs` |
+| `HashingOpOverride` | `io`, `dsl`, `error-path` | covered | `HashingOpOverrideTest.hashingSequenceIsDeterministicForSameInputs`; `HashingOpOverrideTest.builtInWeightFunctionsAreHashedDistinctly`; `HashingOpOverrideTest.customWeightFunctionFailsLoud`; `HashingOpOverrideTest.polygonIsHashedByContentNotIdentity`; `HashingOpOverrideTest.polyhedronFaceGroupingAffectsHash`; `HashingOpOverrideTest.unhashableTypeFailsLoud` |
 | `Logger` | `io`, `dsl`, `error-path` | covered | `LoggerDelegateTest.companionDispatchesAllLevelsWithTagAndThrowable` |
 | `TaggedLogger` | `io`, `dsl` | covered | `LoggerDelegateTest.taggedLoggerUsesConfiguredTag` |
 | `KcsgColor` | `mesh` | covered | `CSGSerializationTest.colorInfluencesMaterialOutputAndUnsupportedObjArgThrows` |
