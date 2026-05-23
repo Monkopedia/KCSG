@@ -2,6 +2,12 @@
 
 KCSG is a Kotlin Multiplatform constructive solid geometry library with a first-class Kotlin DSL. Originally forked from [JCSG](https://github.com/miho/JCSG), it has been substantially reimagined — the DSL is the primary interface, boolean operations compose naturally with Kotlin operators, and it runs on JVM, JS, WASM, Native, and every Apple platform. KCSG is the geometry engine behind [Konstructor](https://github.com/Monkopedia/Konstructor).
 
+<p align="center">
+  <img src="docs/images/kodee.png" alt="Kodee, the Kotlin mascot, modeled as a 3D relief in KCSG" width="360">
+</p>
+
+> Kotlin's mascot **Kodee**, modeled in KCSG (built in [Konstructor](https://github.com/Monkopedia/Konstructor), which uses KCSG) — a single-colour relief from 2D contours via `Extrude.points` + boolean depth. The runnable source is [`kodee.csgs`](kodee.csgs). "Kodee by JetBrains s.r.o." is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) and adapted here into a 3D relief.
+
 ## Example
 
 ```kotlin
