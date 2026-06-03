@@ -1,0 +1,165 @@
+// Klib ABI Dump
+// Targets: [iosArm64, iosSimulatorArm64, iosX64, js, linuxArm64, linuxX64, macosArm64, macosX64, mingwX64, tvosArm64, tvosSimulatorArm64, tvosX64, wasmJs, wasmWasi, watchosArm32, watchosArm64, watchosSimulatorArm64, watchosX64]
+// Rendering settings:
+// - Signature version: 2
+// - Show manifest properties: true
+// - Show declarations: true
+
+// Library unique name: <com.monkopedia:kcsg-dsl>
+open annotation class com.monkopedia.kcsg/CsgDsl : kotlin/Annotation { // com.monkopedia.kcsg/CsgDsl|null[0]
+    constructor <init>() // com.monkopedia.kcsg/CsgDsl.<init>|<init>(){}[0]
+}
+
+abstract interface com.monkopedia.kcsg/ImportedScript { // com.monkopedia.kcsg/ImportedScript|null[0]
+    abstract val exports // com.monkopedia.kcsg/ImportedScript.exports|{}exports[0]
+        abstract fun <get-exports>(): kotlin.collections/Collection<kotlin/String> // com.monkopedia.kcsg/ImportedScript.exports.<get-exports>|<get-exports>(){}[0]
+    abstract val targets // com.monkopedia.kcsg/ImportedScript.targets|{}targets[0]
+        abstract fun <get-targets>(): kotlin.collections/Collection<kotlin/String> // com.monkopedia.kcsg/ImportedScript.targets.<get-targets>|<get-targets>(){}[0]
+
+    abstract fun get(kotlin/String): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/ImportedScript.get|get(kotlin.String){}[0]
+}
+
+abstract interface com.monkopedia.kcsg/KcsgHost { // com.monkopedia.kcsg/KcsgHost|null[0]
+    abstract val supportsCaching // com.monkopedia.kcsg/KcsgHost.supportsCaching|{}supportsCaching[0]
+        abstract fun <get-supportsCaching>(): kotlin/Boolean // com.monkopedia.kcsg/KcsgHost.supportsCaching.<get-supportsCaching>|<get-supportsCaching>(){}[0]
+
+    abstract fun checkCached(kotlin/String): com.monkopedia.kcsg/CSG? // com.monkopedia.kcsg/KcsgHost.checkCached|checkCached(kotlin.String){}[0]
+    abstract fun findScript(kotlin/String): com.monkopedia.kcsg/ImportedScript // com.monkopedia.kcsg/KcsgHost.findScript|findScript(kotlin.String){}[0]
+    abstract fun findStl(kotlin/String): kotlinx.io.files/Path // com.monkopedia.kcsg/KcsgHost.findStl|findStl(kotlin.String){}[0]
+    abstract fun storeCached(kotlin/String, com.monkopedia.kcsg/CSG) // com.monkopedia.kcsg/KcsgHost.storeCached|storeCached(kotlin.String;com.monkopedia.kcsg.CSG){}[0]
+    open fun stlVersion(kotlin/String): kotlin/String // com.monkopedia.kcsg/KcsgHost.stlVersion|stlVersion(kotlin.String){}[0]
+}
+
+abstract class com.monkopedia.kcsg/KcsgBuilder { // com.monkopedia.kcsg/KcsgBuilder|null[0]
+    constructor <init>() // com.monkopedia.kcsg/KcsgBuilder.<init>|<init>(){}[0]
+
+    open val supportsCaching // com.monkopedia.kcsg/KcsgBuilder.supportsCaching|{}supportsCaching[0]
+        open fun <get-supportsCaching>(): kotlin/Boolean // com.monkopedia.kcsg/KcsgBuilder.supportsCaching.<get-supportsCaching>|<get-supportsCaching>(){}[0]
+
+    abstract fun exportProperty(kotlin/String) // com.monkopedia.kcsg/KcsgBuilder.exportProperty|exportProperty(kotlin.String){}[0]
+    abstract fun findScript(kotlin/String): com.monkopedia.kcsg/ImportedScript // com.monkopedia.kcsg/KcsgBuilder.findScript|findScript(kotlin.String){}[0]
+    abstract fun findStl(kotlin/String): kotlinx.io.files/Path // com.monkopedia.kcsg/KcsgBuilder.findStl|findStl(kotlin.String){}[0]
+    abstract fun track(kotlin/String, kotlin/Lazy<com.monkopedia.kcsg/CSG>) // com.monkopedia.kcsg/KcsgBuilder.track|track(kotlin.String;kotlin.Lazy<com.monkopedia.kcsg.CSG>){}[0]
+    final fun csg(kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Function1<com.monkopedia.kcsg/KcsgBuilder.BuilderContext, com.monkopedia.kcsg/CSG>): kotlin.properties/PropertyDelegateProvider<kotlin/Nothing?, kotlin.properties/ReadOnlyProperty<kotlin/Nothing?, com.monkopedia.kcsg/CSG>> // com.monkopedia.kcsg/KcsgBuilder.csg|csg(kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Function1<com.monkopedia.kcsg.KcsgBuilder.BuilderContext,com.monkopedia.kcsg.CSG>){}[0]
+    final fun export(kotlin.reflect/KProperty<com.monkopedia.kcsg/CSG>) // com.monkopedia.kcsg/KcsgBuilder.export|export(kotlin.reflect.KProperty<com.monkopedia.kcsg.CSG>){}[0]
+    final fun export(kotlin/String) // com.monkopedia.kcsg/KcsgBuilder.export|export(kotlin.String){}[0]
+    final fun import(kotlin/String): kotlin/Lazy<com.monkopedia.kcsg/ImportedScript> // com.monkopedia.kcsg/KcsgBuilder.import|import(kotlin.String){}[0]
+    final fun stl(kotlin/String): kotlin.properties/PropertyDelegateProvider<kotlin/Nothing?, kotlin.properties/ReadOnlyProperty<kotlin/Nothing?, com.monkopedia.kcsg/CSG>> // com.monkopedia.kcsg/KcsgBuilder.stl|stl(kotlin.String){}[0]
+    final inline fun primitive(kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., crossinline kotlin/Function1<com.monkopedia.kcsg/KcsgBuilder.BuilderContext, com.monkopedia.kcsg/Primitive>): kotlin.properties/PropertyDelegateProvider<kotlin/Nothing?, kotlin.properties/ReadOnlyProperty<kotlin/Nothing?, com.monkopedia.kcsg/CSG>> // com.monkopedia.kcsg/KcsgBuilder.primitive|primitive(kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Function1<com.monkopedia.kcsg.KcsgBuilder.BuilderContext,com.monkopedia.kcsg.Primitive>){}[0]
+    open fun checkCached(kotlin/String): com.monkopedia.kcsg/CSG? // com.monkopedia.kcsg/KcsgBuilder.checkCached|checkCached(kotlin.String){}[0]
+    open fun stlVersion(kotlin/String): kotlin/String // com.monkopedia.kcsg/KcsgBuilder.stlVersion|stlVersion(kotlin.String){}[0]
+    open fun storeCached(kotlin/String, com.monkopedia.kcsg/CSG) // com.monkopedia.kcsg/KcsgBuilder.storeCached|storeCached(kotlin.String;com.monkopedia.kcsg.CSG){}[0]
+
+    sealed class BuilderContext // com.monkopedia.kcsg/KcsgBuilder.BuilderContext|null[0]
+
+    final object Companion // com.monkopedia.kcsg/KcsgBuilder.Companion|null[0]
+}
+
+final class com.monkopedia.kcsg/ImportedKcsgScript : com.monkopedia.kcsg/ImportedScript { // com.monkopedia.kcsg/ImportedKcsgScript|null[0]
+    constructor <init>(com.monkopedia.kcsg/KcsgScript) // com.monkopedia.kcsg/ImportedKcsgScript.<init>|<init>(com.monkopedia.kcsg.KcsgScript){}[0]
+
+    final val exports // com.monkopedia.kcsg/ImportedKcsgScript.exports|{}exports[0]
+        final fun <get-exports>(): kotlin.collections/Collection<kotlin/String> // com.monkopedia.kcsg/ImportedKcsgScript.exports.<get-exports>|<get-exports>(){}[0]
+    final val targets // com.monkopedia.kcsg/ImportedKcsgScript.targets|{}targets[0]
+        final fun <get-targets>(): kotlin.collections/Collection<kotlin/String> // com.monkopedia.kcsg/ImportedKcsgScript.targets.<get-targets>|<get-targets>(){}[0]
+
+    final fun get(kotlin/String): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/ImportedKcsgScript.get|get(kotlin.String){}[0]
+}
+
+final class com.monkopedia.kcsg/KcsgScript : com.monkopedia.kcsg/KcsgBuilder { // com.monkopedia.kcsg/KcsgScript|null[0]
+    constructor <init>(com.monkopedia.kcsg/KcsgHost = ...) // com.monkopedia.kcsg/KcsgScript.<init>|<init>(com.monkopedia.kcsg.KcsgHost){}[0]
+
+    final var host // com.monkopedia.kcsg/KcsgScript.host|{}host[0]
+        final fun <get-host>(): com.monkopedia.kcsg/KcsgHost // com.monkopedia.kcsg/KcsgScript.host.<get-host>|<get-host>(){}[0]
+        final fun <set-host>(com.monkopedia.kcsg/KcsgHost) // com.monkopedia.kcsg/KcsgScript.host.<set-host>|<set-host>(com.monkopedia.kcsg.KcsgHost){}[0]
+
+    final fun exports(): kotlin.collections/Collection<kotlin/String> // com.monkopedia.kcsg/KcsgScript.exports|exports(){}[0]
+    final fun generateExports(): kotlin.collections/Map<kotlin/String, com.monkopedia.kcsg/CSG> // com.monkopedia.kcsg/KcsgScript.generateExports|generateExports(){}[0]
+    final fun generateTarget(kotlin/String): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/KcsgScript.generateTarget|generateTarget(kotlin.String){}[0]
+    final fun overrideExport(kotlin/String, kotlin/Boolean) // com.monkopedia.kcsg/KcsgScript.overrideExport|overrideExport(kotlin.String;kotlin.Boolean){}[0]
+    final fun targets(): kotlin.collections/Collection<kotlin/String> // com.monkopedia.kcsg/KcsgScript.targets|targets(){}[0]
+
+    final object Companion { // com.monkopedia.kcsg/KcsgScript.Companion|null[0]
+        final val FOOTER // com.monkopedia.kcsg/KcsgScript.Companion.FOOTER|{}FOOTER[0]
+            final fun <get-FOOTER>(): kotlin/String // com.monkopedia.kcsg/KcsgScript.Companion.FOOTER.<get-FOOTER>|<get-FOOTER>(){}[0]
+        final val HEADER // com.monkopedia.kcsg/KcsgScript.Companion.HEADER|{}HEADER[0]
+            final fun <get-HEADER>(): kotlin/String // com.monkopedia.kcsg/KcsgScript.Companion.HEADER.<get-HEADER>|<get-HEADER>(){}[0]
+    }
+}
+
+final object com.monkopedia.kcsg/CSGBuilder { // com.monkopedia.kcsg/CSGBuilder|null[0]
+    final val ZERO // com.monkopedia.kcsg/CSGBuilder.ZERO|{}ZERO[0]
+        final fun <get-ZERO>(): com.monkopedia.kcsg/Vector3d // com.monkopedia.kcsg/CSGBuilder.ZERO.<get-ZERO>|<get-ZERO>(){}[0]
+}
+
+final object com.monkopedia.kcsg/EmptyHost : com.monkopedia.kcsg/KcsgHost { // com.monkopedia.kcsg/EmptyHost|null[0]
+    final val supportsCaching // com.monkopedia.kcsg/EmptyHost.supportsCaching|{}supportsCaching[0]
+        final fun <get-supportsCaching>(): kotlin/Boolean // com.monkopedia.kcsg/EmptyHost.supportsCaching.<get-supportsCaching>|<get-supportsCaching>(){}[0]
+
+    final fun checkCached(kotlin/String): com.monkopedia.kcsg/CSG? // com.monkopedia.kcsg/EmptyHost.checkCached|checkCached(kotlin.String){}[0]
+    final fun findScript(kotlin/String): com.monkopedia.kcsg/ImportedScript // com.monkopedia.kcsg/EmptyHost.findScript|findScript(kotlin.String){}[0]
+    final fun findStl(kotlin/String): kotlinx.io.files/Path // com.monkopedia.kcsg/EmptyHost.findStl|findStl(kotlin.String){}[0]
+    final fun storeCached(kotlin/String, com.monkopedia.kcsg/CSG): kotlin/Nothing // com.monkopedia.kcsg/EmptyHost.storeCached|storeCached(kotlin.String;com.monkopedia.kcsg.CSG){}[0]
+}
+
+final object com.monkopedia.kcsg/TransformBuilder { // com.monkopedia.kcsg/TransformBuilder|null[0]
+    final val unity // com.monkopedia.kcsg/TransformBuilder.unity|{}unity[0]
+        final fun <get-unity>(): com.monkopedia.kcsg/Transform // com.monkopedia.kcsg/TransformBuilder.unity.<get-unity>|<get-unity>(){}[0]
+}
+
+final var com.monkopedia.kcsg/radius // com.monkopedia.kcsg/radius|@com.monkopedia.kcsg.Cylinder{}radius[0]
+    final fun (com.monkopedia.kcsg/Cylinder).<get-radius>(): kotlin/Double // com.monkopedia.kcsg/radius.<get-radius>|<get-radius>@com.monkopedia.kcsg.Cylinder(){}[0]
+    final fun (com.monkopedia.kcsg/Cylinder).<set-radius>(kotlin/Double) // com.monkopedia.kcsg/radius.<set-radius>|<set-radius>@com.monkopedia.kcsg.Cylinder(kotlin.Double){}[0]
+
+final fun (com.monkopedia.kcsg/CSG).com.monkopedia.kcsg/and(com.monkopedia.kcsg/CSG): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/and|and@com.monkopedia.kcsg.CSG(com.monkopedia.kcsg.CSG){}[0]
+final fun (com.monkopedia.kcsg/CSG).com.monkopedia.kcsg/and(com.monkopedia.kcsg/Primitive): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/and|and@com.monkopedia.kcsg.CSG(com.monkopedia.kcsg.Primitive){}[0]
+final fun (com.monkopedia.kcsg/CSG).com.monkopedia.kcsg/minus(com.monkopedia.kcsg/CSG): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/minus|minus@com.monkopedia.kcsg.CSG(com.monkopedia.kcsg.CSG){}[0]
+final fun (com.monkopedia.kcsg/CSG).com.monkopedia.kcsg/minus(com.monkopedia.kcsg/Primitive): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/minus|minus@com.monkopedia.kcsg.CSG(com.monkopedia.kcsg.Primitive){}[0]
+final fun (com.monkopedia.kcsg/CSG).com.monkopedia.kcsg/or(com.monkopedia.kcsg/CSG): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/or|or@com.monkopedia.kcsg.CSG(com.monkopedia.kcsg.CSG){}[0]
+final fun (com.monkopedia.kcsg/CSG).com.monkopedia.kcsg/or(com.monkopedia.kcsg/Primitive): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/or|or@com.monkopedia.kcsg.CSG(com.monkopedia.kcsg.Primitive){}[0]
+final fun (com.monkopedia.kcsg/CSG).com.monkopedia.kcsg/plus(com.monkopedia.kcsg/CSG): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/plus|plus@com.monkopedia.kcsg.CSG(com.monkopedia.kcsg.CSG){}[0]
+final fun (com.monkopedia.kcsg/CSG).com.monkopedia.kcsg/plus(com.monkopedia.kcsg/Primitive): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/plus|plus@com.monkopedia.kcsg.CSG(com.monkopedia.kcsg.Primitive){}[0]
+final fun (com.monkopedia.kcsg/CSG).com.monkopedia.kcsg/times(com.monkopedia.kcsg/CSG): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/times|times@com.monkopedia.kcsg.CSG(com.monkopedia.kcsg.CSG){}[0]
+final fun (com.monkopedia.kcsg/CSG).com.monkopedia.kcsg/times(com.monkopedia.kcsg/Primitive): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/times|times@com.monkopedia.kcsg.CSG(com.monkopedia.kcsg.Primitive){}[0]
+final fun (com.monkopedia.kcsg/CSG).com.monkopedia.kcsg/times(com.monkopedia.kcsg/Transform): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/times|times@com.monkopedia.kcsg.CSG(com.monkopedia.kcsg.Transform){}[0]
+final fun (com.monkopedia.kcsg/CSG).com.monkopedia.kcsg/xor(com.monkopedia.kcsg/CSG): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/xor|xor@com.monkopedia.kcsg.CSG(com.monkopedia.kcsg.CSG){}[0]
+final fun (com.monkopedia.kcsg/CSG).com.monkopedia.kcsg/xor(com.monkopedia.kcsg/Primitive): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/xor|xor@com.monkopedia.kcsg.CSG(com.monkopedia.kcsg.Primitive){}[0]
+final fun (com.monkopedia.kcsg/KcsgBuilder.BuilderContext).com.monkopedia.kcsg/xyz(kotlin/Double, kotlin/Double, kotlin/Double): com.monkopedia.kcsg/Vector3d // com.monkopedia.kcsg/xyz|xyz@com.monkopedia.kcsg.KcsgBuilder.BuilderContext(kotlin.Double;kotlin.Double;kotlin.Double){}[0]
+final fun (com.monkopedia.kcsg/Primitive).com.monkopedia.kcsg/and(com.monkopedia.kcsg/CSG): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/and|and@com.monkopedia.kcsg.Primitive(com.monkopedia.kcsg.CSG){}[0]
+final fun (com.monkopedia.kcsg/Primitive).com.monkopedia.kcsg/and(com.monkopedia.kcsg/Primitive): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/and|and@com.monkopedia.kcsg.Primitive(com.monkopedia.kcsg.Primitive){}[0]
+final fun (com.monkopedia.kcsg/Primitive).com.monkopedia.kcsg/minus(com.monkopedia.kcsg/CSG): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/minus|minus@com.monkopedia.kcsg.Primitive(com.monkopedia.kcsg.CSG){}[0]
+final fun (com.monkopedia.kcsg/Primitive).com.monkopedia.kcsg/minus(com.monkopedia.kcsg/Primitive): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/minus|minus@com.monkopedia.kcsg.Primitive(com.monkopedia.kcsg.Primitive){}[0]
+final fun (com.monkopedia.kcsg/Primitive).com.monkopedia.kcsg/or(com.monkopedia.kcsg/CSG): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/or|or@com.monkopedia.kcsg.Primitive(com.monkopedia.kcsg.CSG){}[0]
+final fun (com.monkopedia.kcsg/Primitive).com.monkopedia.kcsg/or(com.monkopedia.kcsg/Primitive): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/or|or@com.monkopedia.kcsg.Primitive(com.monkopedia.kcsg.Primitive){}[0]
+final fun (com.monkopedia.kcsg/Primitive).com.monkopedia.kcsg/plus(com.monkopedia.kcsg/CSG): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/plus|plus@com.monkopedia.kcsg.Primitive(com.monkopedia.kcsg.CSG){}[0]
+final fun (com.monkopedia.kcsg/Primitive).com.monkopedia.kcsg/plus(com.monkopedia.kcsg/Primitive): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/plus|plus@com.monkopedia.kcsg.Primitive(com.monkopedia.kcsg.Primitive){}[0]
+final fun (com.monkopedia.kcsg/Primitive).com.monkopedia.kcsg/times(com.monkopedia.kcsg/CSG): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/times|times@com.monkopedia.kcsg.Primitive(com.monkopedia.kcsg.CSG){}[0]
+final fun (com.monkopedia.kcsg/Primitive).com.monkopedia.kcsg/times(com.monkopedia.kcsg/Primitive): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/times|times@com.monkopedia.kcsg.Primitive(com.monkopedia.kcsg.Primitive){}[0]
+final fun (com.monkopedia.kcsg/Primitive).com.monkopedia.kcsg/xor(com.monkopedia.kcsg/CSG): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/xor|xor@com.monkopedia.kcsg.Primitive(com.monkopedia.kcsg.CSG){}[0]
+final fun (com.monkopedia.kcsg/Primitive).com.monkopedia.kcsg/xor(com.monkopedia.kcsg/Primitive): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/xor|xor@com.monkopedia.kcsg.Primitive(com.monkopedia.kcsg.Primitive){}[0]
+final fun (kotlin.collections/Collection<com.monkopedia.kcsg/CSG>).com.monkopedia.kcsg/times(com.monkopedia.kcsg/Transform): kotlin.collections/Collection<com.monkopedia.kcsg/CSG> // com.monkopedia.kcsg/times|times@kotlin.collections.Collection<com.monkopedia.kcsg.CSG>(com.monkopedia.kcsg.Transform){}[0]
+final inline fun (com.monkopedia.kcsg/CSG).com.monkopedia.kcsg/rot(kotlin/Double = ..., kotlin/Double = ..., kotlin/Double = ...): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/rot|rot@com.monkopedia.kcsg.CSG(kotlin.Double;kotlin.Double;kotlin.Double){}[0]
+final inline fun (com.monkopedia.kcsg/CSG).com.monkopedia.kcsg/scale(kotlin/Double = ...): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/scale|scale@com.monkopedia.kcsg.CSG(kotlin.Double){}[0]
+final inline fun (com.monkopedia.kcsg/CSG).com.monkopedia.kcsg/scale(kotlin/Double = ..., kotlin/Double = ..., kotlin/Double = ...): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/scale|scale@com.monkopedia.kcsg.CSG(kotlin.Double;kotlin.Double;kotlin.Double){}[0]
+final inline fun (com.monkopedia.kcsg/CSG).com.monkopedia.kcsg/transform(kotlin/Function1<com.monkopedia.kcsg/Transform, com.monkopedia.kcsg/Transform>): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/transform|transform@com.monkopedia.kcsg.CSG(kotlin.Function1<com.monkopedia.kcsg.Transform,com.monkopedia.kcsg.Transform>){}[0]
+final inline fun (com.monkopedia.kcsg/CSG).com.monkopedia.kcsg/translate(kotlin/Double = ..., kotlin/Double = ..., kotlin/Double = ...): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/translate|translate@com.monkopedia.kcsg.CSG(kotlin.Double;kotlin.Double;kotlin.Double){}[0]
+final inline fun (com.monkopedia.kcsg/KcsgBuilder.BuilderContext).com.monkopedia.kcsg/arrayed(kotlin/Int, kotlin/Function1<kotlin/Int, com.monkopedia.kcsg/CSG>): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/arrayed|arrayed@com.monkopedia.kcsg.KcsgBuilder.BuilderContext(kotlin.Int;kotlin.Function1<kotlin.Int,com.monkopedia.kcsg.CSG>){}[0]
+final inline fun (com.monkopedia.kcsg/KcsgBuilder.BuilderContext).com.monkopedia.kcsg/cube(kotlin/Double = ..., kotlin/Function1<com.monkopedia.kcsg/Cube, kotlin/Unit> = ...): com.monkopedia.kcsg/Cube // com.monkopedia.kcsg/cube|cube@com.monkopedia.kcsg.KcsgBuilder.BuilderContext(kotlin.Double;kotlin.Function1<com.monkopedia.kcsg.Cube,kotlin.Unit>){}[0]
+final inline fun (com.monkopedia.kcsg/KcsgBuilder.BuilderContext).com.monkopedia.kcsg/cylinder(com.monkopedia.kcsg/Vector3d = ..., com.monkopedia.kcsg/Vector3d = ..., kotlin/Double = ..., kotlin/Double = ..., kotlin/Int = ..., kotlin/Function1<com.monkopedia.kcsg/Cylinder, kotlin/Unit> = ...): com.monkopedia.kcsg/Cylinder // com.monkopedia.kcsg/cylinder|cylinder@com.monkopedia.kcsg.KcsgBuilder.BuilderContext(com.monkopedia.kcsg.Vector3d;com.monkopedia.kcsg.Vector3d;kotlin.Double;kotlin.Double;kotlin.Int;kotlin.Function1<com.monkopedia.kcsg.Cylinder,kotlin.Unit>){}[0]
+final inline fun (com.monkopedia.kcsg/KcsgBuilder.BuilderContext).com.monkopedia.kcsg/cylinder(kotlin/Double, kotlin/Double, kotlin/Int, kotlin/Function1<com.monkopedia.kcsg/Cylinder, kotlin/Unit> = ...): com.monkopedia.kcsg/Cylinder // com.monkopedia.kcsg/cylinder|cylinder@com.monkopedia.kcsg.KcsgBuilder.BuilderContext(kotlin.Double;kotlin.Double;kotlin.Int;kotlin.Function1<com.monkopedia.kcsg.Cylinder,kotlin.Unit>){}[0]
+final inline fun (com.monkopedia.kcsg/KcsgBuilder.BuilderContext).com.monkopedia.kcsg/primitives(kotlin/Int, kotlin/Function1<kotlin/Int, com.monkopedia.kcsg/Primitive>): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/primitives|primitives@com.monkopedia.kcsg.KcsgBuilder.BuilderContext(kotlin.Int;kotlin.Function1<kotlin.Int,com.monkopedia.kcsg.Primitive>){}[0]
+final inline fun (com.monkopedia.kcsg/KcsgBuilder.BuilderContext).com.monkopedia.kcsg/roundedCube(kotlin/Double = ..., kotlin/Function1<com.monkopedia.kcsg/RoundedCube, kotlin/Unit> = ...): com.monkopedia.kcsg/RoundedCube // com.monkopedia.kcsg/roundedCube|roundedCube@com.monkopedia.kcsg.KcsgBuilder.BuilderContext(kotlin.Double;kotlin.Function1<com.monkopedia.kcsg.RoundedCube,kotlin.Unit>){}[0]
+final inline fun (com.monkopedia.kcsg/KcsgBuilder.BuilderContext).com.monkopedia.kcsg/transform(kotlin/Function1<com.monkopedia.kcsg/Transform, com.monkopedia.kcsg/Transform>): com.monkopedia.kcsg/Transform // com.monkopedia.kcsg/transform|transform@com.monkopedia.kcsg.KcsgBuilder.BuilderContext(kotlin.Function1<com.monkopedia.kcsg.Transform,com.monkopedia.kcsg.Transform>){}[0]
+final inline fun (com.monkopedia.kcsg/Primitive).com.monkopedia.kcsg/times(com.monkopedia.kcsg/Transform): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/times|times@com.monkopedia.kcsg.Primitive(com.monkopedia.kcsg.Transform){}[0]
+final inline fun (com.monkopedia.kcsg/Primitive).com.monkopedia.kcsg/transform(kotlin/Function1<com.monkopedia.kcsg/Transform, com.monkopedia.kcsg/Transform>): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/transform|transform@com.monkopedia.kcsg.Primitive(kotlin.Function1<com.monkopedia.kcsg.Transform,com.monkopedia.kcsg.Transform>){}[0]
+final inline fun (com.monkopedia.kcsg/Primitive).com.monkopedia.kcsg/weighted(com.monkopedia.kcsg/WeightFunction): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/weighted|weighted@com.monkopedia.kcsg.Primitive(com.monkopedia.kcsg.WeightFunction){}[0]
+final inline fun (com.monkopedia.kcsg/Transform).com.monkopedia.kcsg/scale(kotlin/Double = ...): com.monkopedia.kcsg/Transform // com.monkopedia.kcsg/scale|scale@com.monkopedia.kcsg.Transform(kotlin.Double){}[0]
+final inline fun (com.monkopedia.kcsg/Transform).com.monkopedia.kcsg/scale(kotlin/Double = ..., kotlin/Double = ..., kotlin/Double = ...): com.monkopedia.kcsg/Transform // com.monkopedia.kcsg/scale|scale@com.monkopedia.kcsg.Transform(kotlin.Double;kotlin.Double;kotlin.Double){}[0]
+final inline fun (com.monkopedia.kcsg/Transform).com.monkopedia.kcsg/translate(kotlin/Double = ..., kotlin/Double = ..., kotlin/Double = ...): com.monkopedia.kcsg/Transform // com.monkopedia.kcsg/translate|translate@com.monkopedia.kcsg.Transform(kotlin.Double;kotlin.Double;kotlin.Double){}[0]
+final inline fun (kotlin.collections/Collection<com.monkopedia.kcsg/CSG>).com.monkopedia.kcsg/flatten(): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/flatten|flatten@kotlin.collections.Collection<com.monkopedia.kcsg.CSG>(){}[0]
+final inline fun (kotlin.collections/Collection<com.monkopedia.kcsg/CSG>).com.monkopedia.kcsg/merge(): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/merge|merge@kotlin.collections.Collection<com.monkopedia.kcsg.CSG>(){}[0]
+final inline fun (kotlin.collections/Collection<com.monkopedia.kcsg/CSG>).com.monkopedia.kcsg/rot(kotlin/Double = ..., kotlin/Double = ..., kotlin/Double = ...): kotlin.collections/Collection<com.monkopedia.kcsg/CSG> // com.monkopedia.kcsg/rot|rot@kotlin.collections.Collection<com.monkopedia.kcsg.CSG>(kotlin.Double;kotlin.Double;kotlin.Double){}[0]
+final inline fun (kotlin.collections/Collection<com.monkopedia.kcsg/CSG>).com.monkopedia.kcsg/scale(kotlin/Double = ...): kotlin.collections/Collection<com.monkopedia.kcsg/CSG> // com.monkopedia.kcsg/scale|scale@kotlin.collections.Collection<com.monkopedia.kcsg.CSG>(kotlin.Double){}[0]
+final inline fun (kotlin.collections/Collection<com.monkopedia.kcsg/CSG>).com.monkopedia.kcsg/scale(kotlin/Double = ..., kotlin/Double = ..., kotlin/Double = ...): kotlin.collections/Collection<com.monkopedia.kcsg/CSG> // com.monkopedia.kcsg/scale|scale@kotlin.collections.Collection<com.monkopedia.kcsg.CSG>(kotlin.Double;kotlin.Double;kotlin.Double){}[0]
+final inline fun (kotlin.collections/Collection<com.monkopedia.kcsg/CSG>).com.monkopedia.kcsg/transform(kotlin/Function1<com.monkopedia.kcsg/Transform, com.monkopedia.kcsg/Transform>): kotlin.collections/Collection<com.monkopedia.kcsg/CSG> // com.monkopedia.kcsg/transform|transform@kotlin.collections.Collection<com.monkopedia.kcsg.CSG>(kotlin.Function1<com.monkopedia.kcsg.Transform,com.monkopedia.kcsg.Transform>){}[0]
+final inline fun (kotlin.collections/Collection<com.monkopedia.kcsg/CSG>).com.monkopedia.kcsg/translate(kotlin/Double = ..., kotlin/Double = ..., kotlin/Double = ...): kotlin.collections/Collection<com.monkopedia.kcsg/CSG> // com.monkopedia.kcsg/translate|translate@kotlin.collections.Collection<com.monkopedia.kcsg.CSG>(kotlin.Double;kotlin.Double;kotlin.Double){}[0]

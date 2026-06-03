@@ -2,9 +2,16 @@
 
 This checklist tracks public API coverage status for library modules.
 
+## Relationship to BCV (the mechanical ABI gate)
+
+There are two complementary public-API gates, with distinct roles:
+
+- **BCV (`binary-compatibility-validator`)** is the *mechanical ABI gate*. It tracks the actual public ABI of `:kcsg` and `:kcsg-dsl` as committed dumps (JVM `.api` + multiplatform `.klib.api` under each module's `api/`) and fails CI (`./gradlew apiCheck`) on any public-API change that hasn't been re-dumped with `./gradlew apiDump`. It answers *"did the public surface change?"* — exhaustively and automatically.
+- **This checklist** is the *coverage/intent doc*. It answers *"which public symbols are tested, and how well?"* BCV does not track test coverage, and this checklist does not mechanically detect surface changes; they are intentionally separate. Both are required on a public-API PR.
+
 ## Update Rule
 
-- Any change to public API in `kcsg` or `kcsg-dsl` must update this file in the same PR.
+- Any change to public API in `kcsg` or `kcsg-dsl` must update this file in the same PR (and re-run `./gradlew apiDump` so the BCV dumps match — see above).
 - Mark each symbol with one of: `missing`, `partial`, `covered`.
 - Assign one or more scenario tags: `math`, `primitive`, `boolean`, `mesh`, `io`, `dsl`, `error-path`.
 - Add or update test references for each symbol as coverage is implemented.

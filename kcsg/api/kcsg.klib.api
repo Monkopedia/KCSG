@@ -1,0 +1,715 @@
+// Klib ABI Dump
+// Targets: [iosArm64, iosSimulatorArm64, iosX64, js, linuxArm64, linuxX64, macosArm64, macosX64, mingwX64, tvosArm64, tvosSimulatorArm64, tvosX64, wasmJs, wasmWasi, watchosArm32, watchosArm64, watchosSimulatorArm64, watchosX64]
+// Rendering settings:
+// - Signature version: 2
+// - Show manifest properties: true
+// - Show declarations: true
+
+// Library unique name: <com.monkopedia:kcsg>
+abstract fun interface com.monkopedia.kcsg/WeightFunction { // com.monkopedia.kcsg/WeightFunction|null[0]
+    abstract fun eval(com.monkopedia.kcsg/Vector3d, com.monkopedia.kcsg/CSG): kotlin/Double // com.monkopedia.kcsg/WeightFunction.eval|eval(com.monkopedia.kcsg.Vector3d;com.monkopedia.kcsg.CSG){}[0]
+}
+
+abstract interface com.monkopedia.kcsg/Logger { // com.monkopedia.kcsg/Logger|null[0]
+    abstract fun log(com.monkopedia.kcsg/Logger.Level, kotlin/String, kotlin/String, kotlin/Throwable? = ...) // com.monkopedia.kcsg/Logger.log|log(com.monkopedia.kcsg.Logger.Level;kotlin.String;kotlin.String;kotlin.Throwable?){}[0]
+    open fun debug(kotlin/String, kotlin/String, kotlin/Throwable? = ...) // com.monkopedia.kcsg/Logger.debug|debug(kotlin.String;kotlin.String;kotlin.Throwable?){}[0]
+    open fun error(kotlin/String, kotlin/String, kotlin/Throwable? = ...) // com.monkopedia.kcsg/Logger.error|error(kotlin.String;kotlin.String;kotlin.Throwable?){}[0]
+    open fun info(kotlin/String, kotlin/String, kotlin/Throwable? = ...) // com.monkopedia.kcsg/Logger.info|info(kotlin.String;kotlin.String;kotlin.Throwable?){}[0]
+    open fun trace(kotlin/String, kotlin/String, kotlin/Throwable? = ...) // com.monkopedia.kcsg/Logger.trace|trace(kotlin.String;kotlin.String;kotlin.Throwable?){}[0]
+    open fun warn(kotlin/String, kotlin/String, kotlin/Throwable? = ...) // com.monkopedia.kcsg/Logger.warn|warn(kotlin.String;kotlin.String;kotlin.Throwable?){}[0]
+
+    final enum class Level : kotlin/Enum<com.monkopedia.kcsg/Logger.Level> { // com.monkopedia.kcsg/Logger.Level|null[0]
+        enum entry DEBUG // com.monkopedia.kcsg/Logger.Level.DEBUG|null[0]
+        enum entry ERROR // com.monkopedia.kcsg/Logger.Level.ERROR|null[0]
+        enum entry INFO // com.monkopedia.kcsg/Logger.Level.INFO|null[0]
+        enum entry TRACE // com.monkopedia.kcsg/Logger.Level.TRACE|null[0]
+        enum entry WARN // com.monkopedia.kcsg/Logger.Level.WARN|null[0]
+
+        final val entries // com.monkopedia.kcsg/Logger.Level.entries|#static{}entries[0]
+            final fun <get-entries>(): kotlin.enums/EnumEntries<com.monkopedia.kcsg/Logger.Level> // com.monkopedia.kcsg/Logger.Level.entries.<get-entries>|<get-entries>#static(){}[0]
+
+        final fun valueOf(kotlin/String): com.monkopedia.kcsg/Logger.Level // com.monkopedia.kcsg/Logger.Level.valueOf|valueOf#static(kotlin.String){}[0]
+        final fun values(): kotlin/Array<com.monkopedia.kcsg/Logger.Level> // com.monkopedia.kcsg/Logger.Level.values|values#static(){}[0]
+    }
+
+    final object Companion : com.monkopedia.kcsg/Logger { // com.monkopedia.kcsg/Logger.Companion|null[0]
+        final fun log(com.monkopedia.kcsg/Logger.Level, kotlin/String, kotlin/String, kotlin/Throwable?) // com.monkopedia.kcsg/Logger.Companion.log|log(com.monkopedia.kcsg.Logger.Level;kotlin.String;kotlin.String;kotlin.Throwable?){}[0]
+        final fun setLogger(com.monkopedia.kcsg/Logger?) // com.monkopedia.kcsg/Logger.Companion.setLogger|setLogger(com.monkopedia.kcsg.Logger?){}[0]
+        final fun tagged(kotlin/String): com.monkopedia.kcsg/TaggedLogger // com.monkopedia.kcsg/Logger.Companion.tagged|tagged(kotlin.String){}[0]
+    }
+}
+
+abstract interface com.monkopedia.kcsg/OpOverride { // com.monkopedia.kcsg/OpOverride|null[0]
+    abstract fun bounds(kotlin/String, kotlin/Array<out kotlin/Any?>...): com.monkopedia.kcsg/Bounds? // com.monkopedia.kcsg/OpOverride.bounds|bounds(kotlin.String;kotlin.Array<out|kotlin.Any?>...){}[0]
+    abstract fun double(kotlin/String, kotlin/Array<out kotlin/Any?>...): kotlin/Double? // com.monkopedia.kcsg/OpOverride.double|double(kotlin.String;kotlin.Array<out|kotlin.Any?>...){}[0]
+    abstract fun file(kotlinx.io.files/Path): com.monkopedia.kcsg/CSG? // com.monkopedia.kcsg/OpOverride.file|file(kotlinx.io.files.Path){}[0]
+    abstract fun operation(kotlin/String, kotlin/Array<out kotlin/Any?>...): com.monkopedia.kcsg/CSG? // com.monkopedia.kcsg/OpOverride.operation|operation(kotlin.String;kotlin.Array<out|kotlin.Any?>...){}[0]
+    abstract fun source(kotlin/Function0<kotlinx.io/Source>): com.monkopedia.kcsg/CSG? // com.monkopedia.kcsg/OpOverride.source|source(kotlin.Function0<kotlinx.io.Source>){}[0]
+}
+
+abstract interface com.monkopedia.kcsg/Primitive { // com.monkopedia.kcsg/Primitive|null[0]
+    abstract fun getProperties(): com.monkopedia.kcsg/PropertyStorage // com.monkopedia.kcsg/Primitive.getProperties|getProperties(){}[0]
+    abstract fun toPolygons(): kotlin.collections/List<com.monkopedia.kcsg/Polygon> // com.monkopedia.kcsg/Primitive.toPolygons|toPolygons(){}[0]
+    open fun toCSG(): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/Primitive.toCSG|toCSG(){}[0]
+}
+
+final class com.monkopedia.kcsg.ext.vvecmath/Plane { // com.monkopedia.kcsg.ext.vvecmath/Plane|null[0]
+    final val anchor // com.monkopedia.kcsg.ext.vvecmath/Plane.anchor|{}anchor[0]
+        final fun <get-anchor>(): com.monkopedia.kcsg/Vector3d // com.monkopedia.kcsg.ext.vvecmath/Plane.anchor.<get-anchor>|<get-anchor>(){}[0]
+    final val dist // com.monkopedia.kcsg.ext.vvecmath/Plane.dist|{}dist[0]
+        final fun <get-dist>(): kotlin/Double // com.monkopedia.kcsg.ext.vvecmath/Plane.dist.<get-dist>|<get-dist>(){}[0]
+    final val normal // com.monkopedia.kcsg.ext.vvecmath/Plane.normal|{}normal[0]
+        final fun <get-normal>(): com.monkopedia.kcsg/Vector3d // com.monkopedia.kcsg.ext.vvecmath/Plane.normal.<get-normal>|<get-normal>(){}[0]
+
+    final fun compare(com.monkopedia.kcsg/Vector3d): kotlin/Int // com.monkopedia.kcsg.ext.vvecmath/Plane.compare|compare(com.monkopedia.kcsg.Vector3d){}[0]
+    final fun compare(com.monkopedia.kcsg/Vector3d, kotlin/Double): kotlin/Int // com.monkopedia.kcsg.ext.vvecmath/Plane.compare|compare(com.monkopedia.kcsg.Vector3d;kotlin.Double){}[0]
+    final fun copy(com.monkopedia.kcsg/Vector3d = ..., com.monkopedia.kcsg/Vector3d = ...): com.monkopedia.kcsg.ext.vvecmath/Plane // com.monkopedia.kcsg.ext.vvecmath/Plane.copy|copy(com.monkopedia.kcsg.Vector3d;com.monkopedia.kcsg.Vector3d){}[0]
+    final fun distance(com.monkopedia.kcsg/Vector3d): kotlin/Double // com.monkopedia.kcsg.ext.vvecmath/Plane.distance|distance(com.monkopedia.kcsg.Vector3d){}[0]
+    final fun flipped(): com.monkopedia.kcsg.ext.vvecmath/Plane // com.monkopedia.kcsg.ext.vvecmath/Plane.flipped|flipped(){}[0]
+    final fun project(com.monkopedia.kcsg/Vector3d): com.monkopedia.kcsg/Vector3d // com.monkopedia.kcsg.ext.vvecmath/Plane.project|project(com.monkopedia.kcsg.Vector3d){}[0]
+
+    final object Companion { // com.monkopedia.kcsg.ext.vvecmath/Plane.Companion|null[0]
+        final const val TOL // com.monkopedia.kcsg.ext.vvecmath/Plane.Companion.TOL|{}TOL[0]
+            final fun <get-TOL>(): kotlin/Double // com.monkopedia.kcsg.ext.vvecmath/Plane.Companion.TOL.<get-TOL>|<get-TOL>(){}[0]
+
+        final val XY_PLANE // com.monkopedia.kcsg.ext.vvecmath/Plane.Companion.XY_PLANE|{}XY_PLANE[0]
+            final fun <get-XY_PLANE>(): com.monkopedia.kcsg.ext.vvecmath/Plane // com.monkopedia.kcsg.ext.vvecmath/Plane.Companion.XY_PLANE.<get-XY_PLANE>|<get-XY_PLANE>(){}[0]
+        final val XZ_PLANE // com.monkopedia.kcsg.ext.vvecmath/Plane.Companion.XZ_PLANE|{}XZ_PLANE[0]
+            final fun <get-XZ_PLANE>(): com.monkopedia.kcsg.ext.vvecmath/Plane // com.monkopedia.kcsg.ext.vvecmath/Plane.Companion.XZ_PLANE.<get-XZ_PLANE>|<get-XZ_PLANE>(){}[0]
+        final val YZ_PLANE // com.monkopedia.kcsg.ext.vvecmath/Plane.Companion.YZ_PLANE|{}YZ_PLANE[0]
+            final fun <get-YZ_PLANE>(): com.monkopedia.kcsg.ext.vvecmath/Plane // com.monkopedia.kcsg.ext.vvecmath/Plane.Companion.YZ_PLANE.<get-YZ_PLANE>|<get-YZ_PLANE>(){}[0]
+
+        final fun fromPointAndNormal(com.monkopedia.kcsg/Vector3d, com.monkopedia.kcsg/Vector3d): com.monkopedia.kcsg.ext.vvecmath/Plane // com.monkopedia.kcsg.ext.vvecmath/Plane.Companion.fromPointAndNormal|fromPointAndNormal(com.monkopedia.kcsg.Vector3d;com.monkopedia.kcsg.Vector3d){}[0]
+        final fun fromPoints(com.monkopedia.kcsg/Vector3d, com.monkopedia.kcsg/Vector3d, com.monkopedia.kcsg/Vector3d): com.monkopedia.kcsg.ext.vvecmath/Plane // com.monkopedia.kcsg.ext.vvecmath/Plane.Companion.fromPoints|fromPoints(com.monkopedia.kcsg.Vector3d;com.monkopedia.kcsg.Vector3d;com.monkopedia.kcsg.Vector3d){}[0]
+    }
+}
+
+final class com.monkopedia.kcsg/Bounds { // com.monkopedia.kcsg/Bounds|null[0]
+    constructor <init>(com.monkopedia.kcsg/Vector3d, com.monkopedia.kcsg/Vector3d) // com.monkopedia.kcsg/Bounds.<init>|<init>(com.monkopedia.kcsg.Vector3d;com.monkopedia.kcsg.Vector3d){}[0]
+
+    final val bounds // com.monkopedia.kcsg/Bounds.bounds|{}bounds[0]
+        final fun <get-bounds>(): com.monkopedia.kcsg/Vector3d // com.monkopedia.kcsg/Bounds.bounds.<get-bounds>|<get-bounds>(){}[0]
+    final val center // com.monkopedia.kcsg/Bounds.center|{}center[0]
+        final fun <get-center>(): com.monkopedia.kcsg/Vector3d // com.monkopedia.kcsg/Bounds.center.<get-center>|<get-center>(){}[0]
+    final val max // com.monkopedia.kcsg/Bounds.max|{}max[0]
+        final fun <get-max>(): com.monkopedia.kcsg/Vector3d // com.monkopedia.kcsg/Bounds.max.<get-max>|<get-max>(){}[0]
+    final val min // com.monkopedia.kcsg/Bounds.min|{}min[0]
+        final fun <get-min>(): com.monkopedia.kcsg/Vector3d // com.monkopedia.kcsg/Bounds.min.<get-min>|<get-min>(){}[0]
+
+    final fun component1(): com.monkopedia.kcsg/Vector3d // com.monkopedia.kcsg/Bounds.component1|component1(){}[0]
+    final fun component2(): com.monkopedia.kcsg/Vector3d // com.monkopedia.kcsg/Bounds.component2|component2(){}[0]
+    final fun contains(com.monkopedia.kcsg/Polygon): kotlin/Boolean // com.monkopedia.kcsg/Bounds.contains|contains(com.monkopedia.kcsg.Polygon){}[0]
+    final fun contains(com.monkopedia.kcsg/Vector3d): kotlin/Boolean // com.monkopedia.kcsg/Bounds.contains|contains(com.monkopedia.kcsg.Vector3d){}[0]
+    final fun contains(com.monkopedia.kcsg/Vertex): kotlin/Boolean // com.monkopedia.kcsg/Bounds.contains|contains(com.monkopedia.kcsg.Vertex){}[0]
+    final fun copy(com.monkopedia.kcsg/Vector3d = ..., com.monkopedia.kcsg/Vector3d = ...): com.monkopedia.kcsg/Bounds // com.monkopedia.kcsg/Bounds.copy|copy(com.monkopedia.kcsg.Vector3d;com.monkopedia.kcsg.Vector3d){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.monkopedia.kcsg/Bounds.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.monkopedia.kcsg/Bounds.hashCode|hashCode(){}[0]
+    final fun intersects(com.monkopedia.kcsg/Bounds): kotlin/Boolean // com.monkopedia.kcsg/Bounds.intersects|intersects(com.monkopedia.kcsg.Bounds){}[0]
+    final fun intersects(com.monkopedia.kcsg/Polygon): kotlin/Boolean // com.monkopedia.kcsg/Bounds.intersects|intersects(com.monkopedia.kcsg.Polygon){}[0]
+    final fun toCSG(): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/Bounds.toCSG|toCSG(){}[0]
+    final fun toCube(): com.monkopedia.kcsg/Cube // com.monkopedia.kcsg/Bounds.toCube|toCube(){}[0]
+    final fun toString(): kotlin/String // com.monkopedia.kcsg/Bounds.toString|toString(){}[0]
+}
+
+final class com.monkopedia.kcsg/CSG { // com.monkopedia.kcsg/CSG|null[0]
+    final val bounds // com.monkopedia.kcsg/CSG.bounds|{}bounds[0]
+        final fun <get-bounds>(): com.monkopedia.kcsg/Bounds // com.monkopedia.kcsg/CSG.bounds.<get-bounds>|<get-bounds>(){}[0]
+    final val polygons // com.monkopedia.kcsg/CSG.polygons|{}polygons[0]
+        final fun <get-polygons>(): kotlin.collections/List<com.monkopedia.kcsg/Polygon> // com.monkopedia.kcsg/CSG.polygons.<get-polygons>|<get-polygons>(){}[0]
+
+    final fun color(com.monkopedia.kcsg/KcsgColor): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/CSG.color|color(com.monkopedia.kcsg.KcsgColor){}[0]
+    final fun color(kotlin/Double, kotlin/Double, kotlin/Double): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/CSG.color|color(kotlin.Double;kotlin.Double;kotlin.Double){}[0]
+    final fun computeVolume(): kotlin/Double // com.monkopedia.kcsg/CSG.computeVolume|computeVolume(){}[0]
+    final fun copy(): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/CSG.copy|copy(){}[0]
+    final fun difference(com.monkopedia.kcsg/CSG): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/CSG.difference|difference(com.monkopedia.kcsg.CSG){}[0]
+    final fun difference(kotlin.collections/List<com.monkopedia.kcsg/CSG>): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/CSG.difference|difference(kotlin.collections.List<com.monkopedia.kcsg.CSG>){}[0]
+    final fun difference(kotlin/Array<out com.monkopedia.kcsg/CSG>...): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/CSG.difference|difference(kotlin.Array<out|com.monkopedia.kcsg.CSG>...){}[0]
+    final fun dumbUnion(com.monkopedia.kcsg/CSG): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/CSG.dumbUnion|dumbUnion(com.monkopedia.kcsg.CSG){}[0]
+    final fun hull(): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/CSG.hull|hull(){}[0]
+    final fun hull(kotlin.collections/List<com.monkopedia.kcsg/CSG>): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/CSG.hull|hull(kotlin.collections.List<com.monkopedia.kcsg.CSG>){}[0]
+    final fun hull(kotlin/Array<out com.monkopedia.kcsg/CSG>...): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/CSG.hull|hull(kotlin.Array<out|com.monkopedia.kcsg.CSG>...){}[0]
+    final fun intersect(com.monkopedia.kcsg/CSG): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/CSG.intersect|intersect(com.monkopedia.kcsg.CSG){}[0]
+    final fun intersect(kotlin.collections/List<com.monkopedia.kcsg/CSG>): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/CSG.intersect|intersect(kotlin.collections.List<com.monkopedia.kcsg.CSG>){}[0]
+    final fun intersect(kotlin/Array<out com.monkopedia.kcsg/CSG>...): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/CSG.intersect|intersect(kotlin.Array<out|com.monkopedia.kcsg.CSG>...){}[0]
+    final fun optimization(com.monkopedia.kcsg/CSG.OptType): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/CSG.optimization|optimization(com.monkopedia.kcsg.CSG.OptType){}[0]
+    final fun remesh(): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/CSG.remesh|remesh(){}[0]
+    final fun toObj(kotlin/Int = ...): com.monkopedia.kcsg/ObjFile // com.monkopedia.kcsg/CSG.toObj|toObj(kotlin.Int){}[0]
+    final fun toObjString(): kotlin/String // com.monkopedia.kcsg/CSG.toObjString|toObjString(){}[0]
+    final fun toStlString(): kotlin/String // com.monkopedia.kcsg/CSG.toStlString|toStlString(){}[0]
+    final fun toStlString(kotlin.text/StringBuilder): kotlin.text/StringBuilder // com.monkopedia.kcsg/CSG.toStlString|toStlString(kotlin.text.StringBuilder){}[0]
+    final fun transformed(com.monkopedia.kcsg/Transform): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/CSG.transformed|transformed(com.monkopedia.kcsg.Transform){}[0]
+    final fun union(com.monkopedia.kcsg/CSG): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/CSG.union|union(com.monkopedia.kcsg.CSG){}[0]
+    final fun union(kotlin.collections/List<com.monkopedia.kcsg/CSG>): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/CSG.union|union(kotlin.collections.List<com.monkopedia.kcsg.CSG>){}[0]
+    final fun union(kotlin/Array<out com.monkopedia.kcsg/CSG>...): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/CSG.union|union(kotlin.Array<out|com.monkopedia.kcsg.CSG>...){}[0]
+    final fun weighted(com.monkopedia.kcsg/WeightFunction): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/CSG.weighted|weighted(com.monkopedia.kcsg.WeightFunction){}[0]
+
+    final enum class OptType : kotlin/Enum<com.monkopedia.kcsg/CSG.OptType> { // com.monkopedia.kcsg/CSG.OptType|null[0]
+        enum entry CSG_BOUND // com.monkopedia.kcsg/CSG.OptType.CSG_BOUND|null[0]
+        enum entry NONE // com.monkopedia.kcsg/CSG.OptType.NONE|null[0]
+        enum entry POLYGON_BOUND // com.monkopedia.kcsg/CSG.OptType.POLYGON_BOUND|null[0]
+
+        final val entries // com.monkopedia.kcsg/CSG.OptType.entries|#static{}entries[0]
+            final fun <get-entries>(): kotlin.enums/EnumEntries<com.monkopedia.kcsg/CSG.OptType> // com.monkopedia.kcsg/CSG.OptType.entries.<get-entries>|<get-entries>#static(){}[0]
+
+        final fun valueOf(kotlin/String): com.monkopedia.kcsg/CSG.OptType // com.monkopedia.kcsg/CSG.OptType.valueOf|valueOf#static(kotlin.String){}[0]
+        final fun values(): kotlin/Array<com.monkopedia.kcsg/CSG.OptType> // com.monkopedia.kcsg/CSG.OptType.values|values#static(){}[0]
+    }
+
+    final object Companion { // com.monkopedia.kcsg/CSG.Companion|null[0]
+        final var opOverride // com.monkopedia.kcsg/CSG.Companion.opOverride|{}opOverride[0]
+            final fun <get-opOverride>(): com.monkopedia.kcsg/OpOverride? // com.monkopedia.kcsg/CSG.Companion.opOverride.<get-opOverride>|<get-opOverride>(){}[0]
+            final fun <set-opOverride>(com.monkopedia.kcsg/OpOverride?) // com.monkopedia.kcsg/CSG.Companion.opOverride.<set-opOverride>|<set-opOverride>(com.monkopedia.kcsg.OpOverride?){}[0]
+
+        final fun fromPolygons(com.monkopedia.kcsg/PropertyStorage, kotlin.collections/List<com.monkopedia.kcsg/Polygon>): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/CSG.Companion.fromPolygons|fromPolygons(com.monkopedia.kcsg.PropertyStorage;kotlin.collections.List<com.monkopedia.kcsg.Polygon>){}[0]
+        final fun fromPolygons(com.monkopedia.kcsg/PropertyStorage, kotlin/Array<out com.monkopedia.kcsg/Polygon>...): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/CSG.Companion.fromPolygons|fromPolygons(com.monkopedia.kcsg.PropertyStorage;kotlin.Array<out|com.monkopedia.kcsg.Polygon>...){}[0]
+        final fun fromPolygons(kotlin.collections/List<com.monkopedia.kcsg/Polygon>): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/CSG.Companion.fromPolygons|fromPolygons(kotlin.collections.List<com.monkopedia.kcsg.Polygon>){}[0]
+        final fun fromPolygons(kotlin/Array<out com.monkopedia.kcsg/Polygon>...): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/CSG.Companion.fromPolygons|fromPolygons(kotlin.Array<out|com.monkopedia.kcsg.Polygon>...){}[0]
+        final fun setDefaultOptType(com.monkopedia.kcsg/CSG.OptType) // com.monkopedia.kcsg/CSG.Companion.setDefaultOptType|setDefaultOptType(com.monkopedia.kcsg.CSG.OptType){}[0]
+        final inline fun <#A2: kotlin/Any?> withOverride(com.monkopedia.kcsg/OpOverride?, kotlin/Function0<#A2>): #A2 // com.monkopedia.kcsg/CSG.Companion.withOverride|withOverride(com.monkopedia.kcsg.OpOverride?;kotlin.Function0<0:0>){0§<kotlin.Any?>}[0]
+    }
+}
+
+final class com.monkopedia.kcsg/Cube : com.monkopedia.kcsg/Primitive { // com.monkopedia.kcsg/Cube|null[0]
+    constructor <init>(com.monkopedia.kcsg/Vector3d = ..., com.monkopedia.kcsg/Vector3d = ...) // com.monkopedia.kcsg/Cube.<init>|<init>(com.monkopedia.kcsg.Vector3d;com.monkopedia.kcsg.Vector3d){}[0]
+    constructor <init>(kotlin/Double) // com.monkopedia.kcsg/Cube.<init>|<init>(kotlin.Double){}[0]
+    constructor <init>(kotlin/Double, kotlin/Double, kotlin/Double) // com.monkopedia.kcsg/Cube.<init>|<init>(kotlin.Double;kotlin.Double;kotlin.Double){}[0]
+
+    final var center // com.monkopedia.kcsg/Cube.center|{}center[0]
+        final fun <get-center>(): com.monkopedia.kcsg/Vector3d // com.monkopedia.kcsg/Cube.center.<get-center>|<get-center>(){}[0]
+        final fun <set-center>(com.monkopedia.kcsg/Vector3d) // com.monkopedia.kcsg/Cube.center.<set-center>|<set-center>(com.monkopedia.kcsg.Vector3d){}[0]
+    final var centered // com.monkopedia.kcsg/Cube.centered|{}centered[0]
+        final fun <get-centered>(): kotlin/Boolean // com.monkopedia.kcsg/Cube.centered.<get-centered>|<get-centered>(){}[0]
+        final fun <set-centered>(kotlin/Boolean) // com.monkopedia.kcsg/Cube.centered.<set-centered>|<set-centered>(kotlin.Boolean){}[0]
+    final var dimensions // com.monkopedia.kcsg/Cube.dimensions|{}dimensions[0]
+        final fun <get-dimensions>(): com.monkopedia.kcsg/Vector3d // com.monkopedia.kcsg/Cube.dimensions.<get-dimensions>|<get-dimensions>(){}[0]
+        final fun <set-dimensions>(com.monkopedia.kcsg/Vector3d) // com.monkopedia.kcsg/Cube.dimensions.<set-dimensions>|<set-dimensions>(com.monkopedia.kcsg.Vector3d){}[0]
+
+    final fun component1(): com.monkopedia.kcsg/Vector3d // com.monkopedia.kcsg/Cube.component1|component1(){}[0]
+    final fun component2(): com.monkopedia.kcsg/Vector3d // com.monkopedia.kcsg/Cube.component2|component2(){}[0]
+    final fun copy(com.monkopedia.kcsg/Vector3d = ..., com.monkopedia.kcsg/Vector3d = ...): com.monkopedia.kcsg/Cube // com.monkopedia.kcsg/Cube.copy|copy(com.monkopedia.kcsg.Vector3d;com.monkopedia.kcsg.Vector3d){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.monkopedia.kcsg/Cube.equals|equals(kotlin.Any?){}[0]
+    final fun getProperties(): com.monkopedia.kcsg/PropertyStorage // com.monkopedia.kcsg/Cube.getProperties|getProperties(){}[0]
+    final fun hashCode(): kotlin/Int // com.monkopedia.kcsg/Cube.hashCode|hashCode(){}[0]
+    final fun noCenter(): com.monkopedia.kcsg/Cube // com.monkopedia.kcsg/Cube.noCenter|noCenter(){}[0]
+    final fun toPolygons(): kotlin.collections/MutableList<com.monkopedia.kcsg/Polygon> // com.monkopedia.kcsg/Cube.toPolygons|toPolygons(){}[0]
+    final fun toString(): kotlin/String // com.monkopedia.kcsg/Cube.toString|toString(){}[0]
+}
+
+final class com.monkopedia.kcsg/Cylinder : com.monkopedia.kcsg/Primitive { // com.monkopedia.kcsg/Cylinder|null[0]
+    constructor <init>(com.monkopedia.kcsg/Vector3d = ..., com.monkopedia.kcsg/Vector3d = ..., kotlin/Double = ..., kotlin/Double = ..., kotlin/Int = ...) // com.monkopedia.kcsg/Cylinder.<init>|<init>(com.monkopedia.kcsg.Vector3d;com.monkopedia.kcsg.Vector3d;kotlin.Double;kotlin.Double;kotlin.Int){}[0]
+    constructor <init>(com.monkopedia.kcsg/Vector3d, com.monkopedia.kcsg/Vector3d, kotlin/Double, kotlin/Int) // com.monkopedia.kcsg/Cylinder.<init>|<init>(com.monkopedia.kcsg.Vector3d;com.monkopedia.kcsg.Vector3d;kotlin.Double;kotlin.Int){}[0]
+    constructor <init>(kotlin/Double, kotlin/Double, kotlin/Double, kotlin/Int) // com.monkopedia.kcsg/Cylinder.<init>|<init>(kotlin.Double;kotlin.Double;kotlin.Double;kotlin.Int){}[0]
+    constructor <init>(kotlin/Double, kotlin/Double, kotlin/Int) // com.monkopedia.kcsg/Cylinder.<init>|<init>(kotlin.Double;kotlin.Double;kotlin.Int){}[0]
+
+    final var end // com.monkopedia.kcsg/Cylinder.end|{}end[0]
+        final fun <get-end>(): com.monkopedia.kcsg/Vector3d // com.monkopedia.kcsg/Cylinder.end.<get-end>|<get-end>(){}[0]
+        final fun <set-end>(com.monkopedia.kcsg/Vector3d) // com.monkopedia.kcsg/Cylinder.end.<set-end>|<set-end>(com.monkopedia.kcsg.Vector3d){}[0]
+    final var endRadius // com.monkopedia.kcsg/Cylinder.endRadius|{}endRadius[0]
+        final fun <get-endRadius>(): kotlin/Double // com.monkopedia.kcsg/Cylinder.endRadius.<get-endRadius>|<get-endRadius>(){}[0]
+        final fun <set-endRadius>(kotlin/Double) // com.monkopedia.kcsg/Cylinder.endRadius.<set-endRadius>|<set-endRadius>(kotlin.Double){}[0]
+    final var numSlices // com.monkopedia.kcsg/Cylinder.numSlices|{}numSlices[0]
+        final fun <get-numSlices>(): kotlin/Int // com.monkopedia.kcsg/Cylinder.numSlices.<get-numSlices>|<get-numSlices>(){}[0]
+        final fun <set-numSlices>(kotlin/Int) // com.monkopedia.kcsg/Cylinder.numSlices.<set-numSlices>|<set-numSlices>(kotlin.Int){}[0]
+    final var start // com.monkopedia.kcsg/Cylinder.start|{}start[0]
+        final fun <get-start>(): com.monkopedia.kcsg/Vector3d // com.monkopedia.kcsg/Cylinder.start.<get-start>|<get-start>(){}[0]
+        final fun <set-start>(com.monkopedia.kcsg/Vector3d) // com.monkopedia.kcsg/Cylinder.start.<set-start>|<set-start>(com.monkopedia.kcsg.Vector3d){}[0]
+    final var startRadius // com.monkopedia.kcsg/Cylinder.startRadius|{}startRadius[0]
+        final fun <get-startRadius>(): kotlin/Double // com.monkopedia.kcsg/Cylinder.startRadius.<get-startRadius>|<get-startRadius>(){}[0]
+        final fun <set-startRadius>(kotlin/Double) // com.monkopedia.kcsg/Cylinder.startRadius.<set-startRadius>|<set-startRadius>(kotlin.Double){}[0]
+
+    final fun component1(): com.monkopedia.kcsg/Vector3d // com.monkopedia.kcsg/Cylinder.component1|component1(){}[0]
+    final fun component2(): com.monkopedia.kcsg/Vector3d // com.monkopedia.kcsg/Cylinder.component2|component2(){}[0]
+    final fun component3(): kotlin/Double // com.monkopedia.kcsg/Cylinder.component3|component3(){}[0]
+    final fun component4(): kotlin/Double // com.monkopedia.kcsg/Cylinder.component4|component4(){}[0]
+    final fun component5(): kotlin/Int // com.monkopedia.kcsg/Cylinder.component5|component5(){}[0]
+    final fun copy(com.monkopedia.kcsg/Vector3d = ..., com.monkopedia.kcsg/Vector3d = ..., kotlin/Double = ..., kotlin/Double = ..., kotlin/Int = ...): com.monkopedia.kcsg/Cylinder // com.monkopedia.kcsg/Cylinder.copy|copy(com.monkopedia.kcsg.Vector3d;com.monkopedia.kcsg.Vector3d;kotlin.Double;kotlin.Double;kotlin.Int){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.monkopedia.kcsg/Cylinder.equals|equals(kotlin.Any?){}[0]
+    final fun getProperties(): com.monkopedia.kcsg/PropertyStorage // com.monkopedia.kcsg/Cylinder.getProperties|getProperties(){}[0]
+    final fun hashCode(): kotlin/Int // com.monkopedia.kcsg/Cylinder.hashCode|hashCode(){}[0]
+    final fun toPolygons(): kotlin.collections/MutableList<com.monkopedia.kcsg/Polygon> // com.monkopedia.kcsg/Cylinder.toPolygons|toPolygons(){}[0]
+    final fun toString(): kotlin/String // com.monkopedia.kcsg/Cylinder.toString|toString(){}[0]
+}
+
+final class com.monkopedia.kcsg/Edge { // com.monkopedia.kcsg/Edge|null[0]
+    constructor <init>(com.monkopedia.kcsg/Vertex, com.monkopedia.kcsg/Vertex) // com.monkopedia.kcsg/Edge.<init>|<init>(com.monkopedia.kcsg.Vertex;com.monkopedia.kcsg.Vertex){}[0]
+
+    final val p1 // com.monkopedia.kcsg/Edge.p1|{}p1[0]
+        final fun <get-p1>(): com.monkopedia.kcsg/Vertex // com.monkopedia.kcsg/Edge.p1.<get-p1>|<get-p1>(){}[0]
+    final val p2 // com.monkopedia.kcsg/Edge.p2|{}p2[0]
+        final fun <get-p2>(): com.monkopedia.kcsg/Vertex // com.monkopedia.kcsg/Edge.p2.<get-p2>|<get-p2>(){}[0]
+
+    final fun component1(): com.monkopedia.kcsg/Vertex // com.monkopedia.kcsg/Edge.component1|component1(){}[0]
+    final fun component2(): com.monkopedia.kcsg/Vertex // com.monkopedia.kcsg/Edge.component2|component2(){}[0]
+    final fun contains(com.monkopedia.kcsg/Vector3d, kotlin/Double = ...): kotlin/Boolean // com.monkopedia.kcsg/Edge.contains|contains(com.monkopedia.kcsg.Vector3d;kotlin.Double){}[0]
+    final fun copy(com.monkopedia.kcsg/Vertex = ..., com.monkopedia.kcsg/Vertex = ...): com.monkopedia.kcsg/Edge // com.monkopedia.kcsg/Edge.copy|copy(com.monkopedia.kcsg.Vertex;com.monkopedia.kcsg.Vertex){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.monkopedia.kcsg/Edge.equals|equals(kotlin.Any?){}[0]
+    final fun getClosestPointOrNull(com.monkopedia.kcsg/Edge): com.monkopedia.kcsg/Vector3d? // com.monkopedia.kcsg/Edge.getClosestPointOrNull|getClosestPointOrNull(com.monkopedia.kcsg.Edge){}[0]
+    final fun getIntersectionOrNull(com.monkopedia.kcsg/Edge): com.monkopedia.kcsg/Vector3d? // com.monkopedia.kcsg/Edge.getIntersectionOrNull|getIntersectionOrNull(com.monkopedia.kcsg.Edge){}[0]
+    final fun hashCode(): kotlin/Int // com.monkopedia.kcsg/Edge.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.monkopedia.kcsg/Edge.toString|toString(){}[0]
+
+    final object Companion { // com.monkopedia.kcsg/Edge.Companion|null[0]
+        final const val KEY_POLYGON_HOLES // com.monkopedia.kcsg/Edge.Companion.KEY_POLYGON_HOLES|{}KEY_POLYGON_HOLES[0]
+            final fun <get-KEY_POLYGON_HOLES>(): kotlin/String // com.monkopedia.kcsg/Edge.Companion.KEY_POLYGON_HOLES.<get-KEY_POLYGON_HOLES>|<get-KEY_POLYGON_HOLES>(){}[0]
+
+        final fun boundaryPathsWithHoles(kotlin.collections/List<com.monkopedia.kcsg/Polygon>): kotlin.collections/List<com.monkopedia.kcsg/Polygon> // com.monkopedia.kcsg/Edge.Companion.boundaryPathsWithHoles|boundaryPathsWithHoles(kotlin.collections.List<com.monkopedia.kcsg.Polygon>){}[0]
+        final fun boundaryPolygons(com.monkopedia.kcsg/CSG): kotlin.collections/MutableList<com.monkopedia.kcsg/Polygon> // com.monkopedia.kcsg/Edge.Companion.boundaryPolygons|boundaryPolygons(com.monkopedia.kcsg.CSG){}[0]
+        final fun polygons(kotlin.collections/List<com.monkopedia.kcsg/Edge>, com.monkopedia.kcsg/Plane): kotlin.collections/List<com.monkopedia.kcsg/Polygon> // com.monkopedia.kcsg/Edge.Companion.polygons|polygons(kotlin.collections.List<com.monkopedia.kcsg.Edge>;com.monkopedia.kcsg.Plane){}[0]
+        final fun toPoints(kotlin.collections/List<com.monkopedia.kcsg/Edge>): kotlin.collections/List<com.monkopedia.kcsg/Vector3d> // com.monkopedia.kcsg/Edge.Companion.toPoints|toPoints(kotlin.collections.List<com.monkopedia.kcsg.Edge>){}[0]
+        final fun toPolygons(kotlin.collections/List<com.monkopedia.kcsg/Edge>, com.monkopedia.kcsg/Plane): kotlin.collections/List<com.monkopedia.kcsg/Polygon> // com.monkopedia.kcsg/Edge.Companion.toPolygons|toPolygons(kotlin.collections.List<com.monkopedia.kcsg.Edge>;com.monkopedia.kcsg.Plane){}[0]
+        final fun toVertices(kotlin.collections/List<com.monkopedia.kcsg/Edge>): kotlin.collections/List<com.monkopedia.kcsg/Vertex> // com.monkopedia.kcsg/Edge.Companion.toVertices|toVertices(kotlin.collections.List<com.monkopedia.kcsg.Edge>){}[0]
+    }
+}
+
+final class com.monkopedia.kcsg/HashingOpOverride : com.monkopedia.kcsg/OpOverride { // com.monkopedia.kcsg/HashingOpOverride|null[0]
+    constructor <init>() // com.monkopedia.kcsg/HashingOpOverride.<init>|<init>(){}[0]
+
+    final fun bounds(kotlin/String, kotlin/Array<out kotlin/Any?>...): com.monkopedia.kcsg/Bounds // com.monkopedia.kcsg/HashingOpOverride.bounds|bounds(kotlin.String;kotlin.Array<out|kotlin.Any?>...){}[0]
+    final fun double(kotlin/String, kotlin/Array<out kotlin/Any?>...): kotlin/Double // com.monkopedia.kcsg/HashingOpOverride.double|double(kotlin.String;kotlin.Array<out|kotlin.Any?>...){}[0]
+    final fun file(kotlinx.io.files/Path): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/HashingOpOverride.file|file(kotlinx.io.files.Path){}[0]
+    final fun hash(): kotlin/String // com.monkopedia.kcsg/HashingOpOverride.hash|hash(){}[0]
+    final fun operation(kotlin/String, kotlin/Array<out kotlin/Any?>...): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/HashingOpOverride.operation|operation(kotlin.String;kotlin.Array<out|kotlin.Any?>...){}[0]
+    final fun source(kotlin/Function0<kotlinx.io/Source>): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/HashingOpOverride.source|source(kotlin.Function0<kotlinx.io.Source>){}[0]
+}
+
+final class com.monkopedia.kcsg/KcsgColor { // com.monkopedia.kcsg/KcsgColor|null[0]
+    constructor <init>(kotlin/Double, kotlin/Double, kotlin/Double) // com.monkopedia.kcsg/KcsgColor.<init>|<init>(kotlin.Double;kotlin.Double;kotlin.Double){}[0]
+
+    final val blue // com.monkopedia.kcsg/KcsgColor.blue|{}blue[0]
+        final fun <get-blue>(): kotlin/Double // com.monkopedia.kcsg/KcsgColor.blue.<get-blue>|<get-blue>(){}[0]
+    final val green // com.monkopedia.kcsg/KcsgColor.green|{}green[0]
+        final fun <get-green>(): kotlin/Double // com.monkopedia.kcsg/KcsgColor.green.<get-green>|<get-green>(){}[0]
+    final val red // com.monkopedia.kcsg/KcsgColor.red|{}red[0]
+        final fun <get-red>(): kotlin/Double // com.monkopedia.kcsg/KcsgColor.red.<get-red>|<get-red>(){}[0]
+
+    final fun component1(): kotlin/Double // com.monkopedia.kcsg/KcsgColor.component1|component1(){}[0]
+    final fun component2(): kotlin/Double // com.monkopedia.kcsg/KcsgColor.component2|component2(){}[0]
+    final fun component3(): kotlin/Double // com.monkopedia.kcsg/KcsgColor.component3|component3(){}[0]
+    final fun copy(kotlin/Double = ..., kotlin/Double = ..., kotlin/Double = ...): com.monkopedia.kcsg/KcsgColor // com.monkopedia.kcsg/KcsgColor.copy|copy(kotlin.Double;kotlin.Double;kotlin.Double){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.monkopedia.kcsg/KcsgColor.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.monkopedia.kcsg/KcsgColor.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.monkopedia.kcsg/KcsgColor.toString|toString(){}[0]
+
+    final object Companion { // com.monkopedia.kcsg/KcsgColor.Companion|null[0]
+        final val BLACK // com.monkopedia.kcsg/KcsgColor.Companion.BLACK|{}BLACK[0]
+            final fun <get-BLACK>(): com.monkopedia.kcsg/KcsgColor // com.monkopedia.kcsg/KcsgColor.Companion.BLACK.<get-BLACK>|<get-BLACK>(){}[0]
+        final val BLUE // com.monkopedia.kcsg/KcsgColor.Companion.BLUE|{}BLUE[0]
+            final fun <get-BLUE>(): com.monkopedia.kcsg/KcsgColor // com.monkopedia.kcsg/KcsgColor.Companion.BLUE.<get-BLUE>|<get-BLUE>(){}[0]
+        final val GRAY // com.monkopedia.kcsg/KcsgColor.Companion.GRAY|{}GRAY[0]
+            final fun <get-GRAY>(): com.monkopedia.kcsg/KcsgColor // com.monkopedia.kcsg/KcsgColor.Companion.GRAY.<get-GRAY>|<get-GRAY>(){}[0]
+        final val GREEN // com.monkopedia.kcsg/KcsgColor.Companion.GREEN|{}GREEN[0]
+            final fun <get-GREEN>(): com.monkopedia.kcsg/KcsgColor // com.monkopedia.kcsg/KcsgColor.Companion.GREEN.<get-GREEN>|<get-GREEN>(){}[0]
+        final val MAGENTA // com.monkopedia.kcsg/KcsgColor.Companion.MAGENTA|{}MAGENTA[0]
+            final fun <get-MAGENTA>(): com.monkopedia.kcsg/KcsgColor // com.monkopedia.kcsg/KcsgColor.Companion.MAGENTA.<get-MAGENTA>|<get-MAGENTA>(){}[0]
+        final val ORANGE // com.monkopedia.kcsg/KcsgColor.Companion.ORANGE|{}ORANGE[0]
+            final fun <get-ORANGE>(): com.monkopedia.kcsg/KcsgColor // com.monkopedia.kcsg/KcsgColor.Companion.ORANGE.<get-ORANGE>|<get-ORANGE>(){}[0]
+        final val RED // com.monkopedia.kcsg/KcsgColor.Companion.RED|{}RED[0]
+            final fun <get-RED>(): com.monkopedia.kcsg/KcsgColor // com.monkopedia.kcsg/KcsgColor.Companion.RED.<get-RED>|<get-RED>(){}[0]
+        final val WHITE // com.monkopedia.kcsg/KcsgColor.Companion.WHITE|{}WHITE[0]
+            final fun <get-WHITE>(): com.monkopedia.kcsg/KcsgColor // com.monkopedia.kcsg/KcsgColor.Companion.WHITE.<get-WHITE>|<get-WHITE>(){}[0]
+        final val YELLOW // com.monkopedia.kcsg/KcsgColor.Companion.YELLOW|{}YELLOW[0]
+            final fun <get-YELLOW>(): com.monkopedia.kcsg/KcsgColor // com.monkopedia.kcsg/KcsgColor.Companion.YELLOW.<get-YELLOW>|<get-YELLOW>(){}[0]
+    }
+}
+
+final class com.monkopedia.kcsg/ObjFile { // com.monkopedia.kcsg/ObjFile|null[0]
+    final val mtl // com.monkopedia.kcsg/ObjFile.mtl|{}mtl[0]
+        final fun <get-mtl>(): kotlin/String // com.monkopedia.kcsg/ObjFile.mtl.<get-mtl>|<get-mtl>(){}[0]
+    final val mtlSource // com.monkopedia.kcsg/ObjFile.mtlSource|{}mtlSource[0]
+        final fun <get-mtlSource>(): kotlinx.io/Source // com.monkopedia.kcsg/ObjFile.mtlSource.<get-mtlSource>|<get-mtlSource>(){}[0]
+    final val obj // com.monkopedia.kcsg/ObjFile.obj|{}obj[0]
+        final fun <get-obj>(): kotlin/String // com.monkopedia.kcsg/ObjFile.obj.<get-obj>|<get-obj>(){}[0]
+    final val objSource // com.monkopedia.kcsg/ObjFile.objSource|{}objSource[0]
+        final fun <get-objSource>(): kotlinx.io/Source // com.monkopedia.kcsg/ObjFile.objSource.<get-objSource>|<get-objSource>(){}[0]
+
+    final fun toFiles(kotlinx.io.files/Path) // com.monkopedia.kcsg/ObjFile.toFiles|toFiles(kotlinx.io.files.Path){}[0]
+
+    final object Companion { // com.monkopedia.kcsg/ObjFile.Companion|null[0]
+        final const val MTL_NAME // com.monkopedia.kcsg/ObjFile.Companion.MTL_NAME|{}MTL_NAME[0]
+            final fun <get-MTL_NAME>(): kotlin/String // com.monkopedia.kcsg/ObjFile.Companion.MTL_NAME.<get-MTL_NAME>|<get-MTL_NAME>(){}[0]
+    }
+}
+
+final class com.monkopedia.kcsg/Plane { // com.monkopedia.kcsg/Plane|null[0]
+    constructor <init>(com.monkopedia.kcsg/Vector3d, kotlin/Double) // com.monkopedia.kcsg/Plane.<init>|<init>(com.monkopedia.kcsg.Vector3d;kotlin.Double){}[0]
+
+    final var dist // com.monkopedia.kcsg/Plane.dist|{}dist[0]
+        final fun <get-dist>(): kotlin/Double // com.monkopedia.kcsg/Plane.dist.<get-dist>|<get-dist>(){}[0]
+        final fun <set-dist>(kotlin/Double) // com.monkopedia.kcsg/Plane.dist.<set-dist>|<set-dist>(kotlin.Double){}[0]
+    final var normal // com.monkopedia.kcsg/Plane.normal|{}normal[0]
+        final fun <get-normal>(): com.monkopedia.kcsg/Vector3d // com.monkopedia.kcsg/Plane.normal.<get-normal>|<get-normal>(){}[0]
+        final fun <set-normal>(com.monkopedia.kcsg/Vector3d) // com.monkopedia.kcsg/Plane.normal.<set-normal>|<set-normal>(com.monkopedia.kcsg.Vector3d){}[0]
+
+    final fun copy(): com.monkopedia.kcsg/Plane // com.monkopedia.kcsg/Plane.copy|copy(){}[0]
+    final fun flip() // com.monkopedia.kcsg/Plane.flip|flip(){}[0]
+    final fun splitPolygon(com.monkopedia.kcsg/Polygon, kotlin.collections/MutableList<com.monkopedia.kcsg/Polygon>, kotlin.collections/MutableList<com.monkopedia.kcsg/Polygon>, kotlin.collections/MutableList<com.monkopedia.kcsg/Polygon>, kotlin.collections/MutableList<com.monkopedia.kcsg/Polygon>) // com.monkopedia.kcsg/Plane.splitPolygon|splitPolygon(com.monkopedia.kcsg.Polygon;kotlin.collections.MutableList<com.monkopedia.kcsg.Polygon>;kotlin.collections.MutableList<com.monkopedia.kcsg.Polygon>;kotlin.collections.MutableList<com.monkopedia.kcsg.Polygon>;kotlin.collections.MutableList<com.monkopedia.kcsg.Polygon>){}[0]
+
+    final object Companion { // com.monkopedia.kcsg/Plane.Companion|null[0]
+        final const val BACK // com.monkopedia.kcsg/Plane.Companion.BACK|{}BACK[0]
+            final fun <get-BACK>(): kotlin/Int // com.monkopedia.kcsg/Plane.Companion.BACK.<get-BACK>|<get-BACK>(){}[0]
+        final const val COPLANAR // com.monkopedia.kcsg/Plane.Companion.COPLANAR|{}COPLANAR[0]
+            final fun <get-COPLANAR>(): kotlin/Int // com.monkopedia.kcsg/Plane.Companion.COPLANAR.<get-COPLANAR>|<get-COPLANAR>(){}[0]
+        final const val FRONT // com.monkopedia.kcsg/Plane.Companion.FRONT|{}FRONT[0]
+            final fun <get-FRONT>(): kotlin/Int // com.monkopedia.kcsg/Plane.Companion.FRONT.<get-FRONT>|<get-FRONT>(){}[0]
+        final const val SPANNING // com.monkopedia.kcsg/Plane.Companion.SPANNING|{}SPANNING[0]
+            final fun <get-SPANNING>(): kotlin/Int // com.monkopedia.kcsg/Plane.Companion.SPANNING.<get-SPANNING>|<get-SPANNING>(){}[0]
+
+        final val XY_PLANE // com.monkopedia.kcsg/Plane.Companion.XY_PLANE|{}XY_PLANE[0]
+            final fun <get-XY_PLANE>(): com.monkopedia.kcsg/Plane // com.monkopedia.kcsg/Plane.Companion.XY_PLANE.<get-XY_PLANE>|<get-XY_PLANE>(){}[0]
+        final val XZ_PLANE // com.monkopedia.kcsg/Plane.Companion.XZ_PLANE|{}XZ_PLANE[0]
+            final fun <get-XZ_PLANE>(): com.monkopedia.kcsg/Plane // com.monkopedia.kcsg/Plane.Companion.XZ_PLANE.<get-XZ_PLANE>|<get-XZ_PLANE>(){}[0]
+        final val YZ_PLANE // com.monkopedia.kcsg/Plane.Companion.YZ_PLANE|{}YZ_PLANE[0]
+            final fun <get-YZ_PLANE>(): com.monkopedia.kcsg/Plane // com.monkopedia.kcsg/Plane.Companion.YZ_PLANE.<get-YZ_PLANE>|<get-YZ_PLANE>(){}[0]
+
+        final var EPSILON // com.monkopedia.kcsg/Plane.Companion.EPSILON|{}EPSILON[0]
+            final fun <get-EPSILON>(): kotlin/Double // com.monkopedia.kcsg/Plane.Companion.EPSILON.<get-EPSILON>|<get-EPSILON>(){}[0]
+            final fun <set-EPSILON>(kotlin/Double) // com.monkopedia.kcsg/Plane.Companion.EPSILON.<set-EPSILON>|<set-EPSILON>(kotlin.Double){}[0]
+        final var USE_STACKOVERFLOW_WORKAROUND // com.monkopedia.kcsg/Plane.Companion.USE_STACKOVERFLOW_WORKAROUND|{}USE_STACKOVERFLOW_WORKAROUND[0]
+            final fun <get-USE_STACKOVERFLOW_WORKAROUND>(): kotlin/Boolean // com.monkopedia.kcsg/Plane.Companion.USE_STACKOVERFLOW_WORKAROUND.<get-USE_STACKOVERFLOW_WORKAROUND>|<get-USE_STACKOVERFLOW_WORKAROUND>(){}[0]
+            final fun <set-USE_STACKOVERFLOW_WORKAROUND>(kotlin/Boolean) // com.monkopedia.kcsg/Plane.Companion.USE_STACKOVERFLOW_WORKAROUND.<set-USE_STACKOVERFLOW_WORKAROUND>|<set-USE_STACKOVERFLOW_WORKAROUND>(kotlin.Boolean){}[0]
+
+        final fun createFromPoints(com.monkopedia.kcsg/Vector3d, com.monkopedia.kcsg/Vector3d, com.monkopedia.kcsg/Vector3d): com.monkopedia.kcsg/Plane // com.monkopedia.kcsg/Plane.Companion.createFromPoints|createFromPoints(com.monkopedia.kcsg.Vector3d;com.monkopedia.kcsg.Vector3d;com.monkopedia.kcsg.Vector3d){}[0]
+    }
+}
+
+final class com.monkopedia.kcsg/Polygon { // com.monkopedia.kcsg/Polygon|null[0]
+    constructor <init>(kotlin.collections/List<com.monkopedia.kcsg/Vertex>) // com.monkopedia.kcsg/Polygon.<init>|<init>(kotlin.collections.List<com.monkopedia.kcsg.Vertex>){}[0]
+    constructor <init>(kotlin.collections/List<com.monkopedia.kcsg/Vertex>, com.monkopedia.kcsg/PropertyStorage?) // com.monkopedia.kcsg/Polygon.<init>|<init>(kotlin.collections.List<com.monkopedia.kcsg.Vertex>;com.monkopedia.kcsg.PropertyStorage?){}[0]
+    constructor <init>(kotlin/Array<out com.monkopedia.kcsg/Vertex>...) // com.monkopedia.kcsg/Polygon.<init>|<init>(kotlin.Array<out|com.monkopedia.kcsg.Vertex>...){}[0]
+
+    final val bounds // com.monkopedia.kcsg/Polygon.bounds|{}bounds[0]
+        final fun <get-bounds>(): com.monkopedia.kcsg/Bounds // com.monkopedia.kcsg/Polygon.bounds.<get-bounds>|<get-bounds>(){}[0]
+    final val csgPlane // com.monkopedia.kcsg/Polygon.csgPlane|{}csgPlane[0]
+        final fun <get-csgPlane>(): com.monkopedia.kcsg/Plane // com.monkopedia.kcsg/Polygon.csgPlane.<get-csgPlane>|<get-csgPlane>(){}[0]
+    final val isValid // com.monkopedia.kcsg/Polygon.isValid|{}isValid[0]
+        final fun <get-isValid>(): kotlin/Boolean // com.monkopedia.kcsg/Polygon.isValid.<get-isValid>|<get-isValid>(){}[0]
+    final val vertices // com.monkopedia.kcsg/Polygon.vertices|{}vertices[0]
+        final fun <get-vertices>(): kotlin.collections/List<com.monkopedia.kcsg/Vertex> // com.monkopedia.kcsg/Polygon.vertices.<get-vertices>|<get-vertices>(){}[0]
+
+    final var plane // com.monkopedia.kcsg/Polygon.plane|{}plane[0]
+        final fun <get-plane>(): com.monkopedia.kcsg.ext.vvecmath/Plane // com.monkopedia.kcsg/Polygon.plane.<get-plane>|<get-plane>(){}[0]
+    final var storage // com.monkopedia.kcsg/Polygon.storage|{}storage[0]
+        final fun <get-storage>(): com.monkopedia.kcsg/PropertyStorage // com.monkopedia.kcsg/Polygon.storage.<get-storage>|<get-storage>(){}[0]
+        final fun <set-storage>(com.monkopedia.kcsg/PropertyStorage) // com.monkopedia.kcsg/Polygon.storage.<set-storage>|<set-storage>(com.monkopedia.kcsg.PropertyStorage){}[0]
+
+    final fun centroid(): com.monkopedia.kcsg/Vector3d // com.monkopedia.kcsg/Polygon.centroid|centroid(){}[0]
+    final fun contains(com.monkopedia.kcsg/Polygon): kotlin/Boolean // com.monkopedia.kcsg/Polygon.contains|contains(com.monkopedia.kcsg.Polygon){}[0]
+    final fun contains(com.monkopedia.kcsg/Vector3d): kotlin/Boolean // com.monkopedia.kcsg/Polygon.contains|contains(com.monkopedia.kcsg.Vector3d){}[0]
+    final fun copy(): com.monkopedia.kcsg/Polygon // com.monkopedia.kcsg/Polygon.copy|copy(){}[0]
+    final fun flip(): com.monkopedia.kcsg/Polygon // com.monkopedia.kcsg/Polygon.flip|flip(){}[0]
+    final fun flipped(): com.monkopedia.kcsg/Polygon // com.monkopedia.kcsg/Polygon.flipped|flipped(){}[0]
+    final fun intersects(com.monkopedia.kcsg/Polygon): kotlin/Boolean // com.monkopedia.kcsg/Polygon.intersects|intersects(com.monkopedia.kcsg.Polygon){}[0]
+    final fun toStlString(): kotlin/String // com.monkopedia.kcsg/Polygon.toStlString|toStlString(){}[0]
+    final fun toStlString(kotlin.text/StringBuilder): kotlin.text/StringBuilder // com.monkopedia.kcsg/Polygon.toStlString|toStlString(kotlin.text.StringBuilder){}[0]
+    final fun toString(): kotlin/String // com.monkopedia.kcsg/Polygon.toString|toString(){}[0]
+    final fun toTriangles(): kotlin.collections/List<com.monkopedia.kcsg/Polygon> // com.monkopedia.kcsg/Polygon.toTriangles|toTriangles(){}[0]
+    final fun transform(com.monkopedia.kcsg/Transform): com.monkopedia.kcsg/Polygon // com.monkopedia.kcsg/Polygon.transform|transform(com.monkopedia.kcsg.Transform){}[0]
+    final fun transformed(com.monkopedia.kcsg/Transform): com.monkopedia.kcsg/Polygon // com.monkopedia.kcsg/Polygon.transformed|transformed(com.monkopedia.kcsg.Transform){}[0]
+    final fun translate(com.monkopedia.kcsg/Vector3d): com.monkopedia.kcsg/Polygon // com.monkopedia.kcsg/Polygon.translate|translate(com.monkopedia.kcsg.Vector3d){}[0]
+    final fun translated(com.monkopedia.kcsg/Vector3d): com.monkopedia.kcsg/Polygon // com.monkopedia.kcsg/Polygon.translated|translated(com.monkopedia.kcsg.Vector3d){}[0]
+
+    final object Companion { // com.monkopedia.kcsg/Polygon.Companion|null[0]
+        final fun fromConcavePoints(kotlin.collections/List<com.monkopedia.kcsg/Vector3d>): kotlin.collections/List<com.monkopedia.kcsg/Polygon> // com.monkopedia.kcsg/Polygon.Companion.fromConcavePoints|fromConcavePoints(kotlin.collections.List<com.monkopedia.kcsg.Vector3d>){}[0]
+        final fun fromConcavePoints(kotlin/Array<out com.monkopedia.kcsg/Vector3d>...): kotlin.collections/List<com.monkopedia.kcsg/Polygon> // com.monkopedia.kcsg/Polygon.Companion.fromConcavePoints|fromConcavePoints(kotlin.Array<out|com.monkopedia.kcsg.Vector3d>...){}[0]
+        final fun fromPoints(kotlin.collections/List<com.monkopedia.kcsg/Vector3d>): com.monkopedia.kcsg/Polygon // com.monkopedia.kcsg/Polygon.Companion.fromPoints|fromPoints(kotlin.collections.List<com.monkopedia.kcsg.Vector3d>){}[0]
+        final fun fromPoints(kotlin.collections/List<com.monkopedia.kcsg/Vector3d>, com.monkopedia.kcsg/PropertyStorage?): com.monkopedia.kcsg/Polygon // com.monkopedia.kcsg/Polygon.Companion.fromPoints|fromPoints(kotlin.collections.List<com.monkopedia.kcsg.Vector3d>;com.monkopedia.kcsg.PropertyStorage?){}[0]
+        final fun fromPoints(kotlin/Array<out com.monkopedia.kcsg/Vector3d>...): com.monkopedia.kcsg/Polygon // com.monkopedia.kcsg/Polygon.Companion.fromPoints|fromPoints(kotlin.Array<out|com.monkopedia.kcsg.Vector3d>...){}[0]
+    }
+}
+
+final class com.monkopedia.kcsg/Polyhedron : com.monkopedia.kcsg/Primitive { // com.monkopedia.kcsg/Polyhedron|null[0]
+    constructor <init>(kotlin.collections/List<com.monkopedia.kcsg/Vector3d> = ..., kotlin.collections/List<kotlin.collections/List<kotlin/Int>> = ...) // com.monkopedia.kcsg/Polyhedron.<init>|<init>(kotlin.collections.List<com.monkopedia.kcsg.Vector3d>;kotlin.collections.List<kotlin.collections.List<kotlin.Int>>){}[0]
+    constructor <init>(kotlin/Array<com.monkopedia.kcsg/Vector3d>, kotlin/Array<kotlin/Array<kotlin/Int>>) // com.monkopedia.kcsg/Polyhedron.<init>|<init>(kotlin.Array<com.monkopedia.kcsg.Vector3d>;kotlin.Array<kotlin.Array<kotlin.Int>>){}[0]
+
+    final val faces // com.monkopedia.kcsg/Polyhedron.faces|{}faces[0]
+        final fun <get-faces>(): kotlin.collections/List<kotlin.collections/List<kotlin/Int>> // com.monkopedia.kcsg/Polyhedron.faces.<get-faces>|<get-faces>(){}[0]
+    final val points // com.monkopedia.kcsg/Polyhedron.points|{}points[0]
+        final fun <get-points>(): kotlin.collections/List<com.monkopedia.kcsg/Vector3d> // com.monkopedia.kcsg/Polyhedron.points.<get-points>|<get-points>(){}[0]
+
+    final fun component1(): kotlin.collections/List<com.monkopedia.kcsg/Vector3d> // com.monkopedia.kcsg/Polyhedron.component1|component1(){}[0]
+    final fun component2(): kotlin.collections/List<kotlin.collections/List<kotlin/Int>> // com.monkopedia.kcsg/Polyhedron.component2|component2(){}[0]
+    final fun copy(kotlin.collections/List<com.monkopedia.kcsg/Vector3d> = ..., kotlin.collections/List<kotlin.collections/List<kotlin/Int>> = ...): com.monkopedia.kcsg/Polyhedron // com.monkopedia.kcsg/Polyhedron.copy|copy(kotlin.collections.List<com.monkopedia.kcsg.Vector3d>;kotlin.collections.List<kotlin.collections.List<kotlin.Int>>){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.monkopedia.kcsg/Polyhedron.equals|equals(kotlin.Any?){}[0]
+    final fun getProperties(): com.monkopedia.kcsg/PropertyStorage // com.monkopedia.kcsg/Polyhedron.getProperties|getProperties(){}[0]
+    final fun hashCode(): kotlin/Int // com.monkopedia.kcsg/Polyhedron.hashCode|hashCode(){}[0]
+    final fun toPolygons(): kotlin.collections/List<com.monkopedia.kcsg/Polygon> // com.monkopedia.kcsg/Polyhedron.toPolygons|toPolygons(){}[0]
+    final fun toString(): kotlin/String // com.monkopedia.kcsg/Polyhedron.toString|toString(){}[0]
+}
+
+final class com.monkopedia.kcsg/PropertyStorage { // com.monkopedia.kcsg/PropertyStorage|null[0]
+    constructor <init>() // com.monkopedia.kcsg/PropertyStorage.<init>|<init>(){}[0]
+
+    final fun <#A1: kotlin/Any?> getValue(kotlin/String): #A1? // com.monkopedia.kcsg/PropertyStorage.getValue|getValue(kotlin.String){0§<kotlin.Any?>}[0]
+    final fun contains(kotlin/String): kotlin/Boolean // com.monkopedia.kcsg/PropertyStorage.contains|contains(kotlin.String){}[0]
+    final fun delete(kotlin/String) // com.monkopedia.kcsg/PropertyStorage.delete|delete(kotlin.String){}[0]
+    final fun set(kotlin/String, kotlin/Any) // com.monkopedia.kcsg/PropertyStorage.set|set(kotlin.String;kotlin.Any){}[0]
+
+    final object Companion { // com.monkopedia.kcsg/PropertyStorage.Companion|null[0]
+        final fun randomColor(com.monkopedia.kcsg/PropertyStorage) // com.monkopedia.kcsg/PropertyStorage.Companion.randomColor|randomColor(com.monkopedia.kcsg.PropertyStorage){}[0]
+    }
+}
+
+final class com.monkopedia.kcsg/RoundedCube : com.monkopedia.kcsg/Primitive { // com.monkopedia.kcsg/RoundedCube|null[0]
+    constructor <init>(com.monkopedia.kcsg/Vector3d = ..., com.monkopedia.kcsg/Vector3d = ..., kotlin/Double = ..., kotlin/Int = ..., kotlin/Boolean = ...) // com.monkopedia.kcsg/RoundedCube.<init>|<init>(com.monkopedia.kcsg.Vector3d;com.monkopedia.kcsg.Vector3d;kotlin.Double;kotlin.Int;kotlin.Boolean){}[0]
+    constructor <init>(kotlin/Double) // com.monkopedia.kcsg/RoundedCube.<init>|<init>(kotlin.Double){}[0]
+    constructor <init>(kotlin/Double, kotlin/Double, kotlin/Double) // com.monkopedia.kcsg/RoundedCube.<init>|<init>(kotlin.Double;kotlin.Double;kotlin.Double){}[0]
+
+    final var center // com.monkopedia.kcsg/RoundedCube.center|{}center[0]
+        final fun <get-center>(): com.monkopedia.kcsg/Vector3d // com.monkopedia.kcsg/RoundedCube.center.<get-center>|<get-center>(){}[0]
+        final fun <set-center>(com.monkopedia.kcsg/Vector3d) // com.monkopedia.kcsg/RoundedCube.center.<set-center>|<set-center>(com.monkopedia.kcsg.Vector3d){}[0]
+    final var centered // com.monkopedia.kcsg/RoundedCube.centered|{}centered[0]
+        final fun <get-centered>(): kotlin/Boolean // com.monkopedia.kcsg/RoundedCube.centered.<get-centered>|<get-centered>(){}[0]
+        final fun <set-centered>(kotlin/Boolean) // com.monkopedia.kcsg/RoundedCube.centered.<set-centered>|<set-centered>(kotlin.Boolean){}[0]
+    final var cornerRadius // com.monkopedia.kcsg/RoundedCube.cornerRadius|{}cornerRadius[0]
+        final fun <get-cornerRadius>(): kotlin/Double // com.monkopedia.kcsg/RoundedCube.cornerRadius.<get-cornerRadius>|<get-cornerRadius>(){}[0]
+        final fun <set-cornerRadius>(kotlin/Double) // com.monkopedia.kcsg/RoundedCube.cornerRadius.<set-cornerRadius>|<set-cornerRadius>(kotlin.Double){}[0]
+    final var dimensions // com.monkopedia.kcsg/RoundedCube.dimensions|{}dimensions[0]
+        final fun <get-dimensions>(): com.monkopedia.kcsg/Vector3d // com.monkopedia.kcsg/RoundedCube.dimensions.<get-dimensions>|<get-dimensions>(){}[0]
+        final fun <set-dimensions>(com.monkopedia.kcsg/Vector3d) // com.monkopedia.kcsg/RoundedCube.dimensions.<set-dimensions>|<set-dimensions>(com.monkopedia.kcsg.Vector3d){}[0]
+    final var resolution // com.monkopedia.kcsg/RoundedCube.resolution|{}resolution[0]
+        final fun <get-resolution>(): kotlin/Int // com.monkopedia.kcsg/RoundedCube.resolution.<get-resolution>|<get-resolution>(){}[0]
+        final fun <set-resolution>(kotlin/Int) // com.monkopedia.kcsg/RoundedCube.resolution.<set-resolution>|<set-resolution>(kotlin.Int){}[0]
+
+    final fun component1(): com.monkopedia.kcsg/Vector3d // com.monkopedia.kcsg/RoundedCube.component1|component1(){}[0]
+    final fun component2(): com.monkopedia.kcsg/Vector3d // com.monkopedia.kcsg/RoundedCube.component2|component2(){}[0]
+    final fun component3(): kotlin/Double // com.monkopedia.kcsg/RoundedCube.component3|component3(){}[0]
+    final fun component4(): kotlin/Int // com.monkopedia.kcsg/RoundedCube.component4|component4(){}[0]
+    final fun component5(): kotlin/Boolean // com.monkopedia.kcsg/RoundedCube.component5|component5(){}[0]
+    final fun copy(com.monkopedia.kcsg/Vector3d = ..., com.monkopedia.kcsg/Vector3d = ..., kotlin/Double = ..., kotlin/Int = ..., kotlin/Boolean = ...): com.monkopedia.kcsg/RoundedCube // com.monkopedia.kcsg/RoundedCube.copy|copy(com.monkopedia.kcsg.Vector3d;com.monkopedia.kcsg.Vector3d;kotlin.Double;kotlin.Int;kotlin.Boolean){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.monkopedia.kcsg/RoundedCube.equals|equals(kotlin.Any?){}[0]
+    final fun getProperties(): com.monkopedia.kcsg/PropertyStorage // com.monkopedia.kcsg/RoundedCube.getProperties|getProperties(){}[0]
+    final fun hashCode(): kotlin/Int // com.monkopedia.kcsg/RoundedCube.hashCode|hashCode(){}[0]
+    final fun noCenter(): com.monkopedia.kcsg/RoundedCube // com.monkopedia.kcsg/RoundedCube.noCenter|noCenter(){}[0]
+    final fun toPolygons(): kotlin.collections/List<com.monkopedia.kcsg/Polygon> // com.monkopedia.kcsg/RoundedCube.toPolygons|toPolygons(){}[0]
+    final fun toString(): kotlin/String // com.monkopedia.kcsg/RoundedCube.toString|toString(){}[0]
+}
+
+final class com.monkopedia.kcsg/Sphere : com.monkopedia.kcsg/Primitive { // com.monkopedia.kcsg/Sphere|null[0]
+    constructor <init>(com.monkopedia.kcsg/Vector3d, kotlin/Double, kotlin/Int, kotlin/Int) // com.monkopedia.kcsg/Sphere.<init>|<init>(com.monkopedia.kcsg.Vector3d;kotlin.Double;kotlin.Int;kotlin.Int){}[0]
+    constructor <init>(kotlin/Double = ..., kotlin/Int = ..., kotlin/Int = ..., com.monkopedia.kcsg/Vector3d = ...) // com.monkopedia.kcsg/Sphere.<init>|<init>(kotlin.Double;kotlin.Int;kotlin.Int;com.monkopedia.kcsg.Vector3d){}[0]
+
+    final var center // com.monkopedia.kcsg/Sphere.center|{}center[0]
+        final fun <get-center>(): com.monkopedia.kcsg/Vector3d // com.monkopedia.kcsg/Sphere.center.<get-center>|<get-center>(){}[0]
+        final fun <set-center>(com.monkopedia.kcsg/Vector3d) // com.monkopedia.kcsg/Sphere.center.<set-center>|<set-center>(com.monkopedia.kcsg.Vector3d){}[0]
+    final var numSlices // com.monkopedia.kcsg/Sphere.numSlices|{}numSlices[0]
+        final fun <get-numSlices>(): kotlin/Int // com.monkopedia.kcsg/Sphere.numSlices.<get-numSlices>|<get-numSlices>(){}[0]
+        final fun <set-numSlices>(kotlin/Int) // com.monkopedia.kcsg/Sphere.numSlices.<set-numSlices>|<set-numSlices>(kotlin.Int){}[0]
+    final var numStacks // com.monkopedia.kcsg/Sphere.numStacks|{}numStacks[0]
+        final fun <get-numStacks>(): kotlin/Int // com.monkopedia.kcsg/Sphere.numStacks.<get-numStacks>|<get-numStacks>(){}[0]
+        final fun <set-numStacks>(kotlin/Int) // com.monkopedia.kcsg/Sphere.numStacks.<set-numStacks>|<set-numStacks>(kotlin.Int){}[0]
+    final var radius // com.monkopedia.kcsg/Sphere.radius|{}radius[0]
+        final fun <get-radius>(): kotlin/Double // com.monkopedia.kcsg/Sphere.radius.<get-radius>|<get-radius>(){}[0]
+        final fun <set-radius>(kotlin/Double) // com.monkopedia.kcsg/Sphere.radius.<set-radius>|<set-radius>(kotlin.Double){}[0]
+
+    final fun component1(): kotlin/Double // com.monkopedia.kcsg/Sphere.component1|component1(){}[0]
+    final fun component2(): kotlin/Int // com.monkopedia.kcsg/Sphere.component2|component2(){}[0]
+    final fun component3(): kotlin/Int // com.monkopedia.kcsg/Sphere.component3|component3(){}[0]
+    final fun component4(): com.monkopedia.kcsg/Vector3d // com.monkopedia.kcsg/Sphere.component4|component4(){}[0]
+    final fun copy(kotlin/Double = ..., kotlin/Int = ..., kotlin/Int = ..., com.monkopedia.kcsg/Vector3d = ...): com.monkopedia.kcsg/Sphere // com.monkopedia.kcsg/Sphere.copy|copy(kotlin.Double;kotlin.Int;kotlin.Int;com.monkopedia.kcsg.Vector3d){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.monkopedia.kcsg/Sphere.equals|equals(kotlin.Any?){}[0]
+    final fun getProperties(): com.monkopedia.kcsg/PropertyStorage // com.monkopedia.kcsg/Sphere.getProperties|getProperties(){}[0]
+    final fun hashCode(): kotlin/Int // com.monkopedia.kcsg/Sphere.hashCode|hashCode(){}[0]
+    final fun toPolygons(): kotlin.collections/MutableList<com.monkopedia.kcsg/Polygon> // com.monkopedia.kcsg/Sphere.toPolygons|toPolygons(){}[0]
+    final fun toString(): kotlin/String // com.monkopedia.kcsg/Sphere.toString|toString(){}[0]
+}
+
+final class com.monkopedia.kcsg/TaggedLogger { // com.monkopedia.kcsg/TaggedLogger|null[0]
+    final fun debug(kotlin/String, kotlin/Throwable? = ...) // com.monkopedia.kcsg/TaggedLogger.debug|debug(kotlin.String;kotlin.Throwable?){}[0]
+    final fun error(kotlin/String, kotlin/Throwable? = ...) // com.monkopedia.kcsg/TaggedLogger.error|error(kotlin.String;kotlin.Throwable?){}[0]
+    final fun info(kotlin/String, kotlin/Throwable? = ...) // com.monkopedia.kcsg/TaggedLogger.info|info(kotlin.String;kotlin.Throwable?){}[0]
+    final fun trace(kotlin/String, kotlin/Throwable? = ...) // com.monkopedia.kcsg/TaggedLogger.trace|trace(kotlin.String;kotlin.Throwable?){}[0]
+    final fun warn(kotlin/String, kotlin/Throwable? = ...) // com.monkopedia.kcsg/TaggedLogger.warn|warn(kotlin.String;kotlin.Throwable?){}[0]
+}
+
+final class com.monkopedia.kcsg/Transform { // com.monkopedia.kcsg/Transform|null[0]
+    constructor <init>() // com.monkopedia.kcsg/Transform.<init>|<init>(){}[0]
+
+    final val isMirror // com.monkopedia.kcsg/Transform.isMirror|{}isMirror[0]
+        final fun <get-isMirror>(): kotlin/Boolean // com.monkopedia.kcsg/Transform.isMirror.<get-isMirror>|<get-isMirror>(){}[0]
+
+    final fun apply(com.monkopedia.kcsg/Transform): com.monkopedia.kcsg/Transform // com.monkopedia.kcsg/Transform.apply|apply(com.monkopedia.kcsg.Transform){}[0]
+    final fun mirror(com.monkopedia.kcsg.ext.vvecmath/Plane): com.monkopedia.kcsg/Transform // com.monkopedia.kcsg/Transform.mirror|mirror(com.monkopedia.kcsg.ext.vvecmath.Plane){}[0]
+    final fun rot(com.monkopedia.kcsg/Vector3d): com.monkopedia.kcsg/Transform // com.monkopedia.kcsg/Transform.rot|rot(com.monkopedia.kcsg.Vector3d){}[0]
+    final fun rot(com.monkopedia.kcsg/Vector3d, com.monkopedia.kcsg/Vector3d): com.monkopedia.kcsg/Transform // com.monkopedia.kcsg/Transform.rot|rot(com.monkopedia.kcsg.Vector3d;com.monkopedia.kcsg.Vector3d){}[0]
+    final fun rot(com.monkopedia.kcsg/Vector3d, com.monkopedia.kcsg/Vector3d, kotlin/Double): com.monkopedia.kcsg/Transform // com.monkopedia.kcsg/Transform.rot|rot(com.monkopedia.kcsg.Vector3d;com.monkopedia.kcsg.Vector3d;kotlin.Double){}[0]
+    final fun rot(kotlin/Double, kotlin/Double, kotlin/Double): com.monkopedia.kcsg/Transform // com.monkopedia.kcsg/Transform.rot|rot(kotlin.Double;kotlin.Double;kotlin.Double){}[0]
+    final fun rotX(kotlin/Double): com.monkopedia.kcsg/Transform // com.monkopedia.kcsg/Transform.rotX|rotX(kotlin.Double){}[0]
+    final fun rotY(kotlin/Double): com.monkopedia.kcsg/Transform // com.monkopedia.kcsg/Transform.rotY|rotY(kotlin.Double){}[0]
+    final fun rotZ(kotlin/Double): com.monkopedia.kcsg/Transform // com.monkopedia.kcsg/Transform.rotZ|rotZ(kotlin.Double){}[0]
+    final fun scale(com.monkopedia.kcsg/Vector3d): com.monkopedia.kcsg/Transform // com.monkopedia.kcsg/Transform.scale|scale(com.monkopedia.kcsg.Vector3d){}[0]
+    final fun scale(kotlin/Double): com.monkopedia.kcsg/Transform // com.monkopedia.kcsg/Transform.scale|scale(kotlin.Double){}[0]
+    final fun scale(kotlin/Double, kotlin/Double, kotlin/Double): com.monkopedia.kcsg/Transform // com.monkopedia.kcsg/Transform.scale|scale(kotlin.Double;kotlin.Double;kotlin.Double){}[0]
+    final fun scaleX(kotlin/Double): com.monkopedia.kcsg/Transform // com.monkopedia.kcsg/Transform.scaleX|scaleX(kotlin.Double){}[0]
+    final fun scaleY(kotlin/Double): com.monkopedia.kcsg/Transform // com.monkopedia.kcsg/Transform.scaleY|scaleY(kotlin.Double){}[0]
+    final fun scaleZ(kotlin/Double): com.monkopedia.kcsg/Transform // com.monkopedia.kcsg/Transform.scaleZ|scaleZ(kotlin.Double){}[0]
+    final fun to(kotlin/DoubleArray): kotlin/DoubleArray // com.monkopedia.kcsg/Transform.to|to(kotlin.DoubleArray){}[0]
+    final fun toString(): kotlin/String // com.monkopedia.kcsg/Transform.toString|toString(){}[0]
+    final fun transform(com.monkopedia.kcsg/Vector3d): com.monkopedia.kcsg/Vector3d // com.monkopedia.kcsg/Transform.transform|transform(com.monkopedia.kcsg.Vector3d){}[0]
+    final fun transform(com.monkopedia.kcsg/Vector3d, kotlin/Double): com.monkopedia.kcsg/Vector3d // com.monkopedia.kcsg/Transform.transform|transform(com.monkopedia.kcsg.Vector3d;kotlin.Double){}[0]
+    final fun translate(com.monkopedia.kcsg/Vector3d): com.monkopedia.kcsg/Transform // com.monkopedia.kcsg/Transform.translate|translate(com.monkopedia.kcsg.Vector3d){}[0]
+    final fun translate(kotlin/Double, kotlin/Double, kotlin/Double): com.monkopedia.kcsg/Transform // com.monkopedia.kcsg/Transform.translate|translate(kotlin.Double;kotlin.Double;kotlin.Double){}[0]
+    final fun translateX(kotlin/Double): com.monkopedia.kcsg/Transform // com.monkopedia.kcsg/Transform.translateX|translateX(kotlin.Double){}[0]
+    final fun translateY(kotlin/Double): com.monkopedia.kcsg/Transform // com.monkopedia.kcsg/Transform.translateY|translateY(kotlin.Double){}[0]
+    final fun translateZ(kotlin/Double): com.monkopedia.kcsg/Transform // com.monkopedia.kcsg/Transform.translateZ|translateZ(kotlin.Double){}[0]
+
+    final object Companion { // com.monkopedia.kcsg/Transform.Companion|null[0]
+        final fun from(kotlin/DoubleArray...): com.monkopedia.kcsg/Transform // com.monkopedia.kcsg/Transform.Companion.from|from(kotlin.DoubleArray...){}[0]
+        final fun unity(): com.monkopedia.kcsg/Transform // com.monkopedia.kcsg/Transform.Companion.unity|unity(){}[0]
+    }
+}
+
+final class com.monkopedia.kcsg/UnityModifier : com.monkopedia.kcsg/WeightFunction { // com.monkopedia.kcsg/UnityModifier|null[0]
+    constructor <init>() // com.monkopedia.kcsg/UnityModifier.<init>|<init>(){}[0]
+
+    final fun eval(com.monkopedia.kcsg/Vector3d, com.monkopedia.kcsg/CSG): kotlin/Double // com.monkopedia.kcsg/UnityModifier.eval|eval(com.monkopedia.kcsg.Vector3d;com.monkopedia.kcsg.CSG){}[0]
+}
+
+final class com.monkopedia.kcsg/Vector3d { // com.monkopedia.kcsg/Vector3d|null[0]
+    constructor <init>(kotlin/Double = ..., kotlin/Double = ..., kotlin/Double = ...) // com.monkopedia.kcsg/Vector3d.<init>|<init>(kotlin.Double;kotlin.Double;kotlin.Double){}[0]
+
+    final val x // com.monkopedia.kcsg/Vector3d.x|{}x[0]
+        final fun <get-x>(): kotlin/Double // com.monkopedia.kcsg/Vector3d.x.<get-x>|<get-x>(){}[0]
+    final val y // com.monkopedia.kcsg/Vector3d.y|{}y[0]
+        final fun <get-y>(): kotlin/Double // com.monkopedia.kcsg/Vector3d.y.<get-y>|<get-y>(){}[0]
+    final val z // com.monkopedia.kcsg/Vector3d.z|{}z[0]
+        final fun <get-z>(): kotlin/Double // com.monkopedia.kcsg/Vector3d.z.<get-z>|<get-z>(){}[0]
+
+    final fun angle(com.monkopedia.kcsg/Vector3d): kotlin/Double // com.monkopedia.kcsg/Vector3d.angle|angle(com.monkopedia.kcsg.Vector3d){}[0]
+    final fun collinear(com.monkopedia.kcsg/Vector3d, com.monkopedia.kcsg/Vector3d): kotlin/Boolean // com.monkopedia.kcsg/Vector3d.collinear|collinear(com.monkopedia.kcsg.Vector3d;com.monkopedia.kcsg.Vector3d){}[0]
+    final fun component1(): kotlin/Double // com.monkopedia.kcsg/Vector3d.component1|component1(){}[0]
+    final fun component2(): kotlin/Double // com.monkopedia.kcsg/Vector3d.component2|component2(){}[0]
+    final fun component3(): kotlin/Double // com.monkopedia.kcsg/Vector3d.component3|component3(){}[0]
+    final fun copy(kotlin/Double = ..., kotlin/Double = ..., kotlin/Double = ...): com.monkopedia.kcsg/Vector3d // com.monkopedia.kcsg/Vector3d.copy|copy(kotlin.Double;kotlin.Double;kotlin.Double){}[0]
+    final fun crossed(com.monkopedia.kcsg/Vector3d): com.monkopedia.kcsg/Vector3d // com.monkopedia.kcsg/Vector3d.crossed|crossed(com.monkopedia.kcsg.Vector3d){}[0]
+    final fun distance(com.monkopedia.kcsg/Vector3d): kotlin/Double // com.monkopedia.kcsg/Vector3d.distance|distance(com.monkopedia.kcsg.Vector3d){}[0]
+    final fun divided(kotlin/Double): com.monkopedia.kcsg/Vector3d // com.monkopedia.kcsg/Vector3d.divided|divided(kotlin.Double){}[0]
+    final fun dot(com.monkopedia.kcsg/Vector3d): kotlin/Double // com.monkopedia.kcsg/Vector3d.dot|dot(com.monkopedia.kcsg.Vector3d){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.monkopedia.kcsg/Vector3d.equals|equals(kotlin.Any?){}[0]
+    final fun get(kotlin/Int): kotlin/Double // com.monkopedia.kcsg/Vector3d.get|get(kotlin.Int){}[0]
+    final fun hashCode(): kotlin/Int // com.monkopedia.kcsg/Vector3d.hashCode|hashCode(){}[0]
+    final fun lerp(com.monkopedia.kcsg/Vector3d, kotlin/Double): com.monkopedia.kcsg/Vector3d // com.monkopedia.kcsg/Vector3d.lerp|lerp(com.monkopedia.kcsg.Vector3d;kotlin.Double){}[0]
+    final fun magnitude(): kotlin/Double // com.monkopedia.kcsg/Vector3d.magnitude|magnitude(){}[0]
+    final fun magnitudeSq(): kotlin/Double // com.monkopedia.kcsg/Vector3d.magnitudeSq|magnitudeSq(){}[0]
+    final fun minus(com.monkopedia.kcsg/Vector3d): com.monkopedia.kcsg/Vector3d // com.monkopedia.kcsg/Vector3d.minus|minus(com.monkopedia.kcsg.Vector3d){}[0]
+    final fun minus(kotlin/Double, kotlin/Double, kotlin/Double): com.monkopedia.kcsg/Vector3d // com.monkopedia.kcsg/Vector3d.minus|minus(kotlin.Double;kotlin.Double;kotlin.Double){}[0]
+    final fun negated(): com.monkopedia.kcsg/Vector3d // com.monkopedia.kcsg/Vector3d.negated|negated(){}[0]
+    final fun normalized(): com.monkopedia.kcsg/Vector3d // com.monkopedia.kcsg/Vector3d.normalized|normalized(){}[0]
+    final fun orthogonal(): com.monkopedia.kcsg/Vector3d // com.monkopedia.kcsg/Vector3d.orthogonal|orthogonal(){}[0]
+    final fun plus(com.monkopedia.kcsg/Vector3d): com.monkopedia.kcsg/Vector3d // com.monkopedia.kcsg/Vector3d.plus|plus(com.monkopedia.kcsg.Vector3d){}[0]
+    final fun plus(kotlin/Double, kotlin/Double, kotlin/Double): com.monkopedia.kcsg/Vector3d // com.monkopedia.kcsg/Vector3d.plus|plus(kotlin.Double;kotlin.Double;kotlin.Double){}[0]
+    final fun project(com.monkopedia.kcsg/Vector3d): com.monkopedia.kcsg/Vector3d // com.monkopedia.kcsg/Vector3d.project|project(com.monkopedia.kcsg.Vector3d){}[0]
+    final fun times(com.monkopedia.kcsg/Vector3d): com.monkopedia.kcsg/Vector3d // com.monkopedia.kcsg/Vector3d.times|times(com.monkopedia.kcsg.Vector3d){}[0]
+    final fun times(kotlin/Double): com.monkopedia.kcsg/Vector3d // com.monkopedia.kcsg/Vector3d.times|times(kotlin.Double){}[0]
+    final fun times(kotlin/Double, kotlin/Double, kotlin/Double): com.monkopedia.kcsg/Vector3d // com.monkopedia.kcsg/Vector3d.times|times(kotlin.Double;kotlin.Double;kotlin.Double){}[0]
+    final fun toObjString(): kotlin/String // com.monkopedia.kcsg/Vector3d.toObjString|toObjString(){}[0]
+    final fun toObjString(kotlin.text/StringBuilder): kotlin.text/StringBuilder // com.monkopedia.kcsg/Vector3d.toObjString|toObjString(kotlin.text.StringBuilder){}[0]
+    final fun toStlString(): kotlin/String // com.monkopedia.kcsg/Vector3d.toStlString|toStlString(){}[0]
+    final fun toStlString(kotlin.text/StringBuilder): kotlin.text/StringBuilder // com.monkopedia.kcsg/Vector3d.toStlString|toStlString(kotlin.text.StringBuilder){}[0]
+    final fun toString(): kotlin/String // com.monkopedia.kcsg/Vector3d.toString|toString(){}[0]
+    final fun transformed(com.monkopedia.kcsg/Transform): com.monkopedia.kcsg/Vector3d // com.monkopedia.kcsg/Vector3d.transformed|transformed(com.monkopedia.kcsg.Transform){}[0]
+    final fun transformed(com.monkopedia.kcsg/Transform, kotlin/Double): com.monkopedia.kcsg/Vector3d // com.monkopedia.kcsg/Vector3d.transformed|transformed(com.monkopedia.kcsg.Transform;kotlin.Double){}[0]
+
+    final object Companion { // com.monkopedia.kcsg/Vector3d.Companion|null[0]
+        final val UNITY // com.monkopedia.kcsg/Vector3d.Companion.UNITY|{}UNITY[0]
+            final fun <get-UNITY>(): com.monkopedia.kcsg/Vector3d // com.monkopedia.kcsg/Vector3d.Companion.UNITY.<get-UNITY>|<get-UNITY>(){}[0]
+        final val X_ONE // com.monkopedia.kcsg/Vector3d.Companion.X_ONE|{}X_ONE[0]
+            final fun <get-X_ONE>(): com.monkopedia.kcsg/Vector3d // com.monkopedia.kcsg/Vector3d.Companion.X_ONE.<get-X_ONE>|<get-X_ONE>(){}[0]
+        final val Y_ONE // com.monkopedia.kcsg/Vector3d.Companion.Y_ONE|{}Y_ONE[0]
+            final fun <get-Y_ONE>(): com.monkopedia.kcsg/Vector3d // com.monkopedia.kcsg/Vector3d.Companion.Y_ONE.<get-Y_ONE>|<get-Y_ONE>(){}[0]
+        final val ZERO // com.monkopedia.kcsg/Vector3d.Companion.ZERO|{}ZERO[0]
+            final fun <get-ZERO>(): com.monkopedia.kcsg/Vector3d // com.monkopedia.kcsg/Vector3d.Companion.ZERO.<get-ZERO>|<get-ZERO>(){}[0]
+        final val Z_ONE // com.monkopedia.kcsg/Vector3d.Companion.Z_ONE|{}Z_ONE[0]
+            final fun <get-Z_ONE>(): com.monkopedia.kcsg/Vector3d // com.monkopedia.kcsg/Vector3d.Companion.Z_ONE.<get-Z_ONE>|<get-Z_ONE>(){}[0]
+
+        final fun unity(): com.monkopedia.kcsg/Vector3d // com.monkopedia.kcsg/Vector3d.Companion.unity|unity(){}[0]
+        final fun x(kotlin/Double): com.monkopedia.kcsg/Vector3d // com.monkopedia.kcsg/Vector3d.Companion.x|x(kotlin.Double){}[0]
+        final fun xy(kotlin/Double, kotlin/Double): com.monkopedia.kcsg/Vector3d // com.monkopedia.kcsg/Vector3d.Companion.xy|xy(kotlin.Double;kotlin.Double){}[0]
+        final fun xyz(kotlin/Double, kotlin/Double, kotlin/Double): com.monkopedia.kcsg/Vector3d // com.monkopedia.kcsg/Vector3d.Companion.xyz|xyz(kotlin.Double;kotlin.Double;kotlin.Double){}[0]
+        final fun xz(kotlin/Double, kotlin/Double): com.monkopedia.kcsg/Vector3d // com.monkopedia.kcsg/Vector3d.Companion.xz|xz(kotlin.Double;kotlin.Double){}[0]
+        final fun y(kotlin/Double): com.monkopedia.kcsg/Vector3d // com.monkopedia.kcsg/Vector3d.Companion.y|y(kotlin.Double){}[0]
+        final fun yz(kotlin/Double, kotlin/Double): com.monkopedia.kcsg/Vector3d // com.monkopedia.kcsg/Vector3d.Companion.yz|yz(kotlin.Double;kotlin.Double){}[0]
+        final fun z(kotlin/Double): com.monkopedia.kcsg/Vector3d // com.monkopedia.kcsg/Vector3d.Companion.z|z(kotlin.Double){}[0]
+        final fun zero(): com.monkopedia.kcsg/Vector3d // com.monkopedia.kcsg/Vector3d.Companion.zero|zero(){}[0]
+    }
+}
+
+final class com.monkopedia.kcsg/Vertex { // com.monkopedia.kcsg/Vertex|null[0]
+    constructor <init>(com.monkopedia.kcsg/Vector3d, com.monkopedia.kcsg/Vector3d, kotlin/Double = ...) // com.monkopedia.kcsg/Vertex.<init>|<init>(com.monkopedia.kcsg.Vector3d;com.monkopedia.kcsg.Vector3d;kotlin.Double){}[0]
+
+    final var normal // com.monkopedia.kcsg/Vertex.normal|{}normal[0]
+        final fun <get-normal>(): com.monkopedia.kcsg/Vector3d // com.monkopedia.kcsg/Vertex.normal.<get-normal>|<get-normal>(){}[0]
+        final fun <set-normal>(com.monkopedia.kcsg/Vector3d) // com.monkopedia.kcsg/Vertex.normal.<set-normal>|<set-normal>(com.monkopedia.kcsg.Vector3d){}[0]
+    final var pos // com.monkopedia.kcsg/Vertex.pos|{}pos[0]
+        final fun <get-pos>(): com.monkopedia.kcsg/Vector3d // com.monkopedia.kcsg/Vertex.pos.<get-pos>|<get-pos>(){}[0]
+        final fun <set-pos>(com.monkopedia.kcsg/Vector3d) // com.monkopedia.kcsg/Vertex.pos.<set-pos>|<set-pos>(com.monkopedia.kcsg.Vector3d){}[0]
+    final var weight // com.monkopedia.kcsg/Vertex.weight|{}weight[0]
+        final fun <get-weight>(): kotlin/Double // com.monkopedia.kcsg/Vertex.weight.<get-weight>|<get-weight>(){}[0]
+        final fun <set-weight>(kotlin/Double) // com.monkopedia.kcsg/Vertex.weight.<set-weight>|<set-weight>(kotlin.Double){}[0]
+
+    final fun component1(): com.monkopedia.kcsg/Vector3d // com.monkopedia.kcsg/Vertex.component1|component1(){}[0]
+    final fun component2(): com.monkopedia.kcsg/Vector3d // com.monkopedia.kcsg/Vertex.component2|component2(){}[0]
+    final fun component3(): kotlin/Double // com.monkopedia.kcsg/Vertex.component3|component3(){}[0]
+    final fun copy(com.monkopedia.kcsg/Vector3d = ..., com.monkopedia.kcsg/Vector3d = ..., kotlin/Double = ...): com.monkopedia.kcsg/Vertex // com.monkopedia.kcsg/Vertex.copy|copy(com.monkopedia.kcsg.Vector3d;com.monkopedia.kcsg.Vector3d;kotlin.Double){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.monkopedia.kcsg/Vertex.equals|equals(kotlin.Any?){}[0]
+    final fun flip() // com.monkopedia.kcsg/Vertex.flip|flip(){}[0]
+    final fun hashCode(): kotlin/Int // com.monkopedia.kcsg/Vertex.hashCode|hashCode(){}[0]
+    final fun interpolate(com.monkopedia.kcsg/Vertex, kotlin/Double): com.monkopedia.kcsg/Vertex // com.monkopedia.kcsg/Vertex.interpolate|interpolate(com.monkopedia.kcsg.Vertex;kotlin.Double){}[0]
+    final fun toObjString(): kotlin/String // com.monkopedia.kcsg/Vertex.toObjString|toObjString(){}[0]
+    final fun toObjString(kotlin.text/StringBuilder): kotlin.text/StringBuilder // com.monkopedia.kcsg/Vertex.toObjString|toObjString(kotlin.text.StringBuilder){}[0]
+    final fun toStlString(): kotlin/String // com.monkopedia.kcsg/Vertex.toStlString|toStlString(){}[0]
+    final fun toStlString(kotlin.text/StringBuilder): kotlin.text/StringBuilder // com.monkopedia.kcsg/Vertex.toStlString|toStlString(kotlin.text.StringBuilder){}[0]
+    final fun toString(): kotlin/String // com.monkopedia.kcsg/Vertex.toString|toString(){}[0]
+    final fun transform(com.monkopedia.kcsg/Transform): com.monkopedia.kcsg/Vertex // com.monkopedia.kcsg/Vertex.transform|transform(com.monkopedia.kcsg.Transform){}[0]
+    final fun transformed(com.monkopedia.kcsg/Transform): com.monkopedia.kcsg/Vertex // com.monkopedia.kcsg/Vertex.transformed|transformed(com.monkopedia.kcsg.Transform){}[0]
+}
+
+final class com.monkopedia.kcsg/XModifier : com.monkopedia.kcsg/WeightFunction { // com.monkopedia.kcsg/XModifier|null[0]
+    constructor <init>() // com.monkopedia.kcsg/XModifier.<init>|<init>(){}[0]
+    constructor <init>(kotlin/Boolean) // com.monkopedia.kcsg/XModifier.<init>|<init>(kotlin.Boolean){}[0]
+
+    final var centered // com.monkopedia.kcsg/XModifier.centered|{}centered[0]
+        final fun <get-centered>(): kotlin/Boolean // com.monkopedia.kcsg/XModifier.centered.<get-centered>|<get-centered>(){}[0]
+
+    final fun eval(com.monkopedia.kcsg/Vector3d, com.monkopedia.kcsg/CSG): kotlin/Double // com.monkopedia.kcsg/XModifier.eval|eval(com.monkopedia.kcsg.Vector3d;com.monkopedia.kcsg.CSG){}[0]
+}
+
+final class com.monkopedia.kcsg/YModifier : com.monkopedia.kcsg/WeightFunction { // com.monkopedia.kcsg/YModifier|null[0]
+    constructor <init>() // com.monkopedia.kcsg/YModifier.<init>|<init>(){}[0]
+    constructor <init>(kotlin/Boolean) // com.monkopedia.kcsg/YModifier.<init>|<init>(kotlin.Boolean){}[0]
+
+    final var centered // com.monkopedia.kcsg/YModifier.centered|{}centered[0]
+        final fun <get-centered>(): kotlin/Boolean // com.monkopedia.kcsg/YModifier.centered.<get-centered>|<get-centered>(){}[0]
+
+    final fun eval(com.monkopedia.kcsg/Vector3d, com.monkopedia.kcsg/CSG): kotlin/Double // com.monkopedia.kcsg/YModifier.eval|eval(com.monkopedia.kcsg.Vector3d;com.monkopedia.kcsg.CSG){}[0]
+}
+
+final class com.monkopedia.kcsg/ZModifier : com.monkopedia.kcsg/WeightFunction { // com.monkopedia.kcsg/ZModifier|null[0]
+    constructor <init>() // com.monkopedia.kcsg/ZModifier.<init>|<init>(){}[0]
+    constructor <init>(kotlin/Boolean) // com.monkopedia.kcsg/ZModifier.<init>|<init>(kotlin.Boolean){}[0]
+
+    final var centered // com.monkopedia.kcsg/ZModifier.centered|{}centered[0]
+        final fun <get-centered>(): kotlin/Boolean // com.monkopedia.kcsg/ZModifier.centered.<get-centered>|<get-centered>(){}[0]
+
+    final fun eval(com.monkopedia.kcsg/Vector3d, com.monkopedia.kcsg/CSG): kotlin/Double // com.monkopedia.kcsg/ZModifier.eval|eval(com.monkopedia.kcsg.Vector3d;com.monkopedia.kcsg.CSG){}[0]
+}
+
+final object com.monkopedia.kcsg/Extrude { // com.monkopedia.kcsg/Extrude|null[0]
+    final fun combine(com.monkopedia.kcsg/Polygon, com.monkopedia.kcsg/Polygon): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/Extrude.combine|combine(com.monkopedia.kcsg.Polygon;com.monkopedia.kcsg.Polygon){}[0]
+    final fun isCCW(com.monkopedia.kcsg/Polygon): kotlin/Boolean // com.monkopedia.kcsg/Extrude.isCCW|isCCW(com.monkopedia.kcsg.Polygon){}[0]
+    final fun points(com.monkopedia.kcsg/Vector3d, kotlin.collections/List<com.monkopedia.kcsg/Vector3d>): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/Extrude.points|points(com.monkopedia.kcsg.Vector3d;kotlin.collections.List<com.monkopedia.kcsg.Vector3d>){}[0]
+    final fun points(com.monkopedia.kcsg/Vector3d, kotlin/Array<out com.monkopedia.kcsg/Vector3d>...): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/Extrude.points|points(com.monkopedia.kcsg.Vector3d;kotlin.Array<out|com.monkopedia.kcsg.Vector3d>...){}[0]
+    final fun points(com.monkopedia.kcsg/Vector3d, kotlin/Boolean, kotlin/Boolean, kotlin.collections/List<com.monkopedia.kcsg/Vector3d>): kotlin.collections/List<com.monkopedia.kcsg/Polygon> // com.monkopedia.kcsg/Extrude.points|points(com.monkopedia.kcsg.Vector3d;kotlin.Boolean;kotlin.Boolean;kotlin.collections.List<com.monkopedia.kcsg.Vector3d>){}[0]
+    final fun points(com.monkopedia.kcsg/Vector3d, kotlin/Boolean, kotlin/Boolean, kotlin/Array<out com.monkopedia.kcsg/Vector3d>...): kotlin.collections/List<com.monkopedia.kcsg/Polygon> // com.monkopedia.kcsg/Extrude.points|points(com.monkopedia.kcsg.Vector3d;kotlin.Boolean;kotlin.Boolean;kotlin.Array<out|com.monkopedia.kcsg.Vector3d>...){}[0]
+    final fun toCW(kotlin.collections/List<com.monkopedia.kcsg/Vector3d>): kotlin.collections/List<com.monkopedia.kcsg/Vector3d> // com.monkopedia.kcsg/Extrude.toCW|toCW(kotlin.collections.List<com.monkopedia.kcsg.Vector3d>){}[0]
+}
+
+final object com.monkopedia.kcsg/FileUtil { // com.monkopedia.kcsg/FileUtil|null[0]
+    final fun read(kotlinx.io.files/Path): kotlin/String // com.monkopedia.kcsg/FileUtil.read|read(kotlinx.io.files.Path){}[0]
+    final fun toStlFile(kotlinx.io.files/Path, com.monkopedia.kcsg/CSG) // com.monkopedia.kcsg/FileUtil.toStlFile|toStlFile(kotlinx.io.files.Path;com.monkopedia.kcsg.CSG){}[0]
+    final fun write(kotlinx.io.files/Path, kotlin/String) // com.monkopedia.kcsg/FileUtil.write|write(kotlinx.io.files.Path;kotlin.String){}[0]
+}
+
+final object com.monkopedia.kcsg/STL { // com.monkopedia.kcsg/STL|null[0]
+    final fun file(kotlinx.io.files/Path): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/STL.file|file(kotlinx.io.files.Path){}[0]
+    final fun from(kotlin/Function0<kotlinx.io/Source>, kotlin/Function0<kotlin/Long>): com.monkopedia.kcsg/CSG // com.monkopedia.kcsg/STL.from|from(kotlin.Function0<kotlinx.io.Source>;kotlin.Function0<kotlin.Long>){}[0]
+}

@@ -35,11 +35,13 @@ This repository is a multi-module Gradle project:
 - Remove temporary debug prints and unused code paths in the same PR that deprecates them.
 - Avoid broad `catch (Throwable)` without explicit rationale and recovery behavior.
 
-## Coverage & API Checklist Gate
-- Before opening a PR, run `./gradlew :kcsg:test :kcsg-dsl:test :kcsg:koverXmlReport :kcsg:koverVerifyJvm :kcsg-dsl:koverVerify`.
+## Coverage & API Gates
+There are two complementary public-API gates; a public-API change must satisfy both:
+- **BCV (mechanical ABI gate)** — `binary-compatibility-validator` tracks the actual public ABI of `:kcsg` and `:kcsg-dsl` (JVM `.api` + multiplatform `.klib.api` under each module's `api/`). Any public-API change must be reflected by running `./gradlew apiDump` and committing the updated dumps; CI runs `./gradlew apiCheck` and fails on an undumped change. `:csgs` and `:samples` are not libraries and are excluded.
+- **Checklist (coverage/intent doc)** — `docs/public-api-checklist.md` records which public symbols are tested and with what scenarios. If any public API files change under `kcsg/src/main/java/com/monkopedia/kcsg/*.kt` or `kcsg-dsl/src/main/java/com/monkopedia/kcsg/*.kt`, update the checklist in the same change.
+- Before opening a PR, run `./gradlew apiCheck :kcsg:test :kcsg-dsl:test :kcsg:koverXmlReport :kcsg:koverVerifyJvm :kcsg-dsl:koverVerify` (after `apiDump` if you changed public API).
 - `:kcsg:koverVerifyJvm` enforces API-package coverage for `com.monkopedia.kcsg` (excluding vendored `com.monkopedia.kcsg.ext.*`), while `:kcsg:koverXmlReport` preserves full-module trend visibility.
-- If any public API files change under `kcsg/src/main/java/com/monkopedia/kcsg/*.kt` or `kcsg-dsl/src/main/java/com/monkopedia/kcsg/*.kt`, update `docs/public-api-checklist.md` in the same change.
-- PR CI enforces both the library coverage gate and the public API checklist update requirement.
+- PR CI enforces all three: the BCV ABI check, the library coverage gate, and the public API checklist update requirement.
 
 ## Architecture Guardrails
 - Keep core mesh/boolean algorithms in `kcsg`; `kcsg-dsl` and `csgs` should orchestrate, not duplicate core logic.

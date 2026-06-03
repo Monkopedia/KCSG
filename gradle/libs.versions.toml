@@ -5,6 +5,7 @@ clikt = "5.1.0"
 vannik = "0.36.0"
 kover = "0.9.2"
 kotlinx-io = "0.8.0"
+bcv = "0.18.1"
 
 [libraries]
 slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4j"}
@@ -17,3 +18,4 @@ kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 vannik-publish = { id = "com.vanniktech.maven.publish", version.ref = "vannik" }
 kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
+bcv = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "bcv" }
