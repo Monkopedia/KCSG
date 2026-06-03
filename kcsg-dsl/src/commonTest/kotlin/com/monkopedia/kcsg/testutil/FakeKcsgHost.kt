@@ -9,6 +9,7 @@ class FakeKcsgHost(
     override val supportsCaching: Boolean = true,
 ) : KcsgHost {
     val stlPaths = mutableMapOf<String, Path>()
+    val stlVersions = mutableMapOf<String, String>()
     val scripts = mutableMapOf<String, ImportedScript>()
     val cache = mutableMapOf<String, CSG>()
 
@@ -21,6 +22,8 @@ class FakeKcsgHost(
         stlRequests.add(stlName)
         return stlPaths[stlName] ?: error("No STL registered for '$stlName'")
     }
+
+    override fun stlVersion(stlName: String): String = stlVersions[stlName] ?: ""
 
     override fun findScript(csgsName: String): ImportedScript {
         scriptRequests.add(csgsName)

@@ -5,11 +5,38 @@ import java.nio.file.Files
 import kotlinx.io.files.Path
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertNotEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertSame
 import kotlin.test.assertTrue
 
 class KcsgScriptJvmIoTest {
+
+    @Test
+    fun stlVersionTokenChangesDependentCacheHash() {
+        // A csg{} property importing an STL by name must change its cache key when the host
+        // reports a new version token for that STL — so re-editing the source STL invalidates
+        // cached results that consumed it.
+        val host = FakeKcsgHost(supportsCaching = true)
+        val stlPath = Files.createTempFile("kcsg-stl-version", ".stl")
+        FileUtil.toStlFile(Path(stlPath.toString()), Cube(1.0).toCSG())
+        host.registerStl("widget", stlPath.toString())
+
+        fun cacheHashWithVersion(version: String): String {
+            host.stlVersions["widget"] = version
+            val script = KcsgScript(host)
+            val widget by script.stl("widget")
+            val part by script.csg { widget }
+            part.polygons // force the real build → getCached → storeCached(hash)
+            return host.cacheStores.last()
+        }
+
+        val v1 = cacheHashWithVersion("2026-01-01T00:00:00Z")
+        val v2 = cacheHashWithVersion("2026-05-23T12:00:00Z")
+        assertNotEquals(v1, v2)
+
+        stlPath.toFile().delete()
+    }
     @Test
     fun hostDelegationAndScriptEnvelopeConstants() {
         val host = FakeKcsgHost(supportsCaching = false)

@@ -39,6 +39,11 @@ class FileImportHost(imports: List<File>, outputDir: File?) : KcsgHost {
         return Path(resolve(stlName, "stl").path)
     }
 
+    override fun stlVersion(stlName: String): String {
+        val file = runCatching { resolve(stlName, "stl") }.getOrNull() ?: return ""
+        return "${file.lastModified()}:${file.length()}"
+    }
+
     override fun findScript(csgsName: String): ImportedScript {
         val file = resolve(csgsName, "csgs")
         val script = createScript(file)

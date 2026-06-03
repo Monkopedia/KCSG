@@ -80,7 +80,7 @@ abstract class KcsgBuilder {
                     }
                 )
             }.wrapGetter {
-                CSG.opOverride?.operation("stl:$stlName")
+                CSG.opOverride?.operation("stl:$stlName", stlVersion(stlName))
             }
             track(propertyName, lazy)
             ReadOnlyProperty { _, _ ->
@@ -166,6 +166,10 @@ abstract class KcsgBuilder {
     protected abstract fun track(propertyName: String, lazy: Lazy<CSG>)
     protected abstract fun findStl(stlName: String): Path
     protected abstract fun findScript(csgsName: String): ImportedScript
+
+    /** Version token for [stlName], folded into the cache key of `stl()` properties (see [KcsgHost.stlVersion]). */
+    protected open fun stlVersion(stlName: String): String = ""
+
     protected open fun checkCached(hash: String): CSG? = null
     protected open fun storeCached(hash: String, csg: CSG) {}
 

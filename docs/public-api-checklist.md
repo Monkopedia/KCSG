@@ -24,6 +24,7 @@ This checklist tracks public API coverage status for library modules.
 
 ## Recent API Notes
 
+- `KcsgHost` gains `stlVersion(stlName): String` (default `""`). It is folded into the cache key of an `stl()` property so a host that returns a version token (e.g. the source STL's modification time) invalidates cached results when the imported STL changes. The default `""` preserves prior name-only keying, so existing host implementations are unaffected.
 - `XModifier`/`YModifier`/`ZModifier` now expose a public read-only `centered` property (previously private). `HashingOpOverride` now incorporates the `WeightFunction` passed to `CSG.weighted` into the cache key (built-in modifiers are hashed by type + `centered`; a custom `WeightFunction` throws during hashing — disable caching via `csg(allowCaching = false)` for such builds). The hasher also now content-hashes `Polygon` (was identity `hashCode`), length-frames `Polyhedron` points/faces, and its fallback branch fails loud instead of silently using `hashCode()`. These change content hashes for affected models (cache cold-starts once).
 - `Cube.centered` is now a public `var` (previously private), mirroring `RoundedCube.centered`. The `HashingOpOverride` cache key for `Cube` now incorporates this flag, so a `Cube` and its `noCenter()` variant no longer collide to the same content hash. Existing cache entries for `Cube`-containing models are invalidated (hashes change once).
 - `io`-surface APIs now use `kotlinx.io.files.Path` as the primary path abstraction across `kcsg` and `kcsg-dsl`.
@@ -93,7 +94,7 @@ This checklist tracks public API coverage status for library modules.
 | `ImportedKcsgScript` | `dsl`, `io` | covered | `ImportedScriptTest.importedKcsgScriptSurfacesExportsTargetsAndGet` |
 | `ImportedScript` | `dsl`, `io` | covered | `ImportedScriptTest.importedKcsgScriptSurfacesExportsTargetsAndGet` |
 | `KcsgBuilder` | `dsl`, `io`, `error-path` | covered | `KcsgBuilderTest.primitiveCsgImportStlAndExportFlow`; `KcsgBuilderTest.csgRemeshDefaultsToTrueAndCanBeDisabled` |
-| `KcsgHost` | `dsl`, `io` | covered | `KcsgHostTest.emptyHostDefaultsAndErrorPaths` |
+| `KcsgHost` | `dsl`, `io` | covered | `KcsgHostTest.emptyHostDefaultsAndErrorPaths`; `KcsgScriptJvmIoTest.stlVersionTokenChangesDependentCacheHash` |
 | `EmptyHost` | `dsl`, `error-path` | covered | `KcsgHostTest.emptyHostDefaultsAndErrorPaths` |
 | `KcsgScript` | `dsl`, `io`, `error-path` | covered | `KcsgScriptTest.overrideExportGenerateExportsTargetsAndCacheDelegation` |
 | DSL boolean/set operator extensions (`and`, `or`, `xor`, `plus`, `minus`, `times`) | `dsl`, `boolean` | covered | `DslOperationsTest.operationOverloadsAcrossCsgAndPrimitivePairs` |
