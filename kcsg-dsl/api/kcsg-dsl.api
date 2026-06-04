@@ -1,0 +1,180 @@
+public final class com/monkopedia/kcsg/CSGBuilder {
+	public static final field INSTANCE Lcom/monkopedia/kcsg/CSGBuilder;
+	public final fun getZERO ()Lcom/monkopedia/kcsg/Vector3d;
+}
+
+public final class com/monkopedia/kcsg/CSGKt {
+	public static final fun cube (Lcom/monkopedia/kcsg/KcsgBuilder$BuilderContext;DLkotlin/jvm/functions/Function1;)Lcom/monkopedia/kcsg/Cube;
+	public static synthetic fun cube$default (Lcom/monkopedia/kcsg/KcsgBuilder$BuilderContext;DLkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lcom/monkopedia/kcsg/Cube;
+	public static final fun cylinder (Lcom/monkopedia/kcsg/KcsgBuilder$BuilderContext;DDILkotlin/jvm/functions/Function1;)Lcom/monkopedia/kcsg/Cylinder;
+	public static final fun cylinder (Lcom/monkopedia/kcsg/KcsgBuilder$BuilderContext;Lcom/monkopedia/kcsg/Vector3d;Lcom/monkopedia/kcsg/Vector3d;DDILkotlin/jvm/functions/Function1;)Lcom/monkopedia/kcsg/Cylinder;
+	public static synthetic fun cylinder$default (Lcom/monkopedia/kcsg/KcsgBuilder$BuilderContext;DDILkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lcom/monkopedia/kcsg/Cylinder;
+	public static synthetic fun cylinder$default (Lcom/monkopedia/kcsg/KcsgBuilder$BuilderContext;Lcom/monkopedia/kcsg/Vector3d;Lcom/monkopedia/kcsg/Vector3d;DDILkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lcom/monkopedia/kcsg/Cylinder;
+	public static final fun roundedCube (Lcom/monkopedia/kcsg/KcsgBuilder$BuilderContext;DLkotlin/jvm/functions/Function1;)Lcom/monkopedia/kcsg/RoundedCube;
+	public static synthetic fun roundedCube$default (Lcom/monkopedia/kcsg/KcsgBuilder$BuilderContext;DLkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lcom/monkopedia/kcsg/RoundedCube;
+	public static final fun transform (Lcom/monkopedia/kcsg/KcsgBuilder$BuilderContext;Lkotlin/jvm/functions/Function1;)Lcom/monkopedia/kcsg/Transform;
+	public static final fun weighted (Lcom/monkopedia/kcsg/Primitive;Lcom/monkopedia/kcsg/WeightFunction;)Lcom/monkopedia/kcsg/CSG;
+	public static final fun xyz (Lcom/monkopedia/kcsg/KcsgBuilder$BuilderContext;DDD)Lcom/monkopedia/kcsg/Vector3d;
+}
+
+public final class com/monkopedia/kcsg/CollectionsKt {
+	public static final fun arrayed (Lcom/monkopedia/kcsg/KcsgBuilder$BuilderContext;ILkotlin/jvm/functions/Function1;)Lcom/monkopedia/kcsg/CSG;
+	public static final fun flatten (Ljava/util/Collection;)Lcom/monkopedia/kcsg/CSG;
+	public static final fun merge (Ljava/util/Collection;)Lcom/monkopedia/kcsg/CSG;
+	public static final fun primitives (Lcom/monkopedia/kcsg/KcsgBuilder$BuilderContext;ILkotlin/jvm/functions/Function1;)Lcom/monkopedia/kcsg/CSG;
+	public static final fun rot (Ljava/util/Collection;DDD)Ljava/util/Collection;
+	public static synthetic fun rot$default (Ljava/util/Collection;DDDILjava/lang/Object;)Ljava/util/Collection;
+	public static final fun scale (Ljava/util/Collection;D)Ljava/util/Collection;
+	public static final fun scale (Ljava/util/Collection;DDD)Ljava/util/Collection;
+	public static synthetic fun scale$default (Ljava/util/Collection;DDDILjava/lang/Object;)Ljava/util/Collection;
+	public static synthetic fun scale$default (Ljava/util/Collection;DILjava/lang/Object;)Ljava/util/Collection;
+	public static final fun times (Ljava/util/Collection;Lcom/monkopedia/kcsg/Transform;)Ljava/util/Collection;
+	public static final fun transform (Ljava/util/Collection;Lkotlin/jvm/functions/Function1;)Ljava/util/Collection;
+	public static final fun translate (Ljava/util/Collection;DDD)Ljava/util/Collection;
+	public static synthetic fun translate$default (Ljava/util/Collection;DDDILjava/lang/Object;)Ljava/util/Collection;
+}
+
+public abstract interface annotation class com/monkopedia/kcsg/CsgDsl : java/lang/annotation/Annotation {
+}
+
+public final class com/monkopedia/kcsg/EmptyHost : com/monkopedia/kcsg/KcsgHost {
+	public static final field INSTANCE Lcom/monkopedia/kcsg/EmptyHost;
+	public fun checkCached (Ljava/lang/String;)Lcom/monkopedia/kcsg/CSG;
+	public fun findScript (Ljava/lang/String;)Lcom/monkopedia/kcsg/ImportedScript;
+	public fun findStl (Ljava/lang/String;)Lkotlinx/io/files/Path;
+	public fun getSupportsCaching ()Z
+	public fun stlVersion (Ljava/lang/String;)Ljava/lang/String;
+	public fun storeCached (Ljava/lang/String;Lcom/monkopedia/kcsg/CSG;)Ljava/lang/Void;
+	public synthetic fun storeCached (Ljava/lang/String;Lcom/monkopedia/kcsg/CSG;)V
+}
+
+public final class com/monkopedia/kcsg/ImportedKcsgScript : com/monkopedia/kcsg/ImportedScript {
+	public fun <init> (Lcom/monkopedia/kcsg/KcsgScript;)V
+	public fun get (Ljava/lang/String;)Lcom/monkopedia/kcsg/CSG;
+	public fun getExports ()Ljava/util/Collection;
+	public fun getTargets ()Ljava/util/Collection;
+}
+
+public abstract interface class com/monkopedia/kcsg/ImportedScript {
+	public abstract fun get (Ljava/lang/String;)Lcom/monkopedia/kcsg/CSG;
+	public abstract fun getExports ()Ljava/util/Collection;
+	public abstract fun getTargets ()Ljava/util/Collection;
+}
+
+public abstract class com/monkopedia/kcsg/KcsgBuilder {
+	public static final field Companion Lcom/monkopedia/kcsg/KcsgBuilder$Companion;
+	public fun <init> ()V
+	protected fun checkCached (Ljava/lang/String;)Lcom/monkopedia/kcsg/CSG;
+	public final fun csg (ZZZLkotlin/jvm/functions/Function1;)Lkotlin/properties/PropertyDelegateProvider;
+	public static synthetic fun csg$default (Lcom/monkopedia/kcsg/KcsgBuilder;ZZZLkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lkotlin/properties/PropertyDelegateProvider;
+	public final fun export (Ljava/lang/String;)V
+	public final fun export (Lkotlin/reflect/KProperty;)V
+	protected abstract fun exportProperty (Ljava/lang/String;)V
+	protected abstract fun findScript (Ljava/lang/String;)Lcom/monkopedia/kcsg/ImportedScript;
+	protected abstract fun findStl (Ljava/lang/String;)Lkotlinx/io/files/Path;
+	protected fun getSupportsCaching ()Z
+	public final fun import (Ljava/lang/String;)Lkotlin/Lazy;
+	public final fun primitive (ZZZLkotlin/jvm/functions/Function1;)Lkotlin/properties/PropertyDelegateProvider;
+	public static synthetic fun primitive$default (Lcom/monkopedia/kcsg/KcsgBuilder;ZZZLkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lkotlin/properties/PropertyDelegateProvider;
+	public final fun stl (Ljava/lang/String;)Lkotlin/properties/PropertyDelegateProvider;
+	protected fun stlVersion (Ljava/lang/String;)Ljava/lang/String;
+	protected fun storeCached (Ljava/lang/String;Lcom/monkopedia/kcsg/CSG;)V
+	protected abstract fun track (Ljava/lang/String;Lkotlin/Lazy;)V
+}
+
+public abstract class com/monkopedia/kcsg/KcsgBuilder$BuilderContext {
+}
+
+public final class com/monkopedia/kcsg/KcsgBuilder$Companion {
+}
+
+public abstract interface class com/monkopedia/kcsg/KcsgHost {
+	public abstract fun checkCached (Ljava/lang/String;)Lcom/monkopedia/kcsg/CSG;
+	public abstract fun findScript (Ljava/lang/String;)Lcom/monkopedia/kcsg/ImportedScript;
+	public abstract fun findStl (Ljava/lang/String;)Lkotlinx/io/files/Path;
+	public abstract fun getSupportsCaching ()Z
+	public fun stlVersion (Ljava/lang/String;)Ljava/lang/String;
+	public abstract fun storeCached (Ljava/lang/String;Lcom/monkopedia/kcsg/CSG;)V
+}
+
+public final class com/monkopedia/kcsg/KcsgHost$DefaultImpls {
+	public static fun stlVersion (Lcom/monkopedia/kcsg/KcsgHost;Ljava/lang/String;)Ljava/lang/String;
+}
+
+public final class com/monkopedia/kcsg/KcsgScript : com/monkopedia/kcsg/KcsgBuilder {
+	public static final field Companion Lcom/monkopedia/kcsg/KcsgScript$Companion;
+	public fun <init> ()V
+	public fun <init> (Lcom/monkopedia/kcsg/KcsgHost;)V
+	public synthetic fun <init> (Lcom/monkopedia/kcsg/KcsgHost;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun exports ()Ljava/util/Collection;
+	public final fun generateExports ()Ljava/util/Map;
+	public final fun generateTarget (Ljava/lang/String;)Lcom/monkopedia/kcsg/CSG;
+	public final fun getHost ()Lcom/monkopedia/kcsg/KcsgHost;
+	public final fun overrideExport (Ljava/lang/String;Z)V
+	public final fun setHost (Lcom/monkopedia/kcsg/KcsgHost;)V
+	public final fun targets ()Ljava/util/Collection;
+}
+
+public final class com/monkopedia/kcsg/KcsgScript$Companion {
+	public final fun getFOOTER ()Ljava/lang/String;
+	public final fun getHEADER ()Ljava/lang/String;
+}
+
+public final class com/monkopedia/kcsg/OperationsKt {
+	public static final fun and (Lcom/monkopedia/kcsg/CSG;Lcom/monkopedia/kcsg/CSG;)Lcom/monkopedia/kcsg/CSG;
+	public static final fun and (Lcom/monkopedia/kcsg/CSG;Lcom/monkopedia/kcsg/Primitive;)Lcom/monkopedia/kcsg/CSG;
+	public static final fun and (Lcom/monkopedia/kcsg/Primitive;Lcom/monkopedia/kcsg/CSG;)Lcom/monkopedia/kcsg/CSG;
+	public static final fun and (Lcom/monkopedia/kcsg/Primitive;Lcom/monkopedia/kcsg/Primitive;)Lcom/monkopedia/kcsg/CSG;
+	public static final fun minus (Lcom/monkopedia/kcsg/CSG;Lcom/monkopedia/kcsg/CSG;)Lcom/monkopedia/kcsg/CSG;
+	public static final fun minus (Lcom/monkopedia/kcsg/CSG;Lcom/monkopedia/kcsg/Primitive;)Lcom/monkopedia/kcsg/CSG;
+	public static final fun minus (Lcom/monkopedia/kcsg/Primitive;Lcom/monkopedia/kcsg/CSG;)Lcom/monkopedia/kcsg/CSG;
+	public static final fun minus (Lcom/monkopedia/kcsg/Primitive;Lcom/monkopedia/kcsg/Primitive;)Lcom/monkopedia/kcsg/CSG;
+	public static final fun or (Lcom/monkopedia/kcsg/CSG;Lcom/monkopedia/kcsg/CSG;)Lcom/monkopedia/kcsg/CSG;
+	public static final fun or (Lcom/monkopedia/kcsg/CSG;Lcom/monkopedia/kcsg/Primitive;)Lcom/monkopedia/kcsg/CSG;
+	public static final fun or (Lcom/monkopedia/kcsg/Primitive;Lcom/monkopedia/kcsg/CSG;)Lcom/monkopedia/kcsg/CSG;
+	public static final fun or (Lcom/monkopedia/kcsg/Primitive;Lcom/monkopedia/kcsg/Primitive;)Lcom/monkopedia/kcsg/CSG;
+	public static final fun plus (Lcom/monkopedia/kcsg/CSG;Lcom/monkopedia/kcsg/CSG;)Lcom/monkopedia/kcsg/CSG;
+	public static final fun plus (Lcom/monkopedia/kcsg/CSG;Lcom/monkopedia/kcsg/Primitive;)Lcom/monkopedia/kcsg/CSG;
+	public static final fun plus (Lcom/monkopedia/kcsg/Primitive;Lcom/monkopedia/kcsg/CSG;)Lcom/monkopedia/kcsg/CSG;
+	public static final fun plus (Lcom/monkopedia/kcsg/Primitive;Lcom/monkopedia/kcsg/Primitive;)Lcom/monkopedia/kcsg/CSG;
+	public static final fun times (Lcom/monkopedia/kcsg/CSG;Lcom/monkopedia/kcsg/CSG;)Lcom/monkopedia/kcsg/CSG;
+	public static final fun times (Lcom/monkopedia/kcsg/CSG;Lcom/monkopedia/kcsg/Primitive;)Lcom/monkopedia/kcsg/CSG;
+	public static final fun times (Lcom/monkopedia/kcsg/Primitive;Lcom/monkopedia/kcsg/CSG;)Lcom/monkopedia/kcsg/CSG;
+	public static final fun times (Lcom/monkopedia/kcsg/Primitive;Lcom/monkopedia/kcsg/Primitive;)Lcom/monkopedia/kcsg/CSG;
+	public static final fun xor (Lcom/monkopedia/kcsg/CSG;Lcom/monkopedia/kcsg/CSG;)Lcom/monkopedia/kcsg/CSG;
+	public static final fun xor (Lcom/monkopedia/kcsg/CSG;Lcom/monkopedia/kcsg/Primitive;)Lcom/monkopedia/kcsg/CSG;
+	public static final fun xor (Lcom/monkopedia/kcsg/Primitive;Lcom/monkopedia/kcsg/CSG;)Lcom/monkopedia/kcsg/CSG;
+	public static final fun xor (Lcom/monkopedia/kcsg/Primitive;Lcom/monkopedia/kcsg/Primitive;)Lcom/monkopedia/kcsg/CSG;
+}
+
+public final class com/monkopedia/kcsg/PropertiesKt {
+	public static final fun getRadius (Lcom/monkopedia/kcsg/Cylinder;)D
+	public static final fun setRadius (Lcom/monkopedia/kcsg/Cylinder;D)V
+}
+
+public final class com/monkopedia/kcsg/TransformBuilder {
+	public static final field INSTANCE Lcom/monkopedia/kcsg/TransformBuilder;
+	public final fun getUnity ()Lcom/monkopedia/kcsg/Transform;
+}
+
+public final class com/monkopedia/kcsg/TransformKt {
+	public static final fun rot (Lcom/monkopedia/kcsg/CSG;DDD)Lcom/monkopedia/kcsg/CSG;
+	public static synthetic fun rot$default (Lcom/monkopedia/kcsg/CSG;DDDILjava/lang/Object;)Lcom/monkopedia/kcsg/CSG;
+	public static final fun scale (Lcom/monkopedia/kcsg/CSG;D)Lcom/monkopedia/kcsg/CSG;
+	public static final fun scale (Lcom/monkopedia/kcsg/CSG;DDD)Lcom/monkopedia/kcsg/CSG;
+	public static final fun scale (Lcom/monkopedia/kcsg/Transform;D)Lcom/monkopedia/kcsg/Transform;
+	public static final fun scale (Lcom/monkopedia/kcsg/Transform;DDD)Lcom/monkopedia/kcsg/Transform;
+	public static synthetic fun scale$default (Lcom/monkopedia/kcsg/CSG;DDDILjava/lang/Object;)Lcom/monkopedia/kcsg/CSG;
+	public static synthetic fun scale$default (Lcom/monkopedia/kcsg/CSG;DILjava/lang/Object;)Lcom/monkopedia/kcsg/CSG;
+	public static synthetic fun scale$default (Lcom/monkopedia/kcsg/Transform;DDDILjava/lang/Object;)Lcom/monkopedia/kcsg/Transform;
+	public static synthetic fun scale$default (Lcom/monkopedia/kcsg/Transform;DILjava/lang/Object;)Lcom/monkopedia/kcsg/Transform;
+	public static final fun times (Lcom/monkopedia/kcsg/CSG;Lcom/monkopedia/kcsg/Transform;)Lcom/monkopedia/kcsg/CSG;
+	public static final fun times (Lcom/monkopedia/kcsg/Primitive;Lcom/monkopedia/kcsg/Transform;)Lcom/monkopedia/kcsg/CSG;
+	public static final fun transform (Lcom/monkopedia/kcsg/CSG;Lkotlin/jvm/functions/Function1;)Lcom/monkopedia/kcsg/CSG;
+	public static final fun transform (Lcom/monkopedia/kcsg/Primitive;Lkotlin/jvm/functions/Function1;)Lcom/monkopedia/kcsg/CSG;
+	public static final fun translate (Lcom/monkopedia/kcsg/CSG;DDD)Lcom/monkopedia/kcsg/CSG;
+	public static final fun translate (Lcom/monkopedia/kcsg/Transform;DDD)Lcom/monkopedia/kcsg/Transform;
+	public static synthetic fun translate$default (Lcom/monkopedia/kcsg/CSG;DDDILjava/lang/Object;)Lcom/monkopedia/kcsg/CSG;
+	public static synthetic fun translate$default (Lcom/monkopedia/kcsg/Transform;DDDILjava/lang/Object;)Lcom/monkopedia/kcsg/Transform;
+}
+

@@ -45,6 +45,9 @@ jobs:
             fi
           fi
 
+      - name: Validate public ABI (binary-compatibility-validator)
+        run: ./gradlew apiCheck --stacktrace
+
       - name: Run library tests and coverage verification
         run: ./gradlew :kcsg:test :kcsg-dsl:test :kcsg:oracleTest :kcsg:koverXmlReport :kcsg:koverVerifyJvm :kcsg-dsl:koverXmlReport :kcsg-dsl:koverVerify --stacktrace
 

@@ -1,6 +1,20 @@
+import kotlinx.validation.ExperimentalBCVApi
+
 plugins {
     alias(libs.plugins.kotlin.jvm) apply false
     alias(libs.plugins.kotlin.multiplatform) apply false
+    alias(libs.plugins.bcv)
+}
+
+// Binary-compatibility-validator: mechanical public-ABI gate for the library modules.
+// Only :kcsg and :kcsg-dsl are published libraries; :csgs (CLI app) and :samples are not.
+apiValidation {
+    ignoredProjects.addAll(listOf("csgs", "samples"))
+    // Validate the non-JVM targets (JS/Wasm/native/Apple) too, not just the JVM .api dump.
+    @OptIn(ExperimentalBCVApi::class)
+    klib {
+        enabled = true
+    }
 }
 
 tasks.register("coverageHtml") {
