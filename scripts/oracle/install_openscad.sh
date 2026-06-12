@@ -4,7 +4,7 @@ set -euo pipefail
 REPO_ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/../.." && pwd)"
 INSTALL_ROOT="${OPENSCAD_INSTALL_DIR:-$REPO_ROOT/.tools/openscad}"
 BASE_URL="${OPENSCAD_BASE_URL:-https://files.openscad.org/snapshots}"
-ARTIFACT_NAME="${OPENSCAD_ARTIFACT_NAME:-OpenSCAD-2025.06.03.ai25586-x86_64.AppImage}"
+ARTIFACT_NAME="${OPENSCAD_ARTIFACT_NAME:-OpenSCAD-2026.01.02.ai30348-x86_64.AppImage}"
 
 if [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then
     cat <<'USAGE'
@@ -13,7 +13,7 @@ Usage: install_openscad.sh
 Environment overrides:
   OPENSCAD_INSTALL_DIR   Install directory (default: .tools/openscad)
   OPENSCAD_BASE_URL      Download base URL (default: https://files.openscad.org/snapshots)
-  OPENSCAD_ARTIFACT_NAME Artifact filename (default: OpenSCAD-2025.06.03.ai25586-x86_64.AppImage)
+  OPENSCAD_ARTIFACT_NAME Artifact filename (default: OpenSCAD-2026.01.02.ai30348-x86_64.AppImage)
 USAGE
     exit 0
 fi
@@ -81,7 +81,7 @@ cat >"$wrapper_path" <<'WRAPPER'
 set -euo pipefail
 
 script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
-artifact_name="${OPENSCAD_ARTIFACT_NAME:-OpenSCAD-2025.06.03.ai25586-x86_64.AppImage}"
+artifact_name="${OPENSCAD_ARTIFACT_NAME:-OpenSCAD-2026.01.02.ai30348-x86_64.AppImage}"
 appimage_path="$script_dir/$artifact_name"
 
 if [[ ! -x "$appimage_path" ]]; then
