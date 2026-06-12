@@ -268,16 +268,8 @@ class CSG private constructor(
     }
 
     private fun unionPolygonBoundsOpt(csg: CSG): CSG {
-        val inner: MutableList<Polygon> = ArrayList()
-        val outer: MutableList<Polygon> = ArrayList()
         val bounds = csg.bounds
-        _polygons.forEach { p: Polygon ->
-            if (bounds.intersects(p.bounds)) {
-                inner.add(p)
-            } else {
-                outer.add(p)
-            }
-        }
+        val (inner, outer) = _polygons.partition { bounds.intersects(it.bounds) }
         val allPolygons: MutableList<Polygon> = ArrayList()
         if (inner.isNotEmpty()) {
             val innerCSG = fromPolygons(inner)
@@ -354,10 +346,7 @@ class CSG private constructor(
         if (csgs.isEmpty()) {
             return copy()
         }
-        var csgsUnion = csgs[0]
-        for (i in 1 until csgs.size) {
-            csgsUnion = csgsUnion.union(csgs[i])
-        }
+        val csgsUnion = csgs.reduce { acc, c -> acc.union(c) }
         return difference(csgsUnion)
     }
 
@@ -441,19 +430,8 @@ class CSG private constructor(
     }
 
     private fun differencePolygonBoundsOpt(csg: CSG): CSG {
-        val inner: MutableList<Polygon> = ArrayList()
-        val outer: MutableList<Polygon> = ArrayList()
         val bounds = csg.bounds
-        _polygons.forEach { p: Polygon ->
-            if (bounds.intersects(
-                    p.bounds,
-                )
-            ) {
-                inner.add(p)
-            } else {
-                outer.add(p)
-            }
-        }
+        val (inner, outer) = _polygons.partition { bounds.intersects(it.bounds) }
         val innerCSG = fromPolygons(inner)
         val allPolygons: MutableList<Polygon> = ArrayList()
         allPolygons.addAll(outer)
@@ -538,10 +516,7 @@ class CSG private constructor(
         if (csgs.isEmpty()) {
             return copy()
         }
-        var csgsUnion = csgs[0]
-        for (i in 1 until csgs.size) {
-            csgsUnion = csgsUnion.union(csgs[i])
-        }
+        val csgsUnion = csgs.reduce { acc, c -> acc.union(c) }
         return intersect(csgsUnion)
     }
 
