@@ -33,7 +33,7 @@ Direct module commands:
 
 `scripts/oracle/install_openscad.sh` downloads a pinned Linux AppImage from `files.openscad.org`:
 
-- default artifact: `OpenSCAD-2025.06.03.ai25586-x86_64.AppImage`
+- default artifact: `OpenSCAD-2026.01.02.ai30348-x86_64.AppImage`
 - default source: `https://files.openscad.org/snapshots`
 - checksum verified via the adjacent `.sha256` file before use
 - bootstrap target: Linux `x86_64`
