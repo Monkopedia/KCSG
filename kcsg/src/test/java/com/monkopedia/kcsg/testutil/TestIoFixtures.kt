@@ -48,4 +48,17 @@ object TestIoFixtures {
         val length = content.toByteArray(StandardCharsets.UTF_8).size.toLong()
         return { length }
     }
+
+    @JvmStatic
+    fun sourceFactory(bytes: ByteArray): () -> Source = {
+        Buffer().apply {
+            write(bytes, 0, bytes.size)
+        }
+    }
+
+    @JvmStatic
+    fun byteLength(bytes: ByteArray): () -> Long {
+        val length = bytes.size.toLong()
+        return { length }
+    }
 }
