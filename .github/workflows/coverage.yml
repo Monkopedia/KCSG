@@ -26,21 +26,25 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libegl1 libopengl0 libgl1 libglu1-mesa
 
-      - name: Require public API checklist update when API changes
+      - name: Require public API checklist update when the public ABI changes
         if: github.event_name == 'pull_request'
         run: |
           BASE_SHA="${{ github.event.pull_request.base.sha }}"
           HEAD_SHA="${{ github.sha }}"
+          # Key the checklist requirement off the actual public ABI, not source paths.
+          # The BCV dumps (kcsg/api, kcsg-dsl/api) change iff the public surface changes
+          # (apiCheck, below, enforces that the dumps match the code). So a transparent
+          # refactor that touches API-path source files but leaves the ABI byte-identical
+          # no longer has to edit the checklist for no reason.
           API_CHANGES="$(git diff --name-only "$BASE_SHA" "$HEAD_SHA" -- \
-            "kcsg/src/main/java/com/monkopedia/kcsg/*.kt" \
-            "kcsg-dsl/src/main/java/com/monkopedia/kcsg/*.kt")"
+            "kcsg/api/" "kcsg-dsl/api/")"
 
           if [ -n "$API_CHANGES" ]; then
-            echo "Detected public API file changes:"
+            echo "Detected public ABI (BCV dump) changes:"
             echo "$API_CHANGES"
             CHECKLIST_CHANGE="$(git diff --name-only "$BASE_SHA" "$HEAD_SHA" -- "docs/public-api-checklist.md")"
             if [ -z "$CHECKLIST_CHANGE" ]; then
-              echo "docs/public-api-checklist.md must be updated with public API changes."
+              echo "docs/public-api-checklist.md must be updated when the public ABI changes."
               exit 1
             fi
           fi
