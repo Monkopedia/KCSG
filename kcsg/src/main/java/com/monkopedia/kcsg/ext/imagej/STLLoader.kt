@@ -123,7 +123,12 @@ internal object STLLoader {
     private fun Source.readFully(buffer: ByteArray): Boolean {
         var offset = 0
         while (offset < buffer.size) {
-            val read = readAtMostTo(buffer, offset, buffer.size - offset)
+            // kotlinx-io's readAtMostTo(sink, startIndex, endIndex) takes an END INDEX, not a
+            // length. The fill target is buffer[offset, buffer.size); passing buffer.size - offset
+            // under-reads once a read is partial (offset > 0) and throws when offset > size/2
+            // (startIndex > endIndex). Partial reads happen whenever a read straddles a
+            // kotlinx-io segment boundary, which any non-tiny binary STL hits.
+            val read = readAtMostTo(buffer, offset, buffer.size)
             if (read <= 0) {
                 return false
             }

@@ -31,6 +31,7 @@ There are two complementary public-API gates, with distinct roles:
 
 ## Recent API Notes
 
+- Fixed binary STL import (`STL.file` / `STL.from` for binary STL): the internal `STLLoader.readFully` passed kotlinx-io `readAtMostTo`'s third argument as a length instead of the END INDEX it expects, so any read that straddled a kotlinx-io segment boundary (i.e. any non-tiny binary STL) under-read and then threw, aborting the import. **No public API change** — internal fix in vendored `ext/imagej/STLLoader.kt`; regression test added (`STLTest.binaryStlReadFullyHandlesReadsAcrossSegmentBoundaries`).
 - `CSG.difference(List)`/`intersect(List)` and the polygon-bounds union/difference optimizations now use stdlib `partition()`/`reduce()` internally instead of hand-rolled loops. **No public API change** — private/body-only refactor; signatures are unchanged and `apiCheck` is byte-identical.
 - Removed a dead commented-out Java block from `Polygon.kt` (an abandoned `concaveToConvex` triangulation experiment + a nested QuickHull3D attempt). **No public API change** — the deleted lines were inert comments.
 - `KcsgHost` gains `stlVersion(stlName): String` (default `""`). It is folded into the cache key of an `stl()` property so a host that returns a version token (e.g. the source STL's modification time) invalidates cached results when the imported STL changes. The default `""` preserves prior name-only keying, so existing host implementations are unaffected.
