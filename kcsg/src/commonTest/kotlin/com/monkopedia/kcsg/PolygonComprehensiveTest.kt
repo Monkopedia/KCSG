@@ -27,6 +27,41 @@ class PolygonComprehensiveTest {
     }
 
     @Test
+    fun degeneratePolygonIsInvalidWithFiniteNormal() {
+        // A degenerate triangle (collinear or duplicate vertices) has a zero-length cross
+        // product. createFromPoints must NOT normalize it into a NaN normal: NaN slips past the
+        // `Vector3d.ZERO == normal` degenerate check (NaN != ZERO), leaving the polygon "valid"
+        // and injecting NaN into BSP boolean ops (Node builds from isValid polygons only). The
+        // polygon must instead be flagged invalid, with a finite (zero) normal.
+        val collinear = Polygon.fromPoints(
+            Vector3d.xyz(0.0, 0.0, 0.0),
+            Vector3d.xyz(1.0, 0.0, 0.0),
+            Vector3d.xyz(2.0, 0.0, 0.0),
+        )
+        assertFalse(collinear.isValid)
+        assertFalse(collinear.csgPlane.normal.x.isNaN())
+        assertFalse(collinear.csgPlane.normal.y.isNaN())
+        assertFalse(collinear.csgPlane.normal.z.isNaN())
+
+        val duplicateVertex = Polygon.fromPoints(
+            Vector3d.xyz(0.0, 0.0, 0.0),
+            Vector3d.xyz(0.0, 0.0, 0.0),
+            Vector3d.xyz(1.0, 1.0, 0.0),
+        )
+        assertFalse(duplicateVertex.isValid)
+        assertFalse(duplicateVertex.csgPlane.normal.x.isNaN())
+
+        // A genuine triangle is unaffected: still valid, with a unit normal.
+        val valid = Polygon.fromPoints(
+            Vector3d.xyz(0.0, 0.0, 0.0),
+            Vector3d.xyz(1.0, 0.0, 0.0),
+            Vector3d.xyz(0.0, 1.0, 0.0),
+        )
+        assertTrue(valid.isValid)
+        assertVectorClose(Vector3d.Z_ONE, valid.csgPlane.normal, 1e-9)
+    }
+
+    @Test
     fun copyFlipFlippedAndStlConversion() {
         val polygon = square()
         val copied = polygon.copy()

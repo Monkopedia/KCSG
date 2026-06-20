@@ -185,7 +185,17 @@ class Plane(normal: Vector3d, dist: Double) {
          * @return a plane
          */
         fun createFromPoints(a: Vector3d, b: Vector3d, c: Vector3d): Plane {
-            val n = b.minus(a).crossed(c.minus(a)).normalized()
+            val cross = b.minus(a).crossed(c.minus(a))
+            // Degenerate input (collinear or duplicate points) gives a zero-length cross
+            // product. Normalizing it divides by zero and yields a NaN normal, which slips
+            // past the `Vector3d.ZERO == normal` degenerate check in Polygon.validateAndInit
+            // (NaN != ZERO) — so the polygon would be kept valid and inject NaN into BSP
+            // boolean ops. Return a ZERO normal instead, so the polygon is flagged invalid and
+            // filtered out (Node builds its tree from isValid polygons only).
+            if (cross.magnitudeSq() == 0.0) {
+                return Plane(Vector3d.ZERO, 0.0)
+            }
+            val n = cross.normalized()
             return Plane(n, n.dot(a))
         }
     }
@@ -198,7 +208,13 @@ class Plane(normal: Vector3d, dist: Double) {
      * @param dist distance from origin
      */
     init {
-        this.normal = normal.normalized()
+        // Never normalize a zero-length normal into NaN (0.0/0.0). A degenerate polygon
+        // (collinear/duplicate points) yields a zero normal; a NaN one would slip past the
+        // `Vector3d.ZERO == normal` degenerate check in Polygon.validateAndInit (NaN != ZERO)
+        // and inject NaN into BSP boolean ops. Keep it zero so the polygon is flagged invalid
+        // and filtered out (Node builds its tree from isValid polygons only).
+        val magnitude = normal.magnitude()
+        this.normal = if (magnitude == 0.0) Vector3d.ZERO else normal.divided(magnitude)
         this.dist = dist
     }
 }
