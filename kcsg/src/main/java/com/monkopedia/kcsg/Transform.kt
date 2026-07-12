@@ -597,19 +597,6 @@ class Transform {
             (prevZ + diffZ * amount),
         )
     }
-    //    /**
-    //     * Performs an SVD normalization of the underlying matrix to calculate and
-    //     * return the uniform scale factor. If the matrix has non-uniform scale
-    //     * factors, the largest of the x, y, and z scale factors distill be
-    //     * returned.
-    //     *
-    //     * <b>Note:</b> this transformation is not modified.
-    //     *
-    //     * @return the scale factor of this transformation
-    //     */
-    //    public double getScale() {
-    //        return m.getScale();
-    //    }
     /**
      * Indicates whether this transform performs a mirror operation, i.e., flips
      * the orientation.

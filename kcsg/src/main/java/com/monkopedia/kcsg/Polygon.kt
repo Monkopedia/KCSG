@@ -121,8 +121,6 @@ class Polygon {
                     ${toStlString()}
                 """.trimIndent()
             )
-//            throw new RuntimeException(
-//                    "Normal is zero! Probably, duplicate points have been specified!\n\n"+toStlString());
         }
     }
 

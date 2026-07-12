@@ -162,12 +162,6 @@ data class Edge(val p1: Vertex, val p2: Vertex) {
     companion object {
         private val logger = Logger.tagged("KCSG.Edge")
 
-        //    /**
-        //     * @param p2 the p2 to set
-        //     */
-        //    public void setP2(Vertex p2) {
-        //        this.p2 = p2;
-        //    }
         private fun fromPolygon(poly: Polygon): List<Edge> {
             val result: MutableList<Edge> = ArrayList()
             for (i in poly.vertices.indices) {
@@ -186,18 +180,10 @@ data class Edge(val p1: Vertex, val p2: Vertex) {
         }
 
         private fun toPolygon(points: List<Vector3d>, plane: Plane): Polygon {
-
-//        List<Vector3d> points = edges.stream().().map(e -> e.p1.pos).
-//                collect(Collectors.toList());
             val p: Polygon = Polygon.fromPoints(points)
             p.vertices.forEach { vertex: Vertex ->
                 vertex.normal = plane.normal.copy()
             }
-
-//        // we try to detect wrong orientation by comparing normals
-//        if (p.plane.normal.angle(plane.normal) > 0.1) {
-//            p.flip();
-//        }
             return p
         }
 
@@ -217,12 +203,9 @@ data class Edge(val p1: Vertex, val p2: Vertex) {
                     "Boundary edges do not form a closed path."
                 }
                 if (used[nextEdgeIndex]) {
-//                logger.info("nexIndex: " + nextEdgeIndex);
                     break
                 }
-                //            logger.infoedge: " + edge.p2.pos);
                 edge = boundaryEdges[nextEdgeIndex]
-                //            logger.info("-> edge: " + edge.p1.pos);
                 used[nextEdgeIndex] = true
             }
             val result: MutableList<Polygon> = ArrayList()
@@ -362,12 +345,9 @@ data class Edge(val p1: Vertex, val p2: Vertex) {
                     "Boundary edges do not form a closed path."
                 }
                 if (used[nextEdgeIndex]) {
-//                logger.info("nexIndex: " + nextEdgeIndex);
                     break
                 }
-                //            logger.infoedge: " + edge.p2.pos);
                 edge = boundaryEdges[nextEdgeIndex]
-                //            logger.info("-> edge: " + edge.p1.pos);
                 used[nextEdgeIndex] = true
             }
             val result: MutableList<Polygon> = ArrayList()
@@ -406,9 +386,6 @@ data class Edge(val p1: Vertex, val p2: Vertex) {
             // boundary-edge-list
             //
             // thanks to Susanne Höllbacher for the idea :)
-//        logger.info("#bnd-edges: " + realBndEdges.size()
-//                + ",#edges: " + edges.size()
-//                + ", #del-bnd-edges: " + (boundaryEdges.size() - realBndEdges.size()));
             return potentialBoundaryEdges.filter { be: Edge ->
                 !edges.any { e: Edge -> falseBoundaryEdgeSharedWithOtherEdge(be, e) }
             }
@@ -465,7 +442,6 @@ data class Edge(val p1: Vertex, val p2: Vertex) {
                     // TODO do we need radians or degrees?
                     val angle = nOuter.angle(nInner)
 
-//                logger.info("angle: " + angle + " between " + pOuterI+" -> " + pInnerI);
                     if (angle < 0.01 /*&& abs(pOuter.plane.dist - pInner.plane.dist) < 0.1*/) {
                         otherPolysInPlane.add(pInner)
                         used[pInnerI] = true

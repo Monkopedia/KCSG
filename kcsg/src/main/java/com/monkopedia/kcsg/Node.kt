@@ -71,10 +71,6 @@ internal class Node constructor(polygons: List<Polygon>? = null) {
         node.planeImpl = planeImpl?.copy()
         node.front = front?.copy()
         node.back = back?.copy()
-        //        node.polygons = new ArrayList<>();
-//        polygons.parallelStream().forEach((Polygon p) -> {
-//            node.polygons.add(p.clone());
-//        });
         node.polygons = polygons.map(Polygon::copy).toMutableList()
         return node
     }
@@ -144,8 +140,6 @@ internal class Node constructor(polygons: List<Polygon>? = null) {
     fun allPolygons(): MutableList<Polygon> {
         val localPolygons: MutableList<Polygon> = ArrayList(polygons)
         front?.allPolygons()?.let { localPolygons.addAll(it) }
-        //            polygons = Utils.concat(polygons, this.front.allPolygons());
-//            polygons = Utils.concat(polygons, this.back.allPolygons());
         back?.allPolygons()?.let { localPolygons.addAll(it) }
         return localPolygons
     }

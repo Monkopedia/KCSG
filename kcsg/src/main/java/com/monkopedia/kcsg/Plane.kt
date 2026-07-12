@@ -111,7 +111,6 @@ class Plane(normal: Vector3d, dist: Double) {
                 back.add(polygon)
 
             SPANNING -> {
-                // logger.info(" -> spanning");
                 val f: MutableList<Vertex> = ArrayList()
                 val b: MutableList<Vertex> = ArrayList()
                 var i = 0
