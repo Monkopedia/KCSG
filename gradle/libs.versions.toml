@@ -1,10 +1,10 @@
 [versions]
-kotlin = "2.3.10"
-slf4j = "2.0.17"
+kotlin = "2.4.0"
+slf4j = "2.0.18"
 clikt = "5.1.0"
-vannik = "0.36.0"
-kover = "0.9.2"
-kotlinx-io = "0.8.0"
+vannik = "0.37.0"
+kover = "0.9.8"
+kotlinx-io = "0.9.1"
 bcv = "0.18.1"
 
 [libraries]
