@@ -332,40 +332,5 @@ object Extrude {
     private fun normalizedX(v1: Vector3d, v2: Vector3d): Double {
         val v2MinusV1 = v2.minus(v1)
         return v2MinusV1.divided(v2MinusV1.magnitude()).times(Vector3d.X_ONE).x
-    } //    public static void main(String[] args) {
-    //        logger.info("1 CCW: " + isCCW(Polygon.fromPoints(
-    //                new Vector3d(-1, -1),
-    //                new Vector3d(0, -1),
-    //                new Vector3d(1, 0),
-    //                new Vector3d(1, 1)
-    //        )));
-    //
-    //        logger.info("3 CCW: " + isCCW(Polygon.fromPoints(
-    //                new Vector3d(1, 1),
-    //                new Vector3d(1, 0),
-    //                new Vector3d(0, -1),
-    //                new Vector3d(-1, -1)
-    //        )));
-    //
-    //        logger.info("2 CCW: " + isCCW(Polygon.fromPoints(
-    //                new Vector3d(0, -1),
-    //                new Vector3d(1, 0),
-    //                new Vector3d(1, 1),
-    //                new Vector3d(-1, -1)
-    //        )));
-    //
-    //        logger.info("4 CCW: " + isCCW(Polygon.fromPoints(
-    //                new Vector3d(-1, -1),
-    //                new Vector3d(-1, 1),
-    //                new Vector3d(0, 0)
-    //        )));
-    //
-    //        logger.info("5 CCW: " + isCCW(Polygon.fromPoints(
-    //                new Vector3d(0, 0),
-    //                new Vector3d(0, 1),
-    //                new Vector3d(0.5, 0.5),
-    //                new Vector3d(1, 1.1),
-    //                new Vector3d(1, 0)
-    //        )));
-    //    }
+    }
 }

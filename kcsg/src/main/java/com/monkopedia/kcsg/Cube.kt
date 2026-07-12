@@ -78,64 +78,6 @@ data class Cube(
      */
     constructor(w: Double, h: Double, d: Double) : this(Vector3d.ZERO, Vector3d.xyz(w, h, d))
 
-    //    public List<Polygon> toPolygons() {
-    //        List<Polygon> result = new ArrayList<>(6);
-    //
-    //        Vector3d centerOffset = dimensions.times(0.5);
-    //
-    //        result.addAll(Arrays.asList(new Polygon[]{
-    //            Polygon.fromPoints(
-    //            centerOffset.times(-1, -1, -1),
-    //            centerOffset.times(1, -1, -1),
-    //            centerOffset.times(1, -1, 1),
-    //            centerOffset.times(-1, -1, 1)
-    //            ),
-    //            Polygon.fromPoints(
-    //            centerOffset.times(1, -1, -1),
-    //            centerOffset.times(1, 1, -1),
-    //            centerOffset.times(1, 1, 1),
-    //            centerOffset.times(1, -1, 1)
-    //            ),
-    //            Polygon.fromPoints(
-    //            centerOffset.times(1, 1, -1),
-    //            centerOffset.times(-1, 1, -1),
-    //            centerOffset.times(-1, 1, 1),
-    //            centerOffset.times(1, 1, 1)
-    //            ),
-    //            Polygon.fromPoints(
-    //            centerOffset.times(1, 1, 1),
-    //            centerOffset.times(-1, 1, 1),
-    //            centerOffset.times(-1, -1, 1),
-    //            centerOffset.times(1, -1, 1)
-    //            ),
-    //            Polygon.fromPoints(
-    //            centerOffset.times(-1, 1, 1),
-    //            centerOffset.times(-1, 1, -1),
-    //            centerOffset.times(-1, -1, -1),
-    //            centerOffset.times(-1, -1, 1)
-    //            ),
-    //            Polygon.fromPoints(
-    //            centerOffset.times(-1, 1, -1),
-    //            centerOffset.times(1, 1, -1),
-    //            centerOffset.times(1, -1, -1),
-    //            centerOffset.times(-1, -1, -1)
-    //            )
-    //        }
-    //        ));
-    //
-    //        if(!centered) {
-    //            Transform centerTransform = Transform.unity().
-    //                    translate(dimensions.x / 2.0,
-    //                            dimensions.y / 2.0,
-    //                            dimensions.z / 2.0);
-    //
-    //            for (Polygon p : result) {
-    //                p.transform(centerTransform);
-    //            }
-    //        }
-    //
-    //        return result;
-    //    }
     override fun toPolygons(): MutableList<Polygon> {
         val a = arrayOf(
             arrayOf(intArrayOf(0, 4, 6, 2), intArrayOf(-1, 0, 0)),
