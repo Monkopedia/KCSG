@@ -46,6 +46,7 @@ class CSGSerializationTest {
         assertTrue(objString.contains("# Vertices"))
         assertTrue(objString.contains("\nv "))
         assertTrue(objString.contains("# Faces"))
+        assertTrue(objString.contains("\nf "))
     }
 
     @Test

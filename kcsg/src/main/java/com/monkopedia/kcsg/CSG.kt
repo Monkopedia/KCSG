@@ -674,7 +674,7 @@ class CSG private constructor(
         )
 
         val vertices: MutableList<Vertex> = ArrayList()
-        val indices: List<PolygonStruct> = ArrayList()
+        val indices: MutableList<PolygonStruct> = ArrayList()
         sb.append("\n# Vertices\n")
         for (p in _polygons) {
             val polyIndices: MutableList<Int> = ArrayList()
@@ -687,6 +687,13 @@ class CSG private constructor(
                     polyIndices.add(vertices.indexOf(v) + 1)
                 }
             }
+            indices.add(
+                PolygonStruct(
+                    p.storage,
+                    polyIndices,
+                    "material-0",
+                ),
+            )
         }
         sb.append("\n# Faces").append("\n")
         for (ps in indices) {

@@ -2,7 +2,7 @@ package com.monkopedia.kcsg
 
 import com.monkopedia.kcsg.testutil.GeometryAssertions.assertFiniteMesh
 import com.monkopedia.kcsg.testutil.GeometryAssertions.assertVolumeClose
-import kotlin.test.assertFalse
+import kotlin.test.assertEquals
 import kotlin.test.assertNotSame
 import kotlin.test.assertSame
 import kotlin.test.assertTrue
@@ -66,11 +66,25 @@ class CSGCoverageBranchTest {
     }
 
     @Test
-    fun toObjStringCoversNoFaceEntriesBranch() {
+    fun toObjStringEmitsFacesForSolid() {
         val obj = Cube(1.0).toCSG().toObjString()
 
         assertTrue(obj.contains("# Faces"))
-        assertFalse(obj.contains("\nf "))
+        assertTrue(obj.contains("\nf "))
+
+        // Every face line must reference three valid 1-based vertex indices
+        // (a vertex line 'v ' must exist for each referenced index).
+        val vertexCount = obj.lineSequence().count { it.startsWith("v ") }
+        assertTrue(vertexCount > 0)
+        val faceLines = obj.lineSequence().filter { it.startsWith("f ") }.toList()
+        assertTrue(faceLines.isNotEmpty())
+        for (face in faceLines) {
+            val refs = face.removePrefix("f ").trim().split(" ").map { it.toInt() }
+            assertEquals(3, refs.size)
+            for (ref in refs) {
+                assertTrue(ref in 1..vertexCount)
+            }
+        }
     }
 
     private class ThrowOnceBoundsOverride : OpOverride {
