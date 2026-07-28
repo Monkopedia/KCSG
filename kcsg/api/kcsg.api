@@ -152,7 +152,6 @@ public final class com/monkopedia/kcsg/Edge {
 public final class com/monkopedia/kcsg/Edge$Companion {
 	public final fun boundaryPathsWithHoles (Ljava/util/List;)Ljava/util/List;
 	public final fun boundaryPolygons (Lcom/monkopedia/kcsg/CSG;)Ljava/util/List;
-	public final fun polygons (Ljava/util/List;Lcom/monkopedia/kcsg/Plane;)Ljava/util/List;
 	public final fun toPoints (Ljava/util/List;)Ljava/util/List;
 	public final fun toPolygons (Ljava/util/List;Lcom/monkopedia/kcsg/Plane;)Ljava/util/List;
 	public final fun toVertices (Ljava/util/List;)Ljava/util/List;
