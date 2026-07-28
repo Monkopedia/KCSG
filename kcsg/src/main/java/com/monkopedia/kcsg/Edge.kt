@@ -284,7 +284,6 @@ data class Edge(val p1: Vertex, val p2: Vertex) {
                 while (true) {
                     val finalEdge = edge
                     boundaryPath.add(finalEdge.p1.pos)
-                    print("edge: " + edge.p2.pos)
                     val nextEdgeResult =
                         boundaryEdges.firstOrNull { e: Edge -> finalEdge.p2 == e.p1 }
                     if (nextEdgeResult == null) {
@@ -329,31 +328,6 @@ data class Edge(val p1: Vertex, val p2: Vertex) {
                 }
             }
             return -1
-        }
-
-        fun polygons(boundaryEdges: List<Edge>, plane: Plane): List<Polygon> {
-            require(boundaryEdges.isNotEmpty()) { "boundaryEdges must not be empty" }
-            val boundaryPath: MutableList<Vector3d> = ArrayList()
-            val used = BooleanArray(boundaryEdges.size)
-            var edge = boundaryEdges[0]
-            used[0] = true
-            while (true) {
-                val finalEdge = edge
-                boundaryPath.add(finalEdge.p1.pos)
-                val nextEdgeIndex = boundaryEdges.indexOfFirst { e: Edge -> finalEdge.p2 == e.p1 }
-                require(nextEdgeIndex >= 0) {
-                    "Boundary edges do not form a closed path."
-                }
-                if (used[nextEdgeIndex]) {
-                    break
-                }
-                edge = boundaryEdges[nextEdgeIndex]
-                used[nextEdgeIndex] = true
-            }
-            val result: MutableList<Polygon> = ArrayList()
-            logger.info("#bnd-path-length: " + boundaryPath.size)
-            result.add(toPolygon(boundaryPath, plane))
-            return result
         }
 
         fun boundaryPolygons(csg: CSG): MutableList<Polygon> {

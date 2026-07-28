@@ -70,7 +70,7 @@ class EdgeApiTest {
     }
 
     @Test
-    fun toVerticesToPointsToPolygonsAndPolygonsHelpers() {
+    fun toVerticesToPointsAndToPolygonsHelpers() {
         val boundaryEdges = squareBoundaryEdges()
         val plane = Plane.createFromPoints(
             Vector3d.xyz(0.0, 0.0, 0.0),
@@ -84,16 +84,13 @@ class EdgeApiTest {
         assertEquals(4, points.size)
         assertVectorClose(Vector3d.xyz(0.0, 0.0, 0.0), points[0], 1e-9)
 
-        val polygonsFromToPolygons = Edge.toPolygons(boundaryEdges, plane)
-        val polygonsFromPolygons = Edge.polygons(boundaryEdges, plane)
-        assertEquals(1, polygonsFromToPolygons.size)
-        assertEquals(1, polygonsFromPolygons.size)
-        assertEquals(4, polygonsFromToPolygons[0].vertices.size)
-        assertEquals(4, polygonsFromPolygons[0].vertices.size)
+        val polygons = Edge.toPolygons(boundaryEdges, plane)
+        assertEquals(1, polygons.size)
+        assertEquals(4, polygons[0].vertices.size)
     }
 
     @Test
-    fun toPolygonsAndPolygonsRejectEmptyBoundaryEdgeLists() {
+    fun toPolygonsRejectsEmptyBoundaryEdgeLists() {
         val plane = Plane.createFromPoints(
             Vector3d.xyz(0.0, 0.0, 0.0),
             Vector3d.xyz(2.0, 0.0, 0.0),
@@ -103,13 +100,10 @@ class EdgeApiTest {
         assertFailsWith<IllegalArgumentException> {
             Edge.toPolygons(emptyList(), plane)
         }
-        assertFailsWith<IllegalArgumentException> {
-            Edge.polygons(emptyList(), plane)
-        }
     }
 
     @Test
-    fun toPolygonsAndPolygonsRejectOpenBoundaryChains() {
+    fun toPolygonsRejectsOpenBoundaryChains() {
         val plane = Plane.createFromPoints(
             Vector3d.xyz(0.0, 0.0, 0.0),
             Vector3d.xyz(2.0, 0.0, 0.0),
@@ -121,9 +115,6 @@ class EdgeApiTest {
 
         assertFailsWith<IllegalArgumentException> {
             Edge.toPolygons(openBoundary, plane)
-        }
-        assertFailsWith<IllegalArgumentException> {
-            Edge.polygons(openBoundary, plane)
         }
     }
 

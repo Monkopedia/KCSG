@@ -1,6 +1,5 @@
 [versions]
 kotlin = "2.4.10"
-slf4j = "2.0.18"
 clikt = "5.1.0"
 vannik = "0.37.0"
 kover = "0.9.8"
@@ -8,8 +7,6 @@ kotlinx-io = "0.9.1"
 bcv = "0.18.1"
 
 [libraries]
-slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4j"}
-slf4j-simple = { module = "org.slf4j:slf4j-simple", version.ref = "slf4j"}
 clikt = { module = "com.github.ajalt.clikt:clikt", version.ref = "clikt"}
 kotlinx-io-core = { module = "org.jetbrains.kotlinx:kotlinx-io-core", version.ref = "kotlinx-io"}
 
