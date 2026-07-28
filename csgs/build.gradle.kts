@@ -39,7 +39,6 @@ dependencies {
 
     implementation(libs.clikt)
     implementation(libs.kotlinx.io.core)
-    implementation(libs.slf4j.simple)
     implementation(kotlin("stdlib-jdk8"))
     implementation(project(":kcsg-dsl"))
     implementation(project(":kcsg"))

@@ -11,6 +11,7 @@ import com.github.ajalt.clikt.parameters.types.enum
 import com.github.ajalt.clikt.parameters.types.file
 import com.monkopedia.csgs.OutputType.OBJ
 import com.monkopedia.csgs.OutputType.STL
+import com.monkopedia.kcsg.Logger
 import java.io.File
 
 fun main(vararg args: String) = Csgs().main(args)
@@ -48,9 +49,14 @@ class Csgs : CliktCommand() {
         "--imports",
         help = "Include a directory or specific file as resolvable for dependency imports."
     ).file(mustExist = true, mustBeReadable = true).multiple(listOf(File(".")))
+    val verbose by option(
+        "-v",
+        "--verbose",
+        help = "Emit informational and trace diagnostics to stderr."
+    ).flag()
 
     override fun run() {
-        System.setProperty(org.slf4j.simple.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
+        Logger.setLogger(StderrLogger(verbose))
         if (clear) {
             require(outputDirectory.deleteRecursively()) {
                 "Failed to clear output directory ${outputDirectory.absolutePath}"
