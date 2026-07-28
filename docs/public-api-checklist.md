@@ -33,6 +33,7 @@ There are two complementary public-API gates, with distinct roles:
 
 - **Breaking:** removed `Edge.Companion.polygons(List<Edge>, Plane)`. It was a semantically identical duplicate of `Edge.Companion.toPolygons(List<Edge>, Plane)` — inherited from upstream JCSG's leftover `_toPolygons`, which the Kotlin conversion renamed into a legitimate-looking public name. `toPolygons` is the single entry point and is unchanged; callers of `polygons` should switch to it. **Public API change** — dumps regenerated via `./gradlew apiDump` (`kcsg/api/kcsg.api` and `kcsg/api/kcsg.klib.api` lose the `polygons` entry). Binary- and source-breaking, so the next release is a minor bump (0.5.0).
 - Removed a leftover `print("edge: ...")` debug call from the private `Edge.Companion.boundaryPaths` walk. **No public API change** — the surrounding `logger` calls already trace the walk.
+- `CSG.color(...)` now mutates the receiver (including every polygon's `PropertyStorage`) and returns `this`, instead of returning a colored copy while writing the color where nothing read it. **No public API change** — signatures are unchanged and `apiCheck` is byte-identical — but it is a behavior change: coloring the result of `union`/`difference`/`intersect`/`hull` now takes effect (it previously silently no-op'd), chained `color()` calls are last-wins, and coloring a union collapses its per-primitive materials to one color. Use `csg.copy().color(...)` for the non-mutating form.
 - Fixed binary STL import (`STL.file` / `STL.from` for binary STL): the internal `STLLoader.readFully` passed kotlinx-io `readAtMostTo`'s third argument as a length instead of the END INDEX it expects, so any read that straddled a kotlinx-io segment boundary (i.e. any non-tiny binary STL) under-read and then threw, aborting the import. **No public API change** — internal fix in vendored `ext/imagej/STLLoader.kt`; regression test added (`STLTest.binaryStlReadFullyHandlesReadsAcrossSegmentBoundaries`).
 - `CSG.difference(List)`/`intersect(List)` and the polygon-bounds union/difference optimizations now use stdlib `partition()`/`reduce()` internally instead of hand-rolled loops. **No public API change** — private/body-only refactor; signatures are unchanged and `apiCheck` is byte-identical.
 - Removed a dead commented-out Java block from `Polygon.kt` (an abandoned `concaveToConvex` triangulation experiment + a nested QuickHull3D attempt). **No public API change** — the deleted lines were inert comments.
@@ -52,7 +53,7 @@ There are two complementary public-API gates, with distinct roles:
 | Symbol | Tags | Status | Tests |
 | --- | --- | --- | --- |
 | `Bounds` | `math`, `mesh` | covered | `BoundsTest.centerAndBoundsAreDerivedFromMinAndMax` |
-| `CSG` | `boolean`, `mesh`, `io`, `error-path` | covered | `CSGBooleanTest.singleOverloadsProduceExpectedVolumes`; `PrimitiveInteractionMatrixTest.scenarioS9OptimizationParity`; `CSGRemeshTest.remeshTriangulatesPolygonsAndPreservesVolumeAndBounds` |
+| `CSG` | `boolean`, `mesh`, `io`, `error-path` | covered | `CSGBooleanTest.singleOverloadsProduceExpectedVolumes`; `PrimitiveInteractionMatrixTest.scenarioS9OptimizationParity`; `CSGRemeshTest.remeshTriangulatesPolygonsAndPreservesVolumeAndBounds`; `CSGSerializationTest.colorAppliesToBooleanOperationResult`; `CSGSerializationTest.chainedColorCallsKeepTheLastColor`; `CSGSerializationTest.coloringACopyLeavesTheSourceUntouched` |
 | `Cube` | `primitive`, `mesh` | covered | `CubeTest.constructorsInitializeCenterAndDimensions`; `CubeTest.centeredFlagDefaultsTrueAndTogglesWithNoCenter`; `CubeTest.noCenterShiftsCubeToPositiveOctantFromOrigin` |
 | `Cylinder` | `primitive`, `mesh` | covered | `CylinderTest.constructorsPopulateGeometryFields` |
 | `Edge` | `math`, `mesh`, `error-path` | covered | `EdgeApiTest.containsEqualsAndHashCode` |
@@ -61,7 +62,7 @@ There are two complementary public-API gates, with distinct roles:
 | `HashingOpOverride` | `io`, `dsl`, `error-path` | covered | `HashingOpOverrideTest.hashingSequenceIsDeterministicForSameInputs`; `HashingOpOverrideTest.builtInWeightFunctionsAreHashedDistinctly`; `HashingOpOverrideTest.customWeightFunctionFailsLoud`; `HashingOpOverrideTest.polygonIsHashedByContentNotIdentity`; `HashingOpOverrideTest.polyhedronFaceGroupingAffectsHash`; `HashingOpOverrideTest.unhashableTypeFailsLoud` |
 | `Logger` | `io`, `dsl`, `error-path` | covered | `LoggerDelegateTest.companionDispatchesAllLevelsWithTagAndThrowable` |
 | `TaggedLogger` | `io`, `dsl` | covered | `LoggerDelegateTest.taggedLoggerUsesConfiguredTag` |
-| `KcsgColor` | `mesh` | covered | `CSGSerializationTest.colorInfluencesMaterialOutputAndUnsupportedObjArgThrows` |
+| `KcsgColor` | `mesh` | covered | `CSGSerializationTest.colorInfluencesMaterialOutputAndUnsupportedObjArgThrows`; `CSGSerializationTest.chainedColorCallsKeepTheLastColor` |
 | `ObjFile` | `io`, `mesh`, `error-path` | covered | `ObjFileTest.objAndMtlAccessorsAndStreams` |
 | `OpOverride` | `dsl`, `io` | covered | `OpOverrideContractTest.overrideDispatchesAcrossCsgStlBoundsAndPrimitiveEntrypoints` |
 | `Plane` | `math`, `mesh`, `error-path` | covered | `PlaneTest.splitPolygonClassifiesAllCases` |
