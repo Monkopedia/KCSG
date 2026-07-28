@@ -582,6 +582,18 @@ class CSG private constructor(
         return result
     }
 
+    /**
+     * Returns this csg as an OBJ/MTL pair.
+     *
+     * The OBJ starts with a `mtllib` directive referencing the companion material library,
+     * so this variant must be written through [ObjFile.toFiles] which emits both files and
+     * rewrites the placeholder name to match. Use [toObjString] for a single, sidecar-free
+     * OBJ file.
+     *
+     * @param maxNumberOfVerts vertices per face; only triangles (3) are supported
+     *
+     * @return this csg as an OBJ file plus its material library
+     */
     fun toObj(maxNumberOfVerts: Int = 3): ObjFile {
         if (maxNumberOfVerts != 3) {
             throw UnsupportedOperationException(
@@ -589,7 +601,7 @@ class CSG private constructor(
             )
         }
         val objSb = StringBuilder()
-        objSb.append("mtllib " + ObjFile.MTL_NAME)
+        objSb.append("mtllib ").append(ObjFile.MTL_NAME).append("\n")
         objSb.append("# Group").append("\n")
         objSb.append("g v3d.csg\n")
         class PolygonStruct(
@@ -714,6 +726,9 @@ class CSG private constructor(
 
     /**
      * Returns this csg in OBJ string format.
+     *
+     * This is the single-file variant: it emits no `mtllib` directive, because there is no
+     * companion material library to point at. Use [toObj] when materials are needed.
      *
      * @return this csg in OBJ string format
      */

@@ -20,6 +20,18 @@ class ObjFileTest {
     }
 
     @Test
+    fun toFilesWritesTerminatedMaterialLibraryDirective() {
+        withTempDirectory("kcsg-objfile") { tempDir ->
+            Cube(1.0).toCSG().toObj().toFiles(Path(tempDir, "mesh.obj"))
+
+            val lines = FileUtil.read(Path(tempDir, "mesh.obj")).lineSequence().toList()
+            assertEquals("mtllib mesh.mtl", lines[0])
+            assertEquals("# Group", lines[1])
+            assertTrue(SystemFileSystem.exists(Path(tempDir, "mesh.mtl")))
+        }
+    }
+
+    @Test
     fun toFilesNormalizesObjAndMtlExtensions() {
         withTempDirectory("kcsg-objfile") { tempDir ->
             val noExtensionBase = Path(tempDir, "mesh")
