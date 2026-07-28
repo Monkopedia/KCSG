@@ -54,7 +54,7 @@ Goal: 100% test coverage of public API in `kcsg` and `kcsg-dsl`, with determinis
 
 - [x] Expand `Polygon` tests to cover constructors, `isValid`, `copy`, `flip/flipped`, STL conversion overloads, `toTriangles`, `translate/translated`, `transform/transformed`, `bounds`, `centroid`, `contains(Vector3d)`, `contains(Polygon)`, `storage` getter/setter, `fromPoints` overloads, and `fromConcavePoints` overloads.
 - [x] Add `PolygonErrorPathTest` for invalid polygon creation (`<3` vertices) and deprecated `intersects` unsupported path.
-- [x] Expand `Edge` tests to cover `contains`, `equals/hashCode`, `getClosestPoint`, `getIntersection`, `toVertices`, `toPoints`, `toPolygons`, `polygons`, `boundaryPathsWithHoles`, and `boundaryPolygons`.
+- [x] Expand `Edge` tests to cover `contains`, `equals/hashCode`, `getClosestPoint`, `getIntersection`, `toVertices`, `toPoints`, `toPolygons`, `boundaryPathsWithHoles`, and `boundaryPolygons`.
 - [x] Add `ExtrudeTest` for `points` overloads, `combine`, `toCW`, `isCCW`, top/bottom toggles, and negative-z rejection path.
 
 ## Phase 6 - File and Hashing API Coverage
