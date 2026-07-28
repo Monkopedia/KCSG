@@ -24,8 +24,10 @@ class CSGSerializationTest {
     fun toObjProducesObjAndMtlOutput() {
         val csg = Cube(1.0).toCSG()
         val objFile = csg.toObj()
+        val lines = objFile.obj.lineSequence().toList()
 
-        assertTrue(objFile.obj.contains("mtllib"))
+        assertEquals("mtllib ${ObjFile.MTL_NAME}", lines[0])
+        assertEquals("# Group", lines[1])
         assertTrue(objFile.obj.contains("g v3d.csg"))
         assertTrue(objFile.obj.contains("\nv "))
         assertTrue(objFile.obj.contains("\nf "))
@@ -47,6 +49,14 @@ class CSGSerializationTest {
         assertTrue(objString.contains("\nv "))
         assertTrue(objString.contains("# Faces"))
         assertTrue(objString.contains("\nf "))
+    }
+
+    @Test
+    fun toObjStringOmitsMaterialLibraryDirective() {
+        val objString = Cube(1.0).toCSG().color(KcsgColor.BLUE).toObjString()
+
+        assertEquals("# Group", objString.lineSequence().first())
+        assertTrue(objString.lineSequence().none { it.startsWith("mtllib") })
     }
 
     @Test
