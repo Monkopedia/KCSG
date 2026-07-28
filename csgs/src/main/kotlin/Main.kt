@@ -52,7 +52,7 @@ class Csgs : CliktCommand() {
     val verbose by option(
         "-v",
         "--verbose",
-        help = "Emit informational and trace diagnostics to stderr."
+        help = "Emit informational and trace diagnostics to stderr"
     ).flag()
 
     override fun run() {
