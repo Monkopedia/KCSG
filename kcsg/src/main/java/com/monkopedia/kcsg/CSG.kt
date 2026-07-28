@@ -572,14 +572,43 @@ class CSG private constructor(
         return sb
     }
 
+    /**
+     * Sets the material color of this csg.
+     *
+     * **Note:** this mutates the receiver (including its polygons) and returns it; every polygon
+     * ends up sharing a single new material, so a csg assembled from differently colored parts
+     * collapses to one color. Use [copy] for a non-mutating variant: `csg.copy().color(color)`.
+     *
+     * @param color material color
+     *
+     * @return this csg
+     */
     fun color(color: KcsgColor): CSG {
         return color(color.red, color.green, color.blue)
     }
 
+    /**
+     * Sets the material color of this csg.
+     *
+     * **Note:** this mutates the receiver (including its polygons) and returns it; every polygon
+     * ends up sharing a single new material, so a csg assembled from differently colored parts
+     * collapses to one color. Use [copy] for a non-mutating variant:
+     * `csg.copy().color(red, green, blue)`.
+     *
+     * @param red red component
+     * @param green green component
+     * @param blue blue component
+     *
+     * @return this csg
+     */
     fun color(red: Double, green: Double, blue: Double): CSG {
-        val result = copy()
-        _storage["material:color"] = listOf(red, green, blue).joinToString(" ") { it.toJvmString() }
-        return result
+        // A fresh storage rather than an in-place edit: Polygon.copy() aliases the storage of the
+        // polygon it was copied from, so mutating would recolor the csg this one was copied from.
+        val storage = PropertyStorage()
+        storage["material:color"] = listOf(red, green, blue).joinToString(" ") { it.toJvmString() }
+        _storage = storage
+        _polygons.forEach { p: Polygon -> p.storage = storage }
+        return this
     }
 
     /**

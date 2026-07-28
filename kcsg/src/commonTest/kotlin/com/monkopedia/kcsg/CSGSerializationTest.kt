@@ -4,7 +4,7 @@ import kotlinx.io.readString
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
-import kotlin.test.assertNotSame
+import kotlin.test.assertSame
 import kotlin.test.assertTrue
 
 class CSGSerializationTest {
@@ -64,12 +64,55 @@ class CSGSerializationTest {
         val csg = Cube(1.0).toCSG()
         val colored = csg.color(KcsgColor.BLUE)
 
-        assertNotSame(csg, colored)
-        val mtl = colored.toObj().mtl
-        assertTrue(mtl.contains("0.0 0.0 1.0"))
+        assertSame(csg, colored)
+        assertEquals(listOf(BLUE_MATERIAL), csg.toObj().mtl.materialColors())
 
         assertFailsWith<UnsupportedOperationException> {
             colored.toObj(maxNumberOfVerts = 4)
         }
+    }
+
+    @Test
+    fun colorAppliesToBooleanOperationResult() {
+        val union = cubeAtX(0.0).union(cubeAtX(1.0))
+
+        union.color(KcsgColor.BLUE)
+
+        assertEquals(listOf(BLUE_MATERIAL), union.toObj().mtl.materialColors())
+    }
+
+    @Test
+    fun chainedColorCallsKeepTheLastColor() {
+        val csg = Cube(1.0).toCSG()
+
+        csg.color(KcsgColor.RED).color(KcsgColor.BLUE)
+
+        assertEquals(listOf(BLUE_MATERIAL), csg.toObj().mtl.materialColors())
+    }
+
+    @Test
+    fun coloringACopyLeavesTheSourceUntouched() {
+        val csg = Cube(1.0).toCSG().color(KcsgColor.RED)
+
+        val colored = csg.copy().color(KcsgColor.BLUE)
+
+        assertEquals(listOf(BLUE_MATERIAL), colored.toObj().mtl.materialColors())
+        assertEquals(listOf(RED_MATERIAL), csg.toObj().mtl.materialColors())
+    }
+
+    private fun cubeAtX(centerX: Double): CSG {
+        return Cube(
+            center = Vector3d.xyz(centerX, 0.0, 0.0),
+            dimensions = Vector3d.xyz(2.0, 2.0, 2.0),
+        ).toCSG()
+    }
+
+    private fun String.materialColors(): List<String> {
+        return lineSequence().filter { it.startsWith("Kd ") }.toList()
+    }
+
+    private companion object {
+        const val BLUE_MATERIAL = "Kd 0.0 0.0 1.0"
+        const val RED_MATERIAL = "Kd 1.0 0.0 0.0"
     }
 }

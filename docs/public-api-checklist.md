@@ -50,7 +50,7 @@ There are two complementary public-API gates, with distinct roles:
 | Symbol | Tags | Status | Tests |
 | --- | --- | --- | --- |
 | `Bounds` | `math`, `mesh` | covered | `BoundsTest.centerAndBoundsAreDerivedFromMinAndMax` |
-| `CSG` | `boolean`, `mesh`, `io`, `error-path` | covered | `CSGBooleanTest.singleOverloadsProduceExpectedVolumes`; `PrimitiveInteractionMatrixTest.scenarioS9OptimizationParity`; `CSGRemeshTest.remeshTriangulatesPolygonsAndPreservesVolumeAndBounds` |
+| `CSG` | `boolean`, `mesh`, `io`, `error-path` | covered | `CSGBooleanTest.singleOverloadsProduceExpectedVolumes`; `PrimitiveInteractionMatrixTest.scenarioS9OptimizationParity`; `CSGRemeshTest.remeshTriangulatesPolygonsAndPreservesVolumeAndBounds`; `CSGSerializationTest.colorAppliesToBooleanOperationResult`; `CSGSerializationTest.chainedColorCallsKeepTheLastColor`; `CSGSerializationTest.coloringACopyLeavesTheSourceUntouched` |
 | `Cube` | `primitive`, `mesh` | covered | `CubeTest.constructorsInitializeCenterAndDimensions`; `CubeTest.centeredFlagDefaultsTrueAndTogglesWithNoCenter`; `CubeTest.noCenterShiftsCubeToPositiveOctantFromOrigin` |
 | `Cylinder` | `primitive`, `mesh` | covered | `CylinderTest.constructorsPopulateGeometryFields` |
 | `Edge` | `math`, `mesh`, `error-path` | covered | `EdgeApiTest.containsEqualsAndHashCode` |
@@ -59,7 +59,7 @@ There are two complementary public-API gates, with distinct roles:
 | `HashingOpOverride` | `io`, `dsl`, `error-path` | covered | `HashingOpOverrideTest.hashingSequenceIsDeterministicForSameInputs`; `HashingOpOverrideTest.builtInWeightFunctionsAreHashedDistinctly`; `HashingOpOverrideTest.customWeightFunctionFailsLoud`; `HashingOpOverrideTest.polygonIsHashedByContentNotIdentity`; `HashingOpOverrideTest.polyhedronFaceGroupingAffectsHash`; `HashingOpOverrideTest.unhashableTypeFailsLoud` |
 | `Logger` | `io`, `dsl`, `error-path` | covered | `LoggerDelegateTest.companionDispatchesAllLevelsWithTagAndThrowable` |
 | `TaggedLogger` | `io`, `dsl` | covered | `LoggerDelegateTest.taggedLoggerUsesConfiguredTag` |
-| `KcsgColor` | `mesh` | covered | `CSGSerializationTest.colorInfluencesMaterialOutputAndUnsupportedObjArgThrows` |
+| `KcsgColor` | `mesh` | covered | `CSGSerializationTest.colorInfluencesMaterialOutputAndUnsupportedObjArgThrows`; `CSGSerializationTest.chainedColorCallsKeepTheLastColor` |
 | `ObjFile` | `io`, `mesh`, `error-path` | covered | `ObjFileTest.objAndMtlAccessorsAndStreams` |
 | `OpOverride` | `dsl`, `io` | covered | `OpOverrideContractTest.overrideDispatchesAcrossCsgStlBoundsAndPrimitiveEntrypoints` |
 | `Plane` | `math`, `mesh`, `error-path` | covered | `PlaneTest.splitPolygonClassifiesAllCases` |
