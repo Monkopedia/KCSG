@@ -52,8 +52,11 @@ jobs:
       - name: Validate public ABI (binary-compatibility-validator)
         run: ./gradlew apiCheck --stacktrace
 
-      - name: Run library tests and coverage verification
-        run: ./gradlew :kcsg:test :kcsg-dsl:test :kcsg:oracleTest :kcsg:koverXmlReport :kcsg:koverVerifyJvm :kcsg-dsl:koverXmlReport :kcsg-dsl:koverVerify --stacktrace
+      # :csgs:test also compiles the CLI that ships as the csgs-all fat jar, and
+      # :samples:build compiles the samples module; without them a compile break in
+      # either JVM-only module passes PR CI.
+      - name: Run module tests and coverage verification
+        run: ./gradlew :kcsg:test :kcsg-dsl:test :kcsg:oracleTest :csgs:test :samples:build :kcsg:koverXmlReport :kcsg:koverVerifyJvm :kcsg-dsl:koverXmlReport :kcsg-dsl:koverVerify --stacktrace
 
       - name: Upload coverage reports
         if: always()
