@@ -51,10 +51,10 @@ The oracle test suite consumes these fixtures and compares them to `kcsg` output
 
 ## Updating the Pin
 
-The pinned artifact name appears **twice** in `scripts/oracle/install_openscad.sh`: once as the
-`OPENSCAD_ARTIFACT_NAME` default, and once as the fallback baked into the generated
-`.tools/openscad/openscad` wrapper. To move the pin permanently, change both, then force a
-reinstall:
+The pinned artifact name appears **three times** in `scripts/oracle/install_openscad.sh`: at `:7`
+as the `OPENSCAD_ARTIFACT_NAME` default, at `:16` in the `--help` usage text, and at `:84` as the
+fallback baked into the generated `.tools/openscad/openscad` wrapper. To move the pin permanently,
+change all three — missing `:16` leaves `--help` advertising the old pin — then force a reinstall:
 
 ```bash
 rm -rf .tools/openscad
