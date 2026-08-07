@@ -32,16 +32,29 @@ kotlin {
         }
     }
 
+    // The geometry suites are far slower under Node than on the JVM: the S8
+    // invariance scenario runs a full pair x opt-type boolean matrix and exceeds
+    // Mocha's 2s default. Raise it rather than weaken the test.
     js(IR) {
-        browser()
-        nodejs()
+        browser {
+            testTask { useMocha { timeout = "120s" } }
+        }
+        nodejs {
+            testTask { useMocha { timeout = "120s" } }
+        }
     }
     wasmJs {
-        browser()
-        nodejs()
+        browser {
+            testTask { useMocha { timeout = "120s" } }
+        }
+        nodejs {
+            testTask { useMocha { timeout = "120s" } }
+        }
     }
     wasmWasi {
-        nodejs()
+        nodejs {
+            testTask { useMocha { timeout = "120s" } }
+        }
     }
 
     linuxX64()
