@@ -22,8 +22,49 @@ class LoggerDelegateTest {
 
     @Test
     fun defaultLoggerDropsCalls() {
-        Logger.setLogger(null)
-        Logger.info("KCSG.Test", "ignored")
+        val recorder = RecordingLogger()
+        try {
+            // Sanity: the recorder is wired up, so an empty recorder below means the
+            // calls were dropped rather than that the recorder never worked.
+            Logger.setLogger(recorder)
+            Logger.info("KCSG.Test", "observed")
+            assertEquals(1, recorder.entries.size, "installed delegate should receive calls")
+
+            Logger.setLogger(null)
+            Logger.trace("KCSG.Test", "ignored")
+            Logger.debug("KCSG.Test", "ignored")
+            Logger.info("KCSG.Test", "ignored")
+            Logger.warn("KCSG.Test", "ignored")
+            Logger.error("KCSG.Test", "ignored", IllegalStateException("boom"))
+            Logger.tagged("KCSG.Test").info("ignored")
+
+            assertEquals(
+                listOf("observed"),
+                recorder.entries.map { it.message },
+                "with no delegate installed every call must be dropped"
+            )
+        } finally {
+            Logger.setLogger(null)
+        }
+    }
+
+    @Test
+    fun installingTheCompanionAsItsOwnDelegateDropsCalls() {
+        val recorder = RecordingLogger()
+        try {
+            Logger.setLogger(recorder)
+            // Would otherwise recurse forever through Logger.Companion.log.
+            Logger.setLogger(Logger)
+            Logger.info("KCSG.Test", "ignored")
+
+            assertEquals(
+                emptyList(),
+                recorder.entries.map { it.message },
+                "installing the companion as its own delegate must clear the delegate"
+            )
+        } finally {
+            Logger.setLogger(null)
+        }
     }
 
     @Test

@@ -6,6 +6,7 @@ import com.monkopedia.kcsg.testutil.GeometryScenarioHarness
 import kotlin.test.assertTrue
 import kotlin.test.Test
 import kotlin.math.abs
+import kotlin.math.sqrt
 
 class PrimitiveInteractionMatrixTest {
     @Test
@@ -145,46 +146,98 @@ class PrimitiveInteractionMatrixTest {
 
     @Test
     fun scenarioS5FaceTangency() {
-        fullMatrixPairs.forEach { pair ->
-            pair.harness().run(
-                scenarioId = "S5-face-tangency",
-                pairFactory = { _, leftFactory, rightFactory ->
-                    build(leftFactory, translation = Vector3d.xyz(-1.0, 0.0, 0.0)) to
-                        build(rightFactory, translation = Vector3d.xyz(1.0, 0.0, 0.0))
-                },
-            ) { result ->
-                val ctx = context(result)
-                assertNearZero(result.intersectionVolume, 1e-3, "$ctx tangency intersection")
-            }
-        }
+        runTangencyScenario("S5-face-tangency", TangencyCase::face)
     }
 
     @Test
     fun scenarioS6EdgeTangency() {
-        fullMatrixPairs.forEach { pair ->
-            pair.harness().run(
-                scenarioId = "S6-edge-tangency",
-                pairFactory = { _, leftFactory, rightFactory ->
-                    leftFactory() to build(rightFactory, translation = Vector3d.xyz(2.0, 2.0, 0.0))
-                },
-            ) { result ->
-                val ctx = context(result)
-                assertNearZero(result.intersectionVolume, 1e-3, "$ctx edge tangency intersection")
-            }
-        }
+        runTangencyScenario("S6-edge-tangency", TangencyCase::edge)
     }
 
     @Test
     fun scenarioS7VertexTangency() {
-        fullMatrixPairs.forEach { pair ->
-            pair.harness().run(
-                scenarioId = "S7-vertex-tangency",
+        runTangencyScenario("S7-vertex-tangency", TangencyCase::vertex)
+    }
+
+    /**
+     * Shared body for S5-S7.
+     *
+     * Every offset in [tangencyCases] places the two operands in exact contact, so the
+     * invariants are the same in all three scenarios: no shared volume, a union that
+     * accounts for both operands in full, and a difference that leaves the left operand
+     * alone. The contact probe at the end is what keeps the fixture honest - "the
+     * intersection is empty" is trivially true of solids that never touch.
+     */
+    private fun runTangencyScenario(
+        scenarioId: String,
+        offsetSelector: (TangencyCase) -> Vector3d,
+    ) {
+        tangencyCases.forEach { case ->
+            val offset = offsetSelector(case)
+            case.pair.harness().run(
+                scenarioId = scenarioId,
                 pairFactory = { _, leftFactory, rightFactory ->
-                    leftFactory() to build(rightFactory, translation = Vector3d.xyz(2.0, 2.0, 2.0))
+                    leftFactory() to build(rightFactory, translation = offset)
                 },
             ) { result ->
                 val ctx = context(result)
-                assertNearZero(result.intersectionVolume, 1e-3, "$ctx vertex tangency intersection")
+
+                assertNearZero(result.intersectionVolume, 1e-3, "$ctx tangency intersection")
+                assertVolumeClose(
+                    expected = result.sumVolume,
+                    actual = result.unionVolume,
+                    relativeTolerance = 5e-3,
+                    message = "$ctx tangency union equals sum",
+                )
+                // The difference must leave the left operand alone, but only OptType.NONE
+                // gets that right today: the bounds-optimized paths cut roughly half the
+                // left operand away on several exactly tangent pairs (see #55). S1 already
+                // scopes the same assertion to NONE for the same reason, so this follows
+                // the suite's existing convention rather than inventing a new exception.
+                if (result.optType == CSG.OptType.NONE) {
+                    assertVolumeClose(
+                        expected = result.leftVolume,
+                        actual = result.differenceVolume,
+                        relativeTolerance = 5e-3,
+                        message = "$ctx tangency difference equals left",
+                    )
+                } else {
+                    assertTrue(
+                        "$ctx tangency difference should not exceed left",
+                        result.differenceVolume <= result.leftVolume * (1.0 + 5e-3),
+                    )
+                    assertTrue(
+                        "$ctx tangency difference should not be empty",
+                        result.differenceVolume > 0.0,
+                    )
+                }
+                assertBoundsContain(
+                    result.union.bounds,
+                    result.left.bounds,
+                    1e-6,
+                    "$ctx tangency union contains left",
+                )
+                assertBoundsContain(
+                    result.union.bounds,
+                    result.right.bounds,
+                    1e-6,
+                    "$ctx tangency union contains right",
+                )
+
+                // Fixture guard and mutation guard in one: pushing the right operand
+                // CONTACT_PROBE_DEPTH along the contact direction has to produce a real
+                // overlap. Solids that merely sit near each other would not reach, and an
+                // intersect() that always returned empty would fail here even though it
+                // satisfies every "intersection is empty" assertion above.
+                val nudge = offset.times(-CONTACT_PROBE_DEPTH / offset.magnitude())
+                val overlapping = result.right.copy()
+                    .transformed(Transform.unity().translate(nudge))
+                val probeVolume = result.left.copy().intersect(overlapping).computeVolume()
+                assertTrue(
+                    "$ctx contact probe: operands are not in contact, nudging by " +
+                        "$CONTACT_PROBE_DEPTH along $offset gave intersection volume $probeVolume",
+                    probeVolume > CONTACT_PROBE_MIN_VOLUME,
+                )
             }
         }
     }
@@ -374,14 +427,58 @@ class PrimitiveInteractionMatrixTest {
         val rightFactory: () -> CSG,
     )
 
+    /**
+     * Translations of the right operand that put it in exact contact with the left one.
+     *
+     * The offsets are per pair because the primitives are different shapes: a single
+     * offset shared across the matrix only touches for `Cube-Cube`. All solids here are
+     * centred on the origin with an extent of 1 along their contact direction (the cube
+     * spans +/-1, the sphere and cylinder have radius 1), so:
+     *
+     * - [face]: separation of 2 along x, valid for every pair.
+     * - [edge]: contact against the cube's vertical edge at (1, 1) or, for pairs without
+     *   a cube, an xy-diagonal separation of 2.
+     * - [vertex]: contact against the cube's corner at (1, 1, 1), the sphere's pole, or
+     *   the cylinder's bottom rim.
+     */
+    private data class TangencyCase(
+        val pair: PrimitivePair,
+        val face: Vector3d,
+        val edge: Vector3d,
+        val vertex: Vector3d,
+    )
+
     companion object {
+        /** Overlap depth used by the contact probe in S5-S7. */
+        private const val CONTACT_PROBE_DEPTH = 0.3
+
+        /**
+         * Lower bound on the overlap volume the probe must find. The thinnest overlap in
+         * the matrix is the cylinder rim pushed into the cube corner in S7, roughly 1e-2;
+         * the sphere tessellation costs at most ~0.03 of effective radius on top of that.
+         */
+        private const val CONTACT_PROBE_MIN_VOLUME = 1e-3
+
+        private val sqrt2 = sqrt(2.0)
+        private val sqrtHalf = 1.0 / sqrt2
+        private val sqrtThird = 1.0 / sqrt(3.0)
+
+        private val cubeCube = PrimitivePair("Cube-Cube", ::cubeSolid, ::cubeSolid)
+        private val cubeSphere = PrimitivePair("Cube-Sphere", ::cubeSolid, ::sphereSolid)
+        private val cubeCylinder = PrimitivePair("Cube-Cylinder", ::cubeSolid, ::cylinderSolid)
+        private val sphereSphere = PrimitivePair("Sphere-Sphere", ::sphereSolid, ::sphereSolid)
+        private val sphereCylinder =
+            PrimitivePair("Sphere-Cylinder", ::sphereSolid, ::cylinderSolid)
+        private val cylinderCylinder =
+            PrimitivePair("Cylinder-Cylinder", ::cylinderSolid, ::cylinderSolid)
+
         private val fullMatrixPairs = listOf(
-            PrimitivePair("Cube-Cube", ::cubeSolid, ::cubeSolid),
-            PrimitivePair("Cube-Sphere", ::cubeSolid, ::sphereSolid),
-            PrimitivePair("Cube-Cylinder", ::cubeSolid, ::cylinderSolid),
-            PrimitivePair("Sphere-Sphere", ::sphereSolid, ::sphereSolid),
-            PrimitivePair("Sphere-Cylinder", ::sphereSolid, ::cylinderSolid),
-            PrimitivePair("Cylinder-Cylinder", ::cylinderSolid, ::cylinderSolid),
+            cubeCube,
+            cubeSphere,
+            cubeCylinder,
+            sphereSphere,
+            sphereCylinder,
+            cylinderCylinder,
         )
 
         private val roundedPairs = listOf(
@@ -396,6 +493,62 @@ class PrimitiveInteractionMatrixTest {
 
         private val pairsForS1ToS4AndS8: List<PrimitivePair> =
             fullMatrixPairs + roundedPairs + polyhedronPairs
+
+        private val faceOffset = Vector3d.xyz(2.0, 0.0, 0.0)
+
+        private val tangencyCases: List<TangencyCase> = listOf(
+            TangencyCase(
+                pair = cubeCube,
+                face = faceOffset,
+                edge = Vector3d.xyz(2.0, 2.0, 0.0),
+                vertex = Vector3d.xyz(2.0, 2.0, 2.0),
+            ),
+            TangencyCase(
+                pair = cubeSphere,
+                face = faceOffset,
+                // Sphere centre one radius out from the cube edge at (1, 1).
+                edge = Vector3d.xyz(1.0 + sqrtHalf, 1.0 + sqrtHalf, 0.0),
+                // Sphere centre one radius out from the cube corner at (1, 1, 1).
+                vertex = Vector3d.xyz(
+                    1.0 + sqrtThird,
+                    1.0 + sqrtThird,
+                    1.0 + sqrtThird,
+                ),
+            ),
+            TangencyCase(
+                pair = cubeCylinder,
+                face = faceOffset,
+                // Cylinder axis one radius out from the cube edge at (1, 1).
+                edge = Vector3d.xyz(1.0 + sqrtHalf, 1.0 + sqrtHalf, 0.0),
+                // Cylinder lifted to z in [1, 3]; its bottom rim passes through (1, 1, 1).
+                vertex = Vector3d.xyz(1.0 + sqrtHalf, 1.0 + sqrtHalf, 2.0),
+            ),
+            TangencyCase(
+                pair = sphereSphere,
+                face = faceOffset,
+                edge = Vector3d.xyz(sqrt2, sqrt2, 0.0),
+                vertex = Vector3d.xyz(
+                    2.0 * sqrtThird,
+                    2.0 * sqrtThird,
+                    2.0 * sqrtThird,
+                ),
+            ),
+            TangencyCase(
+                pair = sphereCylinder,
+                face = faceOffset,
+                edge = Vector3d.xyz(sqrt2, sqrt2, 0.0),
+                // Cylinder lifted to z in [1, 3]; its bottom rim passes through the
+                // sphere's pole at (0, 0, 1).
+                vertex = Vector3d.xyz(sqrtHalf, sqrtHalf, 2.0),
+            ),
+            TangencyCase(
+                pair = cylinderCylinder,
+                face = faceOffset,
+                edge = Vector3d.xyz(sqrt2, sqrt2, 0.0),
+                // Rim to rim: axes 2 apart in xy, upper cylinder starting at z = 1.
+                vertex = Vector3d.xyz(sqrt2, sqrt2, 2.0),
+            ),
+        )
 
         private fun cubeSolid(): CSG {
             return Cube(size = 2.0).toCSG()

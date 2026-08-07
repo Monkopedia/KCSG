@@ -1,13 +1,13 @@
 package com.monkopedia.kcsg
 
 import com.monkopedia.kcsg.Extrude.points
-import com.monkopedia.kcsg.Vector3d
+import kotlin.math.abs
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Test
-import java.util.*
-import java.util.stream.Collectors
 
 class ConcavePolygonExtrusionTest {
-    private var helveticaH = arrayOf(
+    private val helveticaH = arrayOf(
         Vector3d.xyz(2.9375, -21.875, 0.0),
         Vector3d.xyz(5.90625, -21.875, 0.0),
         Vector3d.xyz(5.90625, -12.90625, 0.0),
@@ -21,7 +21,7 @@ class ConcavePolygonExtrusionTest {
         Vector3d.xyz(5.90625, 0.0, 0.0),
         Vector3d.xyz(2.9375, 0.0, 0.0)
     )
-    private var helveticaE = arrayOf(
+    private val helveticaE = arrayOf(
         Vector3d.xyz(39.41796875, -8.875, 0.0),
         Vector3d.xyz(39.41796875, -7.5625, 0.0),
         Vector3d.xyz(27.02734375, -7.5625, 0.0),
@@ -267,24 +267,108 @@ class ConcavePolygonExtrusionTest {
         Vector3d.xyz(39.41316604614258, -9.238319396972656, 0.0)
     )
 
+    /**
+     * A prism over a simple polygon has volume `|signed area| * height`. The expected
+     * area is recomputed from the source outline with the shoelace formula, so this
+     * pins the extrusion to the actual glyph: a triangulation that covered the convex
+     * hull instead of the concave outline, or one that overlapped itself, would report
+     * a different volume.
+     */
     @Test
-    fun test() {
-        var hPoints: List<Vector3d> = ArrayList(listOf(*helveticaH))
-        var ePoints: List<Vector3d> = ArrayList(listOf(*helveticaE))
-        hPoints = hPoints.stream().distinct().collect(Collectors.toList())
-        ePoints = ePoints.stream().distinct().collect(Collectors.toList())
-        val hLetter = points(Vector3d.xyz(0.0, 0.0, 10.0), hPoints)
-        val eLetter = points(Vector3d.xyz(0.0, 0.0, 10.0), ePoints)
-        println("H number of polygons: " + hLetter.polygons.size)
-        println("e number of polygons: " + eLetter.polygons.size)
+    fun extrudesConcaveGlyphOutlinesToPrismsOfTheOutlineArea() {
+        val hPoints = distinctPoints(helveticaH)
+        val ePoints = distinctPoints(helveticaE)
 
-        // CSG.setDefaultOptType(CSG.OptType.CSG_BOUND);
-        val simpleUnionOfNonIntersectingBodies = eLetter.union(hLetter)
-        val numPolysExpected = hLetter.polygons.size + eLetter.polygons.size
-        println("Both number of polygons: " + simpleUnionOfNonIntersectingBodies.polygons.size)
+        assertGlyphPrism(hPoints, points(EXTRUSION, hPoints), "H")
+        assertGlyphPrism(ePoints, points(EXTRUSION, ePoints), "e")
+    }
 
-        // assumption only valid if optimization is enabled! (see above)
-        // assumption is wrong for CSG.setDefaultOptType(CSG.OptType.NONE);
-        // assertTrue(numPolysExpected == simpleUnionOfNonIntersectingBodies.getPolygons().size());
+    /**
+     * The two glyphs do not overlap, so unioning them must conserve volume whatever the
+     * optimization type is. The original test only printed the polygon counts here.
+     */
+    @Test
+    fun unionOfDisjointGlyphsConservesVolumeForEveryOptType() {
+        for (optType in CSG.OptType.entries) {
+            val hLetter = points(EXTRUSION, distinctPoints(helveticaH)).optimization(optType)
+            val eLetter = points(EXTRUSION, distinctPoints(helveticaE)).optimization(optType)
+            val union = eLetter.union(hLetter)
+
+            assertEquals(
+                "$optType: union volume of disjoint glyphs",
+                eLetter.computeVolume() + hLetter.computeVolume(),
+                union.computeVolume(),
+                1e-6,
+            )
+            val bounds = union.bounds
+            assertEquals("$optType: union min x", hLetter.bounds.min.x, bounds.min.x, 1e-9)
+            assertEquals("$optType: union max x", eLetter.bounds.max.x, bounds.max.x, 1e-9)
+        }
+    }
+
+    /**
+     * The assertion the original test carried commented out, with the precondition it
+     * was missing. `CSG_BOUND` and `POLYGON_BOUND` both concatenate polygon lists when
+     * the operand bounds are disjoint, so the union is exactly the two glyphs' polygons;
+     * `NONE` runs the full BSP and splits them, which is why the assertion was disabled
+     * rather than fixed.
+     */
+    @Test
+    fun boundsOptimizedUnionOfDisjointGlyphsConcatenatesPolygons() {
+        for (optType in listOf(CSG.OptType.CSG_BOUND, CSG.OptType.POLYGON_BOUND)) {
+            val hLetter = points(EXTRUSION, distinctPoints(helveticaH)).optimization(optType)
+            val eLetter = points(EXTRUSION, distinctPoints(helveticaE)).optimization(optType)
+            val numPolysExpected = hLetter.polygons.size + eLetter.polygons.size
+
+            assertEquals(
+                "$optType: union of non-intersecting bodies should not split polygons",
+                numPolysExpected,
+                eLetter.union(hLetter).polygons.size,
+            )
+        }
+
+        val hNone = points(EXTRUSION, distinctPoints(helveticaH)).optimization(CSG.OptType.NONE)
+        val eNone = points(EXTRUSION, distinctPoints(helveticaE)).optimization(CSG.OptType.NONE)
+        assertTrue(
+            "NONE should run the BSP and split polygons, otherwise the bounds-optimized " +
+                "assertions above are not testing the optimization",
+            eNone.union(hNone).polygons.size > hNone.polygons.size + eNone.polygons.size,
+        )
+    }
+
+    private fun assertGlyphPrism(outline: List<Vector3d>, glyph: CSG, label: String) {
+        val expectedVolume = abs(signedArea(outline)) * EXTRUSION.z
+        assertTrue("$label glyph outline has no area", expectedVolume > 0.0)
+        assertEquals(
+            "$label glyph extrusion volume",
+            expectedVolume,
+            glyph.computeVolume(),
+            expectedVolume * 1e-9,
+        )
+
+        val bounds = glyph.bounds
+        assertEquals("$label min x", outline.minOf { it.x }, bounds.min.x, 1e-9)
+        assertEquals("$label max x", outline.maxOf { it.x }, bounds.max.x, 1e-9)
+        assertEquals("$label min y", outline.minOf { it.y }, bounds.min.y, 1e-9)
+        assertEquals("$label max y", outline.maxOf { it.y }, bounds.max.y, 1e-9)
+        assertEquals("$label min z", 0.0, bounds.min.z, 1e-9)
+        assertEquals("$label max z", EXTRUSION.z, bounds.max.z, 1e-9)
+    }
+
+    private fun distinctPoints(points: Array<Vector3d>): List<Vector3d> = points.toList().distinct()
+
+    /** Shoelace area of a closed polygon in the xy plane. */
+    private fun signedArea(points: List<Vector3d>): Double {
+        var doubled = 0.0
+        for (i in points.indices) {
+            val current = points[i]
+            val next = points[(i + 1) % points.size]
+            doubled += current.x * next.y - next.x * current.y
+        }
+        return doubled / 2.0
+    }
+
+    companion object {
+        private val EXTRUSION = Vector3d.xyz(0.0, 0.0, 10.0)
     }
 }
