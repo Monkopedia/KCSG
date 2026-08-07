@@ -36,17 +36,13 @@ kotlin {
     // invariance scenario runs a full pair x opt-type boolean matrix and exceeds
     // Mocha's 2s default. Raise it rather than weaken the test.
     js(IR) {
-        browser {
-            testTask { useMocha { timeout = "120s" } }
-        }
+        browser()
         nodejs {
             testTask { useMocha { timeout = "120s" } }
         }
     }
     wasmJs {
-        browser {
-            testTask { useMocha { timeout = "120s" } }
-        }
+        browser()
         nodejs {
             testTask { useMocha { timeout = "120s" } }
         }
