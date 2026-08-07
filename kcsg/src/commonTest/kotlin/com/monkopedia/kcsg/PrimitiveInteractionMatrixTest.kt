@@ -453,9 +453,11 @@ class PrimitiveInteractionMatrixTest {
         private const val CONTACT_PROBE_DEPTH = 0.3
 
         /**
-         * Lower bound on the overlap volume the probe must find. The thinnest overlap in
-         * the matrix is the cylinder rim pushed into the cube corner in S7, roughly 1e-2;
-         * the sphere tessellation costs at most ~0.03 of effective radius on top of that.
+         * Lower bound on the overlap volume the probe must find. Measured across the
+         * matrix the thinnest overlap is Cube-Cube corner to corner in S7 at 5.2e-3,
+         * followed by Cube-Cylinder in S7 at 8.7e-3, so this leaves a factor of five.
+         * The bound has to stay well under those: the tessellated sphere and cylinder
+         * sit up to ~0.015 inside their true surfaces, which eats into the nudge.
          */
         private const val CONTACT_PROBE_MIN_VOLUME = 1e-3
 
