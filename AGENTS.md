@@ -18,13 +18,14 @@ This repository is a multi-module Gradle project:
 - `./gradlew :samples:run`: launch sample app entry points.
 
 ## Coding Style & Naming Conventions
-- Follow `.editorconfig`: 4-space indentation, LF line endings, max line length 100, no trailing commas.
+- Follow the conventions in `.editorconfig`: 4-space indentation, LF line endings, max line length 100, no trailing commas. **Nothing in the build enforces these** — there is no ktlint or spotless configuration anywhere in the project, so `.editorconfig` is IDE-only guidance and the existing sources do not fully satisfy it. Match the surrounding file; do not reformat unrelated code to chase these rules.
 - Use package roots under `com.monkopedia.kcsg`.
 - Naming: `UpperCamelCase` for classes/files, `lowerCamelCase` for methods/fields, `SCREAMING_SNAKE_CASE` for constants.
 - Keep geometry operations deterministic and side-effect-light.
 
 ## Testing Guidelines
-- Framework: JUnit 4 (`org.junit.Test`, `org.junit.Assert`).
+- Framework: `kotlin.test` (`kotlin.test.Test`, `kotlin.test.assertEquals`) is the default and the only option for multiplatform tests. JUnit 4 (`org.junit.Test`, `org.junit.Assert`) appears only in JVM-only source sets (`src/test/...`) — the oracle suite, JVM file I/O, and the `csgs` CLI tests.
+- Tests in `src/commonTest` **must** use `kotlin.test`; `org.junit` does not compile for the JS, Wasm or native targets and will break the multiplatform build.
 - Test file naming: `*Test.kt` (for example, `VolumeTest.kt`, `EdgeIntersectionTest.kt`).
 - Prefer regression tests for boolean operations, extrusions, and mesh edge cases.
 - When outputs are mesh artifacts, store expected JVM fixtures in `kcsg/src/jvmTest/resources`.
@@ -38,8 +39,10 @@ This repository is a multi-module Gradle project:
 ## Coverage & API Gates
 There are two complementary public-API gates; a public-API change must satisfy both:
 - **BCV (mechanical ABI gate)** — `binary-compatibility-validator` tracks the actual public ABI of `:kcsg` and `:kcsg-dsl` (JVM `.api` + multiplatform `.klib.api` under each module's `api/`). Any public-API change must be reflected by running `./gradlew apiDump` and committing the updated dumps; CI runs `./gradlew apiCheck` and fails on an undumped change. `:csgs` and `:samples` are not libraries and are excluded.
-- **Checklist (coverage/intent doc)** — `docs/public-api-checklist.md` records which public symbols are tested and with what scenarios. If any public API files change under `kcsg/src/main/java/com/monkopedia/kcsg/*.kt` or `kcsg-dsl/src/main/java/com/monkopedia/kcsg/*.kt`, update the checklist in the same change.
-- Before opening a PR, run `./gradlew apiCheck :kcsg:test :kcsg-dsl:test :kcsg:koverXmlReport :kcsg:koverVerifyJvm :kcsg-dsl:koverVerify` (after `apiDump` if you changed public API).
+- **Checklist (coverage/intent doc)** — `docs/public-api-checklist.md` records which public symbols are tested and with what scenarios. The gate keys off the **BCV dumps, not source paths**: `coverage.yml` diffs `kcsg/api/` and `kcsg-dsl/api/` against the PR base, and requires `docs/public-api-checklist.md` to change in the same PR only when those dumps change. A refactor that touches API-path source files but leaves the ABI byte-identical does not need a checklist edit.
+- Before opening a PR, run the command CI runs (`coverage.yml`), plus `apiDump` first if you changed public API:
+  `./gradlew apiCheck :kcsg:test :kcsg-dsl:test :kcsg:oracleTest :csgs:test :samples:build :kcsg:koverXmlReport :kcsg:koverVerifyJvm :kcsg-dsl:koverXmlReport :kcsg-dsl:koverVerify`
+  CI additionally executes the `commonTest` suites on JS, Wasm and linuxX64 in a separate job (`:kcsg:jsNodeTest`, `:kcsg:wasmJsNodeTest`, `:kcsg:wasmWasiNodeTest`, `:kcsg:linuxX64Test` and the `:kcsg-dsl` equivalents); run those too if you touched `commonMain`/`commonTest`.
 - `:kcsg:koverVerifyJvm` enforces API-package coverage for `com.monkopedia.kcsg` (excluding vendored `com.monkopedia.kcsg.ext.*`), while `:kcsg:koverXmlReport` preserves full-module trend visibility.
 - PR CI enforces all three: the BCV ABI check, the library coverage gate, and the public API checklist update requirement.
 
@@ -70,6 +73,6 @@ There are two complementary public-API gates; a public-API change must satisfy b
 ## Commit & Pull Request Guidelines
 - Use short, imperative commit subjects (for example, `Fix bug in splitPolygons`, `Bump patch version`).
 - Keep commits focused by module or behavior; avoid unrelated refactors in feature fixes.
-- Any PR that changes public API in `kcsg` or `kcsg-dsl` must update `docs/public-api-checklist.md` in the same change.
+- Any PR that changes the public ABI of `kcsg` or `kcsg-dsl` — i.e. that changes the BCV dumps under `kcsg/api/` or `kcsg-dsl/api/` — must update `docs/public-api-checklist.md` in the same change. Touching a source file under an API path without moving the dumps does not trigger this.
 - PRs should include change summary, affected modules, and exact verification commands run (for example, `./gradlew :kcsg:test` or `./gradlew build`).
 - Include sample output notes or screenshots when rendering behavior or exported mesh artifacts change.

@@ -51,9 +51,30 @@ The oracle test suite consumes these fixtures and compares them to `kcsg` output
 
 ## Updating the Pin
 
-To upgrade the OpenSCAD build, set:
+The pinned artifact name appears **twice** in `scripts/oracle/install_openscad.sh`: once as the
+`OPENSCAD_ARTIFACT_NAME` default, and once as the fallback baked into the generated
+`.tools/openscad/openscad` wrapper. To move the pin permanently, change both, then force a
+reinstall:
 
-- `OPENSCAD_ARTIFACT_NAME` (for example `OpenSCAD-YYYY.MM.DD-x86_64.AppImage`)
-- optionally `OPENSCAD_BASE_URL`
+```bash
+rm -rf .tools/openscad
+./gradlew oracleFixtures
+```
 
-Then rerun `./gradlew oracleFixtures`.
+The `rm -rf` is required. `scripts/oracle/generate_openscad_oracles.sh` runs the installer only
+when `.tools/openscad/openscad` is missing, so as long as a previous install left the wrapper in
+place the new AppImage is never downloaded.
+
+`OPENSCAD_ARTIFACT_NAME` and `OPENSCAD_BASE_URL` still work for a one-off trial, but only when you
+invoke the scripts directly — the wrapper resolves `OPENSCAD_ARTIFACT_NAME` at execution time and
+otherwise falls back to the name baked into it, failing with `Missing OpenSCAD AppImage: ...`:
+
+```bash
+rm -rf .tools/openscad
+OPENSCAD_ARTIFACT_NAME=OpenSCAD-YYYY.MM.DD-x86_64.AppImage \
+    ./scripts/oracle/generate_openscad_oracles.sh
+```
+
+Going through `./gradlew` for a trial is unreliable: `oracleGenerateFixtures` is a plain `Exec`
+task, so the script sees the Gradle daemon's environment rather than the one you exported. Edit the
+script defaults for anything that needs to hold across Gradle invocations.
