@@ -58,8 +58,17 @@ done
 echo "consumer-smoke: 4 module descriptors published"
 
 echo "consumer-smoke: compiling the standalone consumers"
+
+# --rerun-tasks, and the outputs deleted first, because the jars are byte-identical between
+# runs whenever the sources are: Gradle then reports `:dsl-only:compileKotlin UP-TO-DATE` and
+# the whole assertion is skipped. Measured on a re-run after a genuine 10s compile:
+# `BUILD SUCCESSFUL in 1s`, both compile tasks UP-TO-DATE. A green that a previous run earned
+# is indistinguishable from one this run earned, so force the compile every time. It is two
+# source files; the cost is a second.
+rm -rf "$CONSUMER_DIR"/dsl-only/build "$CONSUMER_DIR"/core-only/build
+
 set +e
-"$ROOT/gradlew" -p "$CONSUMER_DIR" --console=plain \
+"$ROOT/gradlew" -p "$CONSUMER_DIR" --console=plain --rerun-tasks \
     -PkcsgVersion="$VERSION" -PkcsgRepo="$REPO_DIR" \
     :dsl-only:compileKotlin :core-only:compileKotlin
 status=$?
