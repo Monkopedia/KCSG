@@ -67,18 +67,41 @@ jobs:
             kcsg/build/reports/kover/
             kcsg-dsl/build/reports/kover/
 
-  multiplatform-compile-smoke:
+      # Gradle prints "N tests completed" only on FAILURE, so a passing test task
+      # prints no count at all and the console cannot distinguish 145 tests from
+      # zero. These XML results carry <testsuite tests="N">, which is the only
+      # thing that proves a suite tested something rather than merely ran.
+      - name: Upload JVM test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-jvm
+          path: |
+            kcsg/build/test-results/
+            kcsg-dsl/build/test-results/
+            csgs/build/test-results/
+
+  # Executes the commonTest suites on the non-JVM targets a Linux runner can run.
+  # `:kcsg:test`/`:kcsg-dsl:test` are dependsOn(jvmTest), so without this job the
+  # commonTest sources are compiled for these targets but never executed — the
+  # library had an ABI gate on all 19 published coordinates per module and a
+  # behaviour gate on exactly one. The test tasks depend on the corresponding
+  # compileKotlin* tasks, so this strictly supersedes the previous compile-only smoke.
+  #
+  # Apple, mingw and linuxArm64 stay compile-and-ABI-only: their test binaries
+  # cannot execute on a Linux runner. That is deliberate, not an oversight.
+  multiplatform-test:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         target:
           - name: js
-            tasks: ":kcsg:compileKotlinJs :kcsg-dsl:compileKotlinJs"
+            tasks: ":kcsg:jsNodeTest :kcsg-dsl:jsNodeTest"
           - name: wasm
-            tasks: ":kcsg:compileKotlinWasmJs :kcsg:compileKotlinWasmWasi :kcsg-dsl:compileKotlinWasmJs :kcsg-dsl:compileKotlinWasmWasi"
+            tasks: ":kcsg:wasmJsNodeTest :kcsg:wasmWasiNodeTest :kcsg-dsl:wasmJsNodeTest :kcsg-dsl:wasmWasiNodeTest"
           - name: native-linux
-            tasks: ":kcsg:compileKotlinLinuxX64 :kcsg-dsl:compileKotlinLinuxX64"
+            tasks: ":kcsg:linuxX64Test :kcsg-dsl:linuxX64Test"
     steps:
       - uses: actions/checkout@v4
 
@@ -91,5 +114,14 @@ jobs:
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      - name: Compile ${{ matrix.target.name }} targets
+      - name: Test ${{ matrix.target.name }} targets
         run: ./gradlew ${{ matrix.target.tasks }} --stacktrace
+
+      - name: Upload ${{ matrix.target.name }} test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{ matrix.target.name }}
+          path: |
+            kcsg/build/test-results/
+            kcsg-dsl/build/test-results/
