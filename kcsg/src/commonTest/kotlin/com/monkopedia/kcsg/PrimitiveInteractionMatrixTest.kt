@@ -191,7 +191,7 @@ class PrimitiveInteractionMatrixTest {
                 )
                 // The difference must leave the left operand alone, but only OptType.NONE
                 // gets that right today: the bounds-optimized paths cut roughly half the
-                // left operand away on several exactly tangent pairs (see #55). S1 already
+                // left operand away on several exactly tangent pairs (see #58). S1 already
                 // scopes the same assertion to NONE for the same reason, so this follows
                 // the suite's existing convention rather than inventing a new exception.
                 if (result.optType == CSG.OptType.NONE) {
