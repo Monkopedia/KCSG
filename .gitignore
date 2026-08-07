@@ -1,5 +1,7 @@
 /build/
 /.gradle/
+# consumer-smoke/ is a separate Gradle build and gets its own .gradle/ dir.
+**/.gradle/
 /.idea/
 /.nb-gradle/
 /bin/

@@ -137,3 +137,30 @@ jobs:
           path: |
             kcsg/build/test-results/
             kcsg-dsl/build/test-results/
+
+  # Proves that somebody who RESOLVES the published artifacts can compile against them.
+  # apiCheck validates the ABI's shape; it cannot see whether the types in that ABI reach a
+  # consumer's compile classpath, which is a property of the published Gradle module
+  # metadata. Nothing in this repo had ever resolved a publication before (issue #51).
+  #
+  # Its own job rather than part of `check`, because it costs a full publish plus a second
+  # Gradle build. As a separate job it runs in parallel with library-quality, so it adds no
+  # wall-clock to PR CI, its cost is attributable, and `./gradlew build` stays untouched for
+  # contributors. Wiring it into `check` would put that cost on every local build for a
+  # property that can only change when a dependency declaration changes.
+  consumer-resolution-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Resolve the published artifacts from standalone consumer builds
+        run: ./scripts/consumer-smoke.sh

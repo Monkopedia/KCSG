@@ -16,6 +16,7 @@ This repository is a multi-module Gradle project:
 - `./gradlew :csgs:run --args "<path/to/script.csgs>"`: execute a script with the CLI.
 - `./gradlew :csgs:fatJar`: produce a distributable `csgs-all-*.jar`.
 - `./gradlew :samples:run -Pkcsg.sample=<SampleName>`: launch one sample entry point, e.g. `-Pkcsg.sample=Spheres`. The name is resolved against `com.monkopedia.kcsg.samples`; pass a dotted name to launch anything else (`-Pkcsg.sample=com.monkopedia.kcsg.playground.Main`). Without the property it runs `RoundedCubeSample`. Available samples are the files under `samples/src/main/java/com/monkopedia/kcsg/samples/`; each writes its STL/OBJ into `samples/build/sample-output/`.
+- `./scripts/consumer-smoke.sh`: publish `:kcsg` and `:kcsg-dsl` to a throwaway file repository and compile `consumer-smoke/`, a separate build whose two modules each depend on one published coordinate and nothing else. Run it after changing a dependency declaration in either published module. Not part of `check`; CI runs it as its own job.
 
 ## Coding Style & Naming Conventions
 - Follow the conventions in `.editorconfig`: 4-space indentation, LF line endings, max line length 100, no trailing commas. **Nothing in the build enforces these** — there is no ktlint or spotless configuration anywhere in the project, so `.editorconfig` is IDE-only guidance and the existing sources do not fully satisfy it. Match the surrounding file; do not reformat unrelated code to chase these rules.
@@ -45,6 +46,9 @@ There are two complementary public-API gates; a public-API change must satisfy b
   CI additionally executes the `commonTest` suites on JS, Wasm and linuxX64 in a separate job (`:kcsg:jsNodeTest`, `:kcsg:wasmJsNodeTest`, `:kcsg:wasmWasiNodeTest`, `:kcsg:linuxX64Test` and the `:kcsg-dsl` equivalents); run those too if you touched `commonMain`/`commonTest`.
 - `:kcsg:koverVerifyJvm` enforces API-package coverage for `com.monkopedia.kcsg` (excluding vendored `com.monkopedia.kcsg.ext.*`), while `:kcsg:koverXmlReport` preserves full-module trend visibility.
 - PR CI enforces all three: the BCV ABI check, the library coverage gate, and the public API checklist update requirement.
+
+## Dependency Declaration Rule
+- A dependency whose types appear in a **public signature** of `:kcsg` or `:kcsg-dsl` must be declared `api(...)`, not `implementation(...)`. Gradle publishes `implementation` dependencies only into the runtime variant, so on jvm/js/wasm a consumer resolving the artifact from a repository cannot name the types the API hands it. `apiCheck` cannot detect this — it validates the ABI's shape, not whether the ABI is resolvable. `./scripts/consumer-smoke.sh` is the gate that can.
 
 ## Architecture Guardrails
 - Keep core mesh/boolean algorithms in `kcsg`; `kcsg-dsl` and `csgs` should orchestrate, not duplicate core logic.

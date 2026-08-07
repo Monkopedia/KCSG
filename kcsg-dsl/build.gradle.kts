@@ -73,8 +73,14 @@ kotlin {
         val commonMain by getting {
             kotlin.srcDir("src/main/java")
             dependencies {
-                implementation(project(":kcsg"))
-                implementation(libs.kotlinx.io.core)
+                // `api`, not `implementation`: kcsg-owned types (CSG, Primitive, Transform,
+                // Cube, Cylinder, RoundedCube, WeightFunction) and kotlinx.io.files.Path appear
+                // in this module's public signatures, so they have to reach a consumer's
+                // *compile* classpath. Under `implementation` Gradle omits them from the
+                // published `*ApiElements` variant on jvm/js/wasm and consumers cannot name
+                // them. See scripts/consumer-smoke.sh and issue #51.
+                api(project(":kcsg"))
+                api(libs.kotlinx.io.core)
             }
         }
         val commonTest by getting {
@@ -103,6 +109,12 @@ tasks.register("test") {
     dependsOn(tasks.named("jvmTest"))
 }
 
+// Set only by scripts/consumer-smoke.sh. In this mode the module publishes UNSIGNED to a
+// throwaway file repository under <root>/build/consumer-smoke-repo so that a separate
+// consumer build can resolve the real published metadata. Never set it for a real release:
+// signing is what Maven Central rejects the upload without.
+val consumerSmokePublish = providers.gradleProperty("kcsg.consumerSmoke").isPresent
+
 mavenPublishing {
     pom {
         name.set("kcsg-dsl")
@@ -129,12 +141,26 @@ mavenPublishing {
     }
     publishToMavenCentral(automaticRelease = true)
 
-    signAllPublications()
+    if (!consumerSmokePublish) {
+        signAllPublications()
+    }
 }
 
-signing {
-    sign(publishing.publications)
-    useGpgCmd()
+if (!consumerSmokePublish) {
+    signing {
+        sign(publishing.publications)
+        useGpgCmd()
+    }
+} else {
+    publishing {
+        repositories {
+            maven {
+                name = "consumerSmoke"
+                url = rootProject.layout.buildDirectory
+                    .dir("consumer-smoke-repo").get().asFile.toURI()
+            }
+        }
+    }
 }
 
 kover {
