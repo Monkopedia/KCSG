@@ -11,9 +11,23 @@ import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
+import java.util.concurrent.TimeUnit
 
 class OpenScadTiltedExtrudeRegressionTest {
     private val maxVertexDistance = 1e-3
+
+    /**
+     * Upper bound on a single OpenSCAD render. The tilted extrude is a six-vertex polyhedron
+     * that renders in well under a second; the heaviest scenario in the fixture set
+     * (`many_reductions_union`) takes about five. Two minutes leaves roughly twenty times the
+     * headroom of the slowest known render for slow runners and cold AppImage extraction,
+     * while turning a wedged renderer into a failure in minutes rather than a job that runs
+     * until the CI time limit.
+     */
+    private val openScadTimeoutSeconds = 120L
+
+    /** Grace period for the destroyed process to be reaped before giving up on it. */
+    private val destroyGraceSeconds = 10L
 
     @Test
     fun tiltedExtrudeMatchesOpenScadOracle() {
@@ -61,7 +75,7 @@ class OpenScadTiltedExtrudeRegressionTest {
             Files.newBufferedWriter(scadPath, StandardCharsets.UTF_8).use { writer ->
                 writer.write(scadProgram(points, topPoints))
             }
-            runOpenScad(scadPath, stlPath, backend)
+            runOpenScad("tilted_extrude", scadPath, stlPath, backend)
             return STL.file(kotlinx.io.files.Path(stlPath.toString()))
         } finally {
             workDir.toFile().deleteRecursively()
@@ -130,26 +144,70 @@ class OpenScadTiltedExtrudeRegressionTest {
         return translated.map { point -> rotation.transform(point) }
     }
 
-    private fun runOpenScad(scadPath: Path, outputPath: Path, backend: String) {
+    /**
+     * Runs OpenSCAD with a hard upper bound on the whole interaction.
+     *
+     * Both stdout and stderr are redirected to a file rather than a pipe, so there is no
+     * unbounded read-to-EOF on the way to [Process.waitFor]. That leaves the bounded
+     * `waitFor` as the only blocking call, and a wedged renderer produces a diagnosable
+     * failure instead of a job that runs until the CI time limit.
+     */
+    private fun runOpenScad(
+        scenario: String,
+        scadPath: Path,
+        outputPath: Path,
+        backend: String
+    ) {
         val bin = openScadBinary()
+        val logPath = scadPath.resolveSibling("openscad-output.log")
         val process = ProcessBuilder(
             bin.toString(),
             "--backend=$backend",
             "-o",
             outputPath.toString(),
             scadPath.toString()
-        ).redirectErrorStream(true).start()
-        val output = process.inputStream.bufferedReader().use { it.readText() }
+        ).redirectErrorStream(true)
+            .redirectOutput(logPath.toFile())
+            .start()
+
+        val finished = try {
+            process.waitFor(openScadTimeoutSeconds, TimeUnit.SECONDS)
+        } catch (interrupted: InterruptedException) {
+            process.destroyForcibly()
+            Thread.currentThread().interrupt()
+            throw interrupted
+        }
+        if (!finished) {
+            process.destroyForcibly()
+            process.waitFor(destroyGraceSeconds, TimeUnit.SECONDS)
+            error(
+                "OpenSCAD timed out after ${openScadTimeoutSeconds}s and was destroyed " +
+                    "(scenario=$scenario backend=$backend scad=$scadPath). " +
+                    "Partial output:\n${readOpenScadLog(logPath)}"
+            )
+        }
+
+        val output = readOpenScadLog(logPath)
         if (output.isNotBlank()) {
             println("OpenSCAD output:\n$output")
         }
-        val exit = process.waitFor()
+        val exit = process.exitValue()
         check(exit == 0) {
-            "OpenSCAD failed with exit code $exit:\n$output"
+            "OpenSCAD failed with exit code $exit " +
+                "(scenario=$scenario backend=$backend):\n$output"
         }
         check(Files.isRegularFile(outputPath)) {
-            "OpenSCAD did not produce output STL at $outputPath"
+            "OpenSCAD did not produce output STL at $outputPath " +
+                "(scenario=$scenario backend=$backend)"
         }
+    }
+
+    private fun readOpenScadLog(logPath: Path): String {
+        if (!Files.isRegularFile(logPath)) {
+            return ""
+        }
+        return runCatching { logPath.toFile().readText(StandardCharsets.UTF_8) }
+            .getOrElse { failure -> "<unable to read $logPath: $failure>" }
     }
 
     private fun uniquePoints(csg: CSG): List<Vector3d> {
