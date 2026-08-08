@@ -73,22 +73,30 @@ data class Edge(val p1: Vertex, val p2: Vertex) {
         return abs(ab - (ap + pb)) < TOL
     }
 
+    /**
+     * Edges compare equal regardless of direction (see [equals]), so the hash must be
+     * symmetric in [p1] and [p2] — otherwise `Edge(a, b)` and `Edge(b, a)` would be equal
+     * with different hash codes and land in different buckets of any hash container.
+     */
     override fun hashCode(): Int {
         var hash = 7
-        hash = 71 * hash + p1.hashCode()
-        hash = 71 * hash + p2.hashCode()
+        hash = 71 * hash + (p1.hashCode() xor p2.hashCode())
         return hash
     }
 
-    override fun equals(obj: Any?): Boolean {
-        if (obj !is Edge) {
+    /**
+     * Two edges are equal when they connect the same pair of vertices, in either order.
+     * Direction independence is intentional and is relied upon by the boundary-edge
+     * detection in `boundaryEdgesOfPlaneGroup`, which counts an edge and its reverse as
+     * the same edge. The pairing must be genuine: matching both of `other`'s endpoints
+     * against the *same* endpoint of this edge would make every degenerate edge
+     * `Edge(a, a)` equal to every edge incident to `a`, which is not transitive.
+     */
+    override fun equals(other: Any?): Boolean {
+        if (other !is Edge) {
             return false
         }
-        val other = obj
-        if (!(p1 == other.p1 || p2 == other.p1)) {
-            return false
-        }
-        return p2 == other.p2 || p1 == other.p2
+        return (p1 == other.p1 && p2 == other.p2) || (p1 == other.p2 && p2 == other.p1)
     }
 
     private fun getDirection(): Vector3d {
