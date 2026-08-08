@@ -57,6 +57,14 @@ class CSGOptTypeParityTest {
     fun differenceWithNonOverlappingOperandLeavesLeftUnchanged() {
         val cases = listOf(
             Triple("disjoint cubes", cubeAtX(0.0), cubeAtX(4.0)),
+            // Exactly face-coplanar, no tessellation gap. Under CSG_BOUND this used to
+            // come out with the *right* volume and the *wrong* bounds -- the right
+            // operand's -- so only the bounds assertion below catches it.
+            Triple("face-tangent cubes (exact)", cubeAtX(0.0), cubeAtX(2.0)),
+            // A receiver much larger than the subtrahend, face-tangent to it. Under
+            // CSG_BOUND this used to return the subtrahend outright: the 72.0 slab
+            // vanished and the result was the 8.0 cube, bounds and all.
+            Triple("face-tangent slab/cube", slabEndingAtX(1.0), cubeAtX(2.0)),
             Triple("face-tangent cube/sphere", cubeAtX(0.0), sphereAt(2.0, 0.0, 0.0)),
             Triple("face-tangent sphere/cylinder", sphereAt(0.0, 0.0, 0.0), cylinderAt(2.0, 0.0, 0.0)),
             Triple("edge-tangent cube/cylinder", cubeAtX(0.0), cylinderAt(2.0, 2.0, 0.0)),
@@ -87,6 +95,71 @@ class CSGOptTypeParityTest {
         }
     }
 
+    /**
+     * Companion regression to [differenceWithNonOverlappingOperandLeavesLeftUnchanged],
+     * guarding the *other* reading of an empty intermediate.
+     *
+     * `differencePolygonBoundsOpt` splits the receiver on `csg.bounds.intersects(polygon.bounds)`.
+     * That is a proximity test, not a containment test, so the "inner" side is empty both when
+     * `csg` is disjoint from the receiver *and* when `csg` sits strictly inside it, clear of
+     * every face. The two demand opposite answers — the receiver untouched in the first case,
+     * the receiver with an internal void in the second — so neither an unconditional early-out
+     * nor an empty-receiver guard further down can serve both. A fix for the disjoint half that
+     * silently deletes the cavity in the containment half is a regression of the same size,
+     * pointed the other way.
+     *
+     * `OptType.NONE` is the reference implementation, so it is the oracle here rather than an
+     * analytic volume; because every variant tessellates the same primitives, the comparison can
+     * be exact-ish instead of tolerance-padded. The cavity in `cube-in-cube` is 1.728 of 125, so
+     * anything looser than roughly 1e-2 relative stops being able to see it — see the note on
+     * `PrimitiveInteractionMatrixTest.scenarioS3FullContainment`, whose 3e-2 budget is why this
+     * gap survived a green suite.
+     */
+    @Test
+    fun differenceWithStrictlyInteriorOperandKeepsCavityUnderEveryOptType() {
+        val cases = listOf(
+            Triple("cube-in-cube", cubeOfSize(5.0), cubeOfSize(1.2)),
+            Triple("sphere-in-cube", cubeOfSize(5.0), sphereOfRadius(0.6)),
+            Triple("sphere-in-sphere", sphereOfRadius(2.5), sphereOfRadius(0.6)),
+            Triple("cylinder-in-cube", cubeOfSize(5.0), cylinderOfRadius(0.6)),
+        )
+
+        cases.forEach { (name, left, right) ->
+            val leftVolume = left.computeVolume()
+            val rightVolume = right.computeVolume()
+            val baseline = left.copy().optimization(CSG.OptType.NONE).difference(right.copy())
+            assertFiniteMesh(baseline)
+
+            // Guard the fixture itself: if the subtrahend ever stopped being strictly
+            // interior, or the reference difference stopped cutting a void, the parity
+            // assertions below would still pass while testing nothing.
+            assertVolumeClose(
+                expected = leftVolume - rightVolume,
+                actual = baseline.computeVolume(),
+                relativeTolerance = 1e-3,
+                message = "$name fixture: OptType.NONE must actually remove the subtrahend",
+            )
+
+            listOf(CSG.OptType.CSG_BOUND, CSG.OptType.POLYGON_BOUND).forEach { optType ->
+                val result = left.copy().optimization(optType).difference(right.copy())
+                assertFiniteMesh(result)
+                assertVolumeClose(
+                    expected = baseline.computeVolume(),
+                    actual = result.computeVolume(),
+                    absoluteTolerance = 1e-9,
+                    relativeTolerance = 1e-9,
+                    message = "$name opt=$optType difference must match OptType.NONE",
+                )
+                assertBoundsClose(
+                    expected = baseline.bounds,
+                    actual = result.bounds,
+                    tolerance = 1e-9,
+                    message = "$name opt=$optType difference bounds must match OptType.NONE",
+                )
+            }
+        }
+    }
+
     private fun assertParity(operation: (CSG.OptType) -> CSG) {
         val baseline = operation(CSG.OptType.NONE)
         assertFiniteMesh(baseline)
@@ -109,6 +182,38 @@ class CSGOptTypeParityTest {
         return Cube(
             center = Vector3d.xyz(centerX, 0.0, 0.0),
             dimensions = Vector3d.xyz(2.0, 2.0, 2.0),
+        ).toCSG()
+    }
+
+    /**
+     * An 18x2x2 slab spanning x in [-17, 1], so that its +x face is exactly coplanar with
+     * the -x face of `cubeAtX(2.0)`. Volume 72, nine times the cube it is tangent to.
+     */
+    private fun slabEndingAtX(maxX: Double): CSG {
+        return Cube(
+            center = Vector3d.xyz(maxX - 9.0, 0.0, 0.0),
+            dimensions = Vector3d.xyz(18.0, 2.0, 2.0),
+        ).toCSG()
+    }
+
+    private fun cubeOfSize(size: Double): CSG {
+        return Cube(
+            center = Vector3d.xyz(0.0, 0.0, 0.0),
+            dimensions = Vector3d.xyz(size, size, size),
+        ).toCSG()
+    }
+
+    private fun sphereOfRadius(radius: Double): CSG {
+        return Sphere(radius, 18, 9, Vector3d.xyz(0.0, 0.0, 0.0)).toCSG()
+    }
+
+    private fun cylinderOfRadius(radius: Double): CSG {
+        return Cylinder(
+            start = Vector3d.xyz(0.0, 0.0, -radius),
+            end = Vector3d.xyz(0.0, 0.0, radius),
+            startRadius = radius,
+            endRadius = radius,
+            numSlices = 18,
         ).toCSG()
     }
 

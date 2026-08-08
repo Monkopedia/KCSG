@@ -68,12 +68,22 @@ class PrimitiveInteractionMatrixTest {
             ) { result ->
                 val ctx = context(result)
                 assertBoundsContain(result.left.bounds, result.right.bounds, 1e-6, "$ctx right inside left")
+                // Intersection and difference of a strictly contained pair recompose the
+                // *same* triangles the operands were tessellated from, so the only slack is
+                // summation order: measured worst case across the whole matrix and all three
+                // opt types is 1.2e-16 relative, so 1e-6 still leaves ten orders of headroom.
+                // The old shared 3e-2 budget was the reason a difference that silently dropped
+                // the internal void (1.4% of the receiver) passed -- see CSGOptTypeParityTest
+                // .differenceWithStrictlyInteriorOperandKeepsCavityUnderEveryOptType.
                 assertVolumeClose(
                     expected = result.rightVolume,
                     actual = result.intersectionVolume,
-                    relativeTolerance = 3e-2,
+                    relativeTolerance = 1e-6,
                     message = "$ctx containment intersection",
                 )
+                // Union genuinely needs the loose budget: under CSG_BOUND/POLYGON_BOUND a
+                // contained solid costs up to 2.14% of the receiver's volume (Sphere-Cylinder),
+                // which is a separate known imprecision and not what this scenario is guarding.
                 assertVolumeClose(
                     expected = result.leftVolume,
                     actual = result.unionVolume,
@@ -83,7 +93,7 @@ class PrimitiveInteractionMatrixTest {
                 assertVolumeClose(
                     expected = result.leftVolume - result.rightVolume,
                     actual = result.differenceVolume,
-                    relativeTolerance = 3e-2,
+                    relativeTolerance = 1e-6,
                     message = "$ctx containment difference",
                 )
                 assertBoundsClose(
