@@ -440,6 +440,17 @@ class CSG private constructor(
     }
 
     private fun differenceNoOpt(csg: CSG): CSG {
+        // Subtracting anything from the empty solid yields the empty solid. The BSP
+        // below cannot express that: an empty `a` has no splitting plane, so it clips
+        // nothing away from `b`, `a.build(b.allPolygons())` then adopts the subtrahend
+        // wholesale and the closing `a.invert()` hands back an inside-out copy of
+        // `csg`. `simpleDifference` already short-circuits this case for the public
+        // entry point; the bounds-optimized paths reach differenceNoOpt directly with
+        // an empty left operand whenever nothing of `this` falls inside csg's bounding
+        // box, so the guard has to live here too. See issue #58.
+        if (_polygons.isEmpty()) {
+            return this
+        }
         val a = Node(copy()._polygons)
         val b = Node(csg.copy()._polygons)
         a.invert()

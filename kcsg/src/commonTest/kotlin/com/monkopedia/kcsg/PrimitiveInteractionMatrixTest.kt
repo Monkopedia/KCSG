@@ -28,14 +28,12 @@ class PrimitiveInteractionMatrixTest {
                 assertNearZero(result.intersectionVolume, 1e-6, "$ctx intersection")
                 assertTrue("$ctx difference should not exceed left", result.differenceVolume <= result.leftVolume + 1e-3)
                 assertTrue("$ctx difference should not be negative", result.differenceVolume >= -1e-6)
-                if (result.optType == CSG.OptType.NONE) {
-                    assertVolumeClose(
-                        expected = result.leftVolume,
-                        actual = result.differenceVolume,
-                        relativeTolerance = 1e-3,
-                        message = "$ctx difference unchanged",
-                    )
-                }
+                assertVolumeClose(
+                    expected = result.leftVolume,
+                    actual = result.differenceVolume,
+                    relativeTolerance = 1e-3,
+                    message = "$ctx difference unchanged",
+                )
             }
         }
     }
