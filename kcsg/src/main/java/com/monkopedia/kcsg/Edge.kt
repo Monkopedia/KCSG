@@ -77,12 +77,16 @@ data class Edge(val p1: Vertex, val p2: Vertex) {
      * Edges compare equal regardless of direction (see [equals]), so the hash must be
      * symmetric in [p1] and [p2] — otherwise `Edge(a, b)` and `Edge(b, a)` would be equal
      * with different hash codes and land in different buckets of any hash container.
+     * Addition rather than `xor` because `xor` collapses *every* degenerate edge
+     * `Edge(a, a)` onto the same constant regardless of `a`.
+     *
+     * **This does not make [Edge] safe as a hash key.** [Vertex]/[Vector3d] compare with a
+     * tolerance (`Plane.TOL`) but hash their exact bit pattern, so `-0.0` and `0.0` are
+     * equal vertices with different hash codes, and an [Edge] built from them inherits the
+     * inconsistency. See issue #65; until that is fixed, edge frequency must be counted by
+     * scanning with [equals], not by a hash-based grouping.
      */
-    override fun hashCode(): Int {
-        var hash = 7
-        hash = 71 * hash + (p1.hashCode() xor p2.hashCode())
-        return hash
-    }
+    override fun hashCode(): Int = 497 + (p1.hashCode() + p2.hashCode())
 
     /**
      * Two edges are equal when they connect the same pair of vertices, in either order.
@@ -355,6 +359,12 @@ data class Edge(val p1: Vertex, val p2: Vertex) {
             }
 
             // find potential boundary edges, i.e., edges that occur once (freq=1)
+            //
+            // This O(n^2) scan must NOT be replaced with a hash-based frequency count
+            // (`edges.groupingBy { it }.eachCount()`). Vertex/Vector3d compare with a
+            // tolerance but hash exact bits, so equal-but-differently-hashed vertices
+            // (`-0.0` vs `0.0`, which cylinder caps produce from cos/sin) split one edge
+            // across two buckets and silently change the boundary output. See issue #65.
             val potentialBoundaryEdges: MutableList<Edge> =
                 ArrayList()
             edges.forEach { e: Edge ->
