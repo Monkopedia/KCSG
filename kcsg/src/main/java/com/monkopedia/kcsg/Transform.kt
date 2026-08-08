@@ -551,11 +551,12 @@ class Transform {
     }
 
     /**
-     * Applies this transform to the specified vector.
+     * Applies this transform to the specified vector and returns the result as a new
+     * vector. [Vector3d] is immutable, so [vec] itself is never modified.
      *
      * @param vec vector to transform
      *
-     * @return the specified vector
+     * @return a transformed copy of the specified vector
      */
     fun transform(vec: Vector3d): Vector3d {
         val x: Double
@@ -570,12 +571,13 @@ class Transform {
     }
 
     /**
-     * Applies this transform to the specified vector.
+     * Applies this transform to the specified vector and returns the result as a new
+     * vector. [Vector3d] is immutable, so [vec] itself is never modified.
      *
      * @param vec vector to transform
      * @param amount transform amount (0 = 0 %, 1 = 100%)
      *
-     * @return the specified vector
+     * @return a transformed copy of the specified vector
      */
     fun transform(vec: Vector3d, amount: Double): Vector3d {
         val prevX: Double = vec.x

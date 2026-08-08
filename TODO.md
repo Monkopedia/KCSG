@@ -70,7 +70,7 @@ Goal: 100% test coverage of public API in `kcsg` and `kcsg-dsl`, with determinis
 - [x] Add `WeightFunctionAndModifierTest` for `WeightFunction.eval` via `CSG.weighted`.
 - [x] Add `AxisModifierTest` for `XModifier`, `YModifier`, `ZModifier`, and centered/non-centered behavior.
 - [x] Add `UnityModifierTest` for constant weight behavior.
-- [x] Add `MeshContainerTest` for dimensions, bounds, meshes/materials accessors, `getAsMeshViews`, and constructor precondition mismatch.
+- [x] ~~Add `MeshContainerTest` for dimensions, bounds, meshes/materials accessors, `getAsMeshViews`, and constructor precondition mismatch.~~ Not applicable: the Kotlin port has no `MeshContainer` type (`git grep -l MeshContainer` matches this file only), so no such test was ever added. Left checked so the autonomous TODO runner does not retry an impossible item.
 - [x] Add `OpOverrideContractTest` covering custom override dispatch paths from `CSG`, `STL`, `Bounds`, and `Primitive`.
 
 ## Phase 8 - `kcsg-dsl` Full Coverage (Currently 0 Tests)
@@ -142,6 +142,6 @@ Goal: 100% test coverage of public API in `kcsg` and `kcsg-dsl`, with determinis
 
 ## Phase 14 - Final Ratchet and Closeout
 
-- [x] Run full verification sweep: `./gradlew test :kcsg:sampleTest :kcsg:koverVerify :kcsg-dsl:koverVerify`.
+- [x] Run full verification sweep: `./gradlew test :kcsg:koverVerify :kcsg-dsl:koverVerify`. (Originally recorded with `:kcsg:sampleTest` in the list; that task is not registered anywhere in the build, so the command as written aborts with "Task not found". The other three are real.)
 - [ ] Record final percentages and close remaining TODO items in this file. [Current: `kcsg` module `83.01%`, `kcsg` API package `98.20%`, `kcsg-dsl` module `94.76%`; hashing/file I/O edge cases remain.]
 - [x] Reconfirm `docs/public-api-checklist.md` has no `missing`/`partial` symbols and update references if new tests were added.

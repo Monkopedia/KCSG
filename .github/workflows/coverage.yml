@@ -90,6 +90,18 @@ jobs:
   #
   # Apple, mingw and linuxArm64 stay compile-and-ABI-only: their test binaries
   # cannot execute on a Linux runner. That is deliberate, not an oversight.
+  #
+  # Adding a macOS job would not close the Apple gap, and would look like it did.
+  # KGP enables a native test task only when the target matches the host
+  # (KotlinNativeHostTestRunFactory keys off `konanTarget.isCurrentHost`; the
+  # simulator factory additionally requires a matching host architecture), and a
+  # disabled Gradle task reports SKIPPED inside a green build. GitHub's macOS
+  # runners are arm64, so of the 12 Apple targets published here only
+  # macosArm64Test and the three *SimulatorArm64 test tasks would run;
+  # macosX64Test, iosX64Test, tvosX64Test and watchosX64Test would silently skip,
+  # and the four device targets (iosArm64, tvosArm64, watchosArm32, watchosArm64)
+  # have no test task at all. Anyone adding that job must assert on the uploaded
+  # test-results XML, not on the job going green.
   multiplatform-test:
     runs-on: ubuntu-latest
     strategy:
