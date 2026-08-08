@@ -81,10 +81,13 @@ data class Edge(val p1: Vertex, val p2: Vertex) {
      * `Edge(a, a)` onto the same constant regardless of `a`.
      *
      * **This does not make [Edge] safe as a hash key.** [Vertex]/[Vector3d] compare with a
-     * tolerance (`Plane.TOL`) but hash their exact bit pattern, so `-0.0` and `0.0` are
-     * equal vertices with different hash codes, and an [Edge] built from them inherits the
-     * inconsistency. See issue #65; until that is fixed, edge frequency must be counted by
-     * scanning with [equals], not by a hash-based grouping.
+     * tolerance (`ext.vvecmath.Plane.TOL`, 1e-12 — not `com.monkopedia.kcsg.Plane.EPSILON`,
+     * 1e-8) but hash their exact bit pattern, so vertices that are
+     * equal-within-tolerance without being bit-identical have different hash codes, and an
+     * [Edge] built from them inherits the inconsistency. `-0.0` vs `0.0` is the guaranteed
+     * case; in practice it is trig residue in revolved primitives. See issue #65; until
+     * that is fixed, edge frequency must be counted by scanning with [equals], not by a
+     * hash-based grouping.
      */
     override fun hashCode(): Int = 497 + (p1.hashCode() + p2.hashCode())
 
@@ -362,9 +365,16 @@ data class Edge(val p1: Vertex, val p2: Vertex) {
             //
             // This O(n^2) scan must NOT be replaced with a hash-based frequency count
             // (`edges.groupingBy { it }.eachCount()`). Vertex/Vector3d compare with a
-            // tolerance but hash exact bits, so equal-but-differently-hashed vertices
-            // (`-0.0` vs `0.0`, which cylinder caps produce from cos/sin) split one edge
-            // across two buckets and silently change the boundary output. See issue #65.
+            // tolerance (ext.vvecmath.Plane.TOL, 1e-12) but hash exact bits, so vertices
+            // that are equal-within-tolerance but not bit-identical hash into different
+            // buckets and split one edge in two. `-0.0` vs `0.0` is the guaranteed case;
+            // in practice it is trig residue in revolved primitives — a cylinder's seam
+            // vertex is emitted once at angle 0, where sin is exactly 0.0, and once at
+            // angle 2*PI, where sin is 2.4e-16 in magnitude rather than 0. Measured on
+            // Cylinder(1.0, 2.0, 8): zero -0.0 coordinates, but two such pairs
+            // ([1.0, 0.0, z] ~ [1.0, 2.4492935982947064E-16, z], one per cap circle),
+            // which is why it drops from 10 boundary polygons to 9 under groupingBy.
+            // Every primitive swept through a full turn has the same seam. See issue #65.
             val potentialBoundaryEdges: MutableList<Edge> =
                 ArrayList()
             edges.forEach { e: Edge ->
