@@ -15,7 +15,7 @@ This repository is a multi-module Gradle project:
 - `./gradlew :kcsg:oracleTest -Pkcsg.oracle.quick=true`: local quick mode for remesh oracle checks (full mode remains default).
 - `./gradlew :csgs:run --args "<path/to/script.csgs>"`: execute a script with the CLI.
 - `./gradlew :csgs:fatJar`: produce a distributable `csgs-all-*.jar`.
-- `./gradlew :samples:run`: launch sample app entry points.
+- `./gradlew :samples:run -Pkcsg.sample=<SampleName>`: launch one sample entry point, e.g. `-Pkcsg.sample=Spheres`. The name is resolved against `com.monkopedia.kcsg.samples`; pass a dotted name to launch anything else (`-Pkcsg.sample=com.monkopedia.kcsg.playground.Main`). Without the property it runs `RoundedCubeSample`. Available samples are the files under `samples/src/main/java/com/monkopedia/kcsg/samples/`; each writes its STL/OBJ into `samples/build/sample-output/`.
 
 ## Coding Style & Naming Conventions
 - Follow the conventions in `.editorconfig`: 4-space indentation, LF line endings, max line length 100, no trailing commas. **Nothing in the build enforces these** — there is no ktlint or spotless configuration anywhere in the project, so `.editorconfig` is IDE-only guidance and the existing sources do not fully satisfy it. Match the surrounding file; do not reformat unrelated code to chase these rules.
