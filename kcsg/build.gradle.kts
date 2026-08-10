@@ -1,3 +1,4 @@
+import java.time.Duration
 import org.gradle.api.tasks.Exec
 import org.gradle.api.tasks.testing.Test
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
@@ -105,6 +106,14 @@ val oracleGenerateFixtures by tasks.registering(Exec::class) {
     description = "Generates OpenSCAD oracle fixtures used by oracle agreement tests."
     group = "verification"
     workingDir = rootProject.projectDir
+    // Outermost net. The script bounds every OpenSCAD invocation itself (120s each, 600s for
+    // the run) and the installer bounds its downloads (300s per attempt, three attempts), so
+    // the worst legitimate case is roughly 15 minutes of install plus 10 of rendering. 30
+    // minutes covers that with margin, which means this should never be what fires: the
+    // script's own bounds report which fixture hung, this one only catches a wedge outside
+    // them. Exec honours Task.timeout by destroying the process, so the build fails rather
+    // than running to the CI job limit.
+    timeout.set(Duration.ofMinutes(30))
     val outputDir = layout.buildDirectory.dir("oracle-fixtures")
     commandLine(
         "bash",

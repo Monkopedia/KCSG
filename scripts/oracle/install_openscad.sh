@@ -33,17 +33,41 @@ if ! command -v sha256sum >/dev/null 2>&1; then
     exit 1
 fi
 
+# Same coreutils package as sha256sum above, so this costs nothing extra to demand, and it
+# means there is no code path here that runs OpenSCAD without a bound.
+if ! command -v timeout >/dev/null 2>&1; then
+    echo "timeout is required so the install-time OpenSCAD check cannot hang." >&2
+    exit 1
+fi
+
+# Bounds on a single download attempt. The AppImage is 84.6 MB and fetches in 4.3s here
+# (~19 MB/s), so a 300s cap per attempt is ~70x the observed download and still only needs
+# ~280 kB/s sustained -- far below anything a CI runner or a home connection provides. With
+# --retry 3 the worst case is ~15 minutes instead of the unbounded wait a stalled connection
+# currently produces, where --retry alone reconnects forever rather than failing.
+DOWNLOAD_CONNECT_TIMEOUT_SECONDS=30
+DOWNLOAD_MAX_TIME_SECONDS=300
+
 download_file() {
     local url="$1"
     local dest="$2"
 
     if command -v curl >/dev/null 2>&1; then
-        curl -fL --retry 3 --retry-delay 2 -o "$dest" "$url"
+        curl -fL \
+            --connect-timeout "$DOWNLOAD_CONNECT_TIMEOUT_SECONDS" \
+            --max-time "$DOWNLOAD_MAX_TIME_SECONDS" \
+            --retry 3 --retry-delay 2 \
+            -o "$dest" "$url"
         return
     fi
 
     if command -v wget >/dev/null 2>&1; then
-        wget -O "$dest" "$url"
+        # wget has no whole-transfer cap; --timeout bounds connect/read/DNS stalls, which is
+        # the failure mode --max-time addresses above, and --tries replaces wget's default 20.
+        wget \
+            --timeout="$DOWNLOAD_CONNECT_TIMEOUT_SECONDS" \
+            --tries=3 \
+            -O "$dest" "$url"
         return
     fi
 
@@ -96,4 +120,23 @@ WRAPPER
 chmod +x "$wrapper_path"
 
 echo "OpenSCAD installed at $wrapper_path"
-"$wrapper_path" --version
+
+# The install-time smoke check is an OpenSCAD invocation like any other and can wedge the
+# same way (this one runs before the generator's own budget starts), so it gets the same
+# 120s bound the generator and the oracle test use.
+VERIFY_TIMEOUT_SECONDS=120
+verify_status=0
+timeout --kill-after=10s "${VERIFY_TIMEOUT_SECONDS}s" "$wrapper_path" --version || verify_status=$?
+
+if (( verify_status == 124 || verify_status == 137 )); then
+    echo "Installed OpenSCAD did not respond to --version within ${VERIFY_TIMEOUT_SECONDS}s." >&2
+    echo "The AppImage at $artifact_path is unusable; not leaving it in place." >&2
+    rm -f "$wrapper_path"
+    exit 124
+fi
+
+if (( verify_status != 0 )); then
+    echo "Installed OpenSCAD failed --version with exit code $verify_status." >&2
+    rm -f "$wrapper_path"
+    exit "$verify_status"
+fi
