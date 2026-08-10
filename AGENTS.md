@@ -43,6 +43,7 @@ There are two complementary public-API gates; a public-API change must satisfy b
 - Before opening a PR, run the command CI runs (`coverage.yml`), plus `apiDump` first if you changed public API:
   `./gradlew apiCheck :kcsg:test :kcsg-dsl:test :kcsg:oracleTest :csgs:test :samples:build :kcsg:koverXmlReport :kcsg:koverVerifyJvm :kcsg-dsl:koverXmlReport :kcsg-dsl:koverVerify`
   CI additionally executes the `commonTest` suites on JS, Wasm and linuxX64 in a separate job (`:kcsg:jsNodeTest`, `:kcsg:wasmJsNodeTest`, `:kcsg:wasmWasiNodeTest`, `:kcsg:linuxX64Test` and the `:kcsg-dsl` equivalents); run those too if you touched `commonMain`/`commonTest`.
+  The same job also runs the js/wasmJs suites in headless Chrome (`:kcsg:jsBrowserTest`, `:kcsg:wasmJsBrowserTest` and the `:kcsg-dsl` equivalents). Locally these need a browser karma can find: export `CHROME_BIN=$(command -v chromium)` if you do not have `google-chrome` on `PATH`. Browser mocha timeouts come from `<module>/karma.config.d/`, not from the `useMocha` DSL — calling `useMocha` inside `browser { testTask { .. } }` swaps karma out for a node mocha runner, which changes the npm dependency set (invalidating `kotlin-js-store/yarn.lock`) and stops the tests running in a browser at all.
 - `:kcsg:koverVerifyJvm` enforces API-package coverage for `com.monkopedia.kcsg` (excluding vendored `com.monkopedia.kcsg.ext.*`), while `:kcsg:koverXmlReport` preserves full-module trend visibility.
 - PR CI enforces all three: the BCV ABI check, the library coverage gate, and the public API checklist update requirement.
 

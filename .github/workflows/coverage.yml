@@ -81,7 +81,8 @@ jobs:
             kcsg-dsl/build/test-results/
             csgs/build/test-results/
 
-  # Executes the commonTest suites on the non-JVM targets a Linux runner can run.
+  # Executes the commonTest suites on the non-JVM targets and JS environments a
+  # Linux runner can run.
   # `:kcsg:test`/`:kcsg-dsl:test` are dependsOn(jvmTest), so without this job the
   # commonTest sources are compiled for these targets but never executed — the
   # library had an ABI gate on all 19 published coordinates per module and a
@@ -102,6 +103,14 @@ jobs:
   # and the four device targets (iosArm64, tvosArm64, watchosArm32, watchosArm64)
   # have no test task at all. Anyone adding that job must assert on the uploaded
   # test-results XML, not on the job going green.
+  #
+  # The js and wasm legs run each target in BOTH of its declared environments.
+  # `browser()` is declared on js and wasmJs in both modules, and a browser is a
+  # different JS environment from Node for the same published artifact — the
+  # realistic browser-only failures are anything reaching for a Node API and the
+  # kotlinx-io file paths, which a browser has no equivalent for. Karma fails soft
+  # (see scripts/ci/assert_browser_tests_ran.sh), so the browser legs are gated on
+  # an explicit executed-count assertion rather than on the exit status.
   multiplatform-test:
     runs-on: ubuntu-latest
     strategy:
@@ -109,11 +118,14 @@ jobs:
       matrix:
         target:
           - name: js
-            tasks: ":kcsg:jsNodeTest :kcsg-dsl:jsNodeTest"
+            tasks: ":kcsg:jsNodeTest :kcsg-dsl:jsNodeTest :kcsg:jsBrowserTest :kcsg-dsl:jsBrowserTest"
+            browserVariant: js
           - name: wasm
-            tasks: ":kcsg:wasmJsNodeTest :kcsg:wasmWasiNodeTest :kcsg-dsl:wasmJsNodeTest :kcsg-dsl:wasmWasiNodeTest"
+            tasks: ":kcsg:wasmJsNodeTest :kcsg:wasmWasiNodeTest :kcsg-dsl:wasmJsNodeTest :kcsg-dsl:wasmWasiNodeTest :kcsg:wasmJsBrowserTest :kcsg-dsl:wasmJsBrowserTest"
+            browserVariant: wasmJs
           - name: native-linux
             tasks: ":kcsg:linuxX64Test :kcsg-dsl:linuxX64Test"
+            browserVariant: ""
     steps:
       - uses: actions/checkout@v4
 
@@ -126,8 +138,35 @@ jobs:
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
 
+      # karma-chrome-launcher resolves ChromeHeadless from CHROME_BIN first and
+      # only then guesses at binary names. Resolving it here means the leg fails
+      # with "no chrome" instead of with something further downstream, and it
+      # documents the one variable a local reproduction needs (this box may have
+      # `chromium` where the runner has `google-chrome`).
+      - name: Resolve headless Chrome
+        if: matrix.target.browserVariant != ''
+        run: |
+          for candidate in "$CHROME_BIN" google-chrome google-chrome-stable chromium chromium-browser; do
+            [ -n "$candidate" ] || continue
+            resolved="$(command -v "$candidate" || true)"
+            if [ -n "$resolved" ]; then
+              echo "CHROME_BIN=$resolved" >> "$GITHUB_ENV"
+              "$resolved" --version || true
+              exit 0
+            fi
+          done
+          echo "No Chrome/Chromium binary found; the browser test legs cannot run."
+          exit 1
+
       - name: Test ${{ matrix.target.name }} targets
         run: ./gradlew ${{ matrix.target.tasks }} --stacktrace
+
+      # A green browser task is NOT evidence that it tested anything; see the
+      # script's header. This reads <testsuite tests="N"> and fails on N == 0 or
+      # on a browser/node mismatch.
+      - name: Assert ${{ matrix.target.name }} browser suites executed
+        if: matrix.target.browserVariant != ''
+        run: ./scripts/ci/assert_browser_tests_ran.sh ${{ matrix.target.browserVariant }}
 
       - name: Upload ${{ matrix.target.name }} test results
         if: always()
