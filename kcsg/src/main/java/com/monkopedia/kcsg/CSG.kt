@@ -432,6 +432,23 @@ class CSG private constructor(
     private fun differencePolygonBoundsOpt(csg: CSG): CSG {
         val bounds = csg.bounds
         val (inner, outer) = _polygons.partition { bounds.intersects(it.bounds) }
+        if (inner.isEmpty()) {
+            // The partition is a proximity test, not a containment test, so an empty
+            // `inner` carries two incompatible meanings: `csg` may be disjoint from this
+            // solid (answer: this solid, unchanged), or it may sit strictly inside it,
+            // clear of every face (answer: this solid with an internal void, whose
+            // surface is the inverted `csg`). The partition cannot tell them apart, so
+            // the optimization simply does not apply and the unoptimized difference over
+            // the whole receiver has to decide it. See issue #58.
+            //
+            // The one reading that *is* decidable cheaply is bounding boxes that do not
+            // even touch: that is provably zero shared volume, so `outer` -- which is all
+            // of `_polygons` here -- is already the answer and the BSP can be skipped.
+            if (!bounds.intersects(this.bounds)) {
+                return fromPolygons(outer).optimization(getOptType())
+            }
+            return differenceNoOpt(csg)
+        }
         val innerCSG = fromPolygons(inner)
         val allPolygons: MutableList<Polygon> = ArrayList()
         allPolygons.addAll(outer)
@@ -440,6 +457,22 @@ class CSG private constructor(
     }
 
     private fun differenceNoOpt(csg: CSG): CSG {
+        // Subtracting anything from the empty solid yields the empty solid. The BSP
+        // below cannot express that: an empty `a` has no splitting plane, so it clips
+        // nothing away from `b`, `a.build(b.allPolygons())` then adopts the subtrahend
+        // wholesale and the closing `a.invert()` hands back an inside-out copy of
+        // `csg`. `simpleDifference` already short-circuits this case for the public
+        // entry point, but `differenceCSGBoundsOpt` reaches differenceNoOpt directly
+        // with an empty left operand: its `a2` is `this.intersect(csg.bounds.toCSG())`,
+        // and an empty `a2` proves no part of `this` lies inside csg's box, so the
+        // empty solid really is the answer there. See issue #58.
+        //
+        // Note this guard is *not* what makes `differencePolygonBoundsOpt` correct --
+        // its "empty" means something weaker and it decides the case itself, before
+        // calling here. See the comment there.
+        if (_polygons.isEmpty()) {
+            return this
+        }
         val a = Node(copy()._polygons)
         val b = Node(csg.copy()._polygons)
         a.invert()
