@@ -4,6 +4,7 @@ import com.monkopedia.kcsg.testutil.GeometryAssertions.assertVectorClose
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
+import kotlin.test.assertNotEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
@@ -23,6 +24,56 @@ class EdgeApiTest {
         assertEquals(edge, reversed)
         assertEquals(edge, sameDirection)
         assertEquals(edge.hashCode(), sameDirection.hashCode())
+    }
+
+    /**
+     * Regression test for #42, defect 2: `hashCode` was direction-dependent
+     * (`71 * (71 * 7 + p1.hash) + p2.hash`) while `equals` is direction-independent, so
+     * `Edge(a, b)` and `Edge(b, a)` compared equal but hashed differently. That violates
+     * the `hashCode` contract and makes any hash container behave by insertion order.
+     */
+    @Test
+    fun reversedEdgesHashAlikeAndCollapseInHashContainers() {
+        val a = Vertex(Vector3d.xyz(0.0, 0.0, 0.0), Vector3d.Z_ONE)
+        val b = Vertex(Vector3d.xyz(2.0, 0.0, 0.0), Vector3d.Z_ONE)
+        val forward = Edge(a, b)
+        val reversed = Edge(b, a)
+
+        assertEquals(forward, reversed)
+        assertEquals(forward.hashCode(), reversed.hashCode())
+
+        assertTrue(hashSetOf(forward).contains(reversed))
+        assertTrue(hashSetOf(reversed).contains(forward))
+        assertEquals(1, hashSetOf(forward, reversed).size)
+        assertEquals(1, hashSetOf(reversed, forward).size)
+    }
+
+    /**
+     * Regression test for #42, defect 1: `equals` checked that each of the other edge's
+     * endpoints matched *some* endpoint of this edge without requiring the two matches to
+     * use *different* endpoints. A degenerate edge `Edge(a, a)` therefore compared equal to
+     * every edge sharing an endpoint with it, breaking transitivity.
+     */
+    @Test
+    fun equalsIsTransitiveAroundDegenerateEdges() {
+        val a = Vertex(Vector3d.xyz(0.0, 0.0, 0.0), Vector3d.Z_ONE)
+        val b = Vertex(Vector3d.xyz(1.0, 0.0, 0.0), Vector3d.Z_ONE)
+        val c = Vertex(Vector3d.xyz(0.0, 1.0, 0.0), Vector3d.Z_ONE)
+        val ab = Edge(a, b)
+        val ac = Edge(a, c)
+        val degenerate = Edge(a, a)
+
+        // ab != ac is the anchor: it holds before and after the fix.
+        assertNotEquals(ab, ac)
+        // ...so transitivity requires the degenerate edge to differ from both.
+        assertNotEquals(ab, degenerate)
+        assertNotEquals(degenerate, ab)
+        assertNotEquals(ac, degenerate)
+        assertNotEquals(degenerate, ac)
+
+        // A shared endpoint alone must not make two distinct edges equal either.
+        assertNotEquals(ab, Edge(b, c))
+        assertEquals(degenerate, Edge(a, a))
     }
 
     @Test
