@@ -39,8 +39,8 @@ KCSG is published on Maven Central as `com.monkopedia:kcsg` and `com.monkopedia:
 ```kotlin
 // build.gradle.kts
 dependencies {
-    implementation("com.monkopedia:kcsg:0.5.0")
-    implementation("com.monkopedia:kcsg-dsl:0.5.0")
+    implementation("com.monkopedia:kcsg:0.5.1")
+    implementation("com.monkopedia:kcsg-dsl:0.5.1")
 }
 ```
 
@@ -51,7 +51,7 @@ For Kotlin Multiplatform projects, add the dependencies in `commonMain` and Grad
 KCSG includes `csgs`, a standalone command line tool that runs `.csgs` script files and generates STL or OBJ output directly — no Kotlin project required. The fat jar is attached to each [GitHub release](https://github.com/Monkopedia/KCSG/releases).
 
 ```bash
-java -jar csgs-all-0.5.0.jar sensor.csgs -e base -o out/
+java -jar csgs-all-0.5.1.jar sensor.csgs -e base -o out/
 ```
 
 This makes KCSG usable as a scripting environment for 3D modeling. Write geometry in the DSL, run it from the command line, and get mesh output.
