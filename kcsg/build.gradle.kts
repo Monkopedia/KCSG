@@ -78,7 +78,11 @@ kotlin {
         val commonMain by getting {
             kotlin.srcDir("src/main/java")
             dependencies {
-                implementation(libs.kotlinx.io.core)
+                // `api`, not `implementation`: kotlinx.io.files.Path and kotlinx.io.Source
+                // appear in this module's public signatures (FileUtil.toStlFile/read/write,
+                // STL.file, ObjFile.objSource/mtlSource), so they have to reach a consumer's
+                // *compile* classpath. See scripts/consumer-smoke.sh and issue #51.
+                api(libs.kotlinx.io.core)
             }
         }
         val commonTest by getting {
@@ -148,6 +152,12 @@ tasks.register("test") {
     dependsOn(tasks.named("jvmTest"))
 }
 
+// Set only by scripts/consumer-smoke.sh. In this mode the module publishes UNSIGNED to a
+// throwaway file repository under <root>/build/consumer-smoke-repo so that a separate
+// consumer build can resolve the real published metadata. Never set it for a real release:
+// signing is what Maven Central rejects the upload without.
+val consumerSmokePublish = providers.gradleProperty("kcsg.consumerSmoke").isPresent
+
 mavenPublishing {
     pom {
         name.set("kcsg")
@@ -174,12 +184,26 @@ mavenPublishing {
     }
     publishToMavenCentral(automaticRelease = true)
 
-    signAllPublications()
+    if (!consumerSmokePublish) {
+        signAllPublications()
+    }
 }
 
-signing {
-    sign(publishing.publications)
-    useGpgCmd()
+if (!consumerSmokePublish) {
+    signing {
+        sign(publishing.publications)
+        useGpgCmd()
+    }
+} else {
+    publishing {
+        repositories {
+            maven {
+                name = "consumerSmoke"
+                url = rootProject.layout.buildDirectory
+                    .dir("consumer-smoke-repo").get().asFile.toURI()
+            }
+        }
+    }
 }
 
 kover {
