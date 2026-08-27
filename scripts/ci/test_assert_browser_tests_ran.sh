@@ -58,6 +58,13 @@ check "healthy suite passes"                    0 "$(run_case 5 0 5 0)"
 
 # The finding this file was written for.
 check "all-skipped browser suite FAILS"         1 "$(run_case 5 5 5 0)"
+
+# The other side of the tests-minus-skipped boundary, and the only case that
+# exercises the subtraction toward PASS. Without it, `sum += (s > 0 ? 0 : t)` and
+# `sum += t - s - 1` both survive this whole file while wrongly rejecting a
+# legitimately mostly-skipped suite -- a gate that is wrong in the direction that
+# looks like strictness, and gets blamed on flaky CI rather than on itself.
+check "mostly-skipped matching pair PASSES"     0 "$(run_case 5 4 5 4)"
 check "partially-skipped mismatch FAILS"        1 "$(run_case 5 2 5 0)"
 
 # Pre-existing behaviours, kept under control so a refactor cannot drop them.
