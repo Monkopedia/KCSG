@@ -49,6 +49,14 @@ jobs:
             fi
           fi
 
+      # The browser-execution gate is itself a gate, and a gate nobody has watched
+      # fail cannot be distinguished from one that cannot fail. This feeds it
+      # synthetic JUnit XML and requires it to go RED on an all-skipped suite, on
+      # zero tests, and on a browser/node mismatch -- plus GREEN on a healthy one,
+      # so "fails everything" cannot masquerade as working. Pure bash, ~1s.
+      - name: Self-test the browser-execution gate
+        run: ./scripts/ci/test_assert_browser_tests_ran.sh
+
       - name: Validate public ABI (binary-compatibility-validator)
         run: ./gradlew apiCheck --stacktrace
 
@@ -69,8 +77,10 @@ jobs:
 
       # Gradle prints "N tests completed" only on FAILURE, so a passing test task
       # prints no count at all and the console cannot distinguish 145 tests from
-      # zero. These XML results carry <testsuite tests="N">, which is the only
-      # thing that proves a suite tested something rather than merely ran.
+      # zero. These XML results carry <testsuite tests="N" skipped="M">, and the
+      # number that proves a suite RAN something is tests minus skipped -- `tests`
+      # on its own counts @Ignore'd cases, so an entirely skipped suite reports a
+      # full, healthy N. Read both attributes or the count proves only collection.
       - name: Upload JVM test results
         if: always()
         uses: actions/upload-artifact@v4
@@ -162,8 +172,10 @@ jobs:
         run: ./gradlew ${{ matrix.target.tasks }} --stacktrace
 
       # A green browser task is NOT evidence that it tested anything; see the
-      # script's header. This reads <testsuite tests="N"> and fails on N == 0 or
-      # on a browser/node mismatch.
+      # script's header. This reads <testsuite tests="N" skipped="M">, counts
+      # tests-minus-skipped, and fails on 0 executed or on a browser/node
+      # mismatch. scripts/ci/test_assert_browser_tests_ran.sh is its negative
+      # control and runs in library-quality.
       - name: Assert ${{ matrix.target.name }} browser suites executed
         if: matrix.target.browserVariant != ''
         run: ./scripts/ci/assert_browser_tests_ran.sh ${{ matrix.target.browserVariant }}
