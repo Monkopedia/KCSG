@@ -276,6 +276,14 @@ class CSG private constructor(
             allPolygons.addAll(outer)
             allPolygons.addAll(innerCSG.unionNoOpt(csg)._polygons)
         } else {
+            // An empty `inner` is a proximity result, not a containment one: `csg` may be
+            // disjoint from this solid, or strictly inside it, clear of every face. Only
+            // the former makes concatenation correct; the latter would leave `csg` as a
+            // floating interior shell. Disjoint bounding boxes are the cheap proof of the
+            // former; anything else goes to the full BSP. See issues #77 and #58.
+            if (bounds.intersects(this.bounds)) {
+                return unionNoOpt(csg)
+            }
             allPolygons.addAll(_polygons)
             allPolygons.addAll(csg._polygons)
         }
@@ -299,7 +307,9 @@ class CSG private constructor(
             }
         }
         val allPolygons: MutableList<Polygon> = ArrayList()
-        if (intersects) {
+        // No polygon near `csg` does not mean disjoint: `csg` may sit strictly inside this
+        // solid. Concatenate only when the bounding boxes prove zero shared volume. See #77.
+        if (intersects || bounds.intersects(this.bounds)) {
             return unionNoOpt(csg)
         } else {
             allPolygons.addAll(_polygons)

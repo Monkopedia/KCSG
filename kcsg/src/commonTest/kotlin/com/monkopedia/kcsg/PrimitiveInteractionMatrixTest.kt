@@ -82,13 +82,14 @@ class PrimitiveInteractionMatrixTest {
                     relativeTolerance = 1e-6,
                     message = "$ctx containment intersection",
                 )
-                // Union genuinely needs the loose budget: under CSG_BOUND/POLYGON_BOUND a
-                // contained solid costs up to 2.14% of the receiver's volume (Sphere-Cylinder),
-                // which is a separate known imprecision and not what this scenario is guarding.
+                // Union of a strictly contained pair is the receiver itself. The old 3e-2
+                // budget hid a union that kept the contained operand as a floating interior
+                // shell under CSG_BOUND/POLYGON_BOUND (up to 2.78% of the receiver) -- see
+                // CSGOptTypeParityTest.unionWithStrictlyInteriorOperandReturnsReceiverUnderEveryOptType.
                 assertVolumeClose(
                     expected = result.leftVolume,
                     actual = result.unionVolume,
-                    relativeTolerance = 3e-2,
+                    relativeTolerance = 1e-6,
                     message = "$ctx containment union",
                 )
                 assertVolumeClose(
