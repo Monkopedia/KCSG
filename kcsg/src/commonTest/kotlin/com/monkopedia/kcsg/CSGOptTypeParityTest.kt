@@ -4,6 +4,7 @@ import com.monkopedia.kcsg.testutil.GeometryAssertions.assertBoundsClose
 import com.monkopedia.kcsg.testutil.GeometryAssertions.assertFiniteMesh
 import com.monkopedia.kcsg.testutil.GeometryAssertions.assertVolumeClose
 import kotlin.test.Test
+import kotlin.test.assertEquals
 
 class CSGOptTypeParityTest {
     @Test
@@ -155,6 +156,64 @@ class CSGOptTypeParityTest {
                     actual = result.bounds,
                     tolerance = 1e-9,
                     message = "$name opt=$optType difference bounds must match OptType.NONE",
+                )
+            }
+        }
+    }
+
+    /**
+     * Regression for issue #77.
+     *
+     * When the right operand sits strictly inside the receiver, clear of every face, the
+     * bounds-optimized unions saw no receiver polygon near it and concatenated both polygon
+     * lists. That left `right` as a floating interior shell, so the reported volume was
+     * `volume(left) + volume(right)` instead of `volume(left)`.
+     *
+     * `left ∪ right` with `right ⊂ left` is `left` exactly, so the expected volume is the
+     * receiver's own (for the cube, the analytic 125), and no vertex of the result may lie
+     * inside the contained operand's box -- the receiver's surface is nowhere near it.
+     */
+    @Test
+    fun unionWithStrictlyInteriorOperandReturnsReceiverUnderEveryOptType() {
+        val cases = listOf(
+            Triple("cube-in-cube", cubeOfSize(5.0), cubeOfSize(1.2)),
+            Triple("sphere-in-cube", cubeOfSize(5.0), sphereOfRadius(0.6)),
+            Triple("sphere-in-sphere", sphereOfRadius(2.5), sphereOfRadius(0.6)),
+            Triple("cylinder-in-cube", cubeOfSize(5.0), cylinderOfRadius(0.6)),
+            Triple("cube-in-sphere", sphereOfRadius(2.5), cubeOfSize(1.2)),
+        )
+
+        cases.forEach { (name, left, right) ->
+            val leftVolume = left.computeVolume()
+            if (name == "cube-in-cube") {
+                assertVolumeClose(
+                    expected = 125.0,
+                    actual = leftVolume,
+                    relativeTolerance = 1e-12,
+                    message = "$name fixture: analytic receiver volume",
+                )
+            }
+            CSG.OptType.entries.forEach { optType ->
+                val result = left.copy().optimization(optType).union(right.copy())
+                assertFiniteMesh(result)
+                assertVolumeClose(
+                    expected = leftVolume,
+                    actual = result.computeVolume(),
+                    relativeTolerance = 1e-9,
+                    message = "$name opt=$optType union must equal the receiver",
+                )
+                assertBoundsClose(
+                    expected = left.bounds,
+                    actual = result.bounds,
+                    tolerance = 1e-9,
+                    message = "$name opt=$optType union bounds must equal the receiver's",
+                )
+                val interior = right.bounds
+                val shellVertices = result.polygons.sumOf { p -> p.vertices.count { it in interior } }
+                assertEquals(
+                    0,
+                    shellVertices,
+                    "$name opt=$optType union must not keep a floating interior shell",
                 )
             }
         }
