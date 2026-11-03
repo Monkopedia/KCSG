@@ -148,6 +148,10 @@ abstract class KcsgBuilder {
                 CSG.opOverride?.operation("dsl-csg-remesh", remesh)
                 val time = measureTime {
                     val csg = BuilderContextImpl.lazyBuilder()
+                    // Key on what the builder returned, not only on the operations it ran: a
+                    // builder may hand back a solid built outside this pass with no operation
+                    // applied to it (#79).
+                    CSG.opOverride?.operation("dsl-csg-result", csg)
                     if (remesh) {
                         csg.remesh()
                     }
