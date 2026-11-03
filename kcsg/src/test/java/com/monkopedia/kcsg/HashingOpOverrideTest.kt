@@ -194,15 +194,24 @@ class HashingOpOverrideTest {
         assertNotEquals(oneOp, twoOps)
     }
 
-    // #79: stream/file content was unframed, so bytes could shift between a source and the
-    // operation that follows it.
+    // #79: stream/file content was unframed, so a source whose bytes end with the encoding of
+    // the following call was indistinguishable from that source followed by the call.
     @Test
     fun sourceContentIsLengthFramed() {
-        fun hashOf(content: String, nextOp: String): String = HashingOpOverride().apply {
-            source { Buffer().apply { write(content.encodeToByteArray()) } }
-            operation(nextOp)
+        fun intLe(v: Int) =
+            byteArrayOf(v.toByte(), (v shr 8).toByte(), (v shr 16).toByte(), (v shr 24).toByte())
+        fun framed(s: String) = s.encodeToByteArray().let { intLe(it.size) + it }
+        // the bytes HashingOpOverride writes for operation("x") with no arguments
+        val opRecord = framed("call:op") + intLe(0) + framed("str") + framed("x")
+
+        val sourceThenOp = HashingOpOverride().apply {
+            source { Buffer().apply { write("abc".encodeToByteArray()) } }
+            operation("x")
         }.hash()
-        assertNotEquals(hashOf("abc", "def"), hashOf("abcd", "ef"))
+        val sourceSwallowingOp = HashingOpOverride().apply {
+            source { Buffer().apply { write("abc".encodeToByteArray() + opRecord) } }
+        }.hash()
+        assertNotEquals(sourceThenOp, sourceSwallowingOp)
     }
 
     // #79: a CSG that was not produced by the hashing pass (built with real geometry outside it)
