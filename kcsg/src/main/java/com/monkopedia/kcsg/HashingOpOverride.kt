@@ -249,12 +249,10 @@ class HashingOpOverride : OpOverride {
         }
         return createCSG()
     }
-
-    private companion object {
-        /** Leads every digest; bump when the encoding changes (see class doc). */
-        const val FORMAT_VERSION = "kcsg-hash-v2"
-    }
 }
+
+/** Leads every [HashingOpOverride] digest; bump when the encoding changes (see its class doc). */
+private const val FORMAT_VERSION = "kcsg-hash-v2"
 
 private fun ByteArray.toHexString(): String {
     val digits = "0123456789abcdef"
