@@ -170,6 +170,99 @@ class HashingOpOverrideTest {
         assertNotEquals(centered, notCentered)
     }
 
+    // #79: a String argument was written as raw UTF-8 with no length framing, so moving the
+    // boundary between two adjacent strings produced the same byte stream and the same key.
+    @Test
+    fun adjacentStringsAreLengthFramed() {
+        fun hashOf(name: String, arg: String): String =
+            HashingOpOverride().apply { operation(name, arg) }.hash()
+
+        assertNotEquals(hashOf("stl:part", "12:34"), hashOf("stl:part1", "2:34"))
+        assertNotEquals(hashOf("ab", "c"), hashOf("a", "bc"))
+        assertNotEquals(hashOf("abc", ""), hashOf("ab", "c"))
+    }
+
+    // #79: the argument count of an operation was not framed, so a String argument could not be
+    // told apart from the name of the next operation.
+    @Test
+    fun operationArgumentBoundaryIsFramed() {
+        val oneOp = HashingOpOverride().apply { operation("a", "b") }.hash()
+        val twoOps = HashingOpOverride().apply {
+            operation("a")
+            operation("b")
+        }.hash()
+        assertNotEquals(oneOp, twoOps)
+    }
+
+    // #79: stream/file content was unframed, so a source whose bytes end with the encoding of
+    // the following call was indistinguishable from that source followed by the call.
+    @Test
+    fun sourceContentIsLengthFramed() {
+        fun intLe(v: Int) =
+            byteArrayOf(v.toByte(), (v shr 8).toByte(), (v shr 16).toByte(), (v shr 24).toByte())
+        fun framed(s: String) = s.encodeToByteArray().let { intLe(it.size) + it }
+        // the bytes HashingOpOverride writes for operation("x") with no arguments
+        val opRecord = framed("call:op") + intLe(0) + framed("str") + framed("x")
+
+        val sourceThenOp = HashingOpOverride().apply {
+            source { Buffer().apply { write("abc".encodeToByteArray()) } }
+            operation("x")
+        }.hash()
+        val sourceSwallowingOp = HashingOpOverride().apply {
+            source { Buffer().apply { write("abc".encodeToByteArray() + opRecord) } }
+        }.hash()
+        assertNotEquals(sourceThenOp, sourceSwallowingOp)
+    }
+
+    // #79: a CSG that was not produced by the hashing pass (built with real geometry outside it)
+    // was keyed by its slot in a lookup list, so any two such solids collided.
+    @Test
+    fun foreignCsgIsKeyedByGeometryNotLookupIndex() {
+        val cube = CSG.withOverride(null) { Cube(1.0).toCSG() }
+        val sphere = CSG.withOverride(null) { Sphere(1.0, 32, 16, Vector3d.ZERO).toCSG() }
+        val movedCube = CSG.withOverride(null) {
+            Cube(1.0).toCSG().transformed(Transform.unity().translate(1.0, 0.0, 0.0))
+        }
+        fun hashOf(csg: CSG): String =
+            HashingOpOverride().apply { operation("union", csg) }.hash()
+
+        assertNotEquals(hashOf(cube), hashOf(sphere))
+        assertNotEquals(hashOf(cube), hashOf(movedCube))
+        // hit path: distinct objects with identical geometry share a key
+        assertEquals(
+            hashOf(cube),
+            hashOf(CSG.withOverride(null) { Cube(1.0).toCSG() }),
+        )
+    }
+
+    // A placeholder returned by an earlier operation in the same pass is a reference to that
+    // operation's result; it must stay distinct from a foreign solid that happens to be empty.
+    @Test
+    fun placeholderReferenceDiffersFromForeignEmptyCsg() {
+        val viaPlaceholder = HashingOpOverride().apply {
+            val placeholder = operation("cube")
+            operation("union", placeholder)
+        }.hash()
+        val viaForeign = HashingOpOverride().apply {
+            operation("cube")
+            operation("union", CSG.withOverride(null) { CSG.fromPolygons() })
+        }.hash()
+        assertNotEquals(viaPlaceholder, viaForeign)
+
+        // and which earlier result is referenced matters
+        val refFirst = HashingOpOverride().apply {
+            val a = operation("a")
+            operation("b")
+            operation("use", a)
+        }.hash()
+        val refSecond = HashingOpOverride().apply {
+            operation("a")
+            val b = operation("b")
+            operation("use", b)
+        }.hash()
+        assertNotEquals(refFirst, refSecond)
+    }
+
     private fun runSequence(override: HashingOpOverride, inputs: FixedHashInputs): String {
         override.operation(
             "operation",
@@ -217,23 +310,23 @@ class HashingOpOverrideTest {
         }
 
         assertEquals(
-            "12729f41cefedeff2c6f3d1bcb546dba9387a8485d07099316c89f4eaf9235fa",
+            "c82651946692aa884043eaa0fb3b82d0c8c3bda1e8323d4bd6780d3bc70dda2c",
             hashOf(Cube(2.0)),
         )
         assertEquals(
-            "e43fef71f165ae291e1b12cf966466557906ad7136d482f20c1f1cac15c63656",
+            "ffe93d90d5374fd46ee1535e903ccd96eb4f39729718b6b8c5e04c324204e63a",
             hashOf(Cylinder(1.0, 2.0, 16)),
         )
         assertEquals(
-            "262b0d3f90fba47fcf4f3e3ec6c7429c1aceba7cf929c9202727f0fc86199e2e",
+            "57b3d3ccf1e01dd41143649d3d1c474ee7b5d50c7f1bbebee91c01385738279d",
             hashOf(Sphere(1.0, 16, 8, Vector3d.ZERO)),
         )
         assertEquals(
-            "804169ad7d4fcec7ae7012b03d7637a5839255f1a77b4e5c54559d659d420f91",
+            "f9ddefb837e9e06a959f6121ca7e1434fece4112df1c2c6a908bff7041bac69e",
             hashOf(RoundedCube(cornerRadius = 0.3, resolution = 4)),
         )
         assertEquals(
-            "508708a67aaa38ffec1bd18785b9b3be3d22234fcc9ad8764f48464d5778bc9a",
+            "d3bdd525c8d4e3218882b13b3e4beaa5ca4c030c3d6e5dfc3ce639703a7599c1",
             hashOf(
                 Polyhedron(
                     points = listOf(
@@ -252,12 +345,17 @@ class HashingOpOverrideTest {
             ),
         )
         assertEquals(
-            "ca31103c117b924b751e3e8dcd3000560e52142a103c8ebd64639fb0e2675948",
+            "bfeae79a7d3a4c17e24c0620dc6cae114238eb50eef2fd6cd1f85c3a0c74cfbe",
             hashOf(Transform.unity().translate(1.0, 2.0, 3.0)),
         )
         assertEquals(
-            "dae0aca332b317136ad6e6b00174aec618f8089a9cc242f9972cbe781d71b8bb",
+            "d5fcd8e199ad899d722d3ef699b59f2b60cc192d990618f880f5a18a9ede4338",
             hashOf(Vector3d.xyz(4.0, 5.0, 6.0)),
+        )
+        // pins the String and CSG-geometry encodings (both changed for #79)
+        assertEquals(
+            "957086f2b22604bfef5621feb53bc5810dc29134b28c9cc0f1422a45b1cf2087",
+            hashOf("name", CSG.withOverride(null) { Cube(1.0).toCSG() }),
         )
     }
 

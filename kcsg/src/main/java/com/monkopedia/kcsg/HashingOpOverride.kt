@@ -7,11 +7,39 @@ import kotlinx.io.files.Path
 import kotlinx.io.files.SystemFileSystem
 import kotlinx.io.readByteArray
 
+/**
+ * An [OpOverride] that, instead of building geometry, folds every operation and its arguments into
+ * a SHA-256 digest. The digest ([hash]) is the cache key `csgs` uses for its on-disk STL cache, so
+ * two builds may share a key only if they would produce the same solid.
+ *
+ * Keying: the digest covers a format-version tag followed by one record per call
+ * ([operation], [bounds], [double], [file], [source]). Each record is the call kind, the
+ * operation name and the argument count, then each argument as a tagged value. Every
+ * variable-length field (tags, strings, stream/file contents, list sizes) is length-prefixed so
+ * the byte stream is unambiguous: no two different call sequences serialise to the same bytes.
+ *
+ * A [CSG] argument is encoded one of two ways:
+ * - a placeholder returned by an earlier call on this instance is written as a reference to that
+ *   call's slot. The placeholder has no geometry of its own; the slot stands for the result of the
+ *   earlier, already-hashed call, so the reference is fully determined by the preceding records.
+ * - any other CSG (built with real geometry outside the hashing pass, e.g. captured by a script)
+ *   is written as its full polygon/vertex content the first time it is seen, then assigned a slot
+ *   so later uses of the same instance are a cheap reference. Hashing this content is linear in
+ *   the mesh size, which is small next to the boolean work a cache hit avoids.
+ *
+ * Invalidation: there is no invalidation of entries; a changed input changes the key, so the old
+ * entry is simply never looked up again. Bump [FORMAT_VERSION] whenever the encoding changes so
+ * keys from an older encoding can never be matched by the new one.
+ */
 class HashingOpOverride : OpOverride {
     private val sha256 = Sha256()
     private val csgLookup = mutableListOf<Pair<CSG, Int>>()
     private var count = 0
     private val fileSystem: FileSystem = SystemFileSystem
+
+    init {
+        updateHash(bytes { writeTag(FORMAT_VERSION) })
+    }
 
     fun hash(): String {
         return sha256.digest().toHexString()
@@ -27,13 +55,14 @@ class HashingOpOverride : OpOverride {
 
     private fun hash(any: Any?) {
         val bytes = when (any) {
-            null -> byteArrayOf(0)
-            is String -> {
-                any.encodeToByteArray()
+            null -> bytes { writeTag("null") }
+            is String -> bytes {
+                writeTag("str")
+                writeFramed(any.encodeToByteArray())
             }
-            is CSG -> bytes {
-                writeTag("csg")
-                write(csgLookup.find { it.first === any }?.second ?: placeCsg(any))
+            is CSG -> {
+                hashCsg(any)
+                return
             }
             is Transform -> bytes {
                 writeTag("tr")
@@ -84,7 +113,7 @@ class HashingOpOverride : OpOverride {
             }
             is Source -> bytes {
                 writeTag("is")
-                writeBytes(any.readByteArray())
+                writeFramed(any.readByteArray())
             }
             is Bounds -> bytes {
                 writeTag("bnd")
@@ -97,12 +126,7 @@ class HashingOpOverride : OpOverride {
             }
             is Polygon -> bytes {
                 writeTag("poly")
-                write(any.vertices.size)
-                any.vertices.forEach {
-                    write(it.pos)
-                    write(it.normal)
-                    write(it.weight)
-                }
+                write(any)
             }
             is UnityModifier -> bytes {
                 writeTag("wf:unity")
@@ -136,6 +160,39 @@ class HashingOpOverride : OpOverride {
 
     private val transformBuffer = DoubleArray(16)
 
+    private fun hashCsg(csg: CSG) {
+        val slot = csgLookup.find { it.first === csg }?.second
+        if (slot != null) {
+            updateHash(
+                bytes {
+                    writeTag("csg:ref")
+                    write(slot)
+                }
+            )
+            return
+        }
+        val polygons = csg.polygons
+        updateHash(
+            bytes {
+                writeTag("csg:geo")
+                write(polygons.size)
+            }
+        )
+        polygons.forEach { polygon -> updateHash(bytes { write(polygon) }) }
+        placeCsg(csg)
+    }
+
+    private fun hashCall(kind: String, name: String, args: Array<out Any?>) {
+        updateHash(
+            bytes {
+                writeTag(kind)
+                write(args.size)
+            }
+        )
+        hash(name)
+        args.forEach { hash(it) }
+    }
+
     private fun createCSG(): CSG {
         CSG.withOverride(null) {
             return CSG.fromPolygons().also {
@@ -155,26 +212,24 @@ class HashingOpOverride : OpOverride {
     }
 
     override fun operation(s: String, vararg csg: Any?): CSG {
-        hash(s)
-        csg.forEach { hash(it) }
+        hashCall("call:op", s, csg)
         return createCSG()
     }
 
     override fun bounds(s: String, vararg csg: Any?): Bounds {
-        hash(s)
-        csg.forEach { hash(it) }
+        hashCall("call:bounds", s, csg)
         return Bounds(createVector(), createVector())
     }
 
     override fun double(s: String, vararg csg: Any?): Double {
-        hash(s)
-        csg.forEach { hash(it) }
+        hashCall("call:double", s, csg)
         return count++.toDouble()
     }
 
     override fun file(path: Path): CSG {
         val resolvedPath = runCatching { fileSystem.resolve(path).toString() }
             .getOrElse { path.toString() }
+        updateHash(bytes { writeTag("call:file") })
         if (fileSystem.metadataOrNull(path) != null) {
             hash(resolvedPath)
             fileSystem.source(path).buffered().use {
@@ -188,12 +243,16 @@ class HashingOpOverride : OpOverride {
     }
 
     override fun source(sourceFactory: () -> Source): CSG {
+        updateHash(bytes { writeTag("call:source") })
         sourceFactory().use {
             hash(it)
         }
         return createCSG()
     }
 }
+
+/** Leads every [HashingOpOverride] digest; bump when the encoding changes (see its class doc). */
+private const val FORMAT_VERSION = "kcsg-hash-v2"
 
 private fun ByteArray.toHexString(): String {
     val digits = "0123456789abcdef"
@@ -211,7 +270,22 @@ private class HashBytesBuilder {
     private var size = 0
 
     fun writeTag(tag: String) {
-        writeBytes(tag.encodeToByteArray())
+        writeFramed(tag.encodeToByteArray())
+    }
+
+    /** Writes [bytes] preceded by their length, so adjacent fields cannot run into each other. */
+    fun writeFramed(bytes: ByteArray) {
+        write(bytes.size)
+        writeBytes(bytes)
+    }
+
+    fun write(polygon: Polygon) {
+        write(polygon.vertices.size)
+        polygon.vertices.forEach {
+            write(it.pos)
+            write(it.normal)
+            write(it.weight)
+        }
     }
 
     fun writeBytes(bytes: ByteArray) {
