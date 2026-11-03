@@ -171,11 +171,13 @@ class PrimitiveInteractionMatrixTest {
     /**
      * Shared body for S5-S7.
      *
-     * Every offset in [tangencyCases] places the two operands in exact contact, so the
-     * invariants are the same in all three scenarios: no shared volume, a union that
-     * accounts for both operands in full, and a difference that leaves the left operand
-     * alone. The contact probe at the end is what keeps the fixture honest - "the
-     * intersection is empty" is trivially true of solids that never touch.
+     * Every offset in [tangencyCases] is tangent for the analytic shapes, but only some
+     * cells are tangent once tessellated (see [TangencyCase]); the rest are disjoint with a
+     * gap under 0.04. Either way the invariants are the same in all three scenarios: no
+     * shared volume, a union that accounts for both operands in full, and a difference
+     * that leaves the left operand alone under every [CSG.OptType]. The contact probe at
+     * the end bounds the gap - "the intersection is empty" is trivially true of solids
+     * that are far apart.
      */
     private fun runTangencyScenario(
         scenarioId: String,
@@ -198,28 +200,12 @@ class PrimitiveInteractionMatrixTest {
                     relativeTolerance = 5e-3,
                     message = "$ctx tangency union equals sum",
                 )
-                // The difference must leave the left operand alone, but only OptType.NONE
-                // gets that right today: the bounds-optimized paths cut roughly half the
-                // left operand away on several exactly tangent pairs (see #58). S1 already
-                // scopes the same assertion to NONE for the same reason, so this follows
-                // the suite's existing convention rather than inventing a new exception.
-                if (result.optType == CSG.OptType.NONE) {
-                    assertVolumeClose(
-                        expected = result.leftVolume,
-                        actual = result.differenceVolume,
-                        relativeTolerance = 5e-3,
-                        message = "$ctx tangency difference equals left",
-                    )
-                } else {
-                    assertTrue(
-                        "$ctx tangency difference should not exceed left",
-                        result.differenceVolume <= result.leftVolume * (1.0 + 5e-3),
-                    )
-                    assertTrue(
-                        "$ctx tangency difference should not be empty",
-                        result.differenceVolume > 0.0,
-                    )
-                }
+                assertVolumeClose(
+                    expected = result.leftVolume,
+                    actual = result.differenceVolume,
+                    relativeTolerance = 5e-3,
+                    message = "$ctx tangency difference equals left",
+                )
                 assertBoundsContain(
                     result.union.bounds,
                     result.left.bounds,
@@ -437,7 +423,16 @@ class PrimitiveInteractionMatrixTest {
     )
 
     /**
-     * Translations of the right operand that put it in exact contact with the left one.
+     * Translations of the right operand that put the analytic shapes in exact contact.
+     *
+     * The tessellated solids only keep that contact where the touching features are
+     * exact mesh features: every `Cube-Cube` cell, and the S5 face cell of `Cube-Cylinder`
+     * and `Cylinder-Cylinder` (an 18-slice cylinder has vertices on the x axis). Every
+     * other cell - all sphere pairs, and the cylinder's S6/S7 cells - is disjoint, because
+     * the sphere's and cylinder's facets sit inside their true surfaces: measured along the
+     * offset the gap is 0.0076 to 0.038, and for the S5 sphere cells and `Sphere-Cylinder`
+     * S7 the bounding boxes do not even intersect. So S5-S7 test near-contact as much as
+     * contact; the contact probe's 0.3 nudge is what keeps the gap honest.
      *
      * The offsets are per pair because the primitives are different shapes: a single
      * offset shared across the matrix only touches for `Cube-Cube`. All solids here are
