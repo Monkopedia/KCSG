@@ -392,16 +392,19 @@ class Transform {
      * @return this transform
      */
     fun mirror(plane: Plane): Transform {
-        logger.warn("WARNING: I'm too dumb to implement the mirror() operation correctly. Please fix me!")
         val nx: Double = plane.normal.x
         val ny: Double = plane.normal.y
         val nz: Double = plane.normal.z
-        val w: Double = plane.dist
+        // Signed offset of the plane along its normal. Not plane.dist: that is |anchor|,
+        // which is unsigned and equals the offset only when the anchor is the foot point.
+        val w: Double = plane.normal.dot(plane.anchor)
+        // Reflection p' = p - 2(n.p - w)n: linear part I - 2nn^T, translation +2wn in the
+        // translation column (m03/m13/m23), which is where transform(vec) reads it.
         val elemenents = doubleArrayOf(
-            1.0 - 2.0 * nx * nx, -2.0 * ny * nx, -2.0 * nz * nx, 0.0,
-            -2.0 * nx * ny, 1.0 - 2.0 * ny * ny, -2.0 * nz * ny, 0.0,
-            -2.0 * nx * nz, -2.0 * ny * nz, 1.0 - 2.0 * nz * nz, 0.0,
-            -2.0 * nx * w, -2.0 * ny * w, -2.0 * nz * w, 1.0
+            1.0 - 2.0 * nx * nx, -2.0 * ny * nx, -2.0 * nz * nx, 2.0 * nx * w,
+            -2.0 * nx * ny, 1.0 - 2.0 * ny * ny, -2.0 * nz * ny, 2.0 * ny * w,
+            -2.0 * nx * nz, -2.0 * ny * nz, 1.0 - 2.0 * nz * nz, 2.0 * nz * w,
+            0.0, 0.0, 0.0, 1.0
         )
         m *= Matrix4d(elemenents)
         return this
@@ -626,8 +629,6 @@ class Transform {
     }
 
     companion object {
-        private val logger = Logger.tagged("KCSG.Transform")
-
         /**
          * Returns a new transform based on the specified matrix values (4x4).
          *
