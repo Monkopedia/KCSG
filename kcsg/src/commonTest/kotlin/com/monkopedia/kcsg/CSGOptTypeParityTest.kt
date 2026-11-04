@@ -219,6 +219,47 @@ class CSGOptTypeParityTest {
         }
     }
 
+    /**
+     * Regression for issue #88.
+     *
+     * An empty BSP tree has no splitting plane, so it clips nothing: `A ∩ ∅` kept all of `A`
+     * and `∅ ∩ B` adopted all of `B`. Anything intersected with the empty solid is the empty
+     * solid, so every case below must come back with no polygons and zero volume -- including
+     * a chain that passes through an empty intermediate (`a ∩ far ∩ a`) and the list/vararg
+     * overloads, which delegate to the single-operand `intersect`.
+     */
+    @Test
+    fun intersectWithEmptyOperandIsEmptyUnderEveryOptType() {
+        val a = cubeAtX(0.0)
+        val far = cubeAtX(10.0)
+        assertVolumeClose(8.0, a.computeVolume(), message = "fixture: analytic cube volume")
+
+        CSG.OptType.entries.forEach { optType ->
+            fun opt(csg: CSG) = csg.copy().optimization(optType)
+            fun empty() = CSG.fromPolygons(emptyList()).optimization(optType)
+            val cases = listOf(
+                "a ∩ ∅" to { opt(a).intersect(empty()) },
+                "∅ ∩ a" to { empty().intersect(opt(a)) },
+                "∅ ∩ ∅" to { empty().intersect(empty()) },
+                "a ∩ far" to { opt(a).intersect(opt(far)) },
+                "(a ∩ far) ∩ a" to { opt(a).intersect(opt(far)).intersect(opt(a)) },
+                "a ∩ (far ∩ a)" to { opt(a).intersect(opt(far).intersect(opt(a))) },
+                "a ∩ [∅] (list)" to { opt(a).intersect(listOf(empty())) },
+                "a ∩ ∅ (vararg)" to { opt(a).intersect(empty(), empty()) },
+                "∅ ∩ a (vararg)" to { empty().intersect(opt(a), opt(a)) },
+            )
+            cases.forEach { (name, op) ->
+                val result = op()
+                assertEquals(
+                    0,
+                    result.polygons.size,
+                    "$name opt=$optType must have no polygons",
+                )
+                assertEquals(0.0, result.computeVolume(), "$name opt=$optType must have volume 0")
+            }
+        }
+    }
+
     private fun assertParity(operation: (CSG.OptType) -> CSG) {
         val baseline = operation(CSG.OptType.NONE)
         assertFiniteMesh(baseline)
