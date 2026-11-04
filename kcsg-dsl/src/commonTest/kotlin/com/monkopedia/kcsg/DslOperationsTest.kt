@@ -52,6 +52,26 @@ class DslOperationsTest {
         assertVolume(intersectExpected, p1 * p2)
     }
 
+    /** Regression for issue #88: `and` / `*` must not resurrect geometry from an empty step. */
+    @Test
+    fun intersectOperatorsWithEmptyOperandAreEmpty() {
+        val a = Cube(center = Vector3d.xyz(0.0, 0.0, 0.0), dimensions = Vector3d.xyz(2.0, 2.0, 2.0))
+        val far = Cube(center = Vector3d.xyz(10.0, 0.0, 0.0), dimensions = Vector3d.xyz(2.0, 2.0, 2.0))
+        val empty = CSG.fromPolygons(emptyList())
+
+        listOf(
+            "(a and far) and a" to ((a and far) and a),
+            "(a * far) * a" to ((a * far) * a),
+            "a and empty" to (a and empty),
+            "empty and a" to (empty and a),
+            "a * empty" to (a * empty),
+            "empty * a" to (empty * a),
+        ).forEach { (name, result) ->
+            assertEquals(0, result.polygons.size, "$name must have no polygons")
+            assertEquals(0.0, result.computeVolume(), "$name must have volume 0")
+        }
+    }
+
     private fun assertVolume(expected: Double, actual: CSG) {
         assertEquals(expected, actual.computeVolume(), 1e-4)
     }

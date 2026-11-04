@@ -520,6 +520,13 @@ class CSG private constructor(
      */
     fun intersect(csg: CSG): CSG {
         opOverride?.operation("intersect", this, csg)?.let { return it }
+        // Anything intersected with the empty solid is the empty solid. The BSP below
+        // cannot express that: an empty node has no splitting plane, so it clips nothing,
+        // and the result is the other operand unchanged. Same mechanism as #58's guard in
+        // differenceNoOpt. See issue #88.
+        if (_polygons.isEmpty() || csg._polygons.isEmpty()) {
+            return fromPolygons(emptyList()).optimization(getOptType())
+        }
         val a = Node(copy()._polygons)
         val b = Node(csg.copy()._polygons)
         a.invert()
