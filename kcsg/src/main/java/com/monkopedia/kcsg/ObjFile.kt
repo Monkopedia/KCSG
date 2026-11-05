@@ -12,23 +12,25 @@ import kotlinx.io.writeString
 
 /**
  */
-class ObjFile internal constructor(private var _obj: String, private val _mtl: String) {
+class ObjFile internal constructor(private val _obj: String, private val _mtl: String) {
     fun toFiles(p: Path) {
         val parent = p.parent
         var fileName = p.name
-        if (fileName.lowercase().endsWith(".obj")
-            || fileName.lowercase().endsWith(".mtl")
+        // Strip a .obj/.mtl extension, but never down to an empty base name.
+        if (fileName.length > 4
+            && (fileName.lowercase().endsWith(".obj") || fileName.lowercase().endsWith(".mtl"))
         ) {
             fileName = fileName.substring(0, fileName.length - 4)
         }
         val objName = "$fileName.obj"
         val mtlName = "$fileName.mtl"
-        _obj = _obj.replace(MTL_NAME, mtlName)
+        // Substitute locally: the placeholder must survive for later exports.
+        val objText = _obj.replace(MTL_NAME, mtlName)
         if (parent == null) {
-            FileUtil.write(Path(objName), _obj)
+            FileUtil.write(Path(objName), objText)
             FileUtil.write(Path(mtlName), _mtl)
         } else {
-            FileUtil.write(Path(parent, objName), _obj)
+            FileUtil.write(Path(parent, objName), objText)
             FileUtil.write(Path(parent, mtlName), _mtl)
         }
     }

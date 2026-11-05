@@ -64,6 +64,40 @@ class ObjFileTest {
     }
 
     @Test
+    fun toFilesTwiceOnOneObjFileReferencesEachOwnMaterialLibrary() {
+        // Regression for #83: toFiles used to substitute the mtllib placeholder into the
+        // instance, so a second export kept the first call's material name.
+        withTempDirectory("kcsg-objfile") { tempDir ->
+            val objFile = Cube(1.0).toCSG().toObj()
+            val before = objFile.obj
+
+            objFile.toFiles(Path(tempDir, "a.obj"))
+            objFile.toFiles(Path(tempDir, "b.obj"))
+
+            val aLines = FileUtil.read(Path(tempDir, "a.obj")).lineSequence().toList()
+            val bLines = FileUtil.read(Path(tempDir, "b.obj")).lineSequence().toList()
+            assertEquals("mtllib a.mtl", aLines[0])
+            assertEquals("mtllib b.mtl", bLines[0])
+            assertTrue(SystemFileSystem.exists(Path(tempDir, "b.mtl")))
+            assertEquals(before, objFile.obj)
+            assertEquals(before, objFile.objSource.readString())
+        }
+    }
+
+    @Test
+    fun toFilesKeepsBareExtensionNameAsBase() {
+        withTempDirectory("kcsg-objfile") { tempDir ->
+            Cube(1.0).toCSG().toObj().toFiles(Path(tempDir, ".obj"))
+
+            assertTrue(SystemFileSystem.exists(Path(tempDir, ".obj.obj")))
+            assertTrue(SystemFileSystem.exists(Path(tempDir, ".obj.mtl")))
+            assertTrue(!SystemFileSystem.exists(Path(tempDir, ".mtl")))
+            val lines = FileUtil.read(Path(tempDir, ".obj.obj")).lineSequence().toList()
+            assertEquals("mtllib .obj.mtl", lines[0])
+        }
+    }
+
+    @Test
     fun toFilesSupportsPathsWithoutParentDirectory() {
         val baseName = "kcsg-obj-no-parent-${System.nanoTime()}"
         val objPath = Path("$baseName.obj")
