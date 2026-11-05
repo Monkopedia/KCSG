@@ -27,6 +27,12 @@ abstract class KcsgBuilder {
      * exported and will only be built if exported by default or caller.
      *
      * Setting [exported] to true has the same effect as calling [export] on the property.
+     *
+     * Setting [allowCaching] to false keeps this property out of the host's cache, and its builder
+     * is never run under a hashing pass (so it may use things that cannot be hashed, such as a
+     * custom [WeightFunction]). The opt-out is inherited: any cacheable property that reads this
+     * one while computing its cache key is itself built uncached, since its key cannot cover this
+     * property's contents.
      */
     fun csg(
         exported: Boolean = false,
@@ -43,7 +49,13 @@ abstract class KcsgBuilder {
                     executeBuilder(propertyName, remesh, lazyBuilder)
                 }
             }.wrapGetter {
-                CSG.opOverride?.operation("p:${getHash(propertyName, remesh, lazyBuilder)}")
+                val override = CSG.opOverride
+                if (!allowCaching && override is HashingOpOverride) {
+                    // Read while some property computes its cache key: that key cannot cover
+                    // this property, so make the enclosing property uncacheable (#82).
+                    throw UncacheableDependencyException(propertyName)
+                }
+                override?.operation("p:${getHash(propertyName, remesh, lazyBuilder)}")
             }
             track(propertyName, lazy)
             if (exported) {
@@ -111,7 +123,14 @@ abstract class KcsgBuilder {
         remesh: Boolean,
         lazyBuilder: BuilderContext.() -> CSG
     ): CSG {
-        val hash = getHash(propertyName, remesh, lazyBuilder)
+        val hash = try {
+            getHash(propertyName, remesh, lazyBuilder)
+        } catch (e: UncacheableDependencyException) {
+            logger.info(
+                "Not caching $propertyName: it reads ${e.dependency}, which has allowCaching = false"
+            )
+            return CSG.withOverride(null) { executeBuilder(propertyName, remesh, lazyBuilder) }
+        }
         return checkCached(hash)?.also { logger.info("Using cached STL for $propertyName/$hash") }
             ?: CSG.withOverride(null) { executeBuilder(propertyName, remesh, lazyBuilder) }.also {
                 logger.info("Storing cache as STL for $propertyName/$hash")
@@ -185,6 +204,14 @@ abstract class KcsgBuilder {
         private val logger = Logger.tagged("KCSG.Builder")
     }
 }
+
+/**
+ * Thrown out of a hashing pass when it reads a property declared with `allowCaching = false`; it
+ * unwinds every enclosing key computation up to the outermost [KcsgBuilder.getCached] call, which
+ * then builds that property without caching it.
+ */
+private class UncacheableDependencyException(val dependency: String) :
+    RuntimeException("Cache key depends on non-cacheable property $dependency")
 
 private inline fun <T> Lazy<T>.wrapGetter(crossinline getter: () -> T?): Lazy<T> {
     return object : Lazy<T> {
