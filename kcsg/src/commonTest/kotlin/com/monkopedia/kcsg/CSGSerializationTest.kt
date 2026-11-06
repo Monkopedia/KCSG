@@ -4,6 +4,7 @@ import kotlinx.io.readString
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlin.test.assertNotNull
 import kotlin.test.assertSame
 import kotlin.test.assertTrue
 
@@ -56,6 +57,47 @@ class CSGSerializationTest {
         assertTrue(objFile.mtl.contains("newmtl material-1"))
         assertEquals(listOf(RED_MATERIAL), objFile.mtl.materialColors())
         assertTrue(objFile.obj.lineSequence().any { it == "usemtl material-1" })
+    }
+
+    @Test
+    fun mixedColoredAndUncoloredToObjGivesEveryFaceAMaterial() {
+        // Regression for #46 review: usemtl persists until the next one, so skipping it for
+        // uncoloured faces made them inherit the preceding colour.
+        fun export() = Cube(1.0).toCSG().color(KcsgColor.RED)
+            .union(
+                Cube(
+                    center = Vector3d.xyz(5.0, 0.0, 0.0),
+                    dimensions = Vector3d.xyz(1.0, 1.0, 1.0),
+                ).toCSG(),
+            )
+            .toObj()
+        val first = export()
+        val second = export()
+
+        val kdByMaterial = mutableMapOf<String, String>()
+        var current: String? = null
+        first.mtl.lineSequence().forEach { line ->
+            when {
+                line.startsWith("newmtl ") -> current = line.removePrefix("newmtl ")
+                line.startsWith("Kd ") -> kdByMaterial[assertNotNull(current)] = line
+            }
+        }
+        var active: String? = null
+        val facesByKd = mutableMapOf<String, Int>()
+        first.obj.lineSequence().forEach { line ->
+            when {
+                line.startsWith("usemtl ") -> active = line.removePrefix("usemtl ")
+                line.startsWith("f ") -> {
+                    val kd = kdByMaterial[active]
+                    assertNotNull(kd, "face '$line' uses material $active with no Kd")
+                    facesByKd[kd] = (facesByKd[kd] ?: 0) + 1
+                }
+            }
+        }
+        // The plain cube's 12 faces must not inherit the red cube's material.
+        assertEquals(mapOf(RED_MATERIAL to 12, DEFAULT_MATERIAL to 12), facesByKd)
+        assertEquals(first.obj, second.obj)
+        assertEquals(first.mtl, second.mtl)
     }
 
     @Test
@@ -134,5 +176,6 @@ class CSGSerializationTest {
     private companion object {
         const val BLUE_MATERIAL = "Kd 0.0 0.0 1.0"
         const val RED_MATERIAL = "Kd 1.0 0.0 0.0"
+        const val DEFAULT_MATERIAL = "Kd 0.8 0.8 0.8"
     }
 }
