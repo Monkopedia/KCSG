@@ -432,7 +432,8 @@ data class Vector3d
      * @return the specified string builder
      */
     fun toStlString(sb: StringBuilder): StringBuilder {
-        return sb.append(this.x).append(" ").append(this.y).append(" ").append(this.z)
+        return sb.append(x.toJvmString()).append(" ").append(y.toJvmString()).append(" ")
+            .append(z.toJvmString())
     }
 
     /**
@@ -451,7 +452,8 @@ data class Vector3d
      * @return the specified string builder
      */
     fun toObjString(sb: StringBuilder): StringBuilder {
-        return sb.append(this.x).append(" ").append(this.y).append(" ").append(this.z)
+        return sb.append(x.toJvmString()).append(" ").append(y.toJvmString()).append(" ")
+            .append(z.toJvmString())
     }
 
     override fun toString(): String {
