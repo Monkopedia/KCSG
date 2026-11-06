@@ -90,18 +90,16 @@ class PropertyStorage {
             KcsgColor.WHITE, KcsgColor.BLACK, KcsgColor.GRAY, KcsgColor.ORANGE,
         )
 
+        /**
+         * Assigns a randomly chosen `material:color` to [storage], drawing from the global
+         * [Random]. Explicit opt-in only: a new [PropertyStorage] starts without a colour so that
+         * exports are reproducible; use [CSG.color] for a deterministic colour.
+         */
         fun randomColor(storage: PropertyStorage) {
             val c = colors[Random.nextInt(colors.size)]
             storage["material:color"] = listOf(c.red, c.green, c.blue).joinToString(" ") {
                 it.toJvmString()
             }
         }
-    }
-
-    /**
-     * Constructor. Creates a new property storage.
-     */
-    init {
-        randomColor(this)
     }
 }

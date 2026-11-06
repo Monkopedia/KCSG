@@ -261,8 +261,8 @@ class CSG private constructor(
 
     private fun unionCSGBoundsOpt(csg: CSG): CSG {
         logger.warn(
-            "WARNING: using " + NONE +
-                " since other optimization types missing for union operation.",
+            "WARNING: using the intersect-check union since " + CSG_BOUND +
+                " optimization is missing for union operation.",
         )
         return unionIntersectOpt(csg)
     }

@@ -32,10 +32,30 @@ class CSGSerializationTest {
         assertTrue(objFile.obj.contains("\nv "))
         assertTrue(objFile.obj.contains("\nf "))
 
-        assertTrue(objFile.mtl.contains("newmtl"))
-        assertTrue(objFile.mtl.contains("Kd "))
         assertEquals(objFile.obj, objFile.objSource.readString())
         assertEquals(objFile.mtl, objFile.mtlSource.readString())
+    }
+
+    @Test
+    fun uncoloredToObjIsReproducibleAndHasNoMaterials() {
+        // Regression for #46: every PropertyStorage used to get a random colour, so the .mtl of
+        // the same uncoloured model differed between exports and usemtl was always emitted.
+        val first = Cube(2.0).toCSG().toObj()
+        val second = Cube(2.0).toCSG().toObj()
+
+        assertEquals(first.obj, second.obj)
+        assertEquals(first.mtl, second.mtl)
+        assertEquals("", first.mtl)
+        assertTrue(first.obj.lineSequence().none { it.startsWith("usemtl") })
+    }
+
+    @Test
+    fun coloredToObjEmitsMaterialAndUsemtl() {
+        val objFile = Cube(1.0).toCSG().color(KcsgColor.RED).toObj()
+
+        assertTrue(objFile.mtl.contains("newmtl material-1"))
+        assertEquals(listOf(RED_MATERIAL), objFile.mtl.materialColors())
+        assertTrue(objFile.obj.lineSequence().any { it == "usemtl material-1" })
     }
 
     @Test

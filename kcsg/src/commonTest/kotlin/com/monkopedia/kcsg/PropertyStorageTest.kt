@@ -38,13 +38,16 @@ class PropertyStorageTest {
     }
 
     @Test
-    fun randomColorInitializationAndCompanionHelper() {
+    fun newStorageHasNoMaterialColor() {
+        // Regression for #46: the constructor used to assign a random colour.
         val storage = PropertyStorage()
-        assertTrue("material:color" in storage)
+        assertFalse("material:color" in storage)
+        assertNull(storage.getValue<String>("material:color"))
+    }
 
-        val initialColor: String? = storage.getValue("material:color")
-        assertValidRgbString(assertNotNull(initialColor))
-
+    @Test
+    fun randomColorCompanionHelperAssignsValidColor() {
+        val storage = PropertyStorage()
         storage["material:color"] = "not-a-color"
         PropertyStorage.randomColor(storage)
 

@@ -30,6 +30,7 @@ class BoundsTest {
         val cube = bounds.toCube()
         assertVectorClose(Vector3d.xyz(1.0, 2.0, 3.0), cube.center, EPS)
         assertVectorClose(Vector3d.xyz(2.0, 4.0, 6.0), cube.dimensions, EPS)
+        assertSame(cube, bounds.toCube())
 
         val csgFirst = bounds.toCSG()
         val csgSecond = bounds.toCSG()
