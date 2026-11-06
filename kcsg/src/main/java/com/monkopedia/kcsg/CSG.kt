@@ -261,8 +261,8 @@ class CSG private constructor(
 
     private fun unionCSGBoundsOpt(csg: CSG): CSG {
         logger.warn(
-            "WARNING: using " + NONE +
-                " since other optimization types missing for union operation.",
+            "WARNING: using the intersect-check union since " + CSG_BOUND +
+                " optimization is missing for union operation.",
         )
         return unionIntersectOpt(csg)
     }
@@ -686,13 +686,19 @@ class CSG private constructor(
         class PolygonStruct(
             var storage: PropertyStorage,
             var indices: List<Int>,
-            var materialName: String,
+            var materialName: String?,
         )
 
         val vertices: MutableList<Vertex> = ArrayList()
         val indices: MutableList<PolygonStruct> = ArrayList()
         objSb.append("\n# Vertices\n")
-        val materialNames: MutableMap<PropertyStorage, Int> = HashMap()
+        // `usemtl` stays in effect until the next one, so once any face names a material every
+        // face must: uncoloured storages then share one deterministic default material. A model
+        // with no colour at all keeps a material-free export.
+        val anyColored = _polygons.any { it.storage.contains("material:color") }
+        var usesDefaultMaterial = false
+        // Insertion-ordered so the .mtl lists materials in first-use order on every export.
+        val materialNames: MutableMap<PropertyStorage, Int> = LinkedHashMap()
         var materialIndex = 0
         for (p in _polygons) {
             val polyIndices: MutableList<Int> = ArrayList()
@@ -705,24 +711,28 @@ class CSG private constructor(
                     polyIndices.add(vertices.indexOf(v) + 1)
                 }
             }
-            if (!materialNames.containsKey(p.storage)) {
-                materialIndex++
-                materialNames[p.storage] = materialIndex
-                p.storage["material:name"] = materialIndex
+            val materialName = when {
+                p.storage.contains("material:color") -> {
+                    if (!materialNames.containsKey(p.storage)) {
+                        materialIndex++
+                        materialNames[p.storage] = materialIndex
+                        p.storage["material:name"] = materialIndex
+                    }
+                    "material-" + materialNames[p.storage]
+                }
+                anyColored -> {
+                    usesDefaultMaterial = true
+                    DEFAULT_MATERIAL_NAME
+                }
+                else -> null
             }
-            indices.add(
-                PolygonStruct(
-                    p.storage,
-                    polyIndices,
-                    "material-" + materialNames[p.storage],
-                ),
-            )
+            indices.add(PolygonStruct(p.storage, polyIndices, materialName))
         }
         objSb.append("\n# Faces").append("\n")
         for (ps in indices) {
             // add mtl info
-            ps.storage.getValue<Any>("material:color")?.let {
-                objSb.append("usemtl ").append(ps.materialName).append("\n")
+            ps.materialName?.let {
+                objSb.append("usemtl ").append(it).append("\n")
             }
 
             // we triangulate the polygon to ensure
@@ -739,12 +749,13 @@ class CSG private constructor(
         }
         objSb.append("\n# End Group v3d.csg").append("\n")
         val mtlSb = StringBuilder()
-        materialNames.keys.forEach { s: PropertyStorage ->
-            if (s.contains("material:color")) {
-                mtlSb.append("newmtl material-").append(s.getValue<Any>("material:name"))
-                    .append("\n")
-                mtlSb.append("Kd ").append(s.getValue<Any>("material:color")).append("\n")
-            }
+        materialNames.forEach { (s, index) ->
+            mtlSb.append("newmtl material-").append(index).append("\n")
+            mtlSb.append("Kd ").append(s.getValue<Any>("material:color")).append("\n")
+        }
+        if (usesDefaultMaterial) {
+            mtlSb.append("newmtl ").append(DEFAULT_MATERIAL_NAME).append("\n")
+            mtlSb.append("Kd ").append(DEFAULT_MATERIAL_COLOR).append("\n")
         }
         return ObjFile(objSb.toString(), mtlSb.toString())
     }
@@ -970,6 +981,8 @@ class CSG private constructor(
     }
 
     companion object {
+        private const val DEFAULT_MATERIAL_NAME = "material-default"
+        private const val DEFAULT_MATERIAL_COLOR = "0.8 0.8 0.8"
         private val logger = Logger.tagged("KCSG.CSG")
         private var defaultOptType = NONE
 

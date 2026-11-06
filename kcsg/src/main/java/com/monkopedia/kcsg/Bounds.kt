@@ -71,7 +71,8 @@ data class Bounds(
     )
 
     private var csg: CSG? = null
-    private val cube: Cube = Cube(this.center, this.bounds)
+    // Lazy: bounds are built inside the boolean-op hot paths, and most never become a cube.
+    private val cube: Cube by lazy { Cube(this.center, this.bounds) }
 
     /**
      * Returns this bounding box as csg.

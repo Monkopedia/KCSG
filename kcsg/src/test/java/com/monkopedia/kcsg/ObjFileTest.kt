@@ -11,7 +11,7 @@ import kotlinx.io.readString
 class ObjFileTest {
     @Test
     fun objAndMtlAccessorsAndStreams() {
-        val objFile = Cube(1.0).toCSG().toObj()
+        val objFile = Cube(1.0).toCSG().color(KcsgColor.RED).toObj()
 
         assertTrue(objFile.obj.contains("mtllib"))
         assertTrue(objFile.mtl.contains("newmtl"))
