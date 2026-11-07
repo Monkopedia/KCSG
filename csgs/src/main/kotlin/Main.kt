@@ -1,5 +1,6 @@
 package com.monkopedia.csgs
 
+import com.github.ajalt.clikt.core.BadParameterValue
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.core.main
 import com.github.ajalt.clikt.parameters.arguments.argument
@@ -79,6 +80,11 @@ class Csgs : CliktCommand() {
                     println("  $it")
                 }
             } else {
+                if (export !in output.targets()) {
+                    throw BadParameterValue(
+                        "Unknown target $export for --export, use -e ? to list available"
+                    )
+                }
                 output.overrideExport(export, true)
             }
         }
