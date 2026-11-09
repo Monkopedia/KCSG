@@ -21,6 +21,9 @@ class KcsgScript(var host: KcsgHost = EmptyHost) : KcsgBuilder() {
     override fun findScript(csgsName: String): ImportedScript = host.findScript(csgsName)
 
     fun overrideExport(propertyName: String, export: Boolean) {
+        require(propertyName in properties) {
+            "Unknown target $propertyName, available targets: ${targets()}"
+        }
         if (export) {
             exportedProperties.add(propertyName)
         } else {
