@@ -52,6 +52,23 @@ class KcsgScriptTest {
     }
 
     @Test
+    fun overrideExportRejectsUnknownTarget() {
+        // #106: an unknown name used to be accepted, and generateExports then threw a bare NPE.
+        val script = KcsgScript(FakeKcsgHost())
+        val alpha by script.csg(exported = true) { Cube(1.0).toCSG() }
+        val beta by script.csg { Cube(2.0).toCSG() }
+
+        for (export in listOf(true, false)) {
+            val error = assertFailsWith<IllegalArgumentException> {
+                script.overrideExport("missing", export)
+            }
+            assertEquals("Unknown target missing, available targets: [alpha, beta]", error.message)
+        }
+        assertEquals(setOf("alpha"), script.exports().toSet())
+        assertEquals(setOf("alpha"), script.generateExports().keys)
+    }
+
+    @Test
     fun allowCachingFalsePropertyCanBeReadThroughCacheableProperties() {
         // #82: a custom WeightFunction cannot be hashed, so its property opts out of caching. A
         // cacheable property that reads it must not try to hash it either; instead it inherits
