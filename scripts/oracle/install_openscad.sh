@@ -42,11 +42,17 @@ fi
 
 # Bounds on a single download attempt. The AppImage is 84.6 MB and fetches in 4.3s here
 # (~19 MB/s), so a 300s cap per attempt is ~70x the observed download and still only needs
-# ~280 kB/s sustained -- far below anything a CI runner or a home connection provides. With
-# --retry 3 the worst case is ~15 minutes instead of the unbounded wait a stalled connection
-# currently produces, where --retry alone reconnects forever rather than failing.
+# ~280 kB/s sustained -- far below anything a CI runner or a home connection provides.
+#
+# --max-time restarts on every retry, so --retry 3 alone would allow four full attempts:
+# 4x300s + 3x2s delay = 1206s (~20 min) per download. --retry-max-time caps that: curl only
+# retries while less than 900s have elapsed, so a stalled download gets three attempts,
+# 3x300s + 2x2s = 904s (~15 min), and then fails. Each download_file call has its own
+# budget and there are two (the AppImage and its .sha256), so the installer's downloads
+# are bounded at ~30 minutes in the worst case.
 DOWNLOAD_CONNECT_TIMEOUT_SECONDS=30
 DOWNLOAD_MAX_TIME_SECONDS=300
+DOWNLOAD_RETRY_MAX_TIME_SECONDS=900
 
 download_file() {
     local url="$1"
@@ -57,6 +63,7 @@ download_file() {
             --connect-timeout "$DOWNLOAD_CONNECT_TIMEOUT_SECONDS" \
             --max-time "$DOWNLOAD_MAX_TIME_SECONDS" \
             --retry 3 --retry-delay 2 \
+            --retry-max-time "$DOWNLOAD_RETRY_MAX_TIME_SECONDS" \
             -o "$dest" "$url"
         return
     fi
@@ -130,7 +137,7 @@ timeout --kill-after=10s "${VERIFY_TIMEOUT_SECONDS}s" "$wrapper_path" --version 
 
 if (( verify_status == 124 || verify_status == 137 )); then
     echo "Installed OpenSCAD did not respond to --version within ${VERIFY_TIMEOUT_SECONDS}s." >&2
-    echo "The AppImage at $artifact_path is unusable; not leaving it in place." >&2
+    echo "The AppImage at $artifact_path is unusable; removing the wrapper so the install is not reused." >&2
     rm -f "$wrapper_path"
     exit 124
 fi

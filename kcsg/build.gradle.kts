@@ -111,13 +111,14 @@ val oracleGenerateFixtures by tasks.registering(Exec::class) {
     group = "verification"
     workingDir = rootProject.projectDir
     // Outermost net. The script bounds every OpenSCAD invocation itself (120s each, 600s for
-    // the run) and the installer bounds its downloads (300s per attempt, three attempts), so
-    // the worst legitimate case is roughly 15 minutes of install plus 10 of rendering. 30
-    // minutes covers that with margin, which means this should never be what fires: the
-    // script's own bounds report which fixture hung, this one only catches a wedge outside
-    // them. Exec honours Task.timeout by destroying the process, so the build fails rather
-    // than running to the CI job limit.
-    timeout.set(Duration.ofMinutes(30))
+    // the run) and the installer bounds its curl downloads (904s each, two downloads), so the
+    // worst legitimate case is 2x904s of download + 130s for the install-time --version check
+    // (120s + 10s kill grace) + 610s of rendering (600s budget + 10s kill grace) = 2548s,
+    // ~42.5 minutes. 50 minutes covers that with ~7.5 minutes of margin, which means this
+    // should never be what fires: the script's own bounds report which fixture hung, this one
+    // only catches a wedge outside them. Exec honours Task.timeout by destroying the process,
+    // so the build fails rather than running to the CI job limit.
+    timeout.set(Duration.ofMinutes(50))
     val outputDir = layout.buildDirectory.dir("oracle-fixtures")
     commandLine(
         "bash",
